@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Foam">
+    <output-path>$PROJECT_DIR$/out/artifacts/Foam</output-path>
+    <root id="archive" name="Foam.jar">
+      <element id="module-output" name="Client" />
+    </root>
+  </artifact>
+</component>
