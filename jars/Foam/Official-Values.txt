@@ -107,7 +107,7 @@ Scaffold:Tower:false
 Speed:HypixelJumpHight:0.42
 Speed:HypixelBoostSpeed:0.1
 Speed:mode:Hypixel
-Step:Smooth:true
+Step:mode:NCP
 TPAura:Range:50.0
 TPAura:Delay:100.0
 TPAura:Swing:true
@@ -123,6 +123,7 @@ TargetStrafe:only Speed:true
 TargetStrafe:OnlyJump:true
 TargetStrafe:lockPersonView:true
 Timer:Speed:1.3
+Velocity:mode:Simple
 Velocity:percentage:0.0
 Xray:1:4.0
 Xray:1:4.0

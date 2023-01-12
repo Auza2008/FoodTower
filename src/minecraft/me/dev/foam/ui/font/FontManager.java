@@ -62,7 +62,7 @@ public class FontManager {
         Font output = null;
         try {
             output = Font.createFont(fontType,
-                    Objects.requireNonNull(FontManager.class.getResourceAsStream("/assets/minecraft/foam/" + fontLocation)));
+                    Objects.requireNonNull(FontManager.class.getResourceAsStream("/assets/minecraft/foam/Font/" + fontLocation)));
             output = output.deriveFont(fontSize);
         } catch (Exception e) {
             e.printStackTrace();

@@ -9,7 +9,6 @@ HUD
 InvMove
 InventoryHUD
 KeybindDisplay
-KillAura
 LegitSpeed
 LightningCheck
 NameTags
@@ -17,3 +16,4 @@ NoSlow
 Step
 TargetHUD
 TargetStrafe
+Velocity

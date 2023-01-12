@@ -27,10 +27,12 @@ public class FastUse extends Module {
     @NMSL
     public void onUpdate(EventPreUpdate e) {
         Item usingItem = mc.thePlayer.getItemInUse().getItem();
-        if (mc.thePlayer != null && mc.thePlayer.isUsingItem() && mc.thePlayer.getItemInUse().getItem() != null && (usingItem instanceof ItemFood || usingItem instanceof ItemBucketMilk || usingItem instanceof ItemPotion)) {
+
+        if (usingItem instanceof ItemFood || usingItem instanceof ItemBucketMilk || usingItem instanceof ItemPotion) {
             for (int i = 0; i <= 32; i++) {
                 mc.getNetHandler().addToSendQueue(new C03PacketPlayer(mc.thePlayer.onGround));
             }
+            mc.playerController.onStoppedUsingItem(mc.thePlayer);
         }
     }
 }
