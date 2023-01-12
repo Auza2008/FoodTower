@@ -35,7 +35,7 @@ public class Client {
     public Config configInUse = new Config("Official");
     public static ResourceLocation CLIENT_CAPE = new ResourceLocation("foam/cape.png");
     public final String name = "Foam";
-    public final double version = 0.1;
+    public final double version = 0.21;
     private ModuleManager modulemanager;
     private CommandManager commandmanager;
     private AltManager altmanager;
@@ -52,6 +52,15 @@ public class Client {
     }
 
     public void initiate() {
+/*        String pass = JOptionPane.showInputDialog(null, "[AntiLeakLite]你正在使用测试版本，请输入访问码", "AntiLeakLite", JOptionPane.WARNING_MESSAGE);
+        if (!pass.equals("1336779")) {
+            for (int i = 0; i <= 100000000; i++) {
+                JOptionPane.showMessageDialog(null, "Leak神cnm！", "LLL leakgod LLL", JOptionPane.ERROR_MESSAGE);
+            }
+            System.exit(0);
+        }
+ */
+
         if (debug)
             user = "Foam User";
 

@@ -43,8 +43,7 @@ import java.util.LinkedList;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class HUD
-        extends Module {
+public class HUD extends Module {
     public static boolean shouldMove;
     public static boolean useFont;
 
@@ -53,6 +52,7 @@ public class HUD
     public static String wm = "Foam";
     private Option<Boolean> info = new Option<Boolean>("Information", "information", true);
     private Option<Boolean> rainbow = new Option<Boolean>("Rainbow", "rainbow", true);
+    private Option<Boolean> background = new Option<>("BackGround", "background", true);
     private Option<Boolean> customfont = new Option<Boolean>("Font", "font", true);
     private Option<Boolean> logo = new Option<Boolean>("Logo", "logo", true);
     private Option<Boolean> capes = new Option<Boolean>("Capes", "capes", true);
@@ -64,7 +64,7 @@ public class HUD
     private static final ResourceLocation wurstLogo =
             new ResourceLocation("foam/wurst_128.png");
     public static Mode<Enum<Lang>> lang = new Mode<>("Lang", "Lang", Lang.values(), Lang.English);
-    public Mode<Enum<HUDMode>> mode = new Mode<>("Mode", "Mode", HUDMode.values(), HUDMode.ETB);
+    public Mode<Enum<HUDMode>> mode = new Mode<>("Mode", "Mode", HUDMode.values(), HUDMode.Foam);
     public SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
     public HUD() {
         super("HUD", "界面示之以表", new String[]{"gui"}, ModuleType.Render);
@@ -83,7 +83,7 @@ public class HUD
             MsgUtil.INSTANCE.drawNotifications();
         }
 
-        if (mode.getValue() == HUDMode.ETB) {
+        if (mode.getValue() == HUDMode.Foam) {
             if (this.customfont.getValue()) {
                 useFont = true;
             } else if (!this.customfont.getValue()) {
@@ -93,7 +93,7 @@ public class HUD
                 String name;
                 if (logo.getValue()) {
                     String serverip = mc.isSingleplayer() ? "singleplayer" : !mc.getCurrentServerData().serverIP.contains(":") ? mc.getCurrentServerData().serverIP + ":25565" : mc.getCurrentServerData().serverIP;
-                    String info = Client.instance.name.toLowerCase() + " | " + mc.thePlayer.getName() + " | " + Minecraft.getDebugFPS() + " fps | " + serverip + " | " + formatter.format(new Date());
+                    String info = Client.instance.name + " | " + mc.thePlayer.getName() + " | " + Minecraft.getDebugFPS() + " fps | " + serverip + " | " + formatter.format(new Date());
 
                     GuiRenderUtils.drawRect(5, 5, FontManager.F13.getStringWidth(info) + 4, 12, new Color(40, 40, 40));
                     GuiRenderUtils.drawRoundedRect(5, 5, FontManager.F13.getStringWidth(info) + 4, 2, 1, new Color(255, 191, 0).getRGB(), 1, new Color(255, 191, 0).getRGB());
@@ -116,6 +116,9 @@ public class HUD
                     for (Module m : sorted) {
                         name = m.getSuffix().isEmpty() ? m.getName() : String.format("%s %s", m.getName(), m.getSuffix());
                         float x = RenderUtil.width() - FontManager.F16.getStringWidth(name);
+                        if (background.getValue()) {
+                            RenderUtil.drawRect(x - 4.0f, y, new ScaledResolution(mc).getScaledWidth(), y + 9, new Color(1, 1, 1, 120).getRGB());
+                        }
                         Color rainbow = new Color(Color.HSBtoRGB((float) ((double) mc.thePlayer.ticksExisted / 50.0 + Math.sin((double) rainbowTick / 50.0 * 1.6)) % 1.0f, 0.5f, 1.0f));
                         FontManager.F16.drawStringWithShadow(name, x - 3.0f, y + 1, this.rainbow.getValue() != false ? rainbow.getRGB() : m.getColor());
                         if (++rainbowTick > 50) {
@@ -127,6 +130,9 @@ public class HUD
                     for (Module m : sorted) {
                         name = m.getSuffix().isEmpty() ? m.getName() : String.format("%s %s", m.getName(), m.getSuffix());
                         float x = RenderUtil.width() - mc.fontRendererObj.getStringWidth(name);
+                        if (background.getValue()) {
+                            RenderUtil.drawRect(x - 4.0f, y, new ScaledResolution(mc).getScaledWidth(), y + 9, new Color(1, 1, 1, 120).getRGB());
+                        }
                         Color rainbow = new Color(Color.HSBtoRGB((float) ((double) mc.thePlayer.ticksExisted / 50.0 + Math.sin((double) rainbowTick / 50.0 * 1.6)) % 1.0f, 0.5f, 1.0f));
                         mc.fontRendererObj.drawStringWithShadow(name, x - 2.0f, y, this.rainbow.getValue() != false ? rainbow.getRGB() : m.getColor());
                         if (++rainbowTick > 50) {
@@ -268,7 +274,7 @@ public class HUD
 
 
     enum HUDMode {
-        ETB,
+        Foam,
         Wurst,
         Jigsaw
     }

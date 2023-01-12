@@ -29,7 +29,7 @@ public class FastBow
 
     public FastBow() {
         super("FastBow", "疾骤弓", new String[]{"zoombow", "quickbow"}, ModuleType.Combat);
-        this.setColor(new Color(255, 99, 99).getRGB());
+        this.setColor(new Color(255, 255, 255).getRGB());
         this.counter = 0;
     }
 

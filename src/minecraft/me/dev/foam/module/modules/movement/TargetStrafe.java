@@ -9,12 +9,14 @@ import me.dev.foam.Client;
 import me.dev.foam.api.NMSL;
 import me.dev.foam.api.events.EventMove;
 import me.dev.foam.api.events.EventPreUpdate;
+import me.dev.foam.api.events.EventRender3D;
 import me.dev.foam.module.Module;
 import me.dev.foam.module.ModuleType;
 import me.dev.foam.module.modules.combat.Killaura;
 import me.dev.foam.utils.math.RotationUtil;
 import me.dev.foam.utils.normal.MoveUtils;
 import me.dev.foam.utils.normal.PlayerUtil;
+import me.dev.foam.utils.normal.RenderUtil;
 import me.dev.foam.value.Mode;
 import me.dev.foam.value.Numbers;
 import me.dev.foam.value.Option;
@@ -33,6 +35,7 @@ public class TargetStrafe extends Module {
     public static boolean direction = true;
     private Numbers<Double> range = new Numbers<Double>("Range", "range", 2.0, 0.0, 6.0, 0.1);
     private final Mode mode = new Mode("Mode", "mode", TargetStrafeMode.values(), TargetStrafeMode.Adaptive);
+    private Option<Boolean> render = new Option<>("Render", "render", true);
     public static final Option<Boolean> onlyspeed = new Option<>("OnlySpeed", "only Speed", true);
     public static final Option<Boolean> jumpkey = new Option<>("OnlyJump", "OnlyJump", true);
     private final Option<Boolean> lockPersonView = new Option<>("LockPersonView", "lockPersonView", true);
@@ -113,6 +116,13 @@ public class TargetStrafe extends Module {
             return false;
         }
         return true;
+    }
+
+    @NMSL
+    private void onRender(EventRender3D e) {
+        if (Killaura.target != null && render.getValue()) {
+            RenderUtil.drawCircle(Killaura.target, e.getPartialTicks(), range.getValue());
+        }
     }
 
     static enum TargetStrafeMode {

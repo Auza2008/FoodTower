@@ -1,8 +1,3 @@
-/*
-Author:SuMuGod
-Date:2022/7/10 4:27
-Project:foam Reborn
-*/
 package me.dev.foam.module.modules.movement;
 
 import me.dev.foam.api.NMSL;

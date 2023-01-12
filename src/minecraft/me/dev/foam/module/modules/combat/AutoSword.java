@@ -33,7 +33,7 @@ public class AutoSword
 
     public AutoSword() {
         super("AutoSword", "剑自剑归", new String[]{"autosword"}, ModuleType.Combat);
-        this.setColor(new Color(208, 30, 142).getRGB());
+        this.setColor(new Color(255, 255, 255).getRGB());
     }
 
     @NMSL

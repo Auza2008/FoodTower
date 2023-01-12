@@ -9,6 +9,7 @@ import me.dev.foam.utils.math.Vec3f;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
 import java.nio.FloatBuffer;
@@ -34,6 +35,23 @@ public final class GLUtils {
     public static void glColor(int hex) {
         float[] color = GLUtils.getColor(hex);
         GlStateManager.color(color[0], color[1], color[2], color[3]);
+    }
+
+    public static void startSmooth() {
+        GL11.glEnable((int)2848);
+        GL11.glEnable((int)2881);
+        GL11.glEnable((int)2832);
+        GL11.glEnable((int)3042);
+        GL11.glBlendFunc((int)770, (int)771);
+        GL11.glHint((int)3154, (int)4354);
+        GL11.glHint((int)3155, (int)4354);
+        GL11.glHint((int)3153, (int)4354);
+    }
+
+    public static void endSmooth() {
+        GL11.glDisable((int)2848);
+        GL11.glDisable((int)2881);
+        GL11.glEnable((int)2832);
     }
 
     public static void rotateX(float angle, double x, double y, double z) {

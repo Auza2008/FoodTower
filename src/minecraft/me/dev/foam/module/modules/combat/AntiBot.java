@@ -15,7 +15,7 @@ import java.awt.*;
 public class AntiBot extends Module {
     public AntiBot() {
         super("AntiBot", "反机械者", new String[]{"nobot", "botkiller"}, ModuleType.Combat);
-        this.setColor(new Color(217, 149, 251).getRGB());
+        this.setColor(new Color(255, 255, 255).getRGB());
     }
 
     public static boolean isServerBot(Entity entity) {

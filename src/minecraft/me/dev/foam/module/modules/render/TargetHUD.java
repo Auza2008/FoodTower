@@ -37,8 +37,6 @@ public class TargetHUD extends Module {
         super("TargetHUD", "视界面而有之", new String[]{"TargetHud"}, ModuleType.Render);
     }
 
-    private final Numbers<Integer> customX = new Numbers<>("CustomX", "CustomX", -150, -500, 500, 1);
-    private final Numbers<Integer> customY = new Numbers<>("CustomY", "CustomY", 80, -500, 500, 1);
     static int colors = new Color(-1).getRGB();
 
     private float lastHealth = 0.0F;

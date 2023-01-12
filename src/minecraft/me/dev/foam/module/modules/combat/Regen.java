@@ -23,7 +23,7 @@ public class Regen
 
     public Regen() {
         super("Regen", "自重生", new String[]{"fastgen"}, ModuleType.Combat);
-        this.setColor(new Color(208, 30, 142).getRGB());
+        this.setColor(new Color(255, 255, 255).getRGB());
     }
 
     @NMSL

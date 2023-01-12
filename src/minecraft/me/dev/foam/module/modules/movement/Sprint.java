@@ -16,7 +16,7 @@ import java.awt.*;
 public class Sprint extends Module {
     public Sprint() {
         super("Sprint", "驰行而驰", new String[]{"run"}, ModuleType.Movement);
-        this.setColor(new Color(158, 205, 125).getRGB());
+        this.setColor(new Color(255, 255, 255).getRGB());
     }
 
     @NMSL

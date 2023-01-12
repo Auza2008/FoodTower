@@ -29,7 +29,7 @@ public class InventoryHUD extends Module {
         float startX = HUDEditor.inv.x;
         float startY = HUDEditor.inv.y + 15;
         int curIndex = 0;
-        RenderUtil.drawBordered(HUDEditor.inv.x, HUDEditor.inv.y + 15, (20 * 9) + 2, (20 * 3) + 2, 1, 0xAA << 24, new Color(0x00A6FF).getRGB());
+        RenderUtil.drawBordered(HUDEditor.inv.x, HUDEditor.inv.y + 15, (20 * 9) + 2, (20 * 3) + 2, 1, 0xAA << 24, new Color(0x80FFFFFF, true).getRGB());
 
         for (int i = 9; i < 36; ++i) {
             ItemStack slot = mc.thePlayer.inventory.mainInventory[i];

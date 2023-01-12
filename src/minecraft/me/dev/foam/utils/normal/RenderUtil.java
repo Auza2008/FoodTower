@@ -8,6 +8,7 @@ package me.dev.foam.utils.normal;
 import me.dev.foam.utils.math.Vec2f;
 import me.dev.foam.utils.math.Vec3f;
 import me.dev.foam.utils.math.gl.GLClientState;
+import me.dev.foam.utils.math.gl.GLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
@@ -37,7 +38,19 @@ public class RenderUtil {
     private static final List<Integer> csBuffer;
     private static final Consumer<Integer> ENABLE_CLIENT_STATE;
     private static final Consumer<Integer> DISABLE_CLIENT_STATE;
+    private static final Pattern COLOR_PATTERN = Pattern.compile("(?i)§[0-9A-FK-OR]");
 
+    static {
+        tessellator = Tessellation.createExpanding(4, 1.0f, 2.0f);
+        csBuffer = new ArrayList<Integer>();
+        ENABLE_CLIENT_STATE = GL11::glEnableClientState;
+        DISABLE_CLIENT_STATE = GL11::glEnableClientState;
+    }
+
+
+    public RenderUtil() {
+        super();
+    }
 
     public static void setColor(Color c) {
         glColor4f(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f,
@@ -47,17 +60,16 @@ public class RenderUtil {
     public static void rectangleBordered(double x, double y, double x1, double y1, double width, int internalColor,
                                          int borderColor) {
         RenderUtil.rectangle(x + width, y + width, x1 - width, y1 - width, internalColor);
-        GlStateManager.color((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         RenderUtil.rectangle(x + width, y, x1 - width, y + width, borderColor);
-        GlStateManager.color((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         RenderUtil.rectangle(x, y, x + width, y1, borderColor);
-        GlStateManager.color((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         RenderUtil.rectangle(x1 - width, y, x1, y1, borderColor);
-        GlStateManager.color((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         RenderUtil.rectangle(x + width, y1 - width, x1 - width, y1, borderColor);
-        GlStateManager.color((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
     }
-
 
     public static void drawScaledCustomSizeModalCircle(int x, int y, float u, float v, int uWidth, int vHeight, int width, int height, float tileWidth, float tileHeight) {
         float f = 1.0F / tileWidth;
@@ -73,14 +85,6 @@ public class RenderUtil {
         tessellator.draw();
     }
 
-    static {
-        tessellator = Tessellation.createExpanding(4, 1.0f, 2.0f);
-        csBuffer = new ArrayList<Integer>();
-        ENABLE_CLIENT_STATE = GL11::glEnableClientState;
-        DISABLE_CLIENT_STATE = GL11::glEnableClientState;
-    }
-
-
     public static void circles(float x, float y, float radius, int fill) {
         arcs(x, y, 0.0f, 360.0f, radius, fill);
     }
@@ -94,7 +98,7 @@ public class RenderUtil {
         float f1 = (float) (color >> 16 & 255) / 255.0f;
         float f2 = (float) (color >> 8 & 255) / 255.0f;
         float f3 = (float) (color & 255) / 255.0f;
-        GL11.glColor4f((float) f1, (float) f2, (float) f3, (float) f);
+        GL11.glColor4f(f1, f2, f3, f);
     }
 
     public static double getAnimationState(double animation, double finalState, double speed) {
@@ -117,8 +121,8 @@ public class RenderUtil {
         float ldy;
         float ldx;
         float i;
-        GlStateManager.color((float) 0.0f, (float) 0.0f, (float) 0.0f);
-        GL11.glColor4f((float) 0.0f, (float) 0.0f, (float) 0.0f, (float) 0.0f);
+        GlStateManager.color(0.0f, 0.0f, 0.0f);
+        GL11.glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
         float temp = 0.0f;
         if (start > end) {
             temp = end;
@@ -133,28 +137,28 @@ public class RenderUtil {
         WorldRenderer var10 = var9.getWorldRenderer();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
-        GlStateManager.tryBlendFuncSeparate((int) 770, (int) 771, (int) 1, (int) 0);
-        GlStateManager.color((float) var6, (float) var7, (float) var8, (float) var11);
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        GlStateManager.color(var6, var7, var8, var11);
         if (var11 > 0.5f) {
-            GL11.glEnable((int) 2848);
-            GL11.glLineWidth((float) 2.0f);
-            GL11.glBegin((int) 3);
+            GL11.glEnable(2848);
+            GL11.glLineWidth(2.0f);
+            GL11.glBegin(3);
             i = end;
             while (i >= start) {
-                ldx = (float) Math.cos((double) ((double) i * 3.141592653589793 / 180.0)) * (w * 1.001f);
-                ldy = (float) Math.sin((double) ((double) i * 3.141592653589793 / 180.0)) * (h * 1.001f);
-                GL11.glVertex2f((float) (x + ldx), (float) (y + ldy));
+                ldx = (float) Math.cos((double) i * 3.141592653589793 / 180.0) * (w * 1.001f);
+                ldy = (float) Math.sin((double) i * 3.141592653589793 / 180.0) * (h * 1.001f);
+                GL11.glVertex2f(x + ldx, y + ldy);
                 i -= 4.0f;
             }
             GL11.glEnd();
-            GL11.glDisable((int) 2848);
+            GL11.glDisable(2848);
         }
-        GL11.glBegin((int) 6);
+        GL11.glBegin(6);
         i = end;
         while (i >= start) {
-            ldx = (float) Math.cos((double) ((double) i * 3.141592653589793 / 180.0)) * w;
-            ldy = (float) Math.sin((double) ((double) i * 3.141592653589793 / 180.0)) * h;
-            GL11.glVertex2f((float) (x + ldx), (float) (y + ldy));
+            ldx = (float) Math.cos((double) i * 3.141592653589793 / 180.0) * w;
+            ldy = (float) Math.sin((double) i * 3.141592653589793 / 180.0) * h;
+            GL11.glVertex2f(x + ldx, y + ldy);
             i -= 4.0f;
         }
         GL11.glEnd();
@@ -286,7 +290,6 @@ public class RenderUtil {
         tessellator.draw();
     }
 
-
     public static void drawGradientSideways(double left, double top, double right, double bottom, int col1, int col2) {
         float f = (col1 >> 24 & 0xFF) / 255.0F;
         float f1 = (col1 >> 16 & 0xFF) / 255.0F;
@@ -321,6 +324,7 @@ public class RenderUtil {
         GL11.glDisable(2848);
         GL11.glShadeModel(7424);
     }
+
     public static void drawImage(ResourceLocation image, int x, int y, int width, int height) {
         glDisable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
@@ -333,6 +337,7 @@ public class RenderUtil {
         glDisable(GL_BLEND);
         glEnable(GL_DEPTH_TEST);
     }
+
     public static void drawRect(float left, float top, float right, float bottom, int color) {
         if (left < right) {
             float i = left;
@@ -370,7 +375,6 @@ public class RenderUtil {
         glBindTexture(GL_TEXTURE_2D, texture);
     }
 
-
     public static void drawBordered(double x2, double y2, double width, double height, double length, int innerColor, int outerColor) {
         Gui.drawRect((int) x2, (int) y2, (int) (x2 + width), (int) y2 + (int) height, innerColor);
         Gui.drawRect((int) (x2 - length), (int) y2, (int) x2, (int) y2 + (int) height, outerColor);
@@ -399,8 +403,8 @@ public class RenderUtil {
         WorldRenderer worldRenderer = tessellator.getWorldRenderer();
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
-        GlStateManager.tryBlendFuncSeparate((int) 770, (int) 771, (int) 1, (int) 0);
-        GlStateManager.color((float) var6, (float) var7, (float) var8, (float) var11);
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+        GlStateManager.color(var6, var7, var8, var11);
         worldRenderer.begin(7, DefaultVertexFormats.POSITION);
         worldRenderer.pos(left, bottom, 0.0).endVertex();
         worldRenderer.pos(right, bottom, 0.0).endVertex();
@@ -409,7 +413,7 @@ public class RenderUtil {
         tessellator.draw();
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
-        GlStateManager.color((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
+        GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     public static void drawScaledCustomSizeModalRect(int x, int y, float u, float v, int uWidth, int vHeight, int width, int height, float tileWidth, float tileHeight) {
@@ -491,6 +495,7 @@ public class RenderUtil {
     public static void rect(final double x, final double y, final double width, final double height, final Color color) {
         rect(x, y, width, height, true, color);
     }
+
     public static void rect(final double x, final double y, final double width, final double height, final boolean filled, final Color color) {
         start();
         if (color != null)
@@ -561,7 +566,7 @@ public class RenderUtil {
             int fireAspectLevel = EnchantmentHelper.getEnchantmentLevel(Enchantment.fireAspect.effectId, stack);
             int unbreakingLevel = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack);
             if (sharpnessLevel > 0) {
-                RenderUtil.drawEnchantTag("S" +  getColor(sharpnessLevel) + sharpnessLevel, x * 2, enchantmentY);
+                RenderUtil.drawEnchantTag("S" + getColor(sharpnessLevel) + sharpnessLevel, x * 2, enchantmentY);
                 enchantmentY += 8;
             }
             if (knockbackLevel > 0) {
@@ -588,7 +593,6 @@ public class RenderUtil {
         }
     }
 
-
     private static void drawEnchantTag(String text, int x, float y) {
         GlStateManager.pushMatrix();
         GlStateManager.disableDepth();
@@ -607,7 +611,6 @@ public class RenderUtil {
         fr.drawString(s, (int) x, (int) y, color);
     }
 
-    private static final Pattern COLOR_PATTERN = Pattern.compile("(?i)§[0-9A-FK-OR]");
     public static String stripColor(final String text) {
         return COLOR_PATTERN.matcher(text).replaceAll("");
     }
@@ -640,9 +643,11 @@ public class RenderUtil {
     public static void vertex(final double x, final double y) {
         GL11.glVertex2d(x, y);
     }
+
     public static void end() {
         GL11.glEnd();
     }
+
     public static void stop() {
         GlStateManager.enableAlpha();
         GlStateManager.enableDepth();
@@ -660,23 +665,29 @@ public class RenderUtil {
         GlStateManager.disableAlpha();
         GlStateManager.disableDepth();
     }
+
     public static void enable(final int glTarget) {
         GL11.glEnable(glTarget);
     }
+
     public static void color(Color color) {
         if (color == null)
             color = Color.white;
         color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, color.getAlpha() / 255F);
     }
+
     public static void color(final double red, final double green, final double blue, final double alpha) {
         GL11.glColor4d(red, green, blue, alpha);
     }
+
     public static void lineWidth(final float width) {
         GL11.glLineWidth(width);
     }
+
     public static void begin(final int glMode) {
         GL11.glBegin(glMode);
     }
+
     public static void disable(final int glTarget) {
         GL11.glDisable(glTarget);
     }
@@ -787,8 +798,37 @@ public class RenderUtil {
         GL11.glPopMatrix();
     }
 
-    public RenderUtil() {
-        super();
+    public static void drawCircle(Entity entity, float partialTicks, double rad) {
+        GL11.glEnable(GL11.GL_BLEND);
+
+        GL11.glPushMatrix();
+        GL11.glDisable((int) 3553);
+        GLUtils.startSmooth();
+        GL11.glDisable((int) 2929);
+        GL11.glDepthMask((boolean) false);
+        GL11.glLineWidth((float) 1.0f);
+        GL11.glBegin((int) 3);
+
+        double x = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double) partialTicks - Helper.mc.getRenderManager().viewerPosX;
+        double y = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double) partialTicks - Helper.mc.getRenderManager().viewerPosY;
+        double z = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double) partialTicks - Helper.mc.getRenderManager().viewerPosZ;
+        float r, g, b;
+        r = 0.003921569f * (float) Color.WHITE.getRed();
+        g = 0.003921569f * (float) Color.WHITE.getGreen();
+        b = 0.003921569f * (float) Color.WHITE.getBlue();
+
+        double pix2 = 6.283185307179586;
+        for (int i = 0; i <= 90; ++i) {
+            GL11.glColor3f((float) r, (float) g, (float) b);
+            GL11.glVertex3d((double) (x + rad * Math.cos((double) i * 6.283185307179586 / 8.0)), (double) y, (double) (z + rad * Math.sin((double) i * 6.283185307179586 / 8.0)));
+        }
+        GL11.glEnd();
+        GL11.glDepthMask((boolean) true);
+        GL11.glEnable((int) 2929);
+        GLUtils.endSmooth();
+        GL11.glEnable((int) 3553);
+        GL11.glPopMatrix();
+        GL11.glDisable(GL11.GL_BLEND);
     }
 
     public static int width() {
@@ -809,16 +849,16 @@ public class RenderUtil {
 
     public static void drawCustomImage(int x, int y, int width, int height, ResourceLocation image) {
         ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
-        GL11.glDisable((int) 2929);
-        GL11.glEnable((int) 3042);
-        GL11.glDepthMask((boolean) false);
-        OpenGlHelper.glBlendFunc((int) 770, (int) 771, (int) 1, (int) 0);
-        GL11.glColor4f((float) 1.0f, (float) 1.0f, (float) 1.0f, (float) 1.0f);
+        GL11.glDisable(2929);
+        GL11.glEnable(3042);
+        GL11.glDepthMask(false);
+        OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         Minecraft.getMinecraft().getTextureManager().bindTexture(image);
-        Gui.drawModalRectWithCustomSizedTexture((int) x, (int) y, (float) 0.0f, (float) 0.0f, (int) width, (int) height, (float) width, (float) height);
-        GL11.glDepthMask((boolean) true);
-        GL11.glDisable((int) 3042);
-        GL11.glEnable((int) 2929);
+        Gui.drawModalRectWithCustomSizedTexture(x, y, 0.0f, 0.0f, width, height, (float) width, (float) height);
+        GL11.glDepthMask(true);
+        GL11.glDisable(3042);
+        GL11.glEnable(2929);
     }
 
 
@@ -953,14 +993,14 @@ public class RenderUtil {
         GL11.glColor4f(f2, f3, f4, f);
         GL11.glLineWidth(l1);
         GL11.glBegin(1);
-        GL11.glVertex2d((double) x, (double) y);
-        GL11.glVertex2d((double) x, (double) y2);
-        GL11.glVertex2d((double) x2, (double) y2);
-        GL11.glVertex2d((double) x2, (double) y);
-        GL11.glVertex2d((double) x, (double) y);
-        GL11.glVertex2d((double) x2, (double) y);
-        GL11.glVertex2d((double) x, (double) y2);
-        GL11.glVertex2d((double) x2, (double) y2);
+        GL11.glVertex2d(x, y);
+        GL11.glVertex2d(x, y2);
+        GL11.glVertex2d(x2, y2);
+        GL11.glVertex2d(x2, y);
+        GL11.glVertex2d(x, y);
+        GL11.glVertex2d(x2, y);
+        GL11.glVertex2d(x, y2);
+        GL11.glVertex2d(x2, y2);
         GL11.glEnd();
         GL11.glPopMatrix();
         GL11.glEnable(3553);

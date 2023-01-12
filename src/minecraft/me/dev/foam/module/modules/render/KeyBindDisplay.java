@@ -37,7 +37,7 @@ public class KeyBindDisplay extends Module {
                 modules++;
             }
         }
-        RenderUtil.drawBordered(startX, startY, 100, (FontManager.F18.getHeight() + 2) * modules + FontManager.F18.getHeight() + 8, 1, 0xAA << 24, new Color(0x00A6FF).getRGB());
+        RenderUtil.drawBordered(startX, startY, 100, (FontManager.F18.getHeight() + 2) * modules + FontManager.F18.getHeight() + 8, 1, 0xAA << 24, new Color(0x80FFFFFF, true).getRGB());
         FontManager.F18.drawCenteredString("Keybinds", startX + 50, startY + 2, -1);
         int y = (int) (startY + FontManager.F18.getHeight() + 4 + 2);
         for (Module m : bindM) {
