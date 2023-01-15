@@ -5,8 +5,6 @@ Project:foam Reborn
 */
 package me.dev.foam.value;
 
-import me.dev.foam.ui.clickGui.SmoothAnimationTimer;
-
 public abstract class Value<V> {
     private String displayName;
     private String name;
@@ -37,7 +35,4 @@ public abstract class Value<V> {
         return true;
     }
 
-    public SmoothAnimationTimer getAnimationTimer() {
-        return new SmoothAnimationTimer(1.0f, 1.0f);
-    }
 }

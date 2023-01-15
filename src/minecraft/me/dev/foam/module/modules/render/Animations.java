@@ -13,7 +13,7 @@ import me.dev.foam.value.Mode;
 import me.dev.foam.value.Option;
 
 public class Animations extends Module {
-    public static Mode<Enum> mode = new Mode("Mode", "mode", renderMode.values(), renderMode.Jigsaw);
+    public static Mode<Enum> mode = new Mode("Mode", "mode", renderMode.values(), renderMode.Old);
     public static Option<Boolean> smooth = new Option("Smooth", "Smooth", false);
 
     public Animations() {
@@ -28,6 +28,6 @@ public class Animations extends Module {
     }
 
     public enum renderMode {
-        Sigma, old, Vanilla, Luna, Jigsaw, Swang, Swank, Swong, sb
+        Old, Vanilla, Exhibition, Flux, Jello
     }
 }

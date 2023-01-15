@@ -14,6 +14,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.*;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.shader.Framebuffer;
 import net.minecraft.enchantment.Enchantment;
@@ -53,12 +54,10 @@ public class RenderUtil {
     }
 
     public static void setColor(Color c) {
-        glColor4f(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f,
-                c.getAlpha() / 255f);
+        glColor4f(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, c.getAlpha() / 255f);
     }
 
-    public static void rectangleBordered(double x, double y, double x1, double y1, double width, int internalColor,
-                                         int borderColor) {
+    public static void rectangleBordered(double x, double y, double x1, double y1, double width, int internalColor, int borderColor) {
         RenderUtil.rectangle(x + width, y + width, x1 - width, y1 - width, internalColor);
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         RenderUtil.rectangle(x + width, y, x1 - width, y + width, borderColor);
@@ -104,15 +103,11 @@ public class RenderUtil {
     public static double getAnimationState(double animation, double finalState, double speed) {
         float add = (float) (0.01 * speed);
         if (animation < finalState) {
-            if (animation + add < finalState)
-                animation += add;
-            else
-                animation = finalState;
+            if (animation + add < finalState) animation += add;
+            else animation = finalState;
         } else {
-            if (animation - add > finalState)
-                animation -= add;
-            else
-                animation = finalState;
+            if (animation - add > finalState) animation -= add;
+            else animation = finalState;
         }
         return animation;
     }
@@ -195,8 +190,7 @@ public class RenderUtil {
         tessellator.draw();
     }
 
-    public static void drawOutlinedEntityESP(double x, double y, double z, double width, double height, float red,
-                                             float green, float blue, float alpha) {
+    public static void drawOutlinedEntityESP(double x, double y, double z, double width, double height, float red, float green, float blue, float alpha) {
         GL11.glPushMatrix();
         GL11.glEnable(3042);
         GL11.glBlendFunc(770, 771);
@@ -371,6 +365,10 @@ public class RenderUtil {
         GlStateManager.disableBlend();
     }
 
+    public static void drawRect2(double x, double y, double x2, double y2, int color) {
+        Gui.drawRect((int) x, (int) y, (int) x2, (int) y2, color);
+    }
+
     public static void bindTexture(int texture) {
         glBindTexture(GL_TEXTURE_2D, texture);
     }
@@ -498,8 +496,7 @@ public class RenderUtil {
 
     public static void rect(final double x, final double y, final double width, final double height, final boolean filled, final Color color) {
         start();
-        if (color != null)
-            color(color);
+        if (color != null) color(color);
         begin(filled ? GL11.GL_TRIANGLE_FAN : GL11.GL_LINES);
 
         {
@@ -671,8 +668,7 @@ public class RenderUtil {
     }
 
     public static void color(Color color) {
-        if (color == null)
-            color = Color.white;
+        if (color == null) color = Color.white;
         color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, color.getAlpha() / 255F);
     }
 
@@ -692,8 +688,7 @@ public class RenderUtil {
         GL11.glDisable(glTarget);
     }
 
-    public static void drawFastRoundedRect(final float x0, final float y0, final float x1, final float y1,
-                                           final float radius, final int color) {
+    public static void drawFastRoundedRect(final float x0, final float y0, final float x1, final float y1, final float radius, final int color) {
         final int Semicircle = 18;
         final float f = 90.0f / Semicircle;
         final float f2 = (color >> 24 & 0xFF) / 255.0f;
@@ -731,8 +726,7 @@ public class RenderUtil {
         int j = 0;
         for (j = 0; j <= Semicircle; ++j) {
             final float f8 = j * f;
-            GL11.glVertex2f((float) (f6 + radius * Math.cos(Math.toRadians(f8))),
-                    (float) (f7 - radius * Math.sin(Math.toRadians(f8))));
+            GL11.glVertex2f((float) (f6 + radius * Math.cos(Math.toRadians(f8))), (float) (f7 - radius * Math.sin(Math.toRadians(f8))));
         }
         GL11.glEnd();
         GL11.glBegin(6);
@@ -741,8 +735,7 @@ public class RenderUtil {
         GL11.glVertex2f(f6, f7);
         for (j = 0; j <= Semicircle; ++j) {
             final float f9 = j * f;
-            GL11.glVertex2f((float) (f6 - radius * Math.cos(Math.toRadians(f9))),
-                    (float) (f7 - radius * Math.sin(Math.toRadians(f9))));
+            GL11.glVertex2f((float) (f6 - radius * Math.cos(Math.toRadians(f9))), (float) (f7 - radius * Math.sin(Math.toRadians(f9))));
         }
         GL11.glEnd();
         GL11.glBegin(6);
@@ -751,8 +744,7 @@ public class RenderUtil {
         GL11.glVertex2f(f6, f7);
         for (j = 0; j <= Semicircle; ++j) {
             final float f10 = j * f;
-            GL11.glVertex2f((float) (f6 - radius * Math.cos(Math.toRadians(f10))),
-                    (float) (f7 + radius * Math.sin(Math.toRadians(f10))));
+            GL11.glVertex2f((float) (f6 - radius * Math.cos(Math.toRadians(f10))), (float) (f7 + radius * Math.sin(Math.toRadians(f10))));
         }
         GL11.glEnd();
         GL11.glBegin(6);
@@ -761,8 +753,7 @@ public class RenderUtil {
         GL11.glVertex2f(f6, f7);
         for (j = 0; j <= Semicircle; ++j) {
             final float f11 = j * f;
-            GL11.glVertex2f((float) (f6 + radius * Math.cos(Math.toRadians(f11))),
-                    (float) (f7 + radius * Math.sin(Math.toRadians(f11))));
+            GL11.glVertex2f((float) (f6 + radius * Math.cos(Math.toRadians(f11))), (float) (f7 + radius * Math.sin(Math.toRadians(f11))));
         }
         GL11.glEnd();
         GL11.glEnable(3553);
@@ -802,12 +793,12 @@ public class RenderUtil {
         GL11.glEnable(GL11.GL_BLEND);
 
         GL11.glPushMatrix();
-        GL11.glDisable((int) 3553);
+        GL11.glDisable(3553);
         GLUtils.startSmooth();
-        GL11.glDisable((int) 2929);
-        GL11.glDepthMask((boolean) false);
-        GL11.glLineWidth((float) 1.0f);
-        GL11.glBegin((int) 3);
+        GL11.glDisable(2929);
+        GL11.glDepthMask(false);
+        GL11.glLineWidth(1.0f);
+        GL11.glBegin(3);
 
         double x = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double) partialTicks - Helper.mc.getRenderManager().viewerPosX;
         double y = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double) partialTicks - Helper.mc.getRenderManager().viewerPosY;
@@ -819,14 +810,14 @@ public class RenderUtil {
 
         double pix2 = 6.283185307179586;
         for (int i = 0; i <= 90; ++i) {
-            GL11.glColor3f((float) r, (float) g, (float) b);
-            GL11.glVertex3d((double) (x + rad * Math.cos((double) i * 6.283185307179586 / 8.0)), (double) y, (double) (z + rad * Math.sin((double) i * 6.283185307179586 / 8.0)));
+            GL11.glColor3f(r, g, b);
+            GL11.glVertex3d(x + rad * Math.cos((double) i * 6.283185307179586 / 8.0), y, z + rad * Math.sin((double) i * 6.283185307179586 / 8.0));
         }
         GL11.glEnd();
-        GL11.glDepthMask((boolean) true);
-        GL11.glEnable((int) 2929);
+        GL11.glDepthMask(true);
+        GL11.glEnable(2929);
         GLUtils.endSmooth();
-        GL11.glEnable((int) 3553);
+        GL11.glEnable(3553);
         GL11.glPopMatrix();
         GL11.glDisable(GL11.GL_BLEND);
     }
@@ -872,14 +863,10 @@ public class RenderUtil {
         circle(x + round / 2.0f, y2 - round / 2.0f, round, color);
         circle(x + round / 2.0f, y + round / 2.0f, round, color);
         circle(x2 - round / 2.0f, y2 - round / 2.0f, round, color);
-        Gui.drawRect((int) (x - round / 2.0f - 0.5f), (int) (y + round / 2.0f), (int) x2, (int) (y2 - round / 2.0f),
-                color);
-        Gui.drawRect((int) x, (int) (y + round / 2.0f), (int) (x2 + round / 2.0f + 0.5f), (int) (y2 - round / 2.0f),
-                color);
-        Gui.drawRect((int) (x + round / 2.0f), (int) (y - round / 2.0f - 0.5f), (int) (x2 - round / 2.0f),
-                (int) (y2 - round / 2.0f), color);
-        Gui.drawRect((int) (x + round / 2.0f), (int) y, (int) (x2 - round / 2.0f), (int) (y2 + round / 2.0f + 0.5f),
-                color);
+        Gui.drawRect((int) (x - round / 2.0f - 0.5f), (int) (y + round / 2.0f), (int) x2, (int) (y2 - round / 2.0f), color);
+        Gui.drawRect((int) x, (int) (y + round / 2.0f), (int) (x2 + round / 2.0f + 0.5f), (int) (y2 - round / 2.0f), color);
+        Gui.drawRect((int) (x + round / 2.0f), (int) (y - round / 2.0f - 0.5f), (int) (x2 - round / 2.0f), (int) (y2 - round / 2.0f), color);
+        Gui.drawRect((int) (x + round / 2.0f), (int) y, (int) (x2 - round / 2.0f), (int) (y2 + round / 2.0f + 0.5f), color);
     }
 
     public static void circle(final float x, final float y, final float radius, final int fill) {
@@ -890,18 +877,15 @@ public class RenderUtil {
         arc(x, y, 0.0f, 360.0f, radius, fill);
     }
 
-    public static void arc(final float x, final float y, final float start, final float end, final float radius,
-                           final int color) {
+    public static void arc(final float x, final float y, final float start, final float end, final float radius, final int color) {
         arcEllipse(x, y, start, end, radius, radius, color);
     }
 
-    public static void arc(final float x, final float y, final float start, final float end, final float radius,
-                           final Color color) {
+    public static void arc(final float x, final float y, final float start, final float end, final float radius, final Color color) {
         arcEllipse(x, y, start, end, radius, radius, color);
     }
 
-    public static void arcEllipse(final float x, final float y, float start, float end, final float w, final float h,
-                                  final int color) {
+    public static void arcEllipse(final float x, final float y, float start, float end, final float w, final float h, final int color) {
         GlStateManager.color(0.0f, 0.0f, 0.0f);
         GL11.glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
         float temp = 0.0f;
@@ -941,8 +925,7 @@ public class RenderUtil {
         GlStateManager.disableBlend();
     }
 
-    public static void arcEllipse(final float x, final float y, float start, float end, final float w, final float h,
-                                  final Color color) {
+    public static void arcEllipse(final float x, final float y, float start, float end, final float w, final float h, final Color color) {
         GlStateManager.color(0.0f, 0.0f, 0.0f);
         GL11.glColor4f(0.0f, 0.0f, 0.0f, 0.0f);
         float temp = 0.0f;
@@ -954,8 +937,7 @@ public class RenderUtil {
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        GlStateManager.color(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f,
-                color.getAlpha() / 255.0f);
+        GlStateManager.color(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, color.getAlpha() / 255.0f);
         if (color.getAlpha() > 0.5f) {
             GL11.glEnable(2848);
             GL11.glLineWidth(2.0f);
@@ -1203,6 +1185,181 @@ public class RenderUtil {
         drawFilledCircle((xPosition + width - radius), (yPosition + height - radius), radius, color, 4);
 
         drawRect(0, 0, 0, 0, 0);
+    }
+
+    public static class R2DUtils {
+        public static void enableGL2D() {
+            GL11.glDisable(2929);
+            GL11.glEnable(3042);
+            GL11.glDisable(3553);
+            GL11.glBlendFunc(770, 771);
+            GL11.glDepthMask(true);
+            GL11.glEnable(2848);
+            GL11.glHint(3154, 4354);
+            GL11.glHint(3155, 4354);
+        }
+
+        public static void disableGL2D() {
+            GL11.glEnable(3553);
+            GL11.glDisable(3042);
+            GL11.glEnable(2929);
+            GL11.glDisable(2848);
+            GL11.glHint(3154, 4352);
+            GL11.glHint(3155, 4352);
+        }
+
+        public static void draw2DCorner(Entity e, double posX, double posY, double posZ, int color) {
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(posX, posY, posZ);
+            GL11.glNormal3f(0.0f, 0.0f, 0.0f);
+            GlStateManager.rotate(-RenderManager.playerViewY, 0.0f, 1.0f, 0.0f);
+            GlStateManager.scale(-0.1, -0.1, 0.1);
+            GL11.glDisable(2896);
+            GL11.glDisable(2929);
+            GL11.glEnable(3042);
+            GL11.glBlendFunc(770, 771);
+            GlStateManager.depthMask(true);
+            R2DUtils.drawRect(7.0, -20.0, 7.300000190734863, -17.5, color);
+            R2DUtils.drawRect(-7.300000190734863, -20.0, -7.0, -17.5, color);
+            R2DUtils.drawRect(4.0, -20.299999237060547, 7.300000190734863, -20.0, color);
+            R2DUtils.drawRect(-7.300000190734863, -20.299999237060547, -4.0, -20.0, color);
+            R2DUtils.drawRect(-7.0, 3.0, -4.0, 3.299999952316284, color);
+            R2DUtils.drawRect(4.0, 3.0, 7.0, 3.299999952316284, color);
+            R2DUtils.drawRect(-7.300000190734863, 0.8, -7.0, 3.299999952316284, color);
+            R2DUtils.drawRect(7.0, 0.5, 7.300000190734863, 3.299999952316284, color);
+            R2DUtils.drawRect(7.0, -20.0, 7.300000190734863, -17.5, color);
+            R2DUtils.drawRect(-7.300000190734863, -20.0, -7.0, -17.5, color);
+            R2DUtils.drawRect(4.0, -20.299999237060547, 7.300000190734863, -20.0, color);
+            R2DUtils.drawRect(-7.300000190734863, -20.299999237060547, -4.0, -20.0, color);
+            R2DUtils.drawRect(-7.0, 3.0, -4.0, 3.299999952316284, color);
+            R2DUtils.drawRect(4.0, 3.0, 7.0, 3.299999952316284, color);
+            R2DUtils.drawRect(-7.300000190734863, 0.8, -7.0, 3.299999952316284, color);
+            R2DUtils.drawRect(7.0, 0.5, 7.300000190734863, 3.299999952316284, color);
+            GL11.glDisable(3042);
+            GL11.glEnable(2929);
+            GlStateManager.popMatrix();
+        }
+
+        public static void drawRoundedRect(float x, float y, float x1, float y1, int borderC, int insideC) {
+            R2DUtils.enableGL2D();
+            GL11.glScalef(0.5f, 0.5f, 0.5f);
+            R2DUtils.drawVLine(x *= 2.0f, (y *= 2.0f) + 1.0f, (y1 *= 2.0f) - 2.0f, borderC);
+            R2DUtils.drawVLine((x1 *= 2.0f) - 1.0f, y + 1.0f, y1 - 2.0f, borderC);
+            R2DUtils.drawHLine(x + 2.0f, x1 - 3.0f, y, borderC);
+            R2DUtils.drawHLine(x + 2.0f, x1 - 3.0f, y1 - 1.0f, borderC);
+            R2DUtils.drawHLine(x + 1.0f, x + 1.0f, y + 1.0f, borderC);
+            R2DUtils.drawHLine(x1 - 2.0f, x1 - 2.0f, y + 1.0f, borderC);
+            R2DUtils.drawHLine(x1 - 2.0f, x1 - 2.0f, y1 - 2.0f, borderC);
+            R2DUtils.drawHLine(x + 1.0f, x + 1.0f, y1 - 2.0f, borderC);
+            R2DUtils.drawRect(x + 1.0f, y + 1.0f, x1 - 1.0f, y1 - 1.0f, insideC);
+            GL11.glScalef(2.0f, 2.0f, 2.0f);
+            R2DUtils.disableGL2D();
+            Gui.drawRect(0, 0, 0, 0, 0);
+        }
+
+        public static void drawRect(double x2, double y2, double x1, double y1, int color) {
+            R2DUtils.enableGL2D();
+            R2DUtils.glColor(color);
+            R2DUtils.drawRect(x2, y2, x1, y1);
+            R2DUtils.disableGL2D();
+        }
+
+        private static void drawRect(double x2, double y2, double x1, double y1) {
+            GL11.glBegin(7);
+            GL11.glVertex2d(x2, y1);
+            GL11.glVertex2d(x1, y1);
+            GL11.glVertex2d(x1, y2);
+            GL11.glVertex2d(x2, y2);
+            GL11.glEnd();
+        }
+
+        public static void glColor(int hex) {
+            float alpha = (float) (hex >> 24 & 255) / 255.0f;
+            float red = (float) (hex >> 16 & 255) / 255.0f;
+            float green = (float) (hex >> 8 & 255) / 255.0f;
+            float blue = (float) (hex & 255) / 255.0f;
+            GL11.glColor4f(red, green, blue, alpha);
+        }
+
+        public static void drawRect(float x, float y, float x1, float y1, int color) {
+            R2DUtils.enableGL2D();
+            glColor(color);
+            R2DUtils.drawRect(x, y, x1, y1);
+            R2DUtils.disableGL2D();
+        }
+
+        public static void drawBorderedRect(float x, float y, float x1, float y1, float width, int borderColor) {
+            R2DUtils.enableGL2D();
+            glColor(borderColor);
+            R2DUtils.drawRect(x + width, y, x1 - width, y + width);
+            R2DUtils.drawRect(x, y, x + width, y1);
+            R2DUtils.drawRect(x1 - width, y, x1, y1);
+            R2DUtils.drawRect(x + width, y1 - width, x1 - width, y1);
+            R2DUtils.disableGL2D();
+        }
+
+        public static void drawBorderedRect(float x, float y, float x1, float y1, int insideC, int borderC) {
+            R2DUtils.enableGL2D();
+            GL11.glScalef(0.5f, 0.5f, 0.5f);
+            R2DUtils.drawVLine(x *= 2.0f, y *= 2.0f, y1 *= 2.0f, borderC);
+            R2DUtils.drawVLine((x1 *= 2.0f) - 1.0f, y, y1, borderC);
+            R2DUtils.drawHLine(x, x1 - 1.0f, y, borderC);
+            R2DUtils.drawHLine(x, x1 - 2.0f, y1 - 1.0f, borderC);
+            R2DUtils.drawRect(x + 1.0f, y + 1.0f, x1 - 1.0f, y1 - 1.0f, insideC);
+            GL11.glScalef(2.0f, 2.0f, 2.0f);
+            R2DUtils.disableGL2D();
+        }
+
+        public static void drawGradientRect(float x, float y, float x1, float y1, int topColor, int bottomColor) {
+            R2DUtils.enableGL2D();
+            GL11.glShadeModel(7425);
+            GL11.glBegin(7);
+            glColor(topColor);
+            GL11.glVertex2f(x, y1);
+            GL11.glVertex2f(x1, y1);
+            glColor(bottomColor);
+            GL11.glVertex2f(x1, y);
+            GL11.glVertex2f(x, y);
+            GL11.glEnd();
+            GL11.glShadeModel(7424);
+            R2DUtils.disableGL2D();
+        }
+
+        public static void drawHLine(float x, float y, float x1, int y1) {
+            if (y < x) {
+                float var5 = x;
+                x = y;
+                y = var5;
+            }
+            R2DUtils.drawRect(x, x1, y + 1.0f, x1 + 1.0f, y1);
+        }
+
+        public static void drawVLine(float x, float y, float x1, int y1) {
+            if (x1 < y) {
+                float var5 = y;
+                y = x1;
+                x1 = var5;
+            }
+            R2DUtils.drawRect(x, y + 1.0f, x + 1.0f, x1, y1);
+        }
+
+        public static void drawHLine(float x, float y, float x1, int y1, int y2) {
+            if (y < x) {
+                float var5 = x;
+                x = y;
+                y = var5;
+            }
+            R2DUtils.drawGradientRect(x, x1, y + 1.0f, x1 + 1.0f, y1, y2);
+        }
+
+        public static void drawRect(float x, float y, float x1, float y1) {
+            GL11.glBegin(7);
+            GL11.glVertex2f(x, y1);
+            GL11.glVertex2f(x1, y1);
+            GL11.glVertex2f(x1, y);
+            GL11.glVertex2f(x, y);
+            GL11.glEnd();
+        }
     }
 }
 

@@ -33,8 +33,8 @@ public class TargetStrafe extends Module {
     }
 
     public static boolean direction = true;
-    private Numbers<Double> range = new Numbers<Double>("Range", "range", 2.0, 0.0, 6.0, 0.1);
     private final Mode mode = new Mode("Mode", "mode", TargetStrafeMode.values(), TargetStrafeMode.Adaptive);
+    private Numbers<Double> range = new Numbers<Double>("Range", "range", 2.0, 0.0, 6.0, 0.1);
     private Option<Boolean> render = new Option<>("Render", "render", true);
     public static final Option<Boolean> onlyspeed = new Option<>("OnlySpeed", "only Speed", true);
     public static final Option<Boolean> jumpkey = new Option<>("OnlyJump", "OnlyJump", true);

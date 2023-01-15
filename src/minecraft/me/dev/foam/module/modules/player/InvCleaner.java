@@ -33,13 +33,13 @@ import java.util.ArrayList;
 
 public class InvCleaner extends Module {
     public static int weaponSlot = 36, pickaxeSlot = 37, axeSlot = 38, shovelSlot = 39;
-    private final Numbers<Double> BlockCap = new Numbers<>("BlockCap", "BlockCap", 128.0D, 0.0D, 256.0D, 8.0D);
+    private final Mode<Enum<EMode>> mode = new Mode<>("Mode", "Mode", EMode.values(), EMode.OpenInv);
     private final Numbers<Double> Delay = new Numbers<>("Delay", "Delay", 1.0D, 0.0D, 10.0D, 1.0D);
+    private final Numbers<Double> BlockCap = new Numbers<>("BlockCap", "BlockCap", 128.0D, 0.0D, 256.0D, 8.0D);
     private final Option<Boolean> Food = new Option<>("Food", "Food", true);
     private final Option<Boolean> sort = new Option<>("sort", "sort", true);
     private final Option<Boolean> Archery = new Option<>("Archery", "Archery", true);
     private final Option<Boolean> Sword = new Option<>("Sword", "Sword", true);
-    private final Mode<Enum<EMode>> mode = new Mode<>("Mode", "Mode", EMode.values(), EMode.OpenInv);
     private final Option<Boolean> InvCleaner = new Option<>("InvCleaner", "InvCleaner", true);
     private final Option<Boolean> UHC = new Option<>("UHC", "UHC", false);
     TimerUtil timer = new TimerUtil();

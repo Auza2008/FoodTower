@@ -114,7 +114,6 @@ public class ModuleManager
         registerModule(new InvCleaner());
         registerModule(new Step());
         registerModule(new LightningCheck());
-        registerModule(new Capes());
         registerModule(new Teleport());
         registerModule(new AutoSword());
         registerModule(new Boost());
@@ -177,7 +176,7 @@ public class ModuleManager
         return null;
     }
 
-    public List<Module> getModulesInType(ModuleType t) {
+    public static List<Module> getModulesInType(ModuleType t) {
         ArrayList<Module> output = new ArrayList<Module>();
         for (Module m : modules) {
             if (m.getType() != t) continue;

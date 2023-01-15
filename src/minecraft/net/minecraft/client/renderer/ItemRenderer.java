@@ -90,6 +90,24 @@ public class ItemRenderer
         return blockIn != null && blockIn.getBlockLayer() == EnumWorldBlockLayer.TRANSLUCENT;
     }
 
+    private void func_178096_b(float p_178096_1_, float p_178096_2_) {
+        GlStateManager.translate(0.56F, -0.52F, -0.71999997F);
+        GlStateManager.translate(0.0F, p_178096_1_ * -0.6F, 0.0F);
+        GlStateManager.rotate(45.0F, 0.0F, 1.0F, 0.0F);
+        float var3 = MathHelper.sin(p_178096_2_ * p_178096_2_ * (float) Math.PI);
+        float var4 = MathHelper.sin(MathHelper.sqrt_float(p_178096_2_) * (float) Math.PI);
+        GlStateManager.rotate(var3 * -20.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(var4 * -20.0F, 0.0F, 0.0F, 1.0F);
+        GlStateManager.rotate(var4 * -80.0F, 1.0F, 0.0F, 0.0F);
+    }
+
+    private void func_178103_d() {
+        GlStateManager.translate(-0.5F, 0.2F, 0.0F);
+        GlStateManager.rotate(30.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(-80.0F, 1.0F, 0.0F, 0.0F);
+        GlStateManager.rotate(60.0F, 0.0F, 1.0F, 0.0F);
+    }
+    
     private void rotateArroundXAndY(float angle, float angleY)
     {
         GlStateManager.pushMatrix();
@@ -354,64 +372,54 @@ public class ItemRenderer
                             break;
 
                         case BLOCK:
-                            if (Client.instance.getModuleManager().getModuleByName("Animations").isEnabled()) {
-                                if (Animations.mode.getValue() == Animations.renderMode.Sigma) {
-                                    this.transformFirstPersonItem(f, 0.0f);
-                                    this.doBlockTransformations();
-                                    final float var14 = MathHelper.sin(f1 * f1 * 3.1415927f);
-                                    final float var15 = MathHelper.sin(MathHelper.sqrt_float(f1) * 3.1415927f);
-                                    GlStateManager.translate(-0.0f, 0.4f, 1.0f);
-                                    GlStateManager.rotate(-var15 * 22.5f, -9.0f, -0.0f, 9.0f);
-                                    GlStateManager.rotate(-var15 * 10.0f, 1.0f, -0.4f, -0.5f);
-                                } else if (Animations.mode.getValue() == Animations.renderMode.Vanilla) {
-                                    this.transformFirstPersonItem(f, 0.0f);
-                                    this.doBlockTransformations();
-                                } else if (Animations.mode.getValue() == Animations.renderMode.Luna) {
-                                    this.transformFirstPersonItem(f, 0.0f);
-                                    this.doBlockTransformations();
-                                    final float sin = MathHelper.sin(f1 * f1 * 3.1415927f);
-                                    final float sin2 = MathHelper.sin(MathHelper.sqrt_float(f1) * 3.1415927f);
-                                    GlStateManager.scale(1.0f, 1.0f, 1.0f);
-                                    GlStateManager.translate(-0.2f, 0.45f, 0.25f);
-                                    GlStateManager.rotate(-sin2 * 20.0f, -5.0f, -5.0f, 9.0f);
-                                } else if (Animations.mode.getValue() == Animations.renderMode.Swang) {
-                                    this.transformFirstPersonItem(f / 2.0f, f1);
-                                    final float var16 = MathHelper.sin(MathHelper.sqrt_float(f1) * 3.1415927f);
-                                    GlStateManager.rotate(var16 * 30.0f / 2.0f, -var16, -0.0f, 9.0f);
-                                    GlStateManager.rotate(var16 * 40.0f, 1.0f, -var16 / 2.0f, -0.0f);
-                                    this.doBlockTransformations();
-                                } else if (Animations.mode.getValue() == Animations.renderMode.Swank) {
-                                    this.transformFirstPersonItem(f / 2.0f, f1);
-                                    final float var16 = MathHelper.sin(MathHelper.sqrt_float(f) * 3.1415927f);
-                                    GlStateManager.rotate(var16 * 30.0f, -var16, -0.0f, 9.0f);
-                                    GlStateManager.rotate(var16 * 40.0f, 1.0f, -var16, -0.0f);
-                                    this.doBlockTransformations();
-                                } else if (Animations.mode.getValue() == Animations.renderMode.Swong) {
-                                    this.transformFirstPersonItem(f / 2.0f, 0.0f);
-                                    final float var16 = MathHelper.sin(f1 * f1 * 3.1415927f);
-                                    final float var17 = MathHelper.sin(MathHelper.sqrt_float(f1) * 3.1415927f);
-                                    GlStateManager.rotate(-var17 * 40.0f / 2.0f, var17 / 2.0f, -0.0f, 9.0f);
-                                    GlStateManager.rotate(-var17 * 30.0f, 1.0f, var17 / 2.0f, -0.0f);
-                                    this.doBlockTransformations();
-                                } else if (Animations.mode.getValue() == Animations.renderMode.Jigsaw) {
-                                    this.transformFirstPersonItem(0.1f, f1);
-                                    this.doBlockTransformations();
-                                    GlStateManager.translate(-1, 0.0, 0.0);
-                                } else if (Animations.mode.getValue() == Animations.renderMode.sb) {
-                                    this.transformFirstPersonItem(f, 0.0f);
-                                    this.doBlockTransformations();
-                                    GL11.glRotated(new Random().nextGaussian() * new Random().nextInt(200), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat());
-                                    GL11.glColor4f(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat());
-                                    GlStateManager.color(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat());
-                                    final float var15 = MathHelper.sin(MathHelper.sqrt_float(new Random().nextFloat()) * new Random().nextFloat());
-                                    GlStateManager.translate(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat());
-                                    GlStateManager.rotate(-var15 * new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat());
-                                    GlStateManager.rotate(-var15 * new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat());
-                                    GL11.glRotated(new Random().nextGaussian() * new Random().nextInt(200), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat());
-                                    GL11.glColor4f(new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat(), new Random().nextFloat());
-                                } else if ((Animations.mode.getValue() == Animations.renderMode.old)) {
-                                    this.transformFirstPersonItem(f, f1);
-                                    this.doBlockTransformations();
+                            if (ModuleManager.getModuleByName("Animations").isEnabled()) {
+                                switch (Animations.mode.getValue().toString().toLowerCase()) {
+                                    case "old":
+                                        this.transformFirstPersonItem(f, f1);
+                                        GlStateManager.translate(0, 0.3, 0);
+                                        this.doBlockTransformations();
+                                        break;
+                                    case "vanilla":
+                                        transformFirstPersonItem(0F,0F);
+                                        doBlockTransformations();
+                                        break;
+                                    case "exhibition":
+                                        transformFirstPersonItem(f, 0.83F);
+                                        float f4 = MathHelper.sin(MathHelper.sqrt_float(f1) * 3.83F);
+                                        GlStateManager.translate(-0.5F, 0.2F, 0.2F);
+                                        GlStateManager.rotate(-f4 * 0.0F, 0.0F, 0.0F, 0.0F);
+                                        GlStateManager.rotate(-f4 * 43.0F, 58.0F, 23.0F, 45.0F);
+                                        doBlockTransformations();
+                                        break;
+                                    case "flux":
+                                        this.transformFirstPersonItem(f / 2, 0);
+                                        GlStateManager.rotate(-MathHelper.sin(f1 * f1 * 3.1415927F) * 40.0F / 2.0F, MathHelper.sin(f1 * f1 * 3.1415927F) / 2.0F, -0.0F, 9.0F);
+                                        GlStateManager.rotate(-MathHelper.sin(f1 * f1 * 3.1415927F) * 30.0F, 1.0F, MathHelper.sin(f1 * f1 * 3.1415927F) / 2.0F, -0.0F);
+                                        this.doBlockTransformations();
+                                        GL11.glTranslatef(-0.05F, this.mc.thePlayer.isSneaking() ? -0.2F : 0.0F, 0.1F);
+                                        break;
+                                    case "jello":
+                                        this.func_178096_b(0, 0.0F);
+                                        this.func_178103_d();
+                                        int alpha = (int) Math.min(255, ((System.currentTimeMillis() % 255) > 255/2 ? (Math.abs(Math.abs(System.currentTimeMillis()) % 255 - 255)) : System.currentTimeMillis() % 255)*2);
+                                        float f5 = (f1 > 0.5 ? 1-f1 : f1);
+                                        GlStateManager.translate(0.3f, -0.0f, 0.40f);
+                                        GlStateManager.rotate(0.0f, 0.0f, 0.0f, 1.0f);
+                                        GlStateManager.translate(0, 0.5f, 0);
+
+                                        GlStateManager.rotate(90, 1.0f, 0.0f, -1.0f);
+                                        GlStateManager.translate(0.6f, 0.5f, 0);
+                                        GlStateManager.rotate(-90, 1.0f, 0.0f, -1.0f);
+
+
+                                        GlStateManager.rotate(-10, 1.0f, 0.0f, -1.0f);
+                                        GlStateManager.rotate((- f5) * 10.0f, 10.0f, 10.0f, -9.0f);
+                                        GlStateManager.rotate(10.0f, -1.0f, 0.0f, 0.0f);
+
+                                        GlStateManager.translate(0, 0, -0.5);
+                                        GlStateManager.rotate(mc.thePlayer.isSwingInProgress ? -alpha/5f : 1, 1.0f, -0.0f, 1.0f);
+                                        GlStateManager.translate(0, 0, 0.5);
+                                        break;
                                 }
                             } else {
                                 this.transformFirstPersonItem(f, 0.0F);

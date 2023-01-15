@@ -60,7 +60,7 @@ public class Radar extends Module {
             Entity player = mc.thePlayer;
             GL11.glPushMatrix();
             GL11.glTranslated(radarX, radarY, 0);
-            RenderUtil.drawBordered(0, 0, SIZE, SIZE, 1, BGCOLOR, new Color(0x00A6FF).getRGB());
+            RenderUtil.drawBordered(0, 0, SIZE, SIZE, 1, BGCOLOR, new Color(0x80FFFFFF, true).getRGB());
             GL11.glEnable(GL11.GL_BLEND);
             GL11.glDisable(GL11.GL_TEXTURE_2D);
             GL11.glScissor((int) (radarX * sr.getScaleFactor()), (int) (mc.displayHeight - (radarY+SIZE) * sr.getScaleFactor()), SIZE * sr.getScaleFactor(), SIZE * sr.getScaleFactor());

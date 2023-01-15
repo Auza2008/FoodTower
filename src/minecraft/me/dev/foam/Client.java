@@ -35,7 +35,7 @@ public class Client {
     public Config configInUse = new Config("Official");
     public static ResourceLocation CLIENT_CAPE = new ResourceLocation("foam/cape.png");
     public final String name = "Foam";
-    public final double version = 0.22;
+    public final double version = 0.31;
     private ModuleManager modulemanager;
     private CommandManager commandmanager;
     private AltManager altmanager;

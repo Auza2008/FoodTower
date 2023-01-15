@@ -11,7 +11,6 @@ import me.dev.foam.command.Command;
 import me.dev.foam.module.modules.render.HUD;
 import me.dev.foam.other.FileManager;
 import me.dev.foam.ui.Notification;
-import me.dev.foam.ui.clickGui.SmoothAnimationTimer;
 import me.dev.foam.utils.math.MathUtil;
 import me.dev.foam.utils.normal.Helper;
 import me.dev.foam.utils.normal.MsgUtil;
@@ -35,7 +34,6 @@ public class Module {
     public List<Value> values;
     public ModuleType type;
     // ClickGUI
-    public SmoothAnimationTimer ySmooth = new SmoothAnimationTimer(100);
     public static Minecraft mc = Minecraft.getMinecraft();
     private String suffix;
     private int color;

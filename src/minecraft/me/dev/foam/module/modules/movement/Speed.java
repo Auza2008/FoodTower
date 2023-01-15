@@ -17,9 +17,9 @@ import net.minecraft.potion.Potion;
 import java.awt.*;
 
 public class Speed extends Module {
+    public Mode mode = new Mode("Mode", "mode", SpeedMode.values(), SpeedMode.Hypixel);
     private final Numbers<Double> HypixelJumpHight = new Numbers<>("HypixelJumpHight", "HypixelJumpHight", 0.42, 0.0, 1.0, 0.01);
     private final Numbers<Double> HypixelBoost = new Numbers<>("HypixelBoostSpeed", "HypixelBoostSpeed", 0.1, 0.0, 0.4, 0.1);
-    public Mode mode = new Mode("Mode", "mode", SpeedMode.values(), SpeedMode.Hypixel);
 
     public Speed() {
         super("Speed", "急行以驰", new String[]{"zoom"}, ModuleType.Movement);

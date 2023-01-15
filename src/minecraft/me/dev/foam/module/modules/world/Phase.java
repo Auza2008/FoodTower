@@ -20,8 +20,6 @@ import net.minecraft.util.MathHelper;
 
 import java.awt.*;
 
-import static me.dev.foam.utils.normal.PlayerUtil.getDirection;
-
 public class Phase
         extends Module {
     private Mode<Enum> mode = new Mode("Mode", "mode", (Enum[]) PhaseMode.values(), (Enum) PhaseMode.NewNCP);

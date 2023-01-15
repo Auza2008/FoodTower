@@ -28,8 +28,8 @@ import java.awt.*;
 
 public class AutoArmor extends Module {
 
-    public static Numbers<Double> DELAY = new Numbers<>("DELAY", "DELAY", 1.0D, 0.0D, 10.0D, Double.valueOf(1.0D));
     public static Mode<Enum<EMode>> MODE = new Mode<>("MODE", "MODE", EMode.values(), EMode.Blink);
+    public static Numbers<Double> DELAY = new Numbers<>("DELAY", "DELAY", 1.0D, 0.0D, 10.0D, Double.valueOf(1.0D));
 
     private final TimerUtil timer = new TimerUtil();
 

@@ -7,7 +7,7 @@ package me.dev.foam.module.modules.render;
 
 import me.dev.foam.module.Module;
 import me.dev.foam.module.ModuleType;
-import me.dev.foam.ui.clickGui.ClickGUI;
+import me.dev.foam.ui.clickGui.CSGOClickUI;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
@@ -23,6 +23,6 @@ public class ClickGui extends Module {
     @Override
     public void onEnable() {
         this.setEnabled(false);
-        mc.displayGuiScreen(new ClickGUI());
+        mc.displayGuiScreen(new CSGOClickUI());
     }
 }

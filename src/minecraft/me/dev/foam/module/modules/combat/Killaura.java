@@ -43,7 +43,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Killaura extends Module {
-    private static final Option<Boolean> autoBlock = new Option<>("Autoblock", "Autoblock", true);
+    public Mode<Enum<AuraMode>> mode = new Mode<>("Mode", "Mode", AuraMode.values(), AuraMode.Switch);
     public static Mode<Enum<RotMode>> rotation = new Mode<>("Rotation", "Rotation", RotMode.values(), RotMode.Dynamic);
     public static float[] rotations;
     public static EntityLivingBase target;
@@ -56,12 +56,12 @@ public class Killaura extends Module {
     private final Numbers<Double> switchDelay = new Numbers<>("Switchdelay", "switchdelay", 11.0, 0.0, 50.0, 1.0);
     private final Numbers<Double> aps = new Numbers<>("CPS", "CPS", 10.0, 1.0, 20.0, 0.5);
     private final Numbers<Double> reach = new Numbers<>("Reach", "Reach", 4.5, 1.0, 6.0, 0.1);
+    private static final Option<Boolean> autoBlock = new Option<>("Autoblock", "Autoblock", true);
     private final Option<Boolean> esp = new Option<>("DrawESP", "DrawESP", true);
     private final Option<Boolean> players = new Option<>("Players", "Players", true);
     private final Option<Boolean> animals = new Option<>("Animals", "Animals", true);
     private final Option<Boolean> mobs = new Option<>("Mobs", "Mobs", true);
     private final Option<Boolean> invis = new Option<>("Invisibles", "Invisibles", false);
-    public Mode<Enum<AuraMode>> mode = new Mode<>("Mode", "Mode", AuraMode.values(), AuraMode.Switch);
     public Option<Boolean> matrix = new Option<>("Matrix", "Matrix", false);
     public List<EntityLivingBase> targets = new ArrayList<>();
     public TimerUtil timer = new TimerUtil(), swtichTimer = new TimerUtil();

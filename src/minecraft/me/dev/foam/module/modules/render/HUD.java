@@ -16,56 +16,42 @@ import me.dev.foam.other.FriendManager;
 import me.dev.foam.ui.font.FontManager;
 import me.dev.foam.utils.math.Colors;
 import me.dev.foam.utils.normal.GuiRenderUtils;
-import me.dev.foam.utils.normal.Helper;
 import me.dev.foam.utils.normal.MsgUtil;
 import me.dev.foam.utils.normal.RenderUtil;
 import me.dev.foam.value.Mode;
-import me.dev.foam.value.Numbers;
 import me.dev.foam.value.Option;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
-
-import static org.lwjgl.opengl.GL11.*;
 
 public class HUD extends Module {
-    public static boolean shouldMove;
+    //    public static boolean shouldMove;
     public static boolean useFont;
 
-    public static final ResourceLocation jigsawTexture512 = new ResourceLocation("foam/JIGSAW512.png");
+//    public static final ResourceLocation jigsawTexture512 = new ResourceLocation("foam/JIGSAW512.png");
 
     public static String wm = "Foam";
-    private Option<Boolean> info = new Option<Boolean>("Information", "information", true);
-    private Option<Boolean> rainbow = new Option<Boolean>("Rainbow", "rainbow", true);
-    private Option<Boolean> background = new Option<>("BackGround", "background", true);
-    private Option<Boolean> customfont = new Option<Boolean>("Font", "font", true);
-    private Option<Boolean> logo = new Option<Boolean>("Logo", "logo", true);
-    private Option<Boolean> capes = new Option<Boolean>("Capes", "capes", true);
-
-    private Option<Boolean> msg = new Option<Boolean>("Notification", "Notification", true);
-    public static Numbers<Integer> colorRedValue = new Numbers<>("Red", "Red", 255, 0, 255, 1);
-    public static Numbers<Integer> colorGreenValue = new Numbers<>("Green", "Green", 255, 0, 255, 1);
-    public static Numbers<Integer> colorBlueValue = new Numbers<>("Blue", "Blue", 255, 0, 255, 1);
-    private static final ResourceLocation wurstLogo =
-            new ResourceLocation("foam/wurst_128.png");
-    public static Mode<Enum<Lang>> lang = new Mode<>("Lang", "Lang", Lang.values(), Lang.English);
     public Mode<Enum<HUDMode>> mode = new Mode<>("Mode", "Mode", HUDMode.values(), HUDMode.Foam);
+    //    private static final ResourceLocation wurstLogo = new ResourceLocation("foam/wurst_128.png");
+    public static Mode<Enum<Lang>> lang = new Mode<>("Lang", "Lang", Lang.values(), Lang.English);
+    private final Option<Boolean> logo = new Option<Boolean>("Logo", "logo", true);
+    private final Option<Boolean> msg = new Option<Boolean>("Notification", "Notification", true);
+    private final Option<Boolean> background = new Option<>("BackGround", "background", true);
+    private final Option<Boolean> rainbow = new Option<Boolean>("Rainbow", "rainbow", true);
+    private final Option<Boolean> info = new Option<Boolean>("Information", "information", true);
+    private final Option<Boolean> customfont = new Option<Boolean>("Font", "font", true);
+    private final Option<Boolean> capes = new Option<Boolean>("Capes", "capes", true);
     public SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+
     public HUD() {
         super("HUD", "界面示之以表", new String[]{"gui"}, ModuleType.Render);
         this.setColor(new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255)).getRGB());
@@ -91,13 +77,26 @@ public class HUD extends Module {
             }
             if (!mc.gameSettings.showDebugInfo) {
                 String name;
-                if (logo.getValue()) {
+                /*if (logo.getValue()) {
                     String serverip = mc.isSingleplayer() ? "singleplayer" : !mc.getCurrentServerData().serverIP.contains(":") ? mc.getCurrentServerData().serverIP + ":25565" : mc.getCurrentServerData().serverIP;
                     String info = Client.instance.name + " | " + mc.thePlayer.getName() + " | " + Minecraft.getDebugFPS() + " fps | " + serverip + " | " + formatter.format(new Date());
 
                     GuiRenderUtils.drawRect(5, 5, FontManager.F13.getStringWidth(info) + 4, 12, new Color(40, 40, 40));
                     GuiRenderUtils.drawRoundedRect(5, 5, FontManager.F13.getStringWidth(info) + 4, 2, 1, new Color(255, 191, 0).getRGB(), 1, new Color(255, 191, 0).getRGB());
                     FontManager.F13.drawStringWithShadow(info, 7, 10f, Colors.WHITE.c);
+                }
+
+                 */
+                if (logo.getValue()) {
+                    int rainbowTick = 0;
+                    Color rainbow = new Color(Color.HSBtoRGB((float) ((double) mc.thePlayer.ticksExisted / 50.0 + Math.sin((double) rainbowTick / 50.0 * 1.6)) % 1.0f, 0.5f, 1.0f));
+                    if (++rainbowTick > 50) {
+                        rainbowTick = 0;
+                    }
+                    String logo = Client.instance.name + " v" + Client.instance.version;
+                    GuiRenderUtils.drawRect(5, 5, FontManager.F13.getStringWidth(logo) + 4, 12, new Color(1, 1, 1, 120));
+                    GuiRenderUtils.drawRect(5, 5, FontManager.F13.getStringWidth(logo) + 4, 2, rainbow);
+                    FontManager.F13.drawStringWithShadow(logo, 7, 10, Colors.WHITE.c);
                 }
                 ArrayList<Module> sorted = new ArrayList<>();
                 Client.instance.getModuleManager();
@@ -120,7 +119,7 @@ public class HUD extends Module {
                             RenderUtil.drawRect(x - 4.0f, y, new ScaledResolution(mc).getScaledWidth(), y + 9, new Color(1, 1, 1, 120).getRGB());
                         }
                         Color rainbow = new Color(Color.HSBtoRGB((float) ((double) mc.thePlayer.ticksExisted / 50.0 + Math.sin((double) rainbowTick / 50.0 * 1.6)) % 1.0f, 0.5f, 1.0f));
-                        FontManager.F16.drawStringWithShadow(name, x - 3.0f, y + 1, this.rainbow.getValue() != false ? rainbow.getRGB() : m.getColor());
+                        FontManager.F16.drawStringWithShadow(name, x - 3.0f, y + 1, this.rainbow.getValue() ? rainbow.getRGB() : m.getColor());
                         if (++rainbowTick > 50) {
                             rainbowTick = 0;
                         }
@@ -134,14 +133,14 @@ public class HUD extends Module {
                             RenderUtil.drawRect(x - 4.0f, y, new ScaledResolution(mc).getScaledWidth(), y + 9, new Color(1, 1, 1, 120).getRGB());
                         }
                         Color rainbow = new Color(Color.HSBtoRGB((float) ((double) mc.thePlayer.ticksExisted / 50.0 + Math.sin((double) rainbowTick / 50.0 * 1.6)) % 1.0f, 0.5f, 1.0f));
-                        mc.fontRendererObj.drawStringWithShadow(name, x - 2.0f, y, this.rainbow.getValue() != false ? rainbow.getRGB() : m.getColor());
+                        mc.fontRendererObj.drawStringWithShadow(name, x - 2.0f, y, this.rainbow.getValue() ? rainbow.getRGB() : m.getColor());
                         if (++rainbowTick > 50) {
                             rainbowTick = 0;
                         }
                         y += 9;
                     }
                 }
-                String text = (Object) EnumChatFormatting.GRAY + "X" + (Object) ((Object) EnumChatFormatting.WHITE) + ": " + MathHelper.floor_double(mc.thePlayer.posX) + " " + (Object) ((Object) EnumChatFormatting.GRAY) + "Y" + (Object) ((Object) EnumChatFormatting.WHITE) + ": " + MathHelper.floor_double(mc.thePlayer.posY) + " " + (Object) ((Object) EnumChatFormatting.GRAY) + "Z" + (Object) ((Object) EnumChatFormatting.WHITE) + ": " + MathHelper.floor_double(mc.thePlayer.posZ);
+                String text = EnumChatFormatting.GRAY + "X" + EnumChatFormatting.WHITE + ": " + MathHelper.floor_double(mc.thePlayer.posX) + " " + EnumChatFormatting.GRAY + "Y" + EnumChatFormatting.WHITE + ": " + MathHelper.floor_double(mc.thePlayer.posY) + " " + EnumChatFormatting.GRAY + "Z" + EnumChatFormatting.WHITE + ": " + MathHelper.floor_double(mc.thePlayer.posZ);
                 int ychat;
                 int n = ychat = mc.ingameGUI.getChatGUI().getChatOpen() ? 24 : 10;
                 if (this.info.getValue()) {
@@ -149,7 +148,8 @@ public class HUD extends Module {
                     this.drawPotionStatus(new ScaledResolution(mc));
                 }
             }
-        } else if (mode.getValue() == HUDMode.Wurst) {
+        }
+/*        else if (mode.getValue() == HUDMode.Wurst) {
 
             // GL settings
             glEnable(GL_BLEND);
@@ -270,47 +270,36 @@ public class HUD extends Module {
                 y += 9;
             }
         }
+
+ */
     }
-
-
-    enum HUDMode {
-        Foam,
-        Wurst,
-        Jigsaw
-    }
-
-    public enum Lang {
-        English,
-        文言
-    }
-
 
     private void drawPotionStatus(ScaledResolution sr) {
         int y = 0;
         for (PotionEffect effect : mc.thePlayer.getActivePotionEffects()) {
             int ychat;
             Potion potion = Potion.potionTypes[effect.getPotionID()];
-            String PType = I18n.format(potion.getName(), new Object[0]);
+            String PType = I18n.format(potion.getName());
             switch (effect.getAmplifier()) {
                 case 1: {
-                    PType = String.valueOf(PType) + " II";
+                    PType = PType + " II";
                     break;
                 }
                 case 2: {
-                    PType = String.valueOf(PType) + " III";
+                    PType = PType + " III";
                     break;
                 }
                 case 3: {
-                    PType = String.valueOf(PType) + " IV";
+                    PType = PType + " IV";
                     break;
                 }
             }
             if (effect.getDuration() < 600 && effect.getDuration() > 300) {
-                PType = String.valueOf(PType) + "\u00a77:\u00a76 " + Potion.getDurationString(effect);
+                PType = PType + "\u00a77:\u00a76 " + Potion.getDurationString(effect);
             } else if (effect.getDuration() < 300) {
-                PType = String.valueOf(PType) + "\u00a77:\u00a7c " + Potion.getDurationString(effect);
+                PType = PType + "\u00a77:\u00a7c " + Potion.getDurationString(effect);
             } else if (effect.getDuration() > 600) {
-                PType = String.valueOf(PType) + "\u00a77:\u00a77 " + Potion.getDurationString(effect);
+                PType = PType + "\u00a77:\u00a77 " + Potion.getDurationString(effect);
             }
             int n = ychat = mc.ingameGUI.getChatGUI().getChatOpen() ? 5 : -10;
             if (useFont) {
@@ -328,6 +317,15 @@ public class HUD extends Module {
             event.setLocation(Client.CLIENT_CAPE);
             event.setCancelled(true);
         }
+    }
+
+
+    enum HUDMode {
+        Foam
+    }
+
+    public enum Lang {
+        English, 文言
     }
 }
 

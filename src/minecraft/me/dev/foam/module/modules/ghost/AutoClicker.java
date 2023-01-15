@@ -25,9 +25,8 @@ import java.awt.*;
 import java.util.Random;
 
 public class AutoClicker extends Module {
-
-    public static Numbers<Double> cpsmin = new Numbers<>("CPSMin", "CPSMin", 8.0, 2.0, 20.0, 1.0);
     public static Numbers<Double> cpsmax = new Numbers<>("CPSMax", "CPSMax", 8.0, 2.0, 20.0, 1.0);
+    public static Numbers<Double> cpsmin = new Numbers<>("CPSMin", "CPSMin", 8.0, 2.0, 20.0, 1.0);
     public static boolean Clicked;
     private final TimeHelper time2 = new TimeHelper();
     public TimeHelper time = new TimeHelper();

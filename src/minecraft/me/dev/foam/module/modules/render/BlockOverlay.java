@@ -40,7 +40,7 @@ public class BlockOverlay extends Module {
         this.g = new Numbers<Double>("Green", "Green", 128.0, 0.0, 255.0, 1.0);
         this.b = new Numbers<Double>("Blue", "Blue", 255.0, 0.0, 255.0, 1.0);
 
-        this.togg = new Option<Boolean>("RenderString", "RenderString", true);
+        this.togg = new Option<Boolean>("RenderString", "RenderString", false);
     }
 
     public int reAlpha(final int color, final float alpha) {

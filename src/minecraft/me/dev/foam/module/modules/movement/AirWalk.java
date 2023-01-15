@@ -26,11 +26,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovementInput;
 
 public class AirWalk extends Module {
+    private final Numbers<Double> delay = new Numbers<Double>("Delay", "Delay", 250.0, 0.0, 500.0, 1.0);
+    private final Numbers<Double> boost = new Numbers<Double>("Boost", "Boost", 2.0, 0.1, 2.0, 0.1);
+    private final Option bob = new Option("Bobbing", "Bobbing", true);
     private final Option particle = new Option("Particle", "Particle", false);
     private final Option hurtcheck = new Option("Hurtcheck", "Hurtcheck", false);
-    private final Option bob = new Option("Bobbing", "Bobbing", true);
-    private final Numbers<Double> boost = new Numbers<Double>("Boost", "Boost", 2.0, 0.1, 2.0, 0.1);
-    private final Numbers<Double> delay = new Numbers<Double>("Delay", "Delay", 250.0, 0.0, 500.0, 1.0);
     int counter, level;
     double moveSpeed, lastDist;
     boolean b2;

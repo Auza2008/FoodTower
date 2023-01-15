@@ -19,8 +19,8 @@ public class PinCracker
         extends Module {
     int num;
     private TimerUtil time = new TimerUtil();
-    private Option<Boolean> login = new Option<Boolean>("/login?", "login", false);
     private Numbers<Double> delay = new Numbers<Double>("Delay", "Delay", 1.0, 0.0, 20.0, 1.0);
+    private Option<Boolean> login = new Option<Boolean>("/login?", "login", false);
 
     public PinCracker() {
         super("PinCracker", "PIN开裂", new String[]{"pincracker"}, ModuleType.World);

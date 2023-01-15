@@ -35,8 +35,8 @@ public class AutoPot extends Module {
     public AutoPot() {
         super("AutoPot", "自出药水", new String[]{"Autopot"}, ModuleType.Combat);
     }
+    private Numbers<Double> health = new Numbers<Double>("Health", "health", 10.0, 1.0, 20.0, 1.0);
     private Numbers<Double> delay = new Numbers<Double>("Delay", "delay", 500.0, 100.0, 1500.0, 50.0);
-    private Numbers<Double> health = new Numbers<Double>("Delay", "delay", 10.0, 1.0, 20.0, 1.0);
     private Option<Boolean> jump = new Option<>("Jump","Jump",false);
     private Option<Boolean> heal = new Option<>("Heal","Heal",false);
     private Option<Boolean> regen = new Option<>("Regen","Regen",false);
