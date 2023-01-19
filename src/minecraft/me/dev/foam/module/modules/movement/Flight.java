@@ -12,6 +12,7 @@ import me.dev.foam.module.Module;
 import me.dev.foam.module.ModuleType;
 import me.dev.foam.utils.normal.DamageUtils;
 import me.dev.foam.utils.normal.MoveUtils;
+import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 
@@ -20,6 +21,7 @@ public class Flight
     public Flight() {
         super("Flight", "飞成行", new String[]{"fly", "angel"}, ModuleType.Movement);
         this.setColor(new Color(158, 114, 243).getRGB());
+        setKey(Keyboard.KEY_F);
     }
 
     int ticks, stages;

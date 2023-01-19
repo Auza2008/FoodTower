@@ -19,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
+import viamcp.ViaMCP;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +36,7 @@ public class Client {
     public Config configInUse = new Config("Official");
     public static ResourceLocation CLIENT_CAPE = new ResourceLocation("foam/cape.png");
     public final String name = "Foam";
-    public final double version = 0.31;
+    public final double version = 0.4;
     private ModuleManager modulemanager;
     private CommandManager commandmanager;
     private AltManager altmanager;
@@ -52,18 +53,18 @@ public class Client {
     }
 
     public void initiate() {
-/*        String pass = JOptionPane.showInputDialog(null, "[AntiLeakLite]你正在使用测试版本，请输入访问码", "AntiLeakLite", JOptionPane.WARNING_MESSAGE);
-        if (!pass.equals("1336779")) {
-            for (int i = 0; i <= 100000000; i++) {
-                JOptionPane.showMessageDialog(null, "Leak神cnm！", "LLL leakgod LLL", JOptionPane.ERROR_MESSAGE);
-            }
-            System.exit(0);
+        try
+        {
+            ViaMCP.getInstance().start();
+            // Only use one of the following
+            ViaMCP.getInstance().initAsyncSlider(); // For top left aligned slider
         }
- */
-
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         if (debug)
             user = "Foam User";
-
         if (user == null) {
             cracked = true;
         }
@@ -76,11 +77,9 @@ public class Client {
             this.modulemanager.init();
             this.altmanager = new AltManager();
 //        System.out.println("Config Manager init");
-
             AltManager.init();
             AltManager.setupAlts();
             FileManager.init();
-
             this.configManager = new ConfigManager();
             this.configManager.init();
             System.out.println("Init");
@@ -102,7 +101,6 @@ public class Client {
                 frame.setLocation(rd.nextInt(1920), rd.nextInt(1080));
                 frame.setVisible(true);
                 n++;
-
             }
         }
     }

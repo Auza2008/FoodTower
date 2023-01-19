@@ -1,3 +1,0 @@
-Radar:5:50:true
-Inventory:5:100:true
-KeyBind:5:200:true

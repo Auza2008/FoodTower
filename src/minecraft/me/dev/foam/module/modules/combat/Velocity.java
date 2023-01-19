@@ -34,7 +34,7 @@ public class Velocity extends Module {
                     e.setCancelled(true);
                     break;
                 case "simple":
-                    if (this.percentage.getValue().equals(0.0)) {
+                    if (this.percentage.getValue() == 0.0) {
                         e.setCancelled(true);
                     } else {
                         S12PacketEntityVelocity packet = (S12PacketEntityVelocity) e.getPacket();

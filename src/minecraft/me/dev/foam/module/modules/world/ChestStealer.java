@@ -27,6 +27,7 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import org.apache.commons.lang3.ArrayUtils;
+import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 import java.util.List;
@@ -60,6 +61,7 @@ public class ChestStealer
         this.itemChestplate = new int[]{299, 303, 307, 311, 315};
         this.itemLeggings = new int[]{300, 304, 308, 312, 316};
         this.itemBoots = new int[]{301, 305, 309, 313, 317};
+        setKey(Keyboard.KEY_C);
     }
 
     public static boolean isStealing() {

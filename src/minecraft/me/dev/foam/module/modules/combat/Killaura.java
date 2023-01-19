@@ -36,6 +36,7 @@ import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
+import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ import java.util.List;
 
 public class Killaura extends Module {
     public Mode<Enum<AuraMode>> mode = new Mode<>("Mode", "Mode", AuraMode.values(), AuraMode.Switch);
-    public static Mode<Enum<RotMode>> rotation = new Mode<>("Rotation", "Rotation", RotMode.values(), RotMode.Dynamic);
+    public static Mode<Enum<RotMode>> rotation = new Mode<>("Rotation", "Rotation", RotMode.values(), RotMode.Basic);
     public static float[] rotations;
     public static EntityLivingBase target;
     public static boolean blocking;
@@ -69,6 +70,7 @@ public class Killaura extends Module {
     public Killaura() {
         super("KillAura", "戮死光环", new String[]{"ka"}, ModuleType.Combat);
         setColor(new Color(255, 255, 255).getRGB());
+        setKey(Keyboard.KEY_R);
     }
 
     @NMSL
@@ -80,6 +82,10 @@ public class Killaura extends Module {
         int crackSize = this.crack.getValue().intValue();
         target = targets.get(0);
         rotations = getRotationsToEnt(target);
+        if (rotation.getValue() == RotMode.Basic) {
+            rotations[0] += Math.abs(target.posX - target.lastTickPosX) - Math.abs(target.posZ - target.lastTickPosZ );
+            rotations[1] += Math.abs(target.posY - target.lastTickPosY);
+        }
         if (rotation.getValue() == RotMode.Dynamic) {
             rotations[0] += MathUtils.getRandomInRange(1, 5);
             rotations[1] += MathUtils.getRandomInRange(1, 5);
@@ -261,6 +267,7 @@ public class Killaura extends Module {
     }
 
     enum RotMode {
+        Basic,
         Dynamic,
         Prediction,
         Resolver,

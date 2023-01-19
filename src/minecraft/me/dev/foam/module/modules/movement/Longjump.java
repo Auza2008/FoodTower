@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 import java.util.Random;
@@ -31,6 +32,7 @@ public class Longjump
     public Longjump() {
         super("LongJump", "长跃而起", new String[]{"lj", "jumpman", "jump"}, ModuleType.Movement);
         this.setColor(new Color(76, 67, 216).getRGB());
+        setKey(Keyboard.KEY_H);
     }
 
     boolean hasHurt = false;

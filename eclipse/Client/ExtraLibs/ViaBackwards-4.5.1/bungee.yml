@@ -1,0 +1,5 @@
+name: ViaBackwards
+main: com.viaversion.viabackwards.BungeePlugin
+author: "Matsv, kennytv, Gerrygames, creeper123123321, ForceUpdate1"
+version: 4.5.1
+depends: [ViaVersion]

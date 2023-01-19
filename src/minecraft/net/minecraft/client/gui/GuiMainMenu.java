@@ -25,6 +25,8 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 
     }
 
+
+
     @Override
     public void initGui() {
         ScaledResolution res = new ScaledResolution(mc);

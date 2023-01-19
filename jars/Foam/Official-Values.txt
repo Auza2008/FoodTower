@@ -8,9 +8,9 @@ AirWalk:Bobbing:true
 AirWalk:Particle:false
 AirWalk:Hurtcheck:false
 Animations:mode:Old
-Animations:Smooth:true
+Animations:Smooth:false
 AntiVoid:Pull BackTime:700.0
-AutoArmor:MODE:Blink
+AutoArmor:MODE:Normal
 AutoArmor:DELAY:1.0
 AutoClicker:CPSMax:8.0
 AutoClicker:CPSMin:8.0
@@ -18,7 +18,7 @@ AutoClicker:BlockHit:false
 AutoClicker:BreakBlock:true
 AutoPlay:Delay:3.0
 AutoPot:health:10.0
-AutoPot:delay:10.0
+AutoPot:delay:500.0
 AutoPot:Jump:false
 AutoPot:Heal:false
 AutoPot:Regen:false
@@ -29,18 +29,18 @@ BlockOverlay:Red:0.0
 BlockOverlay:Green:128.0
 BlockOverlay:Blue:255.0
 BlockOverlay:rainbow:true
-BlockOverlay:RenderString:true
+BlockOverlay:RenderString:false
 Bobbing:Amount:1.0
 BowAimbot:lockview:false
 ChestStealer:First Item Delay:50.0
 ChestStealer:delay:50.0
 ChestStealer:Blink:false
-ChestStealer:Only Chest:true
+ChestStealer:Only Chest:false
 ChestStealer:Trash:false
 ChestStealer:Tools:true
 ChestStealer:Bow:true
-Criticals:mode:Packet
-Criticals:delay:0.0
+Criticals:mode:Hypixel
+Criticals:delay:500.0
 ESP:mode:CSGO
 FastBow:faithful:true
 HUD:Mode:Foam
@@ -63,14 +63,14 @@ InvCleaner:Archery:true
 InvCleaner:Sword:true
 InvCleaner:InvCleaner:true
 InvCleaner:UHC:false
-InvMove:mode:Vanilla
+InvMove:mode:Spoof
 KillAura:Mode:Switch
-KillAura:Rotation:Prediction
+KillAura:Rotation:Dynamic
 KillAura:CrackSize:1.0
 KillAura:switchdelay:11.0
-KillAura:CPS:20.0
-KillAura:Reach:6.0
-KillAura:Autoblock:true
+KillAura:CPS:13.0
+KillAura:Reach:4.0
+KillAura:Autoblock:false
 KillAura:DrawESP:true
 KillAura:Players:true
 KillAura:Animals:true
@@ -87,10 +87,10 @@ NameTags:players:true
 NameTags:animals:true
 NameTags:mobs:false
 NameTags:invisibles:false
-NoSlow:mode:Vanilla
+NoSlow:mode:NCP
 Phase:mode:NewNCP
 PinCracker:Delay:1.0
-PinCracker:login:false
+PinCracker:login:true
 Radar:scale:128.0
 Radar:Players:true
 Radar:Animals:true
@@ -99,8 +99,8 @@ Radar:Items:false
 Radar:Invisibles:false
 Reach:Reach Value:3.3
 Regen:guardian:true
-Scaffold:Sprint:true
-Scaffold:Tower:true
+Scaffold:Sprint:false
+Scaffold:Tower:false
 Speed:mode:Hypixel
 Speed:HypixelJumpHight:0.42
 Speed:HypixelBoostSpeed:0.1
@@ -111,7 +111,7 @@ TPAura:players:true
 TPAura:animals:true
 TPAura:mobs:false
 TPAura:invisibles:false
-TargetHUD:mode:Moon
+TargetHUD:mode:ETB
 TargetStrafe:mode:Adaptive
 TargetStrafe:range:2.0
 TargetStrafe:render:true
@@ -119,8 +119,8 @@ TargetStrafe:only Speed:true
 TargetStrafe:OnlyJump:true
 TargetStrafe:lockPersonView:false
 Timer:Speed:1.3
-Velocity:mode:Cancel
-Velocity:percentage:0.0
+Velocity:mode:Simple
+Velocity:percentage:80.0
 Xray:Range:50.0
 Xray:Alpha:150.0
 Xray:extremeRange:4.0

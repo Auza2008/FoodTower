@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: org.yaml.snakeyaml
+Bnd-LastModified: 1664175128357
+Build-Jdk-Spec: 1.8
+Bundle-Description: YAML 1.1 parser and emitter for Java
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: SnakeYAML
+Bundle-SymbolicName: org.yaml.snakeyaml
+Bundle-Version: 1.33.0
+Created-By: Apache Maven Bundle Plugin 5.1.8
+Export-Package: org.yaml.snakeyaml;version="1.33",org.yaml.snakeyaml.c
+ omments;version="1.33",org.yaml.snakeyaml.composer;version="1.33",org
+ .yaml.snakeyaml.constructor;version="1.33",org.yaml.snakeyaml.emitter
+ ;version="1.33",org.yaml.snakeyaml.env;version="1.33",org.yaml.snakey
+ aml.error;version="1.33",org.yaml.snakeyaml.events;version="1.33",org
+ .yaml.snakeyaml.extensions.compactnotation;version="1.33",org.yaml.sn
+ akeyaml.introspector;version="1.33",org.yaml.snakeyaml.nodes;version=
+ "1.33",org.yaml.snakeyaml.parser;version="1.33",org.yaml.snakeyaml.re
+ ader;version="1.33",org.yaml.snakeyaml.representer;version="1.33",org
+ .yaml.snakeyaml.resolver;version="1.33",org.yaml.snakeyaml.scanner;ve
+ rsion="1.33",org.yaml.snakeyaml.serializer;version="1.33",org.yaml.sn
+ akeyaml.tokens;version="1.33",org.yaml.snakeyaml.util;version="1.33"
+Import-Package: org.yaml.snakeyaml;version="[1.33,2)",org.yaml.snakeya
+ ml.comments;version="[1.33,2)",org.yaml.snakeyaml.composer;version="[
+ 1.33,2)",org.yaml.snakeyaml.emitter;version="[1.33,2)",org.yaml.snake
+ yaml.error;version="[1.33,2)",org.yaml.snakeyaml.events;version="[1.3
+ 3,2)",org.yaml.snakeyaml.introspector;version="[1.33,2)",org.yaml.sna
+ keyaml.nodes;version="[1.33,2)",org.yaml.snakeyaml.parser;version="[1
+ .33,2)",org.yaml.snakeyaml.reader;version="[1.33,2)",org.yaml.snakeya
+ ml.resolver;version="[1.33,2)",org.yaml.snakeyaml.scanner;version="[1
+ .33,2)",org.yaml.snakeyaml.serializer;version="[1.33,2)",org.yaml.sna
+ keyaml.tokens;version="[1.33,2)"
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.7))"
+Tool: Bnd-6.3.1.202206071316
+

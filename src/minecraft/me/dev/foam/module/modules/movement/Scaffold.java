@@ -37,6 +37,7 @@ import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.potion.Potion;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.*;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -67,6 +68,7 @@ public class Scaffold extends Module {
     public Scaffold() {
         super("Scaffold", "自动搭路", new String[]{"magiccarpet", "blockplacer", "airwalk"}, ModuleType.Movement);
         this.setColor((new Color(244, 119, 194)).getRGB());
+        setKey(Keyboard.KEY_G);
     }
 
     public static boolean isScaffoldBlock(ItemStack itemStack) {

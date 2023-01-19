@@ -13,6 +13,7 @@ import me.dev.foam.utils.normal.MoveUtils;
 import me.dev.foam.value.Mode;
 import me.dev.foam.value.Numbers;
 import net.minecraft.potion.Potion;
+import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 
@@ -24,6 +25,7 @@ public class Speed extends Module {
     public Speed() {
         super("Speed", "急行以驰", new String[]{"zoom"}, ModuleType.Movement);
         this.setColor(new Color(99, 248, 91).getRGB());
+        setKey(Keyboard.KEY_V);
     }
 
     @NMSL

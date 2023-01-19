@@ -27,6 +27,7 @@ import net.minecraft.inventory.ContainerChest;
 import net.minecraft.item.*;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class InvCleaner extends Module {
     public InvCleaner() {
         super("InvCleaner", "背包清尘", new String[]{"InvCleaner"}, ModuleType.Player);
         setColor(new Color(42342).getRGB());
+        setKey(Keyboard.KEY_C);
     }
 
     public void onEnable() {
