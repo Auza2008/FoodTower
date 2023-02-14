@@ -5,11 +5,11 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
-import me.dev.foam.api.EventBus;
-import me.dev.foam.api.events.EventStep;
-import me.dev.foam.api.events.EventStrafe;
-import me.dev.foam.utils.math.Vec2f;
-import me.dev.foam.utils.math.Vec3f;
+import me.dev.foodtower.api.EventBus;
+import me.dev.foodtower.api.events.EventStep;
+import me.dev.foodtower.api.events.EventStrafe;
+import me.dev.foodtower.utils.math.Vec2f;
+import me.dev.foodtower.utils.math.Vec3f;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockFenceGate;

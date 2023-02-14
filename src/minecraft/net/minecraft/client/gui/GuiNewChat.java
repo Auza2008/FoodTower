@@ -1,7 +1,7 @@
 package net.minecraft.client.gui;
 
-import me.dev.foam.api.EventBus;
-import me.dev.foam.api.events.EventChat;
+import me.dev.foodtower.api.EventBus;
+import me.dev.foodtower.api.events.EventChat;
 import com.google.common.collect.Lists;
 import java.util.Iterator;
 import java.util.List;

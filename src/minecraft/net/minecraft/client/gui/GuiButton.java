@@ -1,7 +1,5 @@
 package net.minecraft.client.gui;
 
-import me.dev.foam.ui.font.FontManager;
-import me.dev.foam.utils.normal.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;

@@ -1,6 +1,6 @@
 package net.minecraft.block.state.pattern;
 
-import me.dev.foam.utils.normal.Helper;
+import me.dev.foodtower.utils.normal.Helper;
 import com.google.common.base.Predicate;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;

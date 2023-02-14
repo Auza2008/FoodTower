@@ -2,8 +2,8 @@ package net.minecraft.block;
 
 import java.util.Random;
 
-import me.dev.foam.Client;
-import me.dev.foam.module.modules.render.Xray;
+import me.dev.foodtower.Client;
+import me.dev.foodtower.module.modules.render.Xray;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;

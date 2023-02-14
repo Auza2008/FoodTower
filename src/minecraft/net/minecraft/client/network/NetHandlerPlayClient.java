@@ -1,7 +1,7 @@
 package net.minecraft.client.network;
 
-import me.dev.foam.api.EventBus;
-import me.dev.foam.api.events.EventPacketSend;
+import me.dev.foodtower.api.EventBus;
+import me.dev.foodtower.api.events.EventPacketSend;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;

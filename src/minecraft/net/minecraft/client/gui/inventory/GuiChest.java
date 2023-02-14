@@ -1,6 +1,6 @@
 package net.minecraft.client.gui.inventory;
 
-import me.dev.foam.utils.math.TimeHelper;
+import me.dev.foodtower.utils.math.TimeHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.ContainerChest;

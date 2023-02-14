@@ -2,9 +2,9 @@ package net.minecraft.client.renderer.entity;
 
 import java.util.Random;
 
-import me.dev.foam.Client;
-import me.dev.foam.module.modules.render.ItemPhysic;
-import me.dev.foam.utils.client.Physic;
+import me.dev.foodtower.Client;
+import me.dev.foodtower.module.modules.render.ItemPhysic;
+import me.dev.foodtower.utils.client.Physic;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;

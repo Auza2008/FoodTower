@@ -1,7 +1,7 @@
 package net.minecraft.client.renderer;
 
-import me.dev.foam.Client;
-import me.dev.foam.module.modules.render.Xray;
+import me.dev.foodtower.Client;
+import me.dev.foodtower.module.modules.render.Xray;
 import com.google.common.primitives.Floats;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

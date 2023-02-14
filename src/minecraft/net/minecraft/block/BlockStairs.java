@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import me.dev.foam.Client;
-import me.dev.foam.module.modules.render.Xray;
+import me.dev.foodtower.Client;
+import me.dev.foodtower.module.modules.render.Xray;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;

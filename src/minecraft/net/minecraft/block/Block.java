@@ -1,11 +1,11 @@
 package net.minecraft.block;
 
-import me.dev.foam.Client;
-import me.dev.foam.api.EventBus;
-import me.dev.foam.api.events.BlockRenderSideEvent;
-import me.dev.foam.api.events.EventCollideWithBlock;
-import me.dev.foam.module.modules.render.Xray;
-import me.dev.foam.utils.normal.Helper;
+import me.dev.foodtower.Client;
+import me.dev.foodtower.api.EventBus;
+import me.dev.foodtower.api.events.BlockRenderSideEvent;
+import me.dev.foodtower.api.events.EventCollideWithBlock;
+import me.dev.foodtower.module.modules.render.Xray;
+import me.dev.foodtower.utils.normal.Helper;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;

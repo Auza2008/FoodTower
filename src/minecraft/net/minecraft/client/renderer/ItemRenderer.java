@@ -1,8 +1,7 @@
 package net.minecraft.client.renderer;
 
-import me.dev.foam.Client;
-import me.dev.foam.module.ModuleManager;
-import me.dev.foam.module.modules.render.Animations;
+import me.dev.foodtower.module.ModuleManager;
+import me.dev.foodtower.module.modules.render.Animations;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -34,8 +33,6 @@ import net.optifine.DynamicLights;
 import net.optifine.reflect.Reflector;
 import net.optifine.shaders.Shaders;
 import org.lwjgl.opengl.GL11;
-
-import java.util.Random;
 
 public class ItemRenderer
 {

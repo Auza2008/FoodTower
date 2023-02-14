@@ -1,10 +1,10 @@
 package net.minecraft.client;
 
-import me.dev.foam.Client;
-import me.dev.foam.api.EventBus;
-import me.dev.foam.api.events.EventKey;
-import me.dev.foam.api.events.EventTick;
-import me.dev.foam.ui.SplashScreen;
+import me.dev.foodtower.Client;
+import me.dev.foodtower.api.EventBus;
+import me.dev.foodtower.api.events.EventKey;
+import me.dev.foodtower.api.events.EventTick;
+import me.dev.foodtower.ui.SplashScreen;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

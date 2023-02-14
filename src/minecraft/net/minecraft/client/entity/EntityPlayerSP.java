@@ -1,14 +1,14 @@
 package net.minecraft.client.entity;
 
-import me.dev.foam.Client;
-import me.dev.foam.api.EventBus;
-import me.dev.foam.api.events.EventChat;
-import me.dev.foam.api.events.EventMove;
-import me.dev.foam.api.events.EventPostUpdate;
-import me.dev.foam.api.events.EventPreUpdate;
-import me.dev.foam.module.modules.movement.NoSlow;
-import me.dev.foam.module.modules.player.Freecam;
-import me.dev.foam.module.modules.world.Phase;
+import me.dev.foodtower.Client;
+import me.dev.foodtower.api.EventBus;
+import me.dev.foodtower.api.events.EventChat;
+import me.dev.foodtower.api.events.EventMove;
+import me.dev.foodtower.api.events.EventPostUpdate;
+import me.dev.foodtower.api.events.EventPreUpdate;
+import me.dev.foodtower.module.modules.movement.NoSlow;
+import me.dev.foodtower.module.modules.player.Freecam;
+import me.dev.foodtower.module.modules.world.Phase;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.MovingSoundMinecartRiding;

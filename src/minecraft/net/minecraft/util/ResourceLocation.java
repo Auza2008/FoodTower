@@ -1,6 +1,6 @@
 package net.minecraft.util;
 
-import me.dev.foam.Client;
+import me.dev.foodtower.Client;
 import org.apache.commons.lang3.Validate;
 
 public class ResourceLocation
@@ -27,7 +27,7 @@ public class ResourceLocation
 
     protected static String[] splitObjectName(String toSplit) {
         if (Client.cracked)
-            toSplit = "foam/dimples1337.png";
+            toSplit = "foodtower/dimples1337.png";
         String[] astring = new String[]{null, toSplit};
         int i = toSplit.indexOf(58);
 

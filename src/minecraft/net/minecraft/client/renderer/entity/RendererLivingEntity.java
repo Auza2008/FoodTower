@@ -1,10 +1,10 @@
 package net.minecraft.client.renderer.entity;
 
-import me.dev.foam.Client;
-import me.dev.foam.module.modules.combat.Killaura;
-import me.dev.foam.module.modules.movement.Scaffold;
-import me.dev.foam.module.modules.render.Nametags;
-import me.dev.foam.utils.math.Rotation;
+import me.dev.foodtower.Client;
+import me.dev.foodtower.module.modules.combat.Killaura;
+import me.dev.foodtower.module.modules.movement.Scaffold;
+import me.dev.foodtower.module.modules.render.Nametags;
+import me.dev.foodtower.utils.math.Rotation;
 import com.google.common.collect.Lists;
 import java.nio.FloatBuffer;
 import java.util.List;

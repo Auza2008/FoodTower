@@ -1,7 +1,7 @@
 package net.minecraft.client.renderer.entity.layers;
 
-import me.dev.foam.api.EventBus;
-import me.dev.foam.api.events.EventRenderCape;
+import me.dev.foodtower.api.EventBus;
+import me.dev.foodtower.api.events.EventRenderCape;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;

@@ -6,8 +6,8 @@ import java.util.EnumSet;
 import java.util.Queue;
 import java.util.Set;
 
-import me.dev.foam.Client;
-import me.dev.foam.module.modules.render.Xray;
+import me.dev.foodtower.Client;
+import me.dev.foodtower.module.modules.render.Xray;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IntegerCache;

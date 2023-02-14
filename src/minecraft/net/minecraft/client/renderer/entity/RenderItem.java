@@ -3,9 +3,9 @@ package net.minecraft.client.renderer.entity;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import me.dev.foam.Client;
-import me.dev.foam.module.modules.render.EnchantEffect;
-import me.dev.foam.utils.math.ColorUtils;
+import me.dev.foodtower.Client;
+import me.dev.foodtower.module.modules.render.EnchantEffect;
+import me.dev.foodtower.utils.math.ColorUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirt;
 import net.minecraft.block.BlockDoublePlant;

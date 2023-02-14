@@ -1,7 +1,7 @@
 package net.minecraft.client.gui;
 
-import me.dev.foam.api.EventBus;
-import me.dev.foam.api.events.EventRender2D;
+import me.dev.foodtower.api.EventBus;
+import me.dev.foodtower.api.events.EventRender2D;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;

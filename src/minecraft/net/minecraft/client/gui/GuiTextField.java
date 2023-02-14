@@ -1,6 +1,6 @@
 package net.minecraft.client.gui;
 
-import me.dev.foam.utils.normal.RenderUtil;
+import me.dev.foodtower.utils.normal.RenderUtil;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import net.minecraft.client.Minecraft;

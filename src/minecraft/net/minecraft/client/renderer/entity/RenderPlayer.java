@@ -1,8 +1,8 @@
 package net.minecraft.client.renderer.entity;
 
-import me.dev.foam.api.EventBus;
-import me.dev.foam.api.events.EventPostRenderPlayer;
-import me.dev.foam.api.events.EventPreRenderPlayer;
+import me.dev.foodtower.api.EventBus;
+import me.dev.foodtower.api.events.EventPostRenderPlayer;
+import me.dev.foodtower.api.events.EventPreRenderPlayer;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.model.ModelPlayer;

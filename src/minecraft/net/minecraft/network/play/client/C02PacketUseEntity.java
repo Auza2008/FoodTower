@@ -2,8 +2,8 @@ package net.minecraft.network.play.client;
 
 import java.io.IOException;
 
-import me.dev.foam.api.EventBus;
-import me.dev.foam.api.events.EventAttack;
+import me.dev.foodtower.api.EventBus;
+import me.dev.foodtower.api.events.EventAttack;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;

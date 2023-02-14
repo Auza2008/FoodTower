@@ -1,7 +1,7 @@
 package net.minecraft.client.multiplayer;
 
-import me.dev.foam.Client;
-import me.dev.foam.module.modules.ghost.Reach;
+import me.dev.foodtower.Client;
+import me.dev.foodtower.module.modules.ghost.Reach;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
