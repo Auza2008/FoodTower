@@ -21,12 +21,12 @@ public class ComboOneHit extends Module {
 
     @NMSL
     public void onAttack(EventAttack e) {
-        if (Client.instance.getModuleManager().getModuleByClass(Killaura.class).isEnabled() && Killaura.target != null) {
+        if (Client.instance.getModuleManager().getModuleByClass(Killaura.class).isEnabled() && Killaura.target != null && !Killaura.target.isDead && !mc.thePlayer.isDead) {
             for (int i = 0; i <= packets.getValue(); i++) {
                 if (swing.getValue()) {
                     mc.getNetHandler().addToSendQueue(new C0APacketAnimation());
                 }
-                mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(Killaura.target, C02PacketUseEntity.Action.ATTACK));
+                mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(e.getEntity(), C02PacketUseEntity.Action.ATTACK));
             }
         }
     }

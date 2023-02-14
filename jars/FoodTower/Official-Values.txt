@@ -70,7 +70,7 @@ KillAura:Mode:Switch
 KillAura:Rotation:Basic
 KillAura:CrackSize:1.0
 KillAura:switchdelay:11.0
-KillAura:CPS:20.0
+KillAura:CPS:1.0
 KillAura:Reach:6.0
 KillAura:Autoblock:true
 KillAura:DrawESP:true
@@ -100,7 +100,7 @@ Radar:Mobs:true
 Radar:Items:false
 Radar:Invisibles:false
 Reach:Reach Value:3.3
-Regen:guardian:true
+Regen:guardian:false
 Scaffold:Sprint:false
 Scaffold:Tower:false
 Speed:mode:Jump

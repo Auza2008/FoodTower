@@ -2,6 +2,7 @@ Animations
 AutoArmor
 AutoSword
 AutoTool
+ComboOneHit
 Criticals
 ESP
 FullBright
@@ -9,6 +10,7 @@ HUD
 InvMove
 ItemPhysic
 Jesus
+KillAura
 NameTags
 NoClickDelay
 NoRender
