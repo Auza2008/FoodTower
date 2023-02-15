@@ -10,18 +10,18 @@ AirWalk:Hurtcheck:false
 Animations:mode:Old
 Animations:Smooth:false
 AntiVoid:Pull BackTime:700.0
-AutoArmor:MODE:Normal
-AutoArmor:DELAY:0.0
+AutoArmor:MODE:Blink
+AutoArmor:DELAY:2.0
 AutoClicker:CPSMax:8.0
 AutoClicker:CPSMin:8.0
 AutoClicker:BlockHit:false
 AutoClicker:BreakBlock:true
 AutoPlay:Delay:3.0
 AutoPot:health:10.0
-AutoPot:delay:500.0
+AutoPot:delay:100.0
 AutoPot:Jump:false
 AutoPot:Heal:false
-AutoPot:Regen:false
+AutoPot:Regen:true
 AutoPot:Speed:false
 AutoPot:Nofrog:false
 BedFucker:Mode:Bed
@@ -33,18 +33,18 @@ BlockOverlay:RenderString:false
 Bobbing:Amount:1.0
 BowAimbot:lockview:false
 ChestStealer:First Item Delay:50.0
-ChestStealer:delay:50.0
+ChestStealer:delay:90.0
 ChestStealer:Blink:false
 ChestStealer:Only Chest:true
 ChestStealer:Trash:false
 ChestStealer:Tools:true
 ChestStealer:Bow:true
-ComboOneHit:packets:200.0
-ComboOneHit:swing:false
-Criticals:mode:Packet
-Criticals:delay:0.0
+Criticals:mode:Hypixel
+Criticals:delay:500.0
 ESP:mode:CSGO
 FastBow:faithful:true
+FastUse:Mode:Packet
+FastUse:Speed:10.0
 HUD:Mode:FoodTower
 HUD:Lang:English
 HUD:logo:true
@@ -57,7 +57,7 @@ HUD:capes:true
 Hitbox:Height:2.0
 Hitbox:Width:1.0
 InvCleaner:Mode:OpenInv
-InvCleaner:Delay:1.0
+InvCleaner:Delay:2.0
 InvCleaner:BlockCap:128.0
 InvCleaner:Food:true
 InvCleaner:sort:true
@@ -65,13 +65,14 @@ InvCleaner:Archery:true
 InvCleaner:Sword:true
 InvCleaner:InvCleaner:true
 InvCleaner:UHC:false
-InvMove:mode:Spoof
+InvMove:mode:NoOpenPacket
 KillAura:Mode:Switch
-KillAura:Rotation:Basic
+KillAura:Rotation:Dynamic
+KillAura:AutoBlockMode:Interact
 KillAura:CrackSize:1.0
 KillAura:switchdelay:11.0
-KillAura:CPS:1.0
-KillAura:Reach:6.0
+KillAura:CPS:13.5
+KillAura:Reach:3.6
 KillAura:Autoblock:true
 KillAura:DrawESP:true
 KillAura:Players:true
@@ -89,7 +90,7 @@ NameTags:players:true
 NameTags:animals:true
 NameTags:mobs:false
 NameTags:invisibles:false
-NoSlow:mode:NCP
+NoSlow:mode:Hypixel
 Phase:mode:NewNCP
 PinCracker:Delay:1.0
 PinCracker:login:false
@@ -103,7 +104,7 @@ Reach:Reach Value:3.3
 Regen:guardian:false
 Scaffold:Sprint:false
 Scaffold:Tower:false
-Speed:mode:Jump
+Speed:mode:Hypixel
 Speed:HypixelJumpHight:0.42
 Speed:HypixelBoostSpeed:0.1
 TPAura:Range:50.0
@@ -115,14 +116,15 @@ TPAura:mobs:false
 TPAura:invisibles:false
 TargetHUD:mode:ETB
 TargetStrafe:mode:Adaptive
-TargetStrafe:range:2.0
+TargetStrafe:range:1.0
 TargetStrafe:render:true
 TargetStrafe:only Speed:true
 TargetStrafe:OnlyJump:true
-TargetStrafe:lockPersonView:false
+TargetStrafe:lockPersonView:true
 Timer:Speed:1.3
-Velocity:mode:Cancel
-Velocity:percentage:0.0
+Velocity:mode:Reverse
+Velocity:percentage:10.0
+Velocity:ReverseStrength:1.0
 Xray:Range:50.0
 Xray:Alpha:150.0
 Xray:extremeRange:4.0

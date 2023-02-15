@@ -15,7 +15,7 @@ import net.minecraft.util.MathHelper;
 
 public class Damage extends Module {
     public Damage() {
-        super("SelfAura", "自杀光环", new String[]{"dmg"}, ModuleType.Combat);
+        super("SelfAura", "看淡了", new String[]{"dmg"}, ModuleType.Combat);
         this.setColor(ColorUtils.randomColor());
     }
 

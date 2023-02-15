@@ -15,6 +15,7 @@ import me.dev.foodtower.utils.math.MathUtils;
 import me.dev.foodtower.utils.math.TimeHelper;
 import me.dev.foodtower.value.Numbers;
 import me.dev.foodtower.value.Option;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.inventory.GuiChest;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -40,7 +41,7 @@ public class ChestStealer
     private Numbers<Double> firstItemDelay = new Numbers<Double>("First Item Delay", "First Item Delay", 50.0, 0.0, 1000.0, 10.0);
     private Numbers<Double> delay = new Numbers<Double>("Delay", "delay", 50.0, 0.0, 1000.0, 10.0);
     private Option<Boolean> blink = new Option<>("Blink", "Blink", false);
-    private Option<Boolean> onlychest = new Option<>("Only Chest", "Only Chest", true);
+    private Option<Boolean> onlychest = new Option<>("Only Chest", "Only Chest", false);
     private Option<Boolean> trash = new Option<>("Trash", "Trash", false);
     private Option<Boolean> tools = new Option<>("Tools", "Tools", true);
     private Option<Boolean> bow = new Option<>("Bow", "Bow", true);
@@ -110,8 +111,8 @@ public class ChestStealer
                         if (time.isDelayComplete(nextDelay) && (itemIsUseful(c, i) || trash.getValue())) {
                             nextDelay = (int) (delay.getValue() * MathUtils.getRandomInRange(0.75, 1.25));
                             if (new Random().nextInt(100) > 80) continue; // Random
-                            mc.playerController.windowClick(c.windowId, i, 0, 1, mc.thePlayer);
-                            this.time.reset();
+                            Minecraft.playerController.windowClick(c.windowId, i, 0, 1, mc.thePlayer);
+                            time.reset();
                         }
                     }
                 }

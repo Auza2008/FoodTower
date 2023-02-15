@@ -1,1 +1,0 @@
-{"id":"viaversion","name":"ViaVersion","version":"4.5.1","description":"Allow newer Minecraft versions to connect to an older server version.","url":"https://viaversion.com","authors":["_MylesC","creeper123123321","Gerrygames","kennytv","Matsv"],"dependencies":[],"main":"com.viaversion.viaversion.VelocityPlugin"}

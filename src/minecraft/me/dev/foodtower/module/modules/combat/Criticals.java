@@ -66,10 +66,6 @@ public class Criticals
                     mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.11, z, true));
                     mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(x, y, z, false));
                     break;
-                case "hmxix":
-                    mc.thePlayer.motionY = 0.1;
-                    mc.thePlayer.fallDistance = 0.1f;
-                    mc.thePlayer.onGround = false;
                 case "jumps":
                     if (mc.thePlayer.onGround)
                         mc.thePlayer.jump();
@@ -81,7 +77,6 @@ public class Criticals
     enum CritMode {
         Packet,
         Hypixel,
-        HmXix,
         jumps;
     }
 }

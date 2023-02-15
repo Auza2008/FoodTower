@@ -53,10 +53,10 @@ public class Blink
     @Override
     public void onDisable() {
         for (Packet packet : this.packetList) {
-            this.mc.getNetHandler().addToSendQueue(packet);
+            mc.getNetHandler().addToSendQueue(packet);
         }
         this.packetList.clear();
-        this.mc.theWorld.removeEntityFromWorld(this.blinkEntity.getEntityId());
+        mc.theWorld.removeEntityFromWorld(this.blinkEntity.getEntityId());
     }
 }
 

@@ -15,6 +15,7 @@ import me.dev.foodtower.module.ModuleType;
 import me.dev.foodtower.module.modules.render.HUD;
 import me.dev.foodtower.ui.font.FontManager;
 import me.dev.foodtower.utils.math.Rotation;
+import me.dev.foodtower.utils.normal.Helper;
 import me.dev.foodtower.utils.normal.MoveUtils;
 import me.dev.foodtower.utils.normal.PlayerUtil;
 import me.dev.foodtower.value.Option;
@@ -133,6 +134,10 @@ public class Scaffold extends Module {
     public void onPre(EventPreUpdate event) {
         if (!sprint.getValue()) {
             mc.thePlayer.setSprinting(false);
+        }
+        if (sprint.getValue() && Helper.onServer("hypixel")) {
+            mc.thePlayer.motionX *= 0.3;
+            mc.thePlayer.motionZ *= 0.3;
         }
         EntityPlayerSP player = mc.thePlayer;
         WorldClient world = mc.theWorld;

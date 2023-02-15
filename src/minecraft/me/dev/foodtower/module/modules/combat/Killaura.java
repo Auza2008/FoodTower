@@ -5,25 +5,26 @@ Project:foodtower Reborn
 */
 package me.dev.foodtower.module.modules.combat;
 
+import me.dev.foodtower.Client;
+import me.dev.foodtower.api.NMSL;
 import me.dev.foodtower.api.events.EventPostUpdate;
 import me.dev.foodtower.api.events.EventPreUpdate;
 import me.dev.foodtower.api.events.EventRender2D;
 import me.dev.foodtower.api.events.EventRender3D;
+import me.dev.foodtower.module.Module;
 import me.dev.foodtower.module.ModuleType;
 import me.dev.foodtower.module.modules.movement.Scaffold;
-import me.dev.foodtower.module.modules.world.Teams;
 import me.dev.foodtower.module.modules.world.BedNuker;
+import me.dev.foodtower.module.modules.world.Teams;
 import me.dev.foodtower.other.FriendManager;
 import me.dev.foodtower.utils.math.MathUtils;
 import me.dev.foodtower.utils.math.RotationUtil;
 import me.dev.foodtower.utils.math.TimerUtil;
+import me.dev.foodtower.utils.normal.Helper;
 import me.dev.foodtower.utils.normal.RenderUtil;
 import me.dev.foodtower.value.Mode;
 import me.dev.foodtower.value.Numbers;
 import me.dev.foodtower.value.Option;
-import me.dev.foodtower.Client;
-import me.dev.foodtower.api.NMSL;
-import me.dev.foodtower.module.Module;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
@@ -33,9 +34,9 @@ import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemSword;
 import net.minecraft.network.play.client.C02PacketUseEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.MathHelper;
+import net.minecraft.network.play.client.C07PacketPlayerDigging;
+import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
+import net.minecraft.util.*;
 import org.lwjgl.input.Keyboard;
 
 import java.awt.*;
@@ -46,6 +47,7 @@ import java.util.List;
 public class Killaura extends Module {
     public Mode<Enum<AuraMode>> mode = new Mode<>("Mode", "Mode", AuraMode.values(), AuraMode.Switch);
     public static Mode<Enum<RotMode>> rotation = new Mode<>("Rotation", "Rotation", RotMode.values(), RotMode.Basic);
+    public static Mode<Enum<BlockMode>> blockmode = new Mode<>("AutoBlockMode", "AutoBlockMode", BlockMode.values(), BlockMode.Packet);
     public static float[] rotations;
     public static EntityLivingBase target;
     public static boolean blocking;
@@ -83,33 +85,25 @@ public class Killaura extends Module {
         target = targets.get(0);
         rotations = getRotationsToEnt(target);
         if (rotation.getValue() == RotMode.Basic) {
-            rotations[0] += Math.abs(target.posX - target.lastTickPosX) - Math.abs(target.posZ - target.lastTickPosZ );
+            rotations[0] += Math.abs(target.posX - target.lastTickPosX) - Math.abs(target.posZ - target.lastTickPosZ);
             rotations[1] += Math.abs(target.posY - target.lastTickPosY);
-        }
-        if (rotation.getValue() == RotMode.Dynamic) {
+        } else if (rotation.getValue() == RotMode.Dynamic) {
             rotations[0] += MathUtils.getRandomInRange(1, 5);
             rotations[1] += MathUtils.getRandomInRange(1, 5);
-        }
-        if (rotation.getValue() == RotMode.Prediction) {
+        } else if (rotation.getValue() == RotMode.Prediction) {
             rotations[0] = (float) (rotations[0] + ((Math.abs(target.posX - target.lastTickPosX) - Math.abs(target.posZ - target.lastTickPosZ)) * (2 / 3)) * 2);
             rotations[1] = (float) (rotations[1] + ((Math.abs(target.posY - target.lastTickPosY) - Math.abs(target.getEntityBoundingBox().minY - target.lastTickPosY)) * (2 / 3)) * 2);
-        }
-
-        if (rotation.getValue() == RotMode.Resolver) {
+        } else if (rotation.getValue() == RotMode.Resolver) {
             if (target.posY < 0) {
                 rotations[1] = 1;
             } else if (target.posY > 255) {
                 rotations[1] = 90;
             }
-
             if (Math.abs(target.posX - target.lastTickPosX) > 0.50 || Math.abs(target.posZ - target.lastTickPosZ) > 0.50) {
                 target.setEntityBoundingBox(new AxisAlignedBB(target.posX, target.posY, target.posZ, target.lastTickPosX, target.lastTickPosY, target.lastTickPosZ));
-//                mc.thePlayer.addChatComponentMessage(new ChatComponentText("Tenacity: resloved target hitbox at " + target.posX + "," + target.posY + "," + target.posZ));
-
+                Helper.sendMessage("resloved target hitbox at " + target.posX + "," + target.posY + "," + target.posZ);
             }
-        }
-
-        if (rotation.getValue() == RotMode.Smooth) {
+        } else if (rotation.getValue() == RotMode.Smooth) {
             float sens = RotationUtil.getSensitivityMultiplier();
 
             rotations[0] = RotationUtil.smoothRotation(mc.thePlayer.rotationYaw, rotations[0], 360);
@@ -129,7 +123,7 @@ public class Killaura extends Module {
 
         attacking = true;
         if (timer.hasReached(1000 / (aps.getValue()))) {
-            if (target != null && target.getHealth() > 0) {
+            if (target != null && target.getHealth() >= 0) {
                 mc.thePlayer.swingItem();
                 mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
                 int i2 = 0;
@@ -138,7 +132,7 @@ public class Killaura extends Module {
                     mc.effectRenderer.emitParticleAtEntity(target, EnumParticleTypes.CRIT_MAGIC);
                     i2++;
                 }
-                if (target != null && target.getHealth() <= 0) {
+                if (target != null && target.isDead) {
                     sortTargets();
                     target = targets.get(0);
                 }
@@ -187,22 +181,46 @@ public class Killaura extends Module {
             if (autoBlock.getValue() && mc.thePlayer.getItemInUse() == null) {
                 if (mc.thePlayer.getHeldItem().getItem() instanceof ItemSword) {
                     if (target != null) {
-                        KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
+                        switch (blockmode.getValue().toString()) {
+                            case "Packet":
+                                mc.getNetHandler().addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
+                                break;
+                            case "Interact":
+                                KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
+                                break;
+                            case "PacketInteract":
+                                mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.INTERACT));
+                        }
                         if (Minecraft.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem())) {
                             mc.getItemRenderer().resetEquippedProgress2();
                         }
                         blocking = true;
                     } else {
                         blocking = false;
-                        KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
-                        Minecraft.playerController.onStoppedUsingItem(mc.thePlayer);
+                        switch (blockmode.getValue().toString()) {
+                            case "Packet":
+                                mc.getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+                                break;
+                            case "Interact":
+                                KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
+                                Minecraft.playerController.onStoppedUsingItem(mc.thePlayer);
+                            break;
+                        }
                     }
                 }
             }
         }
         if (targets.isEmpty()) {
             if (blocking) {
-                mc.gameSettings.keyBindUseItem.pressed = false;
+                switch (blockmode.getValue().toString()) {
+                    case "Packet":
+                        mc.getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+                        break;
+                    case "Interact":
+                        KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
+                        Minecraft.playerController.onStoppedUsingItem(mc.thePlayer);
+                        break;
+                }
             }
             attacking = false;
             blocking = false;
@@ -212,8 +230,15 @@ public class Killaura extends Module {
 
     @Override
     public void onDisable() {
-        KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
-        Minecraft.playerController.onStoppedUsingItem(mc.thePlayer);
+        switch (blockmode.getValue().toString()) {
+            case "Packet":
+                mc.getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+                break;
+            case "Interact":
+                KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
+                Minecraft.playerController.onStoppedUsingItem(mc.thePlayer);
+                break;
+        }
         targets.clear();
         blocking = false;
         attacking = false;
@@ -272,6 +297,12 @@ public class Killaura extends Module {
         Prediction,
         Resolver,
         Smooth
+    }
+
+    enum BlockMode {
+        Packet,
+        Interact,
+        PacketInteract,
     }
 
     private float[] getRotationsToEnt(Entity ent) {

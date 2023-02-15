@@ -16,7 +16,7 @@ public class Helper {
     public static void sendMessageOLD(String msg) {
         Object[] arrobject = new Object[2];
         Client.instance.getClass();
-        arrobject[0] = (Object) ((Object) EnumChatFormatting.BLUE) + "foodtower" + (Object) ((Object) EnumChatFormatting.GRAY) + ": ";
+        arrobject[0] = (Object) ((Object) EnumChatFormatting.BLUE) + "FoodTower" + (Object) ((Object) EnumChatFormatting.GRAY) + ": ";
         arrobject[1] = msg;
         Helper.mc.thePlayer.addChatMessage(new ChatComponentText(String.format("%s%s", arrobject)));
     }

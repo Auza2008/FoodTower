@@ -44,9 +44,9 @@ public class TargetStrafe extends Module {
     private void onUpdate(EventPreUpdate e) {
         if (lockPersonView.getValue() && Client.instance.getModuleManager().getModuleByClass(Killaura.class).isEnabled()) {
             if ((Client.instance.getModuleManager().getModuleByClass(Speed.class).isEnabled() || Client.instance.getModuleManager().getModuleByClass(Flight.class).isEnabled())) {
-                if (Killaura.target != null) {
+                if (Killaura.target != null && !Killaura.target.isDead) {
                     mc.gameSettings.thirdPersonView = 1;
-                } else {
+                } else if (Killaura.target.isDead) {
                     mc.gameSettings.thirdPersonView = 0;
                 }
             }
@@ -56,7 +56,7 @@ public class TargetStrafe extends Module {
     @NMSL
     private void onMove(EventMove em) {
         if (PlayerUtil.isMoving2()) {
-            if (Killaura.target != null) {
+            if (Killaura.target != null && !Killaura.target.isDead) {
                 if (onlyspeed.getValue() && Client.instance.getModuleManager().getModuleByClass(Speed.class).isEnabled()) {
                     if (jumpkey.getValue() && mc.gameSettings.keyBindJump.pressed) {
                         move(em, MoveUtils.defaultSpeed(), Killaura.target);
@@ -120,7 +120,7 @@ public class TargetStrafe extends Module {
 
     @NMSL
     private void onRender(EventRender3D e) {
-        if (Killaura.target != null && render.getValue()) {
+        if (Killaura.target != null && !Killaura.target.isDead && render.getValue()) {
             RenderUtil.drawCircle(Killaura.target, e.getPartialTicks(), range.getValue());
         }
     }

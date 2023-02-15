@@ -1,1 +1,0 @@
-{"id":"viabackwards","name":"ViaBackwards","version":"4.5.1","description":"Allow older Minecraft versions to connect to a newer server version.","authors":["Matsv","kennytv","Gerrygames","creeper123123321","ForceUpdate1"],"dependencies":[{"id":"viaversion","optional":false}],"main":"com.viaversion.viabackwards.VelocityPlugin"}
