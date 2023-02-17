@@ -61,7 +61,7 @@ public class AntiVoid
     }
 
     public static boolean isInVoid() {
-        for (int i = 0; i <= 128; i++) {
+        for (int i = 0; i <= 128; ++i) {
             if (MoveUtils.isOnGround(i)) {
                 return false;
             }

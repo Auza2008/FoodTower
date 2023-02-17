@@ -56,11 +56,20 @@ public class Speed extends Module {
             if (mc.thePlayer.onGround && MoveUtils.isMoving()) {
                 mc.thePlayer.jump();
             }
+        } else if (mode.getValue() == SpeedMode.DCJ) {
+            if (mc.thePlayer.onGround && MoveUtils.isMoving()) {
+                mc.thePlayer.motionY = 0.2;
+                MoveUtils.strafe(0.7);
+                if (mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
+                    mc.thePlayer.motionX *= (1.0 + 0.4 * (mc.thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier() + 1));
+                    mc.thePlayer.motionZ *= (1.0 + 0.4 * (mc.thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier() + 1));
+                }
+            }
         }
     }
 
     enum SpeedMode {
-        Hypixel, Jump
+        Hypixel, DCJ, Jump
     }
 }
 

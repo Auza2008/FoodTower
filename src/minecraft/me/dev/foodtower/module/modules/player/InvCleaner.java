@@ -113,7 +113,7 @@ public class InvCleaner extends Module {
             }
 
             if (timer.hasReached(delay) && this.InvCleaner.getValue())
-                for (int i = 9; i < 45; i++) {
+                for (int i = 9; i < 45; ++i) {
                     if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
                         ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
                         if (shouldDrop(is, i)) {
@@ -142,7 +142,7 @@ public class InvCleaner extends Module {
 
     public boolean isBestWeapon(ItemStack stack) {
         float damage = getDamage(stack);
-        for (int i = 9; i < 45; i++) {
+        for (int i = 9; i < 45; ++i) {
             if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
                 ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
                 if (getDamage(is) > damage && (is.getItem() instanceof ItemSword || !this.Sword.getValue()))
@@ -154,7 +154,7 @@ public class InvCleaner extends Module {
     }
 
     public void getBestWeapon(int slot) {
-        for (int i = 9; i < 45; i++) {
+        for (int i = 9; i < 45; ++i) {
             if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
                 ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
                 if (isBestWeapon(is) && getDamage(is) > 0 && (is.getItem() instanceof ItemSword || !this.Sword.getValue())) {
@@ -470,7 +470,7 @@ public class InvCleaner extends Module {
 
     private int getBlockCount() {
         int blockCount = 0;
-        for (int i = 0; i < 45; i++) {
+        for (int i = 0; i < 45; ++i) {
             if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
                 ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
                 Item item = is.getItem();
@@ -483,7 +483,7 @@ public class InvCleaner extends Module {
     }
 
     private void getBestPickaxe(int slot) {
-        for (int i = 9; i < 45; i++) {
+        for (int i = 9; i < 45; ++i) {
             if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
                 ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
 
@@ -507,7 +507,7 @@ public class InvCleaner extends Module {
     }
 
     private void getBestShovel(int slot) {
-        for (int i = 9; i < 45; i++) {
+        for (int i = 9; i < 45; ++i) {
             if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
                 ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
 
@@ -532,7 +532,7 @@ public class InvCleaner extends Module {
 
     private void getBestAxe(int slot) {
 
-        for (int i = 9; i < 45; i++) {
+        for (int i = 9; i < 45; ++i) {
             if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
                 ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
 
@@ -560,7 +560,7 @@ public class InvCleaner extends Module {
         if (!(item instanceof ItemPickaxe))
             return false;
         float value = getToolEffect(stack);
-        for (int i = 9; i < 45; i++) {
+        for (int i = 9; i < 45; ++i) {
             if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
                 ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
                 if (getToolEffect(is) > value && is.getItem() instanceof ItemPickaxe) {
@@ -577,7 +577,7 @@ public class InvCleaner extends Module {
         if (!(item instanceof ItemSpade))
             return false;
         float value = getToolEffect(stack);
-        for (int i = 9; i < 45; i++) {
+        for (int i = 9; i < 45; ++i) {
             if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
                 ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
                 if (getToolEffect(is) > value && is.getItem() instanceof ItemSpade) {
@@ -594,7 +594,7 @@ public class InvCleaner extends Module {
         if (!(item instanceof ItemAxe))
             return false;
         float value = getToolEffect(stack);
-        for (int i = 9; i < 45; i++) {
+        for (int i = 9; i < 45; ++i) {
             if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
                 ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
                 if (getToolEffect(is) > value && is.getItem() instanceof ItemAxe && !isBestWeapon(stack)) {
@@ -652,7 +652,7 @@ public class InvCleaner extends Module {
 
     boolean invContainsType(int type) {
 
-        for (int i = 9; i < 45; i++) {
+        for (int i = 9; i < 45; ++i) {
             if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
                 ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
                 Item item = is.getItem();
@@ -677,7 +677,7 @@ public class InvCleaner extends Module {
                     drop(4 + type);
                 }
             }
-            for (int i = 9; i < 45; i++) {
+            for (int i = 9; i < 45; ++i) {
                 if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
                     ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
                     if (AutoArmor.isBestArmor(is, type) && AutoArmor.getProtection(is) > 0) {

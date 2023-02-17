@@ -1,0 +1,13 @@
+Animations
+AutoGapple
+Criticals
+FastUse
+FullBright
+HUD
+ItemPhysic
+NoClickDelay
+NoSlow
+Sprint
+TargetHUD
+TargetStrafe
+Velocity

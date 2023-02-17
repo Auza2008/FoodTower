@@ -35,7 +35,7 @@ public class Client {
     public Config configInUse = new Config("Official");
     public static ResourceLocation CLIENT_CAPE = new ResourceLocation("foodtower/cape.png");
     public final String name = "FoodTower";
-    public final double version = 0.42;
+    public final double version = 0.44;
     private ModuleManager modulemanager;
     private CommandManager commandmanager;
     private AltManager altmanager;

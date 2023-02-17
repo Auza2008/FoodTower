@@ -7,6 +7,7 @@ package me.dev.foodtower.module.modules.player;
 
 import me.dev.foodtower.api.NMSL;
 import me.dev.foodtower.api.events.EventPreUpdate;
+import me.dev.foodtower.api.events.EventTick;
 import me.dev.foodtower.module.Module;
 import me.dev.foodtower.module.ModuleType;
 import me.dev.foodtower.value.Mode;
@@ -37,7 +38,7 @@ public class FastUse extends Module {
             if (mc.thePlayer.getItemInUseDuration() >= speed.getValue().floatValue() && (mc.thePlayer.getCurrentEquippedItem() != null && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemPotion || mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemFood)) {
                 mc.thePlayer.sendQueue.getNetworkManager().sendPacket(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
                 mc.thePlayer.sendQueue.getNetworkManager().sendPacket(new C08PacketPlayerBlockPlacement(mc.thePlayer.getItemInUse()));
-                for (int i = 0; i <= 30; i++) {
+                for (int i = 0; i < 30; ++i) {//++i比i++性能好
                     mc.thePlayer.sendQueue.getNetworkManager().sendPacket(new C03PacketPlayer(mc.thePlayer.onGround));
                 }
                 mc.thePlayer.sendQueue.getNetworkManager().sendPacket(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
@@ -45,16 +46,14 @@ public class FastUse extends Module {
             }
         } else if (mod.getValue() == mods.Bypass && (mc.thePlayer.getCurrentEquippedItem() != null && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemPotion || mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemFood)) {
             if (mc.thePlayer.getItemInUseDuration() > 14) {
-                for (int i = 0; i <= 20; i++) {
+                for (int i = 0; i < 20; ++i) {
                     mc.getNetHandler().addToSendQueue(new C03PacketPlayer(mc.thePlayer.onGround));
                 }
-                mc.thePlayer.stopUsingItem();
             }
         } else if (mod.getValue() == mods.Vanilla && isFood()) {
-            for (int i = 0; i <= 35; i++) {
+            for (int i = 0; i < 30; ++i) {
                 mc.getNetHandler().addToSendQueue(new C03PacketPlayer(mc.thePlayer.onGround));
             }
-            mc.thePlayer.stopUsingItem();
         }
     }
 

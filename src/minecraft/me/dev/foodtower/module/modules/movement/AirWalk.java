@@ -53,7 +53,7 @@ public class AirWalk extends Module {
             damage = MathHelper.floor_double(mc.thePlayer.getMaxHealth());
         double offset = 0.0625;
         if (mc.thePlayer != null && mc.getNetHandler() != null && mc.thePlayer.onGround) {
-            for (int i = 0; i <= ((3 + damage) / offset); i++) {
+            for (int i = 0; i <= ((3 + damage) / offset); ++i) {
                 mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
                         mc.thePlayer.posY + offset, mc.thePlayer.posZ, false));
                 mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,

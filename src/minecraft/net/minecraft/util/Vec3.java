@@ -1,5 +1,7 @@
 package net.minecraft.util;
 
+import net.minecraft.entity.Entity;
+
 public class Vec3
 {
     /**
@@ -228,4 +230,7 @@ public class Vec3
         return new Vec3(Math.floor(this.xCoord), Math.floor(this.yCoord), Math.floor(this.zCoord));
     }
 
+    public net.minecraft.util.Vec3 mc() {
+        return new net.minecraft.util.Vec3(this.xCoord, this.yCoord, this.zCoord);
+    }
 }

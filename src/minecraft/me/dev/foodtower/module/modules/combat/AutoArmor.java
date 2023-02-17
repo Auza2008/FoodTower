@@ -53,7 +53,7 @@ public class AutoArmor extends Module {
         if (!stack.getUnlocalizedName().contains(strType)) {
             return false;
         }
-        for (int i = 5; i < 45; i++) {
+        for (int i = 5; i < 45; ++i) {
             if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
                 ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
                 if (getProtection(is) > prot && is.getUnlocalizedName().contains(strType))
@@ -107,7 +107,7 @@ public class AutoArmor extends Module {
                     drop(4 + type);
                 }
             }
-            for (int i = 9; i < 45; i++) {
+            for (int i = 9; i < 45; ++i) {
                 if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
                     ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
                     if (isBestArmor(is, type) && getProtection(is) > 0) {

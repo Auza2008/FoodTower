@@ -48,6 +48,7 @@ public class ModuleManager
 
     @Override
     public void init() {
+        registerModule(new AutoGapple());
         registerModule(new NoClickDelay());
         registerModule(new LegitSpeed());
         registerModule(new HUD());

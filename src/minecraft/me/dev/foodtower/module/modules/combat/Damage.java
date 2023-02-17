@@ -33,7 +33,7 @@ public class Damage extends Module {
 
         double offset = 0.0625;
         if (mc.thePlayer != null && mc.getNetHandler() != null && mc.thePlayer.onGround) {
-            for (int i = 0; i <= ((3 + damage) / offset); i++) { // TODO: teach rederpz (and myself) how math works
+            for (int i = 0; i <= ((3 + damage) / offset); ++i) { // TODO: teach rederpz (and myself) how math works
                 mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
                         mc.thePlayer.posY + offset, mc.thePlayer.posZ, false));
                 mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,

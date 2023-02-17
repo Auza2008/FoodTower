@@ -46,7 +46,7 @@ public class TargetStrafe extends Module {
             if ((Client.instance.getModuleManager().getModuleByClass(Speed.class).isEnabled() || Client.instance.getModuleManager().getModuleByClass(Flight.class).isEnabled())) {
                 if (Killaura.target != null && !Killaura.target.isDead) {
                     mc.gameSettings.thirdPersonView = 1;
-                } else if (Killaura.target.isDead) {
+                } else if ((Killaura.target != null && Killaura.target.isDead) || !Client.instance.getModuleManager().getModuleByClass(Killaura.class).isEnabled()) {
                     mc.gameSettings.thirdPersonView = 0;
                 }
             }
@@ -65,6 +65,8 @@ public class TargetStrafe extends Module {
                     }
                 } else if (!onlyspeed.getValue()) {
                     if (jumpkey.getValue() && mc.gameSettings.keyBindJump.pressed) {
+                        move(em, MoveUtils.defaultSpeed(), Killaura.target);
+                    } else if (!jumpkey.getValue()) {
                         move(em, MoveUtils.defaultSpeed(), Killaura.target);
                     }
                 }
@@ -125,7 +127,7 @@ public class TargetStrafe extends Module {
         }
     }
 
-    static enum TargetStrafeMode {
+    enum TargetStrafeMode {
         Simple,
         Adaptive
     }

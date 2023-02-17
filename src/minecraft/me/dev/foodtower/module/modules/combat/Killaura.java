@@ -77,43 +77,51 @@ public class Killaura extends Module {
 
     @NMSL
     private void onPre(EventPreUpdate e) {
-        if (Client.instance.getModuleManager().getModuleByClass(Scaffold.class).isEnabled() || Client.instance.getModuleManager().getModuleByClass(BedNuker.class).isEnabled() || mc.thePlayer.isDead || mc.thePlayer.isSpectator())
+        if (Client.instance.getModuleManager().getModuleByClass(Scaffold.class).isEnabled() || Client.instance.getModuleManager().getModuleByClass(BedNuker.class).isEnabled() || mc.thePlayer.isDead || mc.thePlayer.isSpectator()) {
             return;
-        if (targets.isEmpty())
+        }
+        if (targets.isEmpty()) {
             return;
+        }
         int crackSize = this.crack.getValue().intValue();
         target = targets.get(0);
         rotations = getRotationsToEnt(target);
-        if (rotation.getValue() == RotMode.Basic) {
-            rotations[0] += Math.abs(target.posX - target.lastTickPosX) - Math.abs(target.posZ - target.lastTickPosZ);
-            rotations[1] += Math.abs(target.posY - target.lastTickPosY);
-        } else if (rotation.getValue() == RotMode.Dynamic) {
-            rotations[0] += MathUtils.getRandomInRange(1, 5);
-            rotations[1] += MathUtils.getRandomInRange(1, 5);
-        } else if (rotation.getValue() == RotMode.Prediction) {
-            rotations[0] = (float) (rotations[0] + ((Math.abs(target.posX - target.lastTickPosX) - Math.abs(target.posZ - target.lastTickPosZ)) * (2 / 3)) * 2);
-            rotations[1] = (float) (rotations[1] + ((Math.abs(target.posY - target.lastTickPosY) - Math.abs(target.getEntityBoundingBox().minY - target.lastTickPosY)) * (2 / 3)) * 2);
-        } else if (rotation.getValue() == RotMode.Resolver) {
-            if (target.posY < 0) {
-                rotations[1] = 1;
-            } else if (target.posY > 255) {
-                rotations[1] = 90;
-            }
-            if (Math.abs(target.posX - target.lastTickPosX) > 0.50 || Math.abs(target.posZ - target.lastTickPosZ) > 0.50) {
-                target.setEntityBoundingBox(new AxisAlignedBB(target.posX, target.posY, target.posZ, target.lastTickPosX, target.lastTickPosY, target.lastTickPosZ));
-                Helper.sendMessage("resloved target hitbox at " + target.posX + "," + target.posY + "," + target.posZ);
-            }
-        } else if (rotation.getValue() == RotMode.Smooth) {
-            float sens = RotationUtil.getSensitivityMultiplier();
+        switch (rotation.getValue().toString()) {
+            case "Basic":
+                rotations[0] += Math.abs(target.posX - target.lastTickPosX) - Math.abs(target.posZ - target.lastTickPosZ);
+                rotations[1] += Math.abs(target.posY - target.lastTickPosY);
+                break;
+            case "Dynamic":
+                rotations[0] += MathUtils.getRandomInRange(1, 5);
+                rotations[1] += MathUtils.getRandomInRange(1, 5);
+                break;
+            case "Prediction":
+                rotations[0] = (float) (rotations[0] + ((Math.abs(target.posX - target.lastTickPosX) - Math.abs(target.posZ - target.lastTickPosZ)) * (2 / 3)) * 2);
+                rotations[1] = (float) (rotations[1] + ((Math.abs(target.posY - target.lastTickPosY) - Math.abs(target.getEntityBoundingBox().minY - target.lastTickPosY)) * (2 / 3)) * 2);
+                break;
+            case "Resolver":
+                if (target.posY < 0) {
+                    rotations[1] = 1;
+                } else if (target.posY > 255) {
+                    rotations[1] = 90;
+                }
+                if (Math.abs(target.posX - target.lastTickPosX) > 0.50 || Math.abs(target.posZ - target.lastTickPosZ) > 0.50) {
+                    target.setEntityBoundingBox(new AxisAlignedBB(target.posX, target.posY, target.posZ, target.lastTickPosX, target.lastTickPosY, target.lastTickPosZ));
+                    Helper.sendMessage("resloved target hitbox at " + target.posX + "," + target.posY + "," + target.posZ);
+                }
+                break;
+            case "Smooth":
+                float sens = RotationUtil.getSensitivityMultiplier();
 
-            rotations[0] = RotationUtil.smoothRotation(mc.thePlayer.rotationYaw, rotations[0], 360);
-            rotations[1] = RotationUtil.smoothRotation(mc.thePlayer.rotationPitch, rotations[1], 90);
+                rotations[0] = RotationUtil.smoothRotation(mc.thePlayer.rotationYaw, rotations[0], 360);
+                rotations[1] = RotationUtil.smoothRotation(mc.thePlayer.rotationPitch, rotations[1], 90);
 
-            rotations[0] = Math.round(rotations[0] / sens) * sens;
-            rotations[1] = Math.round(rotations[1] / sens) * sens;
-
+                rotations[0] = Math.round(rotations[0] / sens) * sens;
+                rotations[1] = Math.round(rotations[1] / sens) * sens;
+                break;
+            case "None":
+                break;
         }
-
         if (matrix.getValue()) {
             rotations[0] = rotations[0] + MathUtils.getRandomFloat(1.98f, -1.98f);
         }
@@ -123,7 +131,7 @@ public class Killaura extends Module {
 
         attacking = true;
         if (timer.hasReached(1000 / (aps.getValue()))) {
-            if (target != null && target.getHealth() >= 0) {
+            if (target.getHealth() >= 0) {
                 mc.thePlayer.swingItem();
                 mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(target, C02PacketUseEntity.Action.ATTACK));
                 int i2 = 0;
@@ -132,9 +140,11 @@ public class Killaura extends Module {
                     mc.effectRenderer.emitParticleAtEntity(target, EnumParticleTypes.CRIT_MAGIC);
                     i2++;
                 }
-                if (target != null && target.isDead) {
+                if (target != null && !targets.isEmpty() && target.getHealth() <= 0) {
                     sortTargets();
-                    target = targets.get(0);
+                    if (target != null && !targets.isEmpty()) {
+                        target = targets.get(0);
+                    }
                 }
             }
             timer.reset();
@@ -207,6 +217,8 @@ public class Killaura extends Module {
                             break;
                         }
                     }
+                } else if (!(mc.thePlayer.getHeldItem().getItem() instanceof ItemSword) || mc.thePlayer.getHeldItem().getItem() == null) {
+                    return;
                 }
             }
         }
@@ -296,7 +308,8 @@ public class Killaura extends Module {
         Dynamic,
         Prediction,
         Resolver,
-        Smooth
+        Smooth,
+        None
     }
 
     enum BlockMode {
