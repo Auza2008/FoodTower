@@ -1,0 +1,7 @@
+run
+build
+.gradle
+.idea
+FoodTowerReload.iml
+FoodTowerReload.ipr
+FoodTowerReload.iws
