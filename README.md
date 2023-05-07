@@ -13,4 +13,4 @@
 4.等待下载依赖库完成，然后运行```gradlew idea```
 
 ##个人的一些叨叨
-这个项目属于是那种我写着玩的，但是我希望有能力的人提交一些代码，我希望这个项目成为[Liquidbounce](liquidbounce.net)一样的开源社区
+这个项目属于是那种我写着玩的，但是我希望有能力的人提交一些代码，我希望这个项目成为[Liquidbounce](https://liquidbounce.net)一样的开源社区
