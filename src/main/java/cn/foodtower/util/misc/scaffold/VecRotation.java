@@ -15,4 +15,8 @@ public class VecRotation {
 	{
 		return this.rotation;
 	}
+
+	public Vec3 getVec() {
+		return vec;
+	}
 }

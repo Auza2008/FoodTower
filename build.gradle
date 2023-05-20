@@ -4,8 +4,8 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.8.21'
 }
 
-group 'me.Symb0ls'
-version 'MC_1.8.9'
+group 'cn.foodtower'
+version ''
 
 repositories {
     maven {

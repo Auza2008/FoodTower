@@ -1,18 +1,7 @@
 package cn.foodtower.util.world;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import cn.foodtower.util.math.RotationUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockAir;
-import net.minecraft.block.BlockFence;
-import net.minecraft.block.BlockIce;
-import net.minecraft.block.BlockLadder;
-import net.minecraft.block.BlockLiquid;
-import net.minecraft.block.BlockPackedIce;
-import net.minecraft.block.BlockVine;
+import cn.foodtower.util.math.RotationUtils;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -27,12 +16,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class BlockUtils {
     static double x;
@@ -560,7 +548,7 @@ public class BlockUtils {
             BlockPos neighbor = pos.offset(side);
             EnumFacing side2 = side.getOpposite();
             if (eyesPos.squareDistanceTo(new Vec3(pos).addVector(0.5, 0.5, 0.5)) < eyesPos.squareDistanceTo(new Vec3(neighbor).addVector(0.5, 0.5, 0.5)) && BlockUtils.canBeClicked(neighbor) && eyesPos.squareDistanceTo(hitVec = new Vec3(neighbor).addVector(0.5, 0.5, 0.5).add(new Vec3(side2.getDirectionVec()).scale(0.5))) <= 18.0625) {
-                RotationUtil.faceVectorPacketInstant(hitVec);
+                RotationUtils.faceVectorPacketInstant(hitVec);
                 PlayerControllerMP playerController = mc.playerController;
                 mc.thePlayer.swingItem();
                 mc.rightClickDelayTimer = 4;

@@ -7,33 +7,33 @@ import cn.foodtower.util.entity.PlayerUtil;
 
 public class GudHopSpeed extends SpeedModule {
     @Override
-    public void onMotion( EventMotionUpdate e) {
+    public void onMotion(EventMotionUpdate e) {
 
     }
 
     @Override
-    public void onPacketSend( EventPacketSend e) {
+    public void onPacketSend(EventPacketSend e) {
 
     }
 
     @Override
-    public void onStep( EventStep e) {
+    public void onStep(EventStep e) {
 
     }
 
     @Override
-    public void onPre( EventPreUpdate e) {
+    public void onPre(EventPreUpdate e) {
 
     }
 
     @Override
-    public void onMove( EventMove e) {
+    public void onMove(EventMove e) {
         if (mc.thePlayer.onGround && PlayerUtil.MovementInput() && !mc.thePlayer.isInWater()) {
-           e.setY(mc.thePlayer.motionY = 0.42);
+            e.setY(mc.thePlayer.motionY = 0.42);
         }
         if (PlayerUtil.MovementInput() && !mc.thePlayer.isInWater()) {
             setMotion(e, 0.8);
-        }else if (!PlayerUtil.MovementInput()) {
+        } else if (!PlayerUtil.MovementInput()) {
             setMotion(e, 0);
         }
     }
@@ -54,7 +54,7 @@ public class GudHopSpeed extends SpeedModule {
     }
 
     @Override
-    public void onPacket( EventPacket e ) {
+    public void onPacket(EventPacket e) {
 
     }
 }

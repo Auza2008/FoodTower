@@ -19,14 +19,16 @@ public class CustomSpeed extends Module {
     public final Option customStrafeValue = new Option("CustomStrafe", true);
     public final Option resetXZValue = new Option("CustomResetXZ", false);
     public final Option resetYValue = new Option("CustomResetY", false);
+
     public CustomSpeed() {
         super("CustomSpeed", new String[]{"Cspeed"}, ModuleType.Movement);
-        addValues(customSpeedValue,customYValue,customTimerValue,customStrafeValue,resetXZValue,resetYValue);
+        addValues(customSpeedValue, customYValue, customTimerValue, customStrafeValue, resetXZValue, resetYValue);
     }
+
     @EventHandler
     public void onMotion(EventMotionUpdate e) {
         if (mc.thePlayer.isSneaking() || !e.isPre()) return;
-        if ( MovementUtils.isMoving()) {
+        if (MovementUtils.isMoving()) {
             mc.timer.timerSpeed = customTimerValue.getValue().floatValue();
 
             if (mc.thePlayer.onGround) {
@@ -42,13 +44,14 @@ public class CustomSpeed extends Module {
     }
 
     @EventHandler
-    public void onRender2d( EventRender2D e){
-        setSuffix(customTimerValue.getValue()+"|"+customSpeedValue.getValue()+"|"+customYValue.getValue());
+    public void onRender2d(EventRender2D e) {
+        setSuffix(customTimerValue.getValue() + "|" + customSpeedValue.getValue() + "|" + customYValue.getValue());
     }
+
     @Override
     public void onEnable() {
-        if(resetXZValue.getValue()) mc.thePlayer.motionX = mc.thePlayer.motionZ = 0D;
-        if(resetYValue.getValue()) mc.thePlayer.motionY = 0D;
+        if (resetXZValue.getValue()) mc.thePlayer.motionX = mc.thePlayer.motionZ = 0D;
+        if (resetYValue.getValue()) mc.thePlayer.motionY = 0D;
         super.onEnable();
     }
 
@@ -59,15 +62,15 @@ public class CustomSpeed extends Module {
     }
 
     @EventHandler
-    public void onUpdate( EventPreUpdate e) {
-        if(mc.thePlayer.isSneaking())
+    public void onUpdate(EventPreUpdate e) {
+        if (mc.thePlayer.isSneaking())
             return;
 
-        if(MovementUtils.isMoving() && customSprint.getValue())
+        if (MovementUtils.isMoving() && customSprint.getValue())
             mc.thePlayer.setSprinting(true);
     }
 
     @EventHandler
-    public void onMove( EventMove event) {
+    public void onMove(EventMove event) {
     }
 }

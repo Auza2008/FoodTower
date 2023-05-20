@@ -6,12 +6,12 @@ import cn.foodtower.module.modules.move.speedmode.SpeedModule;
 
 public class AAC440Speed extends SpeedModule {
     @Override
-    public void onStep( EventStep e) {
+    public void onStep(EventStep e) {
 
     }
 
     @Override
-    public void onPre( EventPreUpdate e) {
+    public void onPre(EventPreUpdate e) {
         if (mc.thePlayer.moveForward > 0) {
             if (mc.thePlayer.onGround) {
                 mc.thePlayer.jump();
@@ -25,11 +25,11 @@ public class AAC440Speed extends SpeedModule {
     }
 
     @Override
-    public void onMove( EventMove e) {
+    public void onMove(EventMove e) {
     }
 
     @Override
-    public void onPost( EventPostUpdate e) {
+    public void onPost(EventPostUpdate e) {
 
     }
 
@@ -44,7 +44,7 @@ public class AAC440Speed extends SpeedModule {
     }
 
     @Override
-    public void onPacket( EventPacket e ) {
+    public void onPacket(EventPacket e) {
 
     }
 
@@ -54,7 +54,7 @@ public class AAC440Speed extends SpeedModule {
     }
 
     @Override
-    public void onPacketSend( EventPacketSend e) {
+    public void onPacketSend(EventPacketSend e) {
 
     }
 }

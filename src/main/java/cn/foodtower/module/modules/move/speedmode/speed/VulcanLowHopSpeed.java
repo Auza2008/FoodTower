@@ -3,23 +3,22 @@ package cn.foodtower.module.modules.move.speedmode.speed;
 import cn.foodtower.api.events.World.*;
 import cn.foodtower.module.modules.combat.KillAura;
 import cn.foodtower.module.modules.move.speedmode.SpeedModule;
-
 import cn.foodtower.util.entity.MovementUtils;
 import net.minecraft.entity.EntityLivingBase;
 
 public class VulcanLowHopSpeed extends SpeedModule {
     @Override
-    public void onStep( EventStep e) {
+    public void onStep(EventStep e) {
 
     }
 
     @Override
-    public void onPre( EventPreUpdate e) {
+    public void onPre(EventPreUpdate e) {
 
     }
 
     @Override
-    public void onMove( EventMove e) {
+    public void onMove(EventMove e) {
         EntityLivingBase target = KillAura.curTarget;
         if (target != null && target.hurtTime > 0 && !mc.thePlayer.isInWeb) {
             if (!mc.thePlayer.isInLava()) {
@@ -39,7 +38,7 @@ public class VulcanLowHopSpeed extends SpeedModule {
     }
 
     @Override
-    public void onPost( EventPostUpdate e) {
+    public void onPost(EventPostUpdate e) {
 
     }
 
@@ -54,7 +53,7 @@ public class VulcanLowHopSpeed extends SpeedModule {
     }
 
     @Override
-    public void onPacket( EventPacket e ) {
+    public void onPacket(EventPacket e) {
 
     }
 
@@ -64,7 +63,7 @@ public class VulcanLowHopSpeed extends SpeedModule {
     }
 
     @Override
-    public void onPacketSend( EventPacketSend e) {
+    public void onPacketSend(EventPacketSend e) {
 
     }
 }

@@ -12,12 +12,12 @@ import java.util.List;
 
 public class BhopSpeed extends SpeedModule {
     @Override
-    public void onMotion( EventMotionUpdate e) {
+    public void onMotion(EventMotionUpdate e) {
 
     }
 
     @Override
-    public void onPacketSend( EventPacketSend e) {
+    public void onPacketSend(EventPacketSend e) {
 
     }
 
@@ -27,12 +27,12 @@ public class BhopSpeed extends SpeedModule {
     }
 
     @Override
-    public void onPre( EventPreUpdate e) {
+    public void onPre(EventPreUpdate e) {
 
     }
 
     @Override
-    public void onMove( EventMove e) {
+    public void onMove(EventMove e) {
         if (mc.thePlayer.moveForward == 0.0f && mc.thePlayer.moveStrafing == 0.0f) {
             movementSpeed = MoveUtils.defaultSpeed();
         }
@@ -72,7 +72,7 @@ public class BhopSpeed extends SpeedModule {
     }
 
     @Override
-    public void onPost( EventPostUpdate e) {
+    public void onPost(EventPostUpdate e) {
 
     }
 
@@ -87,7 +87,7 @@ public class BhopSpeed extends SpeedModule {
     }
 
     @Override
-    public void onPacket( EventPacket e ) {
+    public void onPacket(EventPacket e) {
 
     }
 }

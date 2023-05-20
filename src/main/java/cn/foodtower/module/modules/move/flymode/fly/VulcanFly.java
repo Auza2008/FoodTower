@@ -1,9 +1,8 @@
 package cn.foodtower.module.modules.move.flymode.fly;
 
 import cn.foodtower.api.events.World.*;
-import cn.foodtower.module.modules.move.flymode.FlyModule;
-
 import cn.foodtower.module.modules.move.Fly;
+import cn.foodtower.module.modules.move.flymode.FlyModule;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 
@@ -14,7 +13,7 @@ public class VulcanFly implements FlyModule {
 
     @Override
     public void onEnabled() {
-        if(mc.thePlayer.onGround && Fly.vulcan_canClipValue.getValue()) {
+        if (mc.thePlayer.onGround && Fly.vulcan_canClipValue.getValue()) {
             clip(0f, -0.1f);
             waitFlag = true;
             canGlide = false;
@@ -32,7 +31,7 @@ public class VulcanFly implements FlyModule {
     }
 
     @Override
-    public void onMove( EventMove e) {
+    public void onMove(EventMove e) {
 
     }
 
@@ -42,7 +41,7 @@ public class VulcanFly implements FlyModule {
     }
 
     @Override
-    public void onMotionUpdate( EventMotionUpdate e) {
+    public void onMotionUpdate(EventMotionUpdate e) {
         if (e.isPre() && canGlide) {
             mc.timer.timerSpeed = 1f;
             mc.thePlayer.motionY = -(ticks % 2 == 0 ? 0.17 : 0.10);
@@ -59,13 +58,13 @@ public class VulcanFly implements FlyModule {
     }
 
     @Override
-    public void onPacketSend( EventPacketSend e) {
+    public void onPacketSend(EventPacketSend e) {
 
     }
 
     @Override
-    public void onPacketReceive( EventPacketReceive e) {
-        if(e.packet instanceof S08PacketPlayerPosLook && waitFlag) {
+    public void onPacketReceive(EventPacketReceive e) {
+        if (e.packet instanceof S08PacketPlayerPosLook && waitFlag) {
             S08PacketPlayerPosLook packet = (S08PacketPlayerPosLook) e.packet;
             waitFlag = false;
             mc.thePlayer.setPosition(packet.getX(), packet.getY(), packet.getZ());
@@ -81,11 +80,12 @@ public class VulcanFly implements FlyModule {
     }
 
     @Override
-    public void onStep( EventStep e) {
+    public void onStep(EventStep e) {
 
     }
+
     private void clip(float dist, float y) {
-        double yaw = Math.toRadians((double) mc.thePlayer.rotationYaw);
+        double yaw = Math.toRadians(mc.thePlayer.rotationYaw);
         double x = -Math.sin(yaw) * dist;
         double z = Math.cos(yaw) * dist;
         mc.thePlayer.setPosition(mc.thePlayer.posX + x, mc.thePlayer.posY + y, mc.thePlayer.posZ + z);

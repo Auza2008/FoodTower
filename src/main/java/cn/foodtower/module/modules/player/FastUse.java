@@ -55,13 +55,13 @@ public class FastUse extends Module {
                 mc.thePlayer.stopUsingItem();
             }
         }
-        if (MODE.getValue().equals(Modes.Instant) && timer.hasReached(270)) {
+        if (MODE.getValue().equals(Modes.Instant)) {
             if (mc.thePlayer.isUsingItem()) {
                 Item usingItem = mc.thePlayer.getItemInUse().getItem();
                 if (usingItem instanceof ItemFood || usingItem instanceof ItemBucketMilk || usingItem instanceof ItemPotion) {
                     mc.getNetHandler().addToSendQueue(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
                     mc.getNetHandler().addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.itemInUse));
-                    for (int i = 0; i < 30; ++i) {
+                    for (int i = 0; i < 32; ++i) {
                         mc.getNetHandler().addToSendQueue(new C03PacketPlayer(mc.thePlayer.onGround));
                     }
                     mc.getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
@@ -70,9 +70,6 @@ public class FastUse extends Module {
                     timer.reset();
                 }
             }
-        }
-        if (!mc.thePlayer.isUsingItem() && MODE.getValue() == Modes.Instant) {
-            timer.reset();
         }
     }
 

@@ -13,19 +13,18 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
 
 public class SuperKnockback
-extends Module {
-    private final Mode mode = new Mode("Mode",Modes.values(),Modes.WTap);
+        extends Module {
+    private final Mode mode = new Mode("Mode", Modes.values(), Modes.WTap);
     private final Numbers<Double> hurtTimeValue = new Numbers<>("HurtTime", 10d, 0d, 10d, 1d);
     private final Option onlyMoveValue = new Option("OnlyMove", false);
     private final Option onlyGroundValue = new Option("OnlyGround", false);
     private final Numbers<Double> delay = new Numbers<>("Delay", 0d, 0d, 500d, 1d);
+    MSTimer timer = new MSTimer();
 
     public SuperKnockback() {
         super("SuperKnockback", new String[]{"wtap"}, ModuleType.Combat);
-        addValues(hurtTimeValue, onlyMoveValue, onlyGroundValue ,delay);
+        addValues(hurtTimeValue, onlyMoveValue, onlyGroundValue, delay);
     }
-
-    MSTimer timer = new MSTimer();
 
     @EventHandler
     private void onTick(EventAttack event) {
@@ -63,7 +62,8 @@ extends Module {
             }
         }
     }
-    enum Modes{
+
+    enum Modes {
         ExtraPacket, WTap, Packet
     }
 }

@@ -15,6 +15,7 @@ import cn.foodtower.api.value.Numbers;
 import cn.foodtower.api.value.Option;
 import cn.foodtower.api.value.Value;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.Packet;
 import net.minecraft.util.EnumChatFormatting;
 import org.lwjgl.input.Keyboard;
 
@@ -57,6 +58,9 @@ public class Module {
 		this.curX = -1;
 	}
 
+	public static void sendPacket(Packet<?> packet) {
+		mc.getNetHandler().addToSendQueue(packet);
+	}
 
 	public String getName() {
 		return this.name;

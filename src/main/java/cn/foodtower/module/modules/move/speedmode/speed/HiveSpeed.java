@@ -3,7 +3,6 @@ package cn.foodtower.module.modules.move.speedmode.speed;
 import cn.foodtower.api.events.World.*;
 import cn.foodtower.module.modules.move.speedmode.SpeedModule;
 import cn.foodtower.util.math.MathUtil;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.util.AxisAlignedBB;
@@ -12,17 +11,17 @@ import java.util.List;
 
 public class HiveSpeed extends SpeedModule {
     @Override
-    public void onStep( EventStep e) {
+    public void onStep(EventStep e) {
 
     }
 
     @Override
-    public void onPre( EventPreUpdate e) {
+    public void onPre(EventPreUpdate e) {
 
     }
 
     @Override
-    public void onMove( EventMove e) {
+    public void onMove(EventMove e) {
         if (canZoom() && this.stage == 1) {
             this.movementSpeed = 1.56D * MathUtil.getBaseMovementSpeed() - 0.01D;
             mc.timer.timerSpeed = 1.05F;
@@ -70,17 +69,17 @@ public class HiveSpeed extends SpeedModule {
     }
 
     @Override
-    public void onPacket( EventPacket e ) {
+    public void onPacket(EventPacket e) {
 
     }
 
     @Override
-    public void onMotion( EventMotionUpdate e) {
+    public void onMotion(EventMotionUpdate e) {
 
     }
 
     @Override
-    public void onPacketSend( EventPacketSend e) {
+    public void onPacketSend(EventPacketSend e) {
 
     }
 }

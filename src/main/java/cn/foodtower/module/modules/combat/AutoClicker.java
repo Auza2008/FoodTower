@@ -1,4 +1,3 @@
-
 package cn.foodtower.module.modules.combat;
 
 import cn.foodtower.api.EventHandler;
@@ -23,18 +22,18 @@ import java.util.Random;
 
 public class AutoClicker extends Module {
 
-    public TimeHelper time = new TimeHelper();
     public static Numbers<Double> cpsmin = new Numbers<>("CPSMin", "CPSMin", 8.0, 2.0, 20.0, 1.0);
     public static Numbers<Double> cpsmax = new Numbers<>("CPSMax", "CPSMax", 8.0, 2.0, 20.0, 1.0);
-    protected Random r = new Random();
+    public static int Click;
+    public static boolean Clicked;
+    private final TimeHelper time2 = new TimeHelper();
+    private final TimeHelper time3 = new TimeHelper();
+    public TimeHelper time = new TimeHelper();
     public Option ab = new Option("BlockHit", "BlockHit", true);
     public Option BreakBlock = new Option("BreakBlock", "BreakBlock", true);
     public Option InvClicker = new Option("Inventory", "Inventory", false);
-    public static int Click;
-    public static boolean Clicked;
+    protected Random r = new Random();
     private double delay = 0;
-    private final TimeHelper time2 = new TimeHelper();
-    private final TimeHelper time3 = new TimeHelper();
 
     public AutoClicker() {
         super("AutoClicker", new String[]{"AutoClicker"}, ModuleType.Combat);
@@ -62,7 +61,7 @@ public class AutoClicker extends Module {
             time2.reset();
         }
 
-        if (!ModuleManager.getModuleByClass( KillAura.class).isEnabled() && Mouse.isButtonDown(0) && this.time.delay(this.delay) && mc.currentScreen == null && !isblock) {
+        if (!ModuleManager.getModuleByClass(KillAura.class).isEnabled() && Mouse.isButtonDown(0) && this.time.delay(this.delay) && mc.currentScreen == null && !isblock) {
             PlayerUtil.blockHit(mc.objectMouseOver.entityHit, this.ab.getValue());
             mc.leftClickCounter = 0;
             mc.clickMouse();

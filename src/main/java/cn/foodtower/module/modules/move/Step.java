@@ -21,12 +21,12 @@ public class Step extends Module {
     }
 
     @EventHandler
-    public void onRender2d( EventRender2D e) {
+    public void onRender2d(EventRender2D e) {
         setSuffix(Modes.getValue());
     }
 
     @EventHandler
-    public void onStep( EventStep event) {
+    public void onStep(EventStep event) {
         if (event.getStepHeight() > 0.5F) {
             isStep = true;
             stepX = mc.thePlayer.posX;
@@ -36,7 +36,7 @@ public class Step extends Module {
     }
 
     @EventHandler
-    public void onStepConfirm( EventStepConfirm e) {
+    public void onStepConfirm(EventStepConfirm e) {
         if (mc.thePlayer == null || !isStep) // Check if step
             return;
         if (mc.thePlayer.getEntityBoundingBox().minY - stepY > 0.5) {

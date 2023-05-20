@@ -2,27 +2,26 @@ package cn.foodtower.module.modules.move.speedmode.speed;
 
 import cn.foodtower.api.events.World.*;
 import cn.foodtower.module.modules.move.speedmode.SpeedModule;
-
 import cn.foodtower.util.entity.MovementUtils;
 
 public class VulcanFastHopSpeed extends SpeedModule {
     @Override
-    public void onStep( EventStep e) {
+    public void onStep(EventStep e) {
 
     }
 
     @Override
-    public void onPre( EventPreUpdate e) {
+    public void onPre(EventPreUpdate e) {
 
     }
 
     @Override
-    public void onMove( EventMove e) {
+    public void onMove(EventMove e) {
 
     }
 
     @Override
-    public void onPost( EventPostUpdate e) {
+    public void onPost(EventPostUpdate e) {
 
     }
 
@@ -37,16 +36,16 @@ public class VulcanFastHopSpeed extends SpeedModule {
     }
 
     @Override
-    public void onPacket( EventPacket e ) {
+    public void onPacket(EventPacket e) {
 
     }
 
     @Override
-    public void onMotion( EventMotionUpdate e) {
+    public void onMotion(EventMotionUpdate e) {
         mc.timer.timerSpeed = 1.00f;
         if (Math.abs(mc.thePlayer.movementInput.moveStrafe) < 0.1f) {
             mc.thePlayer.jumpMovementFactor = 0.0265f;
-        }else {
+        } else {
             mc.thePlayer.jumpMovementFactor = 0.0244f;
         }
         if (!mc.thePlayer.onGround) {
@@ -60,10 +59,10 @@ public class VulcanFastHopSpeed extends SpeedModule {
             mc.gameSettings.keyBindJump.pressed = false;
             mc.thePlayer.jump();
             MovementUtils.strafe();
-            if(MovementUtils.getSpeed() < 0.5f) {
+            if (MovementUtils.getSpeed() < 0.5f) {
                 MovementUtils.strafe(0.4849f);
             }
-        }else if (!MovementUtils.isMoving()) {
+        } else if (!MovementUtils.isMoving()) {
             mc.timer.timerSpeed = 1.00f;
             mc.thePlayer.motionX = 0.0;
             mc.thePlayer.motionZ = 0.0;

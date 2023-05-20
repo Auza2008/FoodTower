@@ -100,9 +100,6 @@ public class Fly extends Module {
         if (lagBackCheck.get()) {
             final Packet<?> packet = e.getPacket();
             if (packet instanceof S08PacketPlayerPosLook) {
-                if (mode.getValue().equals(FlyMode.HypixelZoom)) {
-                    HypixelZoomFly.shouldSlow = true;
-                }
                 Notifications.getManager().post("Fly", "检测到回弹!自动关闭Fly");
                 this.setEnabled(false);
             }

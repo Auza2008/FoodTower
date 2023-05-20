@@ -3,6 +3,7 @@ package cn.foodtower.module.modules.combat;
 import cn.foodtower.Client;
 import cn.foodtower.api.EventHandler;
 import cn.foodtower.api.events.Render.EventRender3D;
+import cn.foodtower.api.events.World.EventMotion;
 import cn.foodtower.api.events.World.EventMotionUpdate;
 import cn.foodtower.api.events.World.EventMove;
 import cn.foodtower.api.value.Mode;
@@ -11,7 +12,6 @@ import cn.foodtower.api.value.Option;
 import cn.foodtower.manager.ModuleManager;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
-import cn.foodtower.util.entity.MoveUtils;
 import cn.foodtower.util.entity.MovementUtils;
 import cn.foodtower.util.entity.entitycheck.EntityValidator;
 import cn.foodtower.util.entity.entitycheck.checks.VoidCheck;
@@ -29,15 +29,18 @@ import java.awt.*;
 public class TargetStrafe extends Module {
     public static Mode Esp = new Mode("ESP", EspMode.values(), EspMode.Round);
     private final Numbers<Double> radius = new Numbers<>("Radius", 2.0, 0.1, 4.0, 0.1);
+    private final Option thirdPerson = new Option("ThirdPerson", true);
     private final Option directionKeys = new Option("DirectionKeys", true);
     private final Option space = new Option("OnJump", false);
     private final EntityValidator targetValidator;
     private KillAura aura;
+    private boolean hasChangedThirdPerson = true;
+    private int lastView = 0;
     private int direction = -1;
 
     public TargetStrafe() {
         super("TargetStrafe", new String[]{"TargetStrafe"}, ModuleType.Combat);
-        this.addValues(radius, Esp, directionKeys, space);
+        this.addValues(radius, Esp, thirdPerson, directionKeys, space);
         this.targetValidator = new EntityValidator();
         this.targetValidator.add(new VoidCheck());
         this.targetValidator.add(new WallCheck());
@@ -58,11 +61,17 @@ public class TargetStrafe extends Module {
         return getRotations(entity.posX, entity.posY + (double) entity.getEyeHeight() - 0.4, entity.posZ);
     }
 
+    public static double getSpeed(double motionX, double motionZ) {
+        return Math.sqrt(motionX * motionX + motionZ * motionZ);
+    }
+
     @Override
     public void onEnable() {
         if (this.aura == null) {
             this.aura = (KillAura) ModuleManager.getModuleByClass(KillAura.class);
         }
+        hasChangedThirdPerson = true;
+        lastView = mc.gameSettings.thirdPersonView;
     }
 
     @EventHandler
@@ -82,9 +91,8 @@ public class TargetStrafe extends Module {
 
     @EventHandler(priority = 2)
     private void onMove(EventMove eventMove) {
-        double speed = MoveUtils.getSpeed();
         if (!canStrafe()) return;
-        strafe(eventMove, speed);
+        strafe(eventMove, getSpeed(eventMove.x, eventMove.z));
     }
 
     private void switchDirection() {
@@ -106,6 +114,20 @@ public class TargetStrafe extends Module {
             this.aura = (KillAura) ModuleManager.getModuleByClass(KillAura.class);
         }
         return this.aura.isEnabled() && KillAura.curTarget != null && this.isEnabled() && this.targetValidator.validate(KillAura.curTarget) && (!this.space.getValue() || mc.gameSettings.keyBindJump.isKeyDown());
+    }
+
+    @EventHandler
+    private void onMotion(EventMotion e) {
+        if (thirdPerson.get()) { // smart change back lol
+            if (canStrafe()) {
+                if (hasChangedThirdPerson) lastView = mc.gameSettings.thirdPersonView;
+                mc.gameSettings.thirdPersonView = 1;
+                hasChangedThirdPerson = false;
+            } else if (!hasChangedThirdPerson) {
+                mc.gameSettings.thirdPersonView = lastView;
+                hasChangedThirdPerson = true;
+            }
+        }
     }
 
     @EventHandler

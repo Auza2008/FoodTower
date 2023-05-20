@@ -4,30 +4,30 @@ import cn.foodtower.api.events.World.*;
 import net.minecraft.client.Minecraft;
 
 public abstract class SpeedModule {
-    protected int stage = 0;
     public static Minecraft mc = Minecraft.getMinecraft();
     public double movementSpeed;
+    protected int stage = 0;
     protected double distance;
 
-    public abstract void onStep( EventStep e);
+    public abstract void onStep(EventStep e);
 
-    public abstract void onPre( EventPreUpdate e);
+    public abstract void onPre(EventPreUpdate e);
 
     public abstract void onMove(EventMove e);
 
-    public abstract void onPost( EventPostUpdate e);
+    public abstract void onPost(EventPostUpdate e);
 
     public abstract void onEnabled();
 
     public abstract void onDisabled();
 
-    public abstract void onPacket( EventPacket e );
+    public abstract void onPacket(EventPacket e);
 
-    public abstract void onMotion( EventMotionUpdate e);
+    public abstract void onMotion(EventMotionUpdate e);
 
-    public abstract void onPacketSend( EventPacketSend e);
+    public abstract void onPacketSend(EventPacketSend e);
 
-    public void setMotion( EventMove em, double speed) {
+    public void setMotion(EventMove em, double speed) {
         double forward = mc.thePlayer.movementInput.moveForward;
         double strafe = mc.thePlayer.movementInput.moveStrafe;
         float yaw = mc.thePlayer.rotationYaw;
@@ -55,9 +55,11 @@ public abstract class SpeedModule {
             em.setZ(forward * speed * sin - strafe * speed * cos);
         }
     }
+
     protected boolean canZoom() {
         return mc.thePlayer.moving() && mc.thePlayer.onGround;
     }
+
     public boolean isMoving2() {
         return !(mc.thePlayer.moveForward == 0.0F && mc.thePlayer.moveStrafing == 0.0F);
     }

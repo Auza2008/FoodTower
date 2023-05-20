@@ -1,9 +1,5 @@
 package cn.foodtower.module.modules.combat;
 
-import java.util.Comparator;
-import java.util.Objects;
-import java.util.Optional;
-
 import cn.foodtower.api.EventHandler;
 import cn.foodtower.api.events.World.EventAttack;
 import cn.foodtower.module.Module;
@@ -17,6 +13,10 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 
+import java.util.Comparator;
+import java.util.Objects;
+import java.util.Optional;
+
 public class AutoSword extends Module {
     public TimeHelper timer = new TimeHelper();
 
@@ -25,7 +25,7 @@ public class AutoSword extends Module {
     }
 
     @EventHandler
-    public void onAttack(EventAttack e){
+    public void onAttack(EventAttack e) {
         int best = getBestSword();
         if (best != 0) {
             mc.playerController.windowClick(0, best, 0, 2, mc.thePlayer);
@@ -34,7 +34,7 @@ public class AutoSword extends Module {
 
     int getBestSword() {
         ItemStack bestSword = this.getBestItem(ItemSword.class, Comparator.comparingDouble(this::getSwordDamage));
-        if (bestSword == null){
+        if (bestSword == null) {
             return 0;
         }
         int slotHB = InventoryUtils.getBestSwordSlotID(bestSword, this.getSwordDamage(bestSword));
@@ -75,16 +75,16 @@ public class AutoSword extends Module {
         Optional bestItem = mc.thePlayer.inventoryContainer.inventorySlots.stream().map(Slot::getStack).filter(Objects::nonNull).filter((itemStack) -> {
             return itemStack.getItem().getClass().equals(itemType);
         }).max(comparator);
-        return (ItemStack)bestItem.orElse(null);
+        return (ItemStack) bestItem.orElse(null);
     }
 
     private double getSwordDamage(ItemStack itemStack) {
         double damage = 0.0D;
         Optional attributeModifier = itemStack.getAttributeModifiers().values().stream().findFirst();
-        if(attributeModifier.isPresent()) {
-            damage = ((AttributeModifier)attributeModifier.get()).getAmount();
+        if (attributeModifier.isPresent()) {
+            damage = ((AttributeModifier) attributeModifier.get()).getAmount();
         }
 
-        return damage + (double)EnchantmentHelper.func_152377_a(itemStack, EnumCreatureAttribute.UNDEFINED);
+        return damage + (double) EnchantmentHelper.func_152377_a(itemStack, EnumCreatureAttribute.UNDEFINED);
     }
 }

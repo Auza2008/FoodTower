@@ -19,23 +19,20 @@ import net.minecraft.potion.PotionEffect;
 import java.awt.*;
 
 
-
 public class AutoPot
-extends Module {
+        extends Module {
+    public static boolean potting;
     private final Option REGEN = new Option("Regen", true);
     private final Option SPEED = new Option("Speed", true);
     private final Option PREDICT = new Option("Predict", true);
     private final Option Ground = new Option("GroundCheck", true);
     private final Numbers<Double> HEALTH = new Numbers<>("Health", 6.0, 0.5, 10.0, 0.5);
-
+    Timer timer = new Timer();
     public AutoPot() {
         super("AutoPot", new String[]{"AutoPot"}, ModuleType.Combat);
         super.addValues(this.REGEN, this.SPEED, this.PREDICT, this.HEALTH, this.Ground);
         this.setColor(new Color(208, 30, 142).getRGB());
     }
-
-    public static boolean potting;
-    Timer timer = new Timer();
 
     @Override
     public void onEnable() {
@@ -103,7 +100,7 @@ extends Module {
     }
 
     void getBestPot(int hotbarSlot, int potID) {
-        if ( KillAura.curTarget != null) return;
+        if (KillAura.curTarget != null) return;
         for (int i = 9; i < 45; i++) {
             if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack() && (mc.currentScreen == null || mc.currentScreen instanceof GuiInventory)) {
                 ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();

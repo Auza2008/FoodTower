@@ -1,16 +1,5 @@
 package cn.foodtower.module.modules.combat;
 
-import cn.foodtower.module.modules.world.Teams;
-import cn.foodtower.manager.FriendManager;
-import cn.foodtower.module.Module;
-import cn.foodtower.module.ModuleType;
-import cn.foodtower.util.misc.AStarCustomPathFinder;
-import cn.foodtower.util.render.Colors;
-import cn.foodtower.util.render.RenderingUtil;
-import cn.foodtower.util.SuperLib;
-import cn.foodtower.util.time.STimer;
-import cn.foodtower.util.time.TimerUtil;
-import cn.foodtower.util.Vec3;
 import cn.foodtower.api.EventHandler;
 import cn.foodtower.api.events.Render.EventRender2D;
 import cn.foodtower.api.events.Render.EventRender3D;
@@ -19,10 +8,22 @@ import cn.foodtower.api.events.World.EventTick;
 import cn.foodtower.api.value.Mode;
 import cn.foodtower.api.value.Numbers;
 import cn.foodtower.api.value.Option;
+import cn.foodtower.manager.FriendManager;
+import cn.foodtower.module.Module;
+import cn.foodtower.module.ModuleType;
+import cn.foodtower.module.modules.world.Teams;
+import cn.foodtower.util.SuperLib;
+import cn.foodtower.util.Vec3;
+import cn.foodtower.util.misc.AStarCustomPathFinder;
+import cn.foodtower.util.render.Colors;
+import cn.foodtower.util.render.RenderingUtil;
+import cn.foodtower.util.time.STimer;
+import cn.foodtower.util.time.TimerUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -45,33 +46,32 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TPAura extends Module {
-    public static final Mode TPMode = new Mode("Mode",Modes.values(),Modes.Sigma);
-    private double dashDistance = 5;
+    public static final Mode TPMode = new Mode("Mode", Modes.values(), Modes.Sigma);
     public static final Numbers<Double> RANGE = new Numbers<>("Range", 30d, 1d, 100d, 5d);
+    public static final Option PLAYERS = new Option("Player", true);
     //public static final Option AUTOBLOCK = new Option("AutoBlock",true);
-
-    public static final Option PLAYERS = new Option("Player",true);
-    public static final Option ANIMALS = new Option("Animals",true);
-    public static final Option TEAMS = new Option("Team",false);
-    public static final Option INVISIBLES = new Option("Invisibles",true);
-    public static final Option ESP = new Option("ESP",true);
-    public static final Option PATHESP = new Option("DrawPath",true);
+    public static final Option ANIMALS = new Option("Animals", true);
+    public static final Option TEAMS = new Option("Team", false);
+    public static final Option INVISIBLES = new Option("Invisibles", true);
+    public static final Option ESP = new Option("ESP", true);
+    public static final Option PATHESP = new Option("DrawPath", true);
     public static final Numbers<Double> CPS = new Numbers<>("CPS", 8d, 1d, 20d, 1d);
     public static final Numbers<Double> MAXT = new Numbers<>("MaxTarget", 1d, 1d, 50d, 1d);
+    public static TimerUtil timer = new TimerUtil();
+    public static boolean canReach;
+    public EntityLivingBase TPcurtarget;
+    private final double dashDistance = 5;
     private ArrayList<Vec3> path = new ArrayList<>();
     private List<Vec3>[] test = new ArrayList[50];
     private List<EntityLivingBase> targets = new CopyOnWriteArrayList<>();
-    private STimer cps = new STimer();
-    public static TimerUtil timer = new TimerUtil();
+    private final STimer cps = new STimer();
     private int ticks;
     private int tpdelay;
-    public EntityLivingBase TPcurtarget;
-    public static boolean canReach;
 
     //MODIFICATION DE LA REACH DANS ENTITYRENDERER
     public TPAura() {
-        super("TPAura",new String[]{"InfiniteAura"}, ModuleType.Combat);
-            this.addValues(TPMode,RANGE, PLAYERS, ANIMALS, TEAMS, INVISIBLES, ESP, PATHESP, CPS, MAXT);
+        super("TPAura", new String[]{"InfiniteAura"}, ModuleType.Combat);
+        this.addValues(TPMode, RANGE, PLAYERS, ANIMALS, TEAMS, INVISIBLES, ESP, PATHESP, CPS, MAXT);
     }
 
     @Override
@@ -79,8 +79,9 @@ public class TPAura extends Module {
         timer.reset();
         targets.clear();
     }
+
     @Override
-    public void onDisable(){
+    public void onDisable() {
 //        if (mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItem() instanceof ItemSword
 //                && AUTOBLOCK.getValue() && mc.thePlayer.isBlocking()){
 //            KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(),false);
@@ -89,15 +90,16 @@ public class TPAura extends Module {
     }
 
     @EventHandler
-    public void onTick(EventTick e){
-        if(TPMode.getValue() == Modes.ETB){
+    public void onTick(EventTick e) {
+        if (TPMode.getValue() == Modes.ETB) {
             ++this.ticks;
             ++this.tpdelay;
             if (this.ticks >= 20 - this.speed()) {
                 this.ticks = 0;
-                for (Object object : this.mc.theWorld.loadedEntityList) {
+                for (Object object : mc.theWorld.loadedEntityList) {
                     EntityLivingBase entity;
-                    if (!(object instanceof EntityLivingBase) || (entity = (EntityLivingBase)object) instanceof EntityPlayerSP || this.mc.thePlayer.getDistanceToEntity(entity) > 10.0f || !entity.isEntityAlive()) continue;
+                    if (!(object instanceof EntityLivingBase) || (entity = (EntityLivingBase) object) instanceof EntityPlayerSP || mc.thePlayer.getDistanceToEntity(entity) > 10.0f || !entity.isEntityAlive())
+                        continue;
                     if (FriendManager.isFriend(entity.getName())) continue;
                     this.TPcurtarget = entity;
                     if (this.tpdelay >= 4) {
@@ -107,7 +109,7 @@ public class TPAura extends Module {
                     this.attack(entity);
                 }
             }
-        }else{
+        } else {
             float delayValue = (20f / CPS.getValue().floatValue()) * 50f;
             targets = getTargets();
             if (cps.check(delayValue)) {
@@ -137,7 +139,7 @@ public class TPAura extends Module {
                         }
                     }
                     cps.reset();
-                }else {
+                } else {
 //                    if (mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItem() instanceof ItemSword
 //                            && AUTOBLOCK.getValue() && mc.thePlayer.isBlocking()){
 //                        KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(),false);
@@ -147,46 +149,48 @@ public class TPAura extends Module {
             }
         }
     }
+
     @EventHandler
-    public void onRender2D(EventRender2D e){
+    public void onRender2D(EventRender2D e) {
         this.setSuffix(TPMode.getValue());
     }
+
     @EventHandler
     public void onUpdate(EventPreUpdate event) {
-        if(TPMode.getValue() == Modes.ETB){
-        return;
+        if (TPMode.getValue() == Modes.ETB) {
         }
-            }
+    }
+
     @EventHandler
     public void onRender(EventRender3D event) {
-            if (!targets.isEmpty() && ESP.getValue()) {
-                if (targets.size() > 0) {
-                    for (int i = 0; i < (targets.size() > MAXT.getValue() ? MAXT.getValue() : targets.size()); i++) {
-                        int color = targets.get(i).hurtResistantTime > 15 ? SuperLib.reAlpha(Colors.RED.c,0.2f) : SuperLib.reAlpha(Colors.AQUA.c,0.2f);
-                        drawESP(targets.get(i), color);
-                    }
-
-                }
-            }
-            if (!path.isEmpty() && PATHESP.getValue()) {
-                for (int i = 0; i < targets.size(); i++) {
-                    try {
-                        if (test != null)
-                            for (Vec3 pos : test[i]) {
-                                if (pos != null)
-                                    drawPath(pos);
-                            }
-                    } catch (Exception e) {
-
-                    }
+        if (!targets.isEmpty() && ESP.getValue()) {
+            if (targets.size() > 0) {
+                for (int i = 0; i < (targets.size() > MAXT.getValue() ? MAXT.getValue() : targets.size()); i++) {
+                    int color = targets.get(i).hurtResistantTime > 15 ? SuperLib.reAlpha(Colors.RED.c, 0.2f) : SuperLib.reAlpha(Colors.AQUA.c, 0.2f);
+                    drawESP(targets.get(i), color);
                 }
 
-                if (cps.check(1000)) {
-                    test = new ArrayList[50];
-                    path.clear();
-                }
             }
         }
+        if (!path.isEmpty() && PATHESP.getValue()) {
+            for (int i = 0; i < targets.size(); i++) {
+                try {
+                    if (test != null)
+                        for (Vec3 pos : test[i]) {
+                            if (pos != null)
+                                drawPath(pos);
+                        }
+                } catch (Exception e) {
+
+                }
+            }
+
+            if (cps.check(1000)) {
+                test = new ArrayList[50];
+                path.clear();
+            }
+        }
+    }
 
     private ArrayList<Vec3> computePath(Vec3 topFrom, Vec3 to) {
         if (!canPassThrow(new BlockPos(topFrom.mc()))) {
@@ -259,7 +263,7 @@ public class TPAura extends Module {
                 if (AntiBot.isServerBot(entity)) {
                     return false;
                 }
-                if ( HypixelAntibot.isBot(entity)) {
+                if (HypixelAntibot.isBot(entity)) {
                     return false;
                 }
                 if (entity.isPlayerSleeping()) {
@@ -276,17 +280,13 @@ public class TPAura extends Module {
                         if (!player.isEntityAlive()
                                 && player.getHealth() == 0.0) {
                             return false;
-                        } else if ( Teams.isOnSameTeam(player)
-                                && (Boolean) TEAMS.getValue()) {
+                        } else if (Teams.isOnSameTeam(player)
+                                && TEAMS.getValue()) {
                             return false;
                         } else if (player.isInvisible()
-                                && !INVISIBLES.getValue())
-                        {
+                                && !INVISIBLES.getValue()) {
                             return false;
-                        } else if (FriendManager.isFriend(player.getName())) {
-                            return false;
-                        } else
-                            return true;
+                        } else return !FriendManager.isFriend(player.getName());
                     }
                 } else {
                     if (!entity.isEntityAlive()) {
@@ -301,10 +301,7 @@ public class TPAura extends Module {
                 }
                 if ((entity instanceof EntityAnimal || entity instanceof EntityVillager)
                         && animals) {
-                    if (entity.getName().equals("Villager")) {
-                        return false;
-                    }
-                    return true;
+                    return !entity.getName().equals("Villager");
                 }
             }
         }
@@ -344,73 +341,75 @@ public class TPAura extends Module {
         mc.entityRenderer.setupCameraTransform(mc.timer.renderPartialTicks, 2);
         RenderingUtil.glColor(color);
         RenderingUtil.drawBoundingBox(new AxisAlignedBB(
-                vec.getX() - mc.getRenderManager().renderPosX, vec.getY() - mc.getRenderManager().renderPosY, vec.getZ() - mc.getRenderManager().renderPosZ,
-                vec2.getX() - mc.getRenderManager().renderPosX, vec2.getY() - mc.getRenderManager().renderPosY, vec2.getZ() - mc.getRenderManager().renderPosZ));
+                vec.getX() - RenderManager.renderPosX, vec.getY() - RenderManager.renderPosY, vec.getZ() - RenderManager.renderPosZ,
+                vec2.getX() - RenderManager.renderPosX, vec2.getY() - RenderManager.renderPosY, vec2.getZ() - RenderManager.renderPosZ));
         GL11.glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
         RenderingUtil.post3D();
     }
 
     public void drawPath(Vec3 vec) {
-        double x = vec.getX() - mc.getRenderManager().renderPosX;
-        double y = vec.getY() - mc.getRenderManager().renderPosY;
-        double z = vec.getZ() - mc.getRenderManager().renderPosZ;
+        double x = vec.getX() - RenderManager.renderPosX;
+        double y = vec.getY() - RenderManager.renderPosY;
+        double z = vec.getZ() - RenderManager.renderPosZ;
         double width = 0.3;
         double height = mc.thePlayer.getEyeHeight();
         RenderingUtil.pre3D();
         GL11.glLoadIdentity();
         mc.entityRenderer.setupCameraTransform(mc.timer.renderPartialTicks, 2);
-        int colors[] = {Colors.getColor(Color.WHITE), Colors.getColor(Color.white)};
-            RenderingUtil.glColor(colors[1]);
-            GL11.glLineWidth(3 - 1 * 2);
-            GL11.glBegin(GL11.GL_LINE_STRIP);
-            GL11.glVertex3d(x - width, y, z - width);
-            GL11.glVertex3d(x - width, y, z - width);
-            GL11.glVertex3d(x - width, y + height, z - width);
-            GL11.glVertex3d(x + width, y + height, z - width);
-            GL11.glVertex3d(x + width, y, z - width);
-            GL11.glVertex3d(x - width, y, z - width);
-            GL11.glVertex3d(x - width, y, z + width);
-            GL11.glEnd();
-            GL11.glBegin(GL11.GL_LINE_STRIP);
-            GL11.glVertex3d(x + width, y, z + width);
-            GL11.glVertex3d(x + width, y + height, z + width);
-            GL11.glVertex3d(x - width, y + height, z + width);
-            GL11.glVertex3d(x - width, y, z + width);
-            GL11.glVertex3d(x + width, y, z + width);
-            GL11.glVertex3d(x + width, y, z - width);
-            GL11.glEnd();
-            GL11.glBegin(GL11.GL_LINE_STRIP);
-            GL11.glVertex3d(x + width, y + height, z + width);
-            GL11.glVertex3d(x + width, y + height, z - width);
-            GL11.glEnd();
-            GL11.glBegin(GL11.GL_LINE_STRIP);
-            GL11.glVertex3d(x - width, y + height, z + width);
-            GL11.glVertex3d(x - width, y + height, z - width);
-            GL11.glEnd();
+        int[] colors = {Colors.getColor(Color.WHITE), Colors.getColor(Color.white)};
+        RenderingUtil.glColor(colors[1]);
+        GL11.glLineWidth(3 - 2);
+        GL11.glBegin(GL11.GL_LINE_STRIP);
+        GL11.glVertex3d(x - width, y, z - width);
+        GL11.glVertex3d(x - width, y, z - width);
+        GL11.glVertex3d(x - width, y + height, z - width);
+        GL11.glVertex3d(x + width, y + height, z - width);
+        GL11.glVertex3d(x + width, y, z - width);
+        GL11.glVertex3d(x - width, y, z - width);
+        GL11.glVertex3d(x - width, y, z + width);
+        GL11.glEnd();
+        GL11.glBegin(GL11.GL_LINE_STRIP);
+        GL11.glVertex3d(x + width, y, z + width);
+        GL11.glVertex3d(x + width, y + height, z + width);
+        GL11.glVertex3d(x - width, y + height, z + width);
+        GL11.glVertex3d(x - width, y, z + width);
+        GL11.glVertex3d(x + width, y, z + width);
+        GL11.glVertex3d(x + width, y, z - width);
+        GL11.glEnd();
+        GL11.glBegin(GL11.GL_LINE_STRIP);
+        GL11.glVertex3d(x + width, y + height, z + width);
+        GL11.glVertex3d(x + width, y + height, z - width);
+        GL11.glEnd();
+        GL11.glBegin(GL11.GL_LINE_STRIP);
+        GL11.glVertex3d(x - width, y + height, z + width);
+        GL11.glVertex3d(x - width, y + height, z - width);
+        GL11.glEnd();
 
         RenderingUtil.post3D();
     }
+
     public void attack(EntityLivingBase entity) {
         this.attack(entity, false);
     }
 
     public void attack(EntityLivingBase entity, boolean crit) {
-        this.mc.thePlayer.swingItem();
-        float sharpLevel = EnchantmentHelper.func_152377_a(this.mc.thePlayer.getHeldItem(), entity.getCreatureAttribute());
-        boolean vanillaCrit = this.mc.thePlayer.fallDistance > 0.0f && !this.mc.thePlayer.onGround && !this.mc.thePlayer.isOnLadder() && !this.mc.thePlayer.isInWater() && !this.mc.thePlayer.isPotionActive(Potion.blindness) && this.mc.thePlayer.ridingEntity == null;
-        this.mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity((Entity)entity, C02PacketUseEntity.Action.ATTACK));
+        mc.thePlayer.swingItem();
+        float sharpLevel = EnchantmentHelper.func_152377_a(mc.thePlayer.getHeldItem(), entity.getCreatureAttribute());
+        boolean vanillaCrit = mc.thePlayer.fallDistance > 0.0f && !mc.thePlayer.onGround && !mc.thePlayer.isOnLadder() && !mc.thePlayer.isInWater() && !mc.thePlayer.isPotionActive(Potion.blindness) && mc.thePlayer.ridingEntity == null;
+        mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK));
         if (crit || vanillaCrit) {
-            this.mc.thePlayer.onCriticalHit(entity);
+            mc.thePlayer.onCriticalHit(entity);
         }
         if (sharpLevel > 0.0f) {
-            this.mc.thePlayer.onEnchantmentCritical(entity);
+            mc.thePlayer.onEnchantmentCritical(entity);
         }
     }
 
     private int speed() {
         return 8;
     }
-    enum Modes{
+
+    enum Modes {
         Sigma,
         ETB
     }

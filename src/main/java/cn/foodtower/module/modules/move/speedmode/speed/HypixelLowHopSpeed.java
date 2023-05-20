@@ -7,13 +7,15 @@ import net.minecraft.potion.Potion;
 
 public class HypixelLowHopSpeed extends SpeedModule {
 
+    private double speed;
+
     @Override
-    public void onStep( EventStep e ) {
+    public void onStep(EventStep e) {
 
     }
-    private double speed;
+
     @Override
-    public void onPre( EventPreUpdate e ) {
+    public void onPre(EventPreUpdate e) {
         if (mc.thePlayer.onGround) {
             if (mc.thePlayer.isMoving()) {
                 mc.thePlayer.motionY = 0.319f;
@@ -29,43 +31,43 @@ public class HypixelLowHopSpeed extends SpeedModule {
 
     public double getBaseMoveSpeed() {
         double baseSpeed = 0.2603;
-        if (mc.thePlayer.isPotionActive( Potion.moveSpeed))
+        if (mc.thePlayer.isPotionActive(Potion.moveSpeed))
             baseSpeed *= 1.0 + 0.2 * (mc.thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier() + 1);
         return baseSpeed;
     }
 
     @Override
-    public void onMove( EventMove e ) {
+    public void onMove(EventMove e) {
 
     }
 
     @Override
-    public void onPost( EventPostUpdate e ) {
+    public void onPost(EventPostUpdate e) {
 
     }
 
     @Override
-    public void onEnabled( ) {
+    public void onEnabled() {
 
     }
 
     @Override
-    public void onDisabled( ) {
-        mc.timer.timerSpeed= 1.0F;
+    public void onDisabled() {
+        mc.timer.timerSpeed = 1.0F;
     }
 
     @Override
-    public void onPacket( EventPacket e ) {
-
-    }
-
-    @Override
-    public void onMotion( EventMotionUpdate e ) {
+    public void onPacket(EventPacket e) {
 
     }
 
     @Override
-    public void onPacketSend( EventPacketSend e ) {
+    public void onMotion(EventMotionUpdate e) {
+
+    }
+
+    @Override
+    public void onPacketSend(EventPacketSend e) {
 
     }
 }

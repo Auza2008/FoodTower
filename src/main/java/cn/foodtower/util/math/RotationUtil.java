@@ -2,6 +2,8 @@ package cn.foodtower.util.math;
 
 import cn.foodtower.api.EventHandler;
 import cn.foodtower.api.events.World.EventTick;
+import cn.foodtower.util.misc.Helper;
+import cn.foodtower.util.misc.Location;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,15 +16,57 @@ import net.minecraft.util.Vec3;
 
 import java.util.Random;
 
-import cn.foodtower.util.misc.Helper;
-import cn.foodtower.util.misc.Location;
-
 public class RotationUtil {
     static Minecraft mc = Minecraft.getMinecraft();
     public static Rotation serverRotation = new Rotation(0F, 0F);
     public static Rotation targetRotation;
     private static int keepLength;
 
+    public static float[] getCustomRotation(cn.foodtower.util.Vec3 vec) {
+        cn.foodtower.util.Vec3 playerVector = new cn.foodtower.util.Vec3(mc.thePlayer.posX, mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
+        double y = vec.yCoord - playerVector.yCoord;
+        double x = vec.xCoord - playerVector.xCoord;
+        double z = vec.zCoord - playerVector.zCoord;
+        double dff = Math.sqrt(x * x + z * z);
+        float yaw = (float) Math.toDegrees(Math.atan2(z, x)) - 90.0f;
+        float pitch = (float) (-Math.toDegrees(Math.atan2(y, dff)));
+        return new float[]{MathHelper.wrapAngleTo180_float(yaw), MathHelper.wrapAngleTo180_float(pitch)};
+    }
+
+    public static cn.foodtower.util.misc.scaffold.VecRotation searchCenter(AxisAlignedBB bb, boolean predict) {
+        cn.foodtower.util.misc.scaffold.VecRotation vecRotation = null;
+        for (double xSearch = 0.15; xSearch < 0.85; xSearch += 0.1) {
+            for (double ySearch = 0.15; ySearch < 1.0; ySearch += 0.1) {
+                for (double zSearch = 0.15; zSearch < 0.85; zSearch += 0.1) {
+                    cn.foodtower.util.Vec3 vec3 = new cn.foodtower.util.Vec3(bb.minX + (bb.maxX - bb.minX) * xSearch, bb.minY + (bb.maxY - bb.minY) * ySearch, bb.minZ + (bb.maxZ - bb.minZ) * zSearch);
+                    Rotation rotation = toRotationMisc(vec3, predict);
+                    cn.foodtower.util.misc.scaffold.VecRotation currentVec = new cn.foodtower.util.misc.scaffold.VecRotation(vec3, rotation);
+                    if (vecRotation != null && !(cn.foodtower.util.misc.scaffold.RotationUtil.getRotationDifference(currentVec.getRotation()) < cn.foodtower.util.misc.scaffold.RotationUtil.getRotationDifference(vecRotation.getRotation())))
+                        continue;
+                    vecRotation = currentVec;
+                }
+            }
+        }
+        return vecRotation;
+    }
+
+    public static Rotation toRotationMisc(cn.foodtower.util.Vec3 vec, boolean predict) {
+        cn.foodtower.util.Vec3 eyesPos = new cn.foodtower.util.Vec3(mc.thePlayer.posX, mc.thePlayer.getEntityBoundingBox().minY + (double) mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
+        if (predict) {
+            eyesPos.addVector(mc.thePlayer.motionX, mc.thePlayer.motionY, mc.thePlayer.motionZ);
+        }
+        double diffX = vec.xCoord - eyesPos.xCoord;
+        double diffY = vec.yCoord - eyesPos.yCoord;
+        double diffZ = vec.zCoord - eyesPos.zCoord;
+        return new Rotation(MathHelper.wrapAngleTo180_float((float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90.0f), MathHelper.wrapAngleTo180_float((float) (-Math.toDegrees(Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ))))));
+    }
+
+    public static cn.foodtower.util.Vec3 getLocation(AxisAlignedBB bb) {
+        double yaw = 0.5;
+        double pitch = 0.5;
+        cn.foodtower.util.misc.scaffold.VecRotation rotation = searchCenter(bb, true);
+        return rotation != null ? (cn.foodtower.util.Vec3) rotation.getVec() : new cn.foodtower.util.Vec3(bb.minX + (bb.maxX - bb.minX) * yaw, bb.minY + (bb.maxY - bb.minY) * pitch, bb.minZ + (bb.maxZ - bb.minZ) * yaw);
+    }
 
     public static float a(double a1, double a2) {
         double v1 = a1 - Minecraft.getMinecraft().thePlayer.posX;

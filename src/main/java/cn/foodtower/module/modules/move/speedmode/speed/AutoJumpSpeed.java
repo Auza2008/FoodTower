@@ -12,18 +12,18 @@ import static cn.foodtower.util.entity.PlayerUtil.setSpeed;
 
 public class AutoJumpSpeed extends SpeedModule {
 
-    public double dmgspeed;
-    public boolean shoulddamageboost=false;
     private final MSTimer timer = new MSTimer();
+    public double dmgspeed;
+    public boolean shoulddamageboost = false;
 
     @Override
-    public void onStep( EventStep e) {
+    public void onStep(EventStep e) {
 
     }
 
     @Override
     public void onPre(EventPreUpdate e) {
-        if(mc.thePlayer.isMoving()) {
+        if (mc.thePlayer.isMoving()) {
 
             if (mc.thePlayer.onGround) {
                 mc.thePlayer.jump();
@@ -40,17 +40,18 @@ public class AutoJumpSpeed extends SpeedModule {
         }
 
     }
+
     public double getBaseMoveSpeed() {
-        return this.mc.thePlayer.isSprinting() ? 0.2873 : (double)0.223f;
+        return mc.thePlayer.isSprinting() ? 0.2873 : (double) 0.223f;
     }
 
     @Override
-    public void onMove( EventMove e) {
+    public void onMove(EventMove e) {
 
     }
 
     @Override
-    public void onPost( EventPostUpdate e) {
+    public void onPost(EventPostUpdate e) {
 
     }
 
@@ -65,26 +66,27 @@ public class AutoJumpSpeed extends SpeedModule {
     }
 
     @Override
-    public void onMotion( EventMotionUpdate e) {
+    public void onMotion(EventMotionUpdate e) {
 
     }
 
     @Override
-    public void onPacketSend( EventPacketSend e) {
+    public void onPacketSend(EventPacketSend e) {
 
     }
+
     @Override
-    public void onPacket( EventPacket e ) {
-        if((e.getPacket() instanceof S12PacketEntityVelocity &&( ( S12PacketEntityVelocity ) e.getPacket() ).getEntityID()==mc.thePlayer.getEntityId()) ){
-            shoulddamageboost=true;
+    public void onPacket(EventPacket e) {
+        if ((e.getPacket() instanceof S12PacketEntityVelocity && ((S12PacketEntityVelocity) e.getPacket()).getEntityID() == mc.thePlayer.getEntityId())) {
+            shoulddamageboost = true;
             timer.reset();
         }
-        if(e.getPacket()instanceof S27PacketExplosion){
+        if (e.getPacket() instanceof S27PacketExplosion) {
 
 
-            S27PacketExplosion s27PacketExplosion = (S27PacketExplosion)e.getPacket();
+            S27PacketExplosion s27PacketExplosion = (S27PacketExplosion) e.getPacket();
             if (s27PacketExplosion.getAffectedBlockPositions().isEmpty()) {
-                dmgspeed = Math.hypot(this.mc.thePlayer.motionX + (double)(s27PacketExplosion.func_149149_c() / 8500.0f), this.mc.thePlayer.motionZ + (double)(s27PacketExplosion.func_149147_e() / 8500.0f));
+                dmgspeed = Math.hypot(mc.thePlayer.motionX + (double) (s27PacketExplosion.func_149149_c() / 8500.0f), mc.thePlayer.motionZ + (double) (s27PacketExplosion.func_149147_e() / 8500.0f));
                 shoulddamageboost = true;
                 timer.reset();
             }

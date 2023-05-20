@@ -64,7 +64,7 @@ public class TargetHUD extends Module {
     public static int authListPos;
     public static DecimalFormat format0 = new DecimalFormat("0.0");
     public static DecimalFormat format00 = new DecimalFormat("0");
-    public static Mode mode = new Mode("Mode", Modes.values(), Modes.Distance);
+    public static Mode mode = new Mode("Mode", Modes.values(), Modes.NewPowerX);
     public static Mode animMode = new Mode("Animation Mode", AnimMode.values(), AnimMode.Scale);
     public static Numbers<Double> hudx = new Numbers<>("X", 70.0d, -400d, 400d, 1d);
     public static Numbers<Double> hudY = new Numbers<>("Y", 80.0d, -400d, 400d, 1d);

@@ -9,9 +9,8 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.AxisAlignedBB;
 
 public class VanillaFly implements FlyModule {
-    public float vanillaSpeed = Fly.speed.getValue().floatValue();
-
     private final MSTimer groundTimer = new MSTimer();
+    public float vanillaSpeed = Fly.speed.getValue().floatValue();
 
     @Override
     public void onEnabled() {
@@ -24,7 +23,7 @@ public class VanillaFly implements FlyModule {
     }
 
     @Override
-    public void onMove( EventMove e) {
+    public void onMove(EventMove e) {
         mc.thePlayer.capabilities.isFlying = false;
         mc.thePlayer.motionY = 0;
         mc.thePlayer.motionX = 0;
@@ -39,22 +38,22 @@ public class VanillaFly implements FlyModule {
     }
 
     @Override
-    public void onUpdate( EventPreUpdate e) {
+    public void onUpdate(EventPreUpdate e) {
 
     }
 
     @Override
-    public void onMotionUpdate( EventMotionUpdate e) {
+    public void onMotionUpdate(EventMotionUpdate e) {
 
     }
 
     @Override
-    public void onPostUpdate( EventPostUpdate e) {
+    public void onPostUpdate(EventPostUpdate e) {
 
     }
 
     @Override
-    public void onPacketSend( EventPacketSend e) {
+    public void onPacketSend(EventPacketSend e) {
 
     }
 
@@ -69,38 +68,39 @@ public class VanillaFly implements FlyModule {
     }
 
     private void handleVanillaKickBypass() {
-        if(!Fly.vanillaFlyAntiKick.getValue() || !groundTimer.hasTimePassed(1000)) return;
+        if (!Fly.vanillaFlyAntiKick.getValue() || !groundTimer.hasTimePassed(1000)) return;
 
         final double ground = calculateGround();
 
-        for(double posY = mc.thePlayer.posY; posY > ground; posY -= 8D) {
+        for (double posY = mc.thePlayer.posY; posY > ground; posY -= 8D) {
             mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, posY, mc.thePlayer.posZ, true));
 
-            if(posY - 8D < ground) break; // Prevent next step
+            if (posY - 8D < ground) break; // Prevent next step
         }
 
         mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, ground, mc.thePlayer.posZ, true));
 
 
-        for(double posY = ground; posY < mc.thePlayer.posY; posY += 8D) {
+        for (double posY = ground; posY < mc.thePlayer.posY; posY += 8D) {
             mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, posY, mc.thePlayer.posZ, true));
 
-            if(posY + 8D > mc.thePlayer.posY) break; // Prevent next step
+            if (posY + 8D > mc.thePlayer.posY) break; // Prevent next step
         }
 
         mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true));
 
         groundTimer.reset();
     }
+
     private double calculateGround() {
         final AxisAlignedBB playerBoundingBox = mc.thePlayer.getEntityBoundingBox();
         double blockHeight = 1D;
 
-        for(double ground = mc.thePlayer.posY; ground > 0D; ground -= blockHeight) {
+        for (double ground = mc.thePlayer.posY; ground > 0D; ground -= blockHeight) {
             final AxisAlignedBB customBox = new AxisAlignedBB(playerBoundingBox.maxX, ground + blockHeight, playerBoundingBox.maxZ, playerBoundingBox.minX, ground, playerBoundingBox.minZ);
 
-            if(mc.theWorld.checkBlockCollision(customBox)) {
-                if(blockHeight <= 0.05D)
+            if (mc.theWorld.checkBlockCollision(customBox)) {
+                if (blockHeight <= 0.05D)
                     return ground + blockHeight;
 
                 ground += blockHeight;

@@ -7,14 +7,15 @@ import cn.foodtower.util.time.TimerUtil;
 
 
 public class AACTimer extends SpeedModule {
-    public TimerUtil timer=new TimerUtil();
+    public TimerUtil timer = new TimerUtil();
+
     @Override
-    public void onStep( EventStep e) {
+    public void onStep(EventStep e) {
 
     }
 
     @Override
-    public void onPre( EventPreUpdate e) {
+    public void onPre(EventPreUpdate e) {
 
     }
 
@@ -38,7 +39,7 @@ public class AACTimer extends SpeedModule {
     }
 
     @Override
-    public void onPost( EventPostUpdate e) {
+    public void onPost(EventPostUpdate e) {
 
     }
 
@@ -53,17 +54,17 @@ public class AACTimer extends SpeedModule {
     }
 
     @Override
-    public void onPacket( EventPacket e ) {
+    public void onPacket(EventPacket e) {
 
     }
 
     @Override
-    public void onMotion( EventMotionUpdate e) {
+    public void onMotion(EventMotionUpdate e) {
 
     }
 
     @Override
-    public void onPacketSend( EventPacketSend e) {
+    public void onPacketSend(EventPacketSend e) {
 
     }
 }
