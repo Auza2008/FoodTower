@@ -44,8 +44,8 @@ public class QRLoginScreen extends GuiScreen {
     public void initGui() {
         res = new ScaledResolution(mc);
 
-        this.buttonList.add(new GuiButton(0, res.getScaledWidth() / 2 - 60, 210, 120, 20, "开始"));
-        this.buttonList.add(new GuiButton(1, res.getScaledWidth() / 2 - 60, 240, 120, 20, "退出"));
+        this.buttonList.add(new GuiButton(0, ScaledResolution.getScaledWidth() / 2 - 60, 210, 120, 20, "开始"));
+        this.buttonList.add(new GuiButton(1, ScaledResolution.getScaledWidth() / 2 - 60, 240, 120, 20, "退出"));
 
         super.initGui();
     }
@@ -55,11 +55,11 @@ public class QRLoginScreen extends GuiScreen {
         this.drawDefaultBackground();
 
         String text = "使用二维码登录至网易云音乐";
-        FontLoader.msFont16.drawString(text, res.getScaledWidth() / 2f - (FontLoader.msFont16.getStringWidth(text) / 2f), 30, 0xFFFFFFFF);
-        FontLoader.msFont16.drawString(state, res.getScaledWidth() / 2f - (FontLoader.msFont16.getStringWidth(state.replaceAll("\247.", "")) / 2f), 50, 0xFFFFFFFF);
+        FontLoader.msFont16.drawString(text, ScaledResolution.getScaledWidth() / 2f - (FontLoader.msFont16.getStringWidth(text) / 2f), 30, 0xFFFFFFFF);
+        FontLoader.msFont16.drawString(state, ScaledResolution.getScaledWidth() / 2f - (FontLoader.msFont16.getStringWidth(state.replaceAll("\247.", "")) / 2f), 50, 0xFFFFFFFF);
 
-        if(this.loginProcessThread != null) {
-            RenderUtil.drawImage(new ResourceLocation("cloudMusicCache/qrcode"), res.getScaledWidth() / 2f - 64, 70, 128, 128, 1f);
+        if (this.loginProcessThread != null) {
+            RenderUtil.drawImage(new ResourceLocation("cloudMusicCache/qrcode"), ScaledResolution.getScaledWidth() / 2f - 64, 70, 128, 128, 1f);
         }
 
         super.drawScreen(mouseX, mouseY, partialTicks);
@@ -68,27 +68,27 @@ public class QRLoginScreen extends GuiScreen {
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
 
-        switch(button.id) {
+        switch (button.id) {
 
             case 0:
                 this.loginProcessThread = new Thread(() -> {
                     try {
                         this.buttonList.get(0).enabled = false;
-                        File fileDir = new File(mc.mcDataDir,".cache/cookies.txt");
+                        File fileDir = new File(mc.mcDataDir, ".cache/cookies.txt");
 
-                        if(fileDir.exists()) fileDir.delete();
+                        if (fileDir.exists()) fileDir.delete();
 
                         this.state = "正在创建Key...";
                         String key = CloudMusicAPI.INSTANCE.QRKey();
-                        System.out.println("Key="+key);
+                        System.out.println("Key=" + key);
                         this.state = "生成二维码...";
-                        this.createQRImage(new File(mc.mcDataDir,".cache/qrcode.png"), "https://music.163.com/login?codekey=" + key, 128, "png");
+                        this.createQRImage(new File(mc.mcDataDir, ".cache/qrcode.png"), "https://music.163.com/login?codekey=" + key, 128, "png");
 
                         boolean needBreak = false;
 
-                        while(!needBreak) {
+                        while (!needBreak) {
 
-                            if(!(mc.currentScreen instanceof QRLoginScreen)) needBreak = true;
+                            if (!(mc.currentScreen instanceof QRLoginScreen)) needBreak = true;
 
                             Object[] result = CloudMusicAPI.INSTANCE.QRState(key);
                             int code = (int) result[0];
@@ -114,14 +114,14 @@ public class QRLoginScreen extends GuiScreen {
 
                                     int size = 0;
 
-                                    for(Cookie c : ((CookieStore) result[1]).getCookies()) {
+                                    for (Cookie c : ((CookieStore) result[1]).getCookies()) {
                                         sb.append(c.getName()).append("=").append(c.getValue()).append(";");
                                         size++;
                                     }
 
                                     CloudMusicAPI.INSTANCE.cookies = new String[size][2];
 
-                                    for(int i = 0; i < size; ++i) {
+                                    for (int i = 0; i < size; ++i) {
                                         Cookie c = ((CookieStore) result[1]).getCookies().get(i);
                                         CloudMusicAPI.INSTANCE.cookies[i][0] = c.getName();
                                         CloudMusicAPI.INSTANCE.cookies[i][1] = c.getValue();

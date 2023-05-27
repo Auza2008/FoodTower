@@ -19,17 +19,21 @@ import java.awt.*;
 import java.util.List;
 
 public class GuiNeedBlur extends GuiScreen {
+    private static boolean isBlurEnabled;
     public ParticleEngine pe = new ParticleEngine();
     public GuiButton yesButton;
     public GuiButton noButton;
-    private static boolean isBlurEnabled;
+
+    public static boolean isBlurEnabled() {
+        return ClientSetting.enableBlur.get();
+    }
 
     @Override
-    public void initGui(){
+    public void initGui() {
         int h = new ScaledResolution(this.mc).getScaledHeight();
         int w = new ScaledResolution(this.mc).getScaledWidth();
-        this.yesButton = new UIFlatButton(1, (int) (w / 2f) - 20 - 25, (int) (h / 2f) + 15, 40, 20, "是的", new Color(25,25,25).getRGB());
-        this.noButton = new UIFlatButton(3, (int) (w / 2f) - 20 + 25, (int) (h / 2f) + 15, 40, 20, "不要", new Color(25,25,25).getRGB());
+        this.yesButton = new UIFlatButton(1, (int) (w / 2f) - 20 - 25, (int) (h / 2f) + 15, 40, 20, "是的", new Color(25, 25, 25).getRGB());
+        this.noButton = new UIFlatButton(3, (int) (w / 2f) - 20 + 25, (int) (h / 2f) + 15, 40, 20, "不要", new Color(25, 25, 25).getRGB());
         this.buttonList.add(this.yesButton);
         this.buttonList.add(this.noButton);
     }
@@ -44,13 +48,13 @@ public class GuiNeedBlur extends GuiScreen {
         switch (button.id) {
             case 1:
                 isBlurEnabled = true;
-                FileManager.save("NeedBlur.txt","true",false);
+                FileManager.save("NeedBlur.txt", "true", false);
                 ClientSetting.enableBlur.setValue(true);
                 mc.displayGuiScreen(new GuiWelcome());
                 break;
             case 3:
                 isBlurEnabled = false;
-                FileManager.save("NeedBlur.txt","false",false);
+                FileManager.save("NeedBlur.txt", "false", false);
                 ClientSetting.enableBlur.setValue(false);
                 mc.displayGuiScreen(new GuiWelcome());
                 break;
@@ -76,11 +80,12 @@ public class GuiNeedBlur extends GuiScreen {
         //(部分电脑不支持模糊效果会导致黑屏)
         FontLoader.msFont13.drawCenteredString("部分电脑不支持模糊效果会导致黑屏，如果您不清楚是否支持本效果请不要开启", w / 2f, h / 2f - 15 + 4, -1);
         FontLoader.msFont13.drawCenteredString("如果还是黑屏请删除\".minecraft/FoodTower/NeedBlur.txt\"来再次访问本界面", w / 2f, h / 2f - 7 + 4, -1);
-        FontLoader.msFont13.drawCenteredString("客户端Base: Distance", w / 2f, h / 2f * 2 - 22, -1);
+        FontLoaders.GoogleSans16.drawCenteredString("客户端Base: Distance", w / 2f, h / 2f * 2 - 22, -1);
 
-        FontLoaders.GoogleSans16.drawCenteredString(Client.name+" made by \u00a7oAuza\u00a7r & \u00a7oLittleGod\u00a7r (FoodTower Team)", width / 2f, height - FontLoaders.GoogleSans16.getHeight() - 6f, -1);
+        FontLoaders.GoogleSans16.drawCenteredString(Client.name + " made by \u00a7oAuza\u00a7r & \u00a7oLittleGod\u00a7r (FoodTower Team)", width / 2f, height - FontLoaders.GoogleSans16.getHeight() - 6f, -1);
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
+
     private boolean setBlurEnabled() {
         List<String> names = FileManager.read("NeedBlur.txt");
         for (String v : names) {
@@ -88,10 +93,8 @@ public class GuiNeedBlur extends GuiScreen {
         }
         return false;
     }
-    public static boolean isBlurEnabled() {
-        return ClientSetting.enableBlur.get();
-    }
-    private boolean isBlurConfiged(){
+
+    private boolean isBlurConfiged() {
         List<String> names = FileManager.read("NeedBlur.txt");
         return !names.isEmpty();
     }

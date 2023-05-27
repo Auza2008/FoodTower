@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'idea'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
     id 'org.jetbrains.kotlin.jvm' version '1.8.21'
 }
 
@@ -17,6 +18,9 @@ repositories {
     }
     maven {
         url "https://mvnrepository.com/artifact"
+    }
+    maven {
+        url "https://www.jitpack.io"
     }
 }
 
@@ -61,9 +65,9 @@ dependencies {
 }
 
 jar {
-    from{
+    from {
         configurations.addLib.collect {
-            if(!it.isDirectory()){
+            if (!it.isDirectory()) {
                 zipTree(it)
             }
         }

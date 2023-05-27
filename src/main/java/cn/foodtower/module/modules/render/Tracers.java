@@ -7,6 +7,7 @@ import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.util.math.MathUtil;
 import cn.foodtower.util.render.RenderUtil;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
@@ -22,15 +23,15 @@ public class Tracers
         for (Entity o : mc.theWorld.loadedEntityList) {
             double[] arrd;
             if (!o.isEntityAlive() || !(o instanceof EntityPlayer) || o == mc.thePlayer) continue;
-            double posX = o.lastTickPosX + (o.posX - o.lastTickPosX) * (double)e.getPartialTicks() - mc.getRenderManager().renderPosX;
-            double posY = o.lastTickPosY + (o.posY - o.lastTickPosY) * (double)e.getPartialTicks() - mc.getRenderManager().renderPosY;
-            double posZ = o.lastTickPosZ + (o.posZ - o.lastTickPosZ) * (double)e.getPartialTicks() - mc.getRenderManager().renderPosZ;
+            double posX = o.lastTickPosX + (o.posX - o.lastTickPosX) * (double) e.getPartialTicks() - RenderManager.renderPosX;
+            double posY = o.lastTickPosY + (o.posY - o.lastTickPosY) * (double) e.getPartialTicks() - RenderManager.renderPosY;
+            double posZ = o.lastTickPosZ + (o.posZ - o.lastTickPosZ) * (double) e.getPartialTicks() - RenderManager.renderPosZ;
             boolean old = mc.gameSettings.viewBobbing;
             RenderUtil.startDrawing();
             mc.gameSettings.viewBobbing = false;
             mc.entityRenderer.setupCameraTransform(mc.timer.renderPartialTicks, 2);
             mc.gameSettings.viewBobbing = old;
-            float color = (float)Math.round(255.0 - mc.thePlayer.getDistanceSqToEntity(o) * 255.0 / MathUtil.square((double) mc.gameSettings.renderDistanceChunks * 2.5)) / 255.0f;
+            float color = (float) Math.round(255.0 - mc.thePlayer.getDistanceSqToEntity(o) * 255.0 / MathUtil.square((double) mc.gameSettings.renderDistanceChunks * 2.5)) / 255.0f;
             if (FriendManager.isFriend(o.getName())) {
                 double[] arrd2 = new double[3];
                 arrd2[0] = 0;

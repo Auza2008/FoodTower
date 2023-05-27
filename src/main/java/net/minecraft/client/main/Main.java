@@ -25,7 +25,7 @@ import java.net.Proxy.Type;
 import java.util.List;
 
 public class Main {
-    public static boolean isbeta = true;
+    public static boolean isbeta = false;
     public static boolean loaded = false;
 
     public static boolean noverify = false;

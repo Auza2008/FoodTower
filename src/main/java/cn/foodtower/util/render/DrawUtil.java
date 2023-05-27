@@ -1,7 +1,6 @@
 package cn.foodtower.util.render;
 
 
-
 import cn.foodtower.util.render.gl.GLShader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -36,15 +35,53 @@ import static org.lwjgl.opengl.GL20.*;
 
 public final class DrawUtil {
 
+    public static final String VERTEX_SHADER = "#version 120 \n" + "\n" + "void main() {\n" + "    gl_TexCoord[0] = gl_MultiTexCoord0;\n" + "    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n" + "}";
     private static final FloatBuffer WND_POS_BUFFER = GLAllocation.createDirectFloatBuffer(4);
     private static final IntBuffer VIEWPORT_BUFFER = GLAllocation.createDirectIntBuffer(16);
     private static final FloatBuffer MODEL_MATRIX_BUFFER = GLAllocation.createDirectFloatBuffer(16);
     private static final FloatBuffer PROJECTION_MATRIX_BUFFER = GLAllocation.createDirectFloatBuffer(16);
     private static final IntBuffer SCISSOR_BUFFER = GLAllocation.createDirectIntBuffer(16);
+    private static final String CIRCLE_FRAG_SHADER = "#version 120\n" + "\n" + "uniform float innerRadius;\n" + "uniform vec4 colour;\n" + "\n" + "void main() {\n" + "   vec2 pixel = gl_TexCoord[0].st;\n" + "   vec2 centre = vec2(0.5, 0.5);\n" + "   float d = length(pixel - centre);\n" + "   float c = smoothstep(d+innerRadius, d+innerRadius+0.01, 0.5-innerRadius);\n" + "   float a = smoothstep(0.0, 1.0, c) * colour.a;\n" + "   gl_FragColor = vec4(colour.rgb, a);\n" + "}\n";
+    private static final GLShader CIRCLE_SHADER = new GLShader(VERTEX_SHADER, CIRCLE_FRAG_SHADER) {
+        @Override
+        public void setupUniforms() {
+            this.setupUniform("colour");
+            this.setupUniform("innerRadius");
+        }
+    };
+    private static final String ROUNDED_QUAD_FRAG_SHADER = "#version 120\n" + "uniform float width;\n" + "uniform float height;\n" + "uniform float radius;\n" + "uniform vec4 colour;\n" + "\n" + "float SDRoundedRect(vec2 p, vec2 b, float r) {\n" + "    vec2 q = abs(p) - b + r;\n" + "    return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;\n" + "}\n" + "\n" + "void main() {\n" + "    vec2 size = vec2(width, height);\n" + "    vec2 pixel = gl_TexCoord[0].st * size;\n" + "    vec2 centre = 0.5 * size;\n" + "    float b = SDRoundedRect(pixel - centre, centre, radius);\n" + "    float a = 1.0 - smoothstep(0, 1.0, b);\n" + "    gl_FragColor = vec4(colour.rgb, colour.a * a);\n" + "}";
+    private static final GLShader ROUNDED_QUAD_SHADER = new GLShader(VERTEX_SHADER, ROUNDED_QUAD_FRAG_SHADER) {
+        @Override
+        public void setupUniforms() {
+            this.setupUniform("width");
+            this.setupUniform("height");
+            this.setupUniform("colour");
+            this.setupUniform("radius");
+        }
+    };
+    private static final String RAINBOW_FRAG_SHADER = "#version 120\n" + "uniform float width;\n" + "uniform float height;\n" + "uniform float radius;\n" + "uniform float u_time;\n" + "\n" + "float SDRoundedRect(vec2 p, vec2 b, float r) {\n" + "    vec2 q = abs(p) - b + r;\n" + "    return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;\n" + "}\n" + "\n" + "void main() {\n" + "    vec2 size = vec2(width, height);\n" + "    vec2 pixel = gl_TexCoord[0].st * size;\n" + "    vec2 centre = 0.5 * size;\n" + "    float b = SDRoundedRect(pixel - centre, centre, radius);\n" + "    float a = 1.0 - smoothstep(0, 1.0, b);\n" + "    vec3 colour = 0.5 + 0.5*cos(u_time+gl_TexCoord[0].st.x+vec3(0,2,4));\n" + "    gl_FragColor = vec4(colour, a);\n" + "}";
+    private static final GLShader GL_COLOUR_SHADER = new GLShader(VERTEX_SHADER, RAINBOW_FRAG_SHADER) {
 
+        private final long initTime = System.currentTimeMillis();
+
+        @Override
+        public void setupUniforms() {
+            this.setupUniform("width");
+            this.setupUniform("height");
+            this.setupUniform("radius");
+            this.setupUniform("u_time");
+        }
+
+        @Override
+        public void updateUniforms() {
+            glUniform1f(glGetUniformLocation(getProgram(), "u_time"), (System.currentTimeMillis() - initTime) / 1000.0f);
+        }
+    };
     public static float ticks, ticksSinceClickgui;
+
     private DrawUtil() {
     }
+
     public static void renderEnchantText(ItemStack stack, int x, float y) {
         RenderHelper.disableStandardItemLighting();
         float enchantmentY = y + 24f;
@@ -93,7 +130,7 @@ public final class DrawUtil {
             int fireAspectLevel = EnchantmentHelper.getEnchantmentLevel(Enchantment.fireAspect.effectId, stack);
             int unbreakingLevel = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack);
             if (sharpnessLevel > 0) {
-                DrawUtil.drawEnchantTag("S" +  ColorUtils.getColor(sharpnessLevel) + sharpnessLevel, x * 2, enchantmentY);
+                DrawUtil.drawEnchantTag("S" + ColorUtils.getColor(sharpnessLevel) + sharpnessLevel, x * 2, enchantmentY);
                 enchantmentY += 8;
             }
             if (knockbackLevel > 0) {
@@ -119,6 +156,7 @@ public final class DrawUtil {
             GlStateManager.popMatrix();
         }
     }
+
     private static void drawEnchantTag(String text, int x, float y) {
         GlStateManager.pushMatrix();
         GlStateManager.disableDepth();
@@ -128,6 +166,7 @@ public final class DrawUtil {
         GlStateManager.enableDepth();
         GlStateManager.popMatrix();
     }
+
     public static void drawModel(final float yaw, final float pitch, final EntityLivingBase entityLivingBase) {
         GlStateManager.resetColor();
         GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -145,8 +184,8 @@ public final class DrawUtil {
         RenderHelper.enableStandardItemLighting();
         GlStateManager.rotate(-135.0f, 0.0f, 1.0f, 0.0f);
         GlStateManager.rotate((float) (-Math.atan(pitch / 40.0f) * 20.0), 1.0f, 0.0f, 0.0f);
-        entityLivingBase.renderYawOffset = yaw - yaw / yaw * 0.4f;
-        entityLivingBase.rotationYaw = yaw - yaw / yaw * 0.2f;
+        entityLivingBase.renderYawOffset = yaw - 0.4f;
+        entityLivingBase.rotationYaw = yaw - 0.2f;
         entityLivingBase.rotationPitch = pitch;
         entityLivingBase.rotationYawHead = entityLivingBase.rotationYaw;
         entityLivingBase.prevRotationYawHead = entityLivingBase.rotationYaw;
@@ -186,7 +225,7 @@ public final class DrawUtil {
         final ScaledResolution sr = new ScaledResolution(mc);
         final double scale = sr.getScaleFactor();
 
-        y = sr.getScaledHeight() - y;
+        y = ScaledResolution.getScaledHeight() - y;
 
         x *= scale;
         y *= scale;
@@ -195,22 +234,15 @@ public final class DrawUtil {
 
         GL11.glScissor((int) x, (int) (y - height), (int) width, (int) height);
     }
-    public void circle(final double x, final double y, final double radius, final boolean filled, final Color color) {
-        polygon(x, y, radius, 360, filled, color);
-    }
-
-    public void circle(final double x, final double y, final double radius, final boolean filled) {
-        polygon(x, y, radius, 360, filled);
-    }
 
     public static void circle(final double x, final double y, final double radius, final Color color) {
         polygon(x, y, radius, 360, color);
     }
+
     public static void polygon(final double x, final double y, double sideLength, final double amountOfSides, final boolean filled, final Color color) {
         sideLength /= 2;
         start();
-        if (color != null)
-            color(color);
+        if (color != null) color(color);
         if (!filled) GL11.glLineWidth(2);
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
         begin(filled ? GL11.GL_TRIANGLE_FAN : GL11.GL_LINE_STRIP);
@@ -224,7 +256,6 @@ public final class DrawUtil {
         GL11.glDisable(GL11.GL_LINE_SMOOTH);
         stop();
     }
-
 
     public static void polygon(final double x, final double y, final double sideLength, final int amountOfSides, final boolean filled) {
         polygon(x, y, sideLength, amountOfSides, filled, null);
@@ -250,8 +281,7 @@ public final class DrawUtil {
         float sideLength = (float) edgeRadius;
         sideLength /= 2;
         start();
-        if (color != null)
-            color(color);
+        if (color != null) color(color);
         begin(GL11.GL_TRIANGLE_FAN);
 
         {
@@ -268,8 +298,7 @@ public final class DrawUtil {
         sideLength = (float) edgeRadius;
         sideLength /= 2;
         start();
-        if (color != null)
-            color(color);
+        if (color != null) color(color);
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
         begin(GL11.GL_TRIANGLE_FAN);
 
@@ -288,8 +317,7 @@ public final class DrawUtil {
         sideLength = (float) edgeRadius;
         sideLength /= 2;
         start();
-        if (color != null)
-            color(color);
+        if (color != null) color(color);
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
         begin(GL11.GL_TRIANGLE_FAN);
 
@@ -308,8 +336,7 @@ public final class DrawUtil {
         sideLength = (float) edgeRadius;
         sideLength /= 2;
         start();
-        if (color != null)
-            color(color);
+        if (color != null) color(color);
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
         begin(GL11.GL_TRIANGLE_FAN);
 
@@ -336,6 +363,7 @@ public final class DrawUtil {
         rect(x + halfRadius, y, width - halfRadius, halfRadius, color);
         rect(x + halfRadius, y + height, width - halfRadius, halfRadius, color);
     }
+
     public static void renderGradientRectLeftRight(final int left, final int top, final int right, final int bottom, final int startColor, final int endColor) {
         final float f = (float) (startColor >> 24 & 255) / 255.0F;
         final float f1 = (float) (startColor >> 16 & 255) / 255.0F;
@@ -363,13 +391,6 @@ public final class DrawUtil {
         GlStateManager.enableAlpha();
         GlStateManager.enableTexture2D();
     }
-    public void push() {
-        GL11.glPushMatrix();
-    }
-
-    public void pop() {
-        GL11.glPopMatrix();
-    }
 
     public static void enable(final int glTarget) {
         GL11.glEnable(glTarget);
@@ -396,40 +417,14 @@ public final class DrawUtil {
         disable(GL11.GL_BLEND);
         color(Color.white);
     }
+
     public static void color(final double red, final double green, final double blue, final double alpha) {
         GL11.glColor4d(red, green, blue, alpha);
     }
 
-    public void color(final double red, final double green, final double blue) {
-        color(red, green, blue, 1);
-    }
-
     public static void color(Color color) {
-        if (color == null)
-            color = Color.white;
+        if (color == null) color = Color.white;
         color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, color.getAlpha() / 255F);
-    }
-
-    public void color(Color color, final int alpha) {
-        if (color == null)
-            color = Color.white;
-        color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 0.5);
-    }
-
-    public void lineWidth(final double width) {
-        GL11.glLineWidth((float) width);
-    }
-
-    public void startSmooth() {
-        enable(GL11.GL_POLYGON_SMOOTH);
-        enable(GL11.GL_LINE_SMOOTH);
-        enable(GL11.GL_POINT_SMOOTH);
-    }
-
-    public void endSmooth() {
-        disable(GL11.GL_POINT_SMOOTH);
-        disable(GL11.GL_LINE_SMOOTH);
-        disable(GL11.GL_POLYGON_SMOOTH);
     }
 
     public static void begin(final int glMode) {
@@ -443,10 +438,10 @@ public final class DrawUtil {
     public static void vertex(final double x, final double y) {
         GL11.glVertex2d(x, y);
     }
+
     public static void rect(final double x, final double y, final double width, final double height, final boolean filled, final Color color) {
         start();
-        if (color != null)
-            color(color);
+        if (color != null) color(color);
         begin(filled ? GL11.GL_TRIANGLE_FAN : GL11.GL_LINES);
 
         {
@@ -465,28 +460,19 @@ public final class DrawUtil {
         stop();
     }
 
-    public void rect(final double x, final double y, final double width, final double height, final boolean filled) {
-        rect(x, y, width, height, filled, null);
-    }
-
     public static void rect(final double x, final double y, final double width, final double height, final Color color) {
         rect(x, y, width, height, true, color);
-    }
-
-    public void rect(final double x, final double y, final double width, final double height) {
-        rect(x, y, width, height, true, null);
     }
 
     public static void drawBorderedRect(float x, float y, float width, float height, float borderWidth, Color rectColor, Color borderColor) {
         drawBorderedRect(x, y, width, height, borderWidth, rectColor.getRGB(), borderColor.getRGB());
     }
+
     public static void drawBorderedRect(float x, float y, float x2, float y2, float l1, int col1, int col2) {
         drawRect(x, y, x2, y2, col2);
 
         final float f = (col1 >> 24 & 0xFF) / 255.0F, // @off
-                f1 = (col1 >> 16 & 0xFF) / 255.0F,
-                f2 = (col1 >> 8 & 0xFF) / 255.0F,
-                f3 = (col1 & 0xFF) / 255.0F; // @on
+                f1 = (col1 >> 16 & 0xFF) / 255.0F, f2 = (col1 >> 8 & 0xFF) / 255.0F, f3 = (col1 & 0xFF) / 255.0F; // @on
 
         glEnable(3042);
         glDisable(3553);
@@ -516,13 +502,12 @@ public final class DrawUtil {
         glDisable(3042);
         glDisable(2848);
     }
+
     public static void drawBorderedRect(double x, double y, double x2, double y2, float l1, int col1, int col2) {
         drawRect((float) x, (float) y, (float) x2, (float) y2, col2);
 
         final float f = (col1 >> 24 & 0xFF) / 255.0F, // @off
-                f1 = (col1 >> 16 & 0xFF) / 255.0F,
-                f2 = (col1 >> 8 & 0xFF) / 255.0F,
-                f3 = (col1 & 0xFF) / 255.0F; // @on
+                f1 = (col1 >> 16 & 0xFF) / 255.0F, f2 = (col1 >> 8 & 0xFF) / 255.0F, f3 = (col1 & 0xFF) / 255.0F; // @on
 
         glEnable(3042);
         glDisable(3553);
@@ -553,9 +538,7 @@ public final class DrawUtil {
 
     public static void drawRect(float left, float top, float right, float bottom, int col1) {
         final float f = (col1 >> 24 & 0xFF) / 255.0F, // @off
-                f1 = (col1 >> 16 & 0xFF) / 255.0F,
-                f2 = (col1 >> 8 & 0xFF) / 255.0F,
-                f3 = (col1 & 0xFF) / 255.0F; // @on
+                f1 = (col1 >> 16 & 0xFF) / 255.0F, f2 = (col1 >> 8 & 0xFF) / 255.0F, f3 = (col1 & 0xFF) / 255.0F; // @on
 
         glEnable(3042);
         glDisable(3553);
@@ -604,10 +587,7 @@ public final class DrawUtil {
         return t * t * (3.0 - 2.0 * t);
     }
 
-    public static void glDrawTriangle(final double x, final double y,
-                                      final double x1, final double y1,
-                                      final double x2, final double y2,
-                                      final int colour) {
+    public static void glDrawTriangle(final double x, final double y, final double x1, final double y1, final double x2, final double y2, final int colour) {
         // Disable texture drawing
         glDisable(GL_TEXTURE_2D);
         // Enable blending
@@ -665,11 +645,7 @@ public final class DrawUtil {
         glEnable(GL_ALPHA_TEST);
     }
 
-    public static void glDrawPlusSign(final double x,
-                                      final double y,
-                                      final double size,
-                                      final double rotation,
-                                      final int colour) {
+    public static void glDrawPlusSign(final double x, final double y, final double size, final double rotation, final int colour) {
         // Disable texture drawing
         glDisable(GL_TEXTURE_2D);
         // Enable blending
@@ -717,14 +693,7 @@ public final class DrawUtil {
         glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
     }
 
-    public static void glDrawFilledEllipse(final double x,
-                                           final double y,
-                                           final double radius,
-                                           final int startIndex,
-                                           final int endIndex,
-                                           final int polygons,
-                                           final boolean smooth,
-                                           final int colour) {
+    public static void glDrawFilledEllipse(final double x, final double y, final double radius, final int startIndex, final int endIndex, final int polygons, final boolean smooth, final int colour) {
         // Enable blending
         final boolean restore = glEnableBlend();
 
@@ -769,10 +738,7 @@ public final class DrawUtil {
         glEnable(GL_TEXTURE_2D);
     }
 
-    public static void glDrawFilledEllipse(final double x,
-                                           final double y,
-                                           final float radius,
-                                           final int colour) {
+    public static void glDrawFilledEllipse(final double x, final double y, final float radius, final int colour) {
         // Enable blending
         final boolean restore = glEnableBlend();
         // Enable anti-aliasing
@@ -800,63 +766,40 @@ public final class DrawUtil {
         glEnable(GL_TEXTURE_2D);
     }
 
-    public static void glScissorBox(final double x, final double y,
-                                    final double width, final double height,
-                                    final ScaledResolution scaledResolution) {
-        if (!glIsEnabled(GL_SCISSOR_TEST))
-            glEnable(GL_SCISSOR_TEST);
+    public static void glScissorBox(final double x, final double y, final double width, final double height, final ScaledResolution scaledResolution) {
+        if (!glIsEnabled(GL_SCISSOR_TEST)) glEnable(GL_SCISSOR_TEST);
 
         final int scaling = scaledResolution.getScaleFactor();
 
-        glScissor((int) (x * scaling),
-                (int) ((scaledResolution.getScaledHeight() - (y + height)) * scaling),
-                (int) (width * scaling),
-                (int) (height * scaling));
+        glScissor((int) (x * scaling), (int) ((ScaledResolution.getScaledHeight() - (y + height)) * scaling), (int) (width * scaling), (int) (height * scaling));
     }
 
     public static void glRestoreScissor() {
-        if (!glIsEnabled(GL_SCISSOR_TEST))
-            glEnable(GL_SCISSOR_TEST);
+        if (!glIsEnabled(GL_SCISSOR_TEST)) glEnable(GL_SCISSOR_TEST);
 
         // Restore the last saved scissor box
-        glScissor(SCISSOR_BUFFER.get(0), SCISSOR_BUFFER.get(1),
-                SCISSOR_BUFFER.get(2), SCISSOR_BUFFER.get(3));
+        glScissor(SCISSOR_BUFFER.get(0), SCISSOR_BUFFER.get(1), SCISSOR_BUFFER.get(2), SCISSOR_BUFFER.get(3));
     }
 
     public static void glEndScissor() {
         glDisable(GL_SCISSOR_TEST);
     }
 
-    public static double[] worldToScreen(final double[] positionVector,
-                                         final AxisAlignedBB boundingBox,
-                                         final double[] projection,
-                                         final double[] projectionBuffer) {
-        final double[][] bounds = {
-                {boundingBox.minX, boundingBox.minY, boundingBox.minZ},
-                {boundingBox.minX, boundingBox.maxY, boundingBox.minZ},
-                {boundingBox.minX, boundingBox.maxY, boundingBox.maxZ},
-                {boundingBox.minX, boundingBox.minY, boundingBox.maxZ},
-                {boundingBox.maxX, boundingBox.minY, boundingBox.minZ},
-                {boundingBox.maxX, boundingBox.maxY, boundingBox.minZ},
-                {boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ},
-                {boundingBox.maxX, boundingBox.minY, boundingBox.maxZ}
-        };
+    public static double[] worldToScreen(final double[] positionVector, final AxisAlignedBB boundingBox, final double[] projection, final double[] projectionBuffer) {
+        final double[][] bounds = {{boundingBox.minX, boundingBox.minY, boundingBox.minZ}, {boundingBox.minX, boundingBox.maxY, boundingBox.minZ}, {boundingBox.minX, boundingBox.maxY, boundingBox.maxZ}, {boundingBox.minX, boundingBox.minY, boundingBox.maxZ}, {boundingBox.maxX, boundingBox.minY, boundingBox.minZ}, {boundingBox.maxX, boundingBox.maxY, boundingBox.minZ}, {boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ}, {boundingBox.maxX, boundingBox.minY, boundingBox.maxZ}};
 
         final double[] position;
 
         // null when chests (don't need pos vector proj. for chests)
         if (positionVector != null) {
-            if (!worldToScreen(positionVector, projectionBuffer, projection[2]))
-                return null;
+            if (!worldToScreen(positionVector, projectionBuffer, projection[2])) return null;
 
-            position = new double[]{
-                    projection[0], projection[1], // screen max width/height
+            position = new double[]{projection[0], projection[1], // screen max width/height
                     -1.f, -1.f, // negative placeholder values for > comparison
                     projectionBuffer[0], projectionBuffer[1] // player position vector x/y
             };
         } else {
-            position = new double[]{
-                    projection[0], projection[1], // screen max width/height
+            position = new double[]{projection[0], projection[1], // screen max width/height
                     -1.f, -1.f, // negative placeholder values for > comparison
             };
         }
@@ -881,9 +824,7 @@ public final class DrawUtil {
         glGetFloat(GL_PROJECTION_MATRIX, PROJECTION_MATRIX_BUFFER);
         glGetInteger(GL_VIEWPORT, VIEWPORT_BUFFER);
 
-        if (GLU.gluProject((float) in[0], (float) in[1], (float) in[2],
-                MODEL_MATRIX_BUFFER, PROJECTION_MATRIX_BUFFER,
-                VIEWPORT_BUFFER, WND_POS_BUFFER)) {
+        if (GLU.gluProject((float) in[0], (float) in[1], (float) in[2], MODEL_MATRIX_BUFFER, PROJECTION_MATRIX_BUFFER, VIEWPORT_BUFFER, WND_POS_BUFFER)) {
             final float zCoordinate = WND_POS_BUFFER.get(2);
             // Check z coordinate is within bounds 0-<1.0
             if (zCoordinate < 0.0F || zCoordinate > 1.0F) return false;
@@ -902,12 +843,7 @@ public final class DrawUtil {
         glColor4ub((byte) (color >> 16 & 0xFF), (byte) (color >> 8 & 0xFF), (byte) (color & 0xFF), (byte) (color >> 24 & 0xFF));
     }
 
-    public static void glDrawGradientLine(final double x,
-                                          final double y,
-                                          final double x1,
-                                          final double y1,
-                                          final float lineWidth,
-                                          final int colour) {
+    public static void glDrawGradientLine(final double x, final double y, final double x1, final double y1, final float lineWidth, final int colour) {
         // Enable blending (required for anti-aliasing)
         final boolean restore = glEnableBlend();
         // Disable texture drawing
@@ -957,13 +893,7 @@ public final class DrawUtil {
         glEnable(GL_TEXTURE_2D);
     }
 
-    public static void glDrawLine(final double x,
-                                  final double y,
-                                  final double x1,
-                                  final double y1,
-                                  final float lineWidth,
-                                  final boolean smoothed,
-                                  final int colour) {
+    public static void glDrawLine(final double x, final double y, final double x1, final double y1, final float lineWidth, final boolean smoothed, final int colour) {
         // Enable blending (required for anti-aliasing)
         final boolean restore = glEnableBlend();
         // Disable texture drawing
@@ -1001,11 +931,7 @@ public final class DrawUtil {
         glEnable(GL_TEXTURE_2D);
     }
 
-    public static void glDrawPlayerFace(final double x,
-                                        final double y,
-                                        final double width,
-                                        final double height,
-                                        final ResourceLocation skinLocation) {
+    public static void glDrawPlayerFace(final double x, final double y, final double width, final double height, final ResourceLocation skinLocation) {
         // Bind skin texture
         Minecraft.getMinecraft().getTextureManager().bindTexture(skinLocation);
         // Colour solid
@@ -1029,12 +955,7 @@ public final class DrawUtil {
         glEnd();
     }
 
-    public static void glDrawSidewaysGradientRect(final double x,
-                                                  final double y,
-                                                  final double width,
-                                                  final double height,
-                                                  final int startColour,
-                                                  final int endColour) {
+    public static void glDrawSidewaysGradientRect(final double x, final double y, final double width, final double height, final int startColour, final int endColour) {
         // Enable blending
         final boolean restore = glEnableBlend();
         // Disable texture drawing
@@ -1065,12 +986,7 @@ public final class DrawUtil {
         glRestoreBlend(restore);
     }
 
-    public static void glDrawFilledRect(final double x,
-                                        final double y,
-                                        final double x1,
-                                        final double y1,
-                                        final int startColour,
-                                        final int endColour) {
+    public static void glDrawFilledRect(final double x, final double y, final double x1, final double y1, final int startColour, final int endColour) {
         // Enable blending
         final boolean restore = glEnableBlend();
         // Disable texture drawing
@@ -1103,12 +1019,7 @@ public final class DrawUtil {
         glRestoreBlend(restore);
     }
 
-    public static void glDrawOutlinedQuad(final double x,
-                                          final double y,
-                                          final double width,
-                                          final double height,
-                                          final float thickness,
-                                          final int colour) {
+    public static void glDrawOutlinedQuad(final double x, final double y, final double width, final double height, final float thickness, final int colour) {
         // Enable blending
         final boolean restore = glEnableBlend();
         // Disable texture drawing
@@ -1135,13 +1046,7 @@ public final class DrawUtil {
         glRestoreBlend(restore);
     }
 
-    public static void drawHollowRoundedRect(double x,
-                                             double y,
-                                             double width,
-                                             double height,
-                                             double cornerRadius,
-                                             boolean smoothed,
-                                             Color color) {
+    public static void drawHollowRoundedRect(double x, double y, double width, double height, double cornerRadius, boolean smoothed, Color color) {
         glDisable(GL_TEXTURE_2D);
         glEnable(GL_LINE_SMOOTH);
         glEnable(GL_BLEND);
@@ -1180,12 +1085,7 @@ public final class DrawUtil {
         glDrawLine(x + width, y + cornerRadius, x + width, y + height - cornerRadius, 1.0f, smoothed, color.getRGB());
     }
 
-    public static void glDrawOutlinedQuadGradient(final double x,
-                                                  final double y,
-                                                  final double width,
-                                                  final double height,
-                                                  final float thickness,
-                                                  final int colour, final int secondaryColour) {
+    public static void glDrawOutlinedQuadGradient(final double x, final double y, final double width, final double height, final float thickness, final int colour, final int secondaryColour) {
         // Enable blending
         final boolean restore = glEnableBlend();
         // Disable texture drawing
@@ -1216,13 +1116,7 @@ public final class DrawUtil {
         glRestoreBlend(restore);
     }
 
-
-
-    public static void glDrawFilledQuad(final double x,
-                                        final double y,
-                                        final double width,
-                                        final double height,
-                                        final int colour) {
+    public static void glDrawFilledQuad(final double x, final double y, final double width, final double height, final int colour) {
         // Enable blending
         final boolean restore = glEnableBlend();
         // Disable texture drawing
@@ -1247,12 +1141,7 @@ public final class DrawUtil {
         glEnable(GL_TEXTURE_2D);
     }
 
-    public static void glDrawFilledQuad(final double x,
-                                        final double y,
-                                        final double width,
-                                        final double height,
-                                        final int startColour,
-                                        final int endColour) {
+    public static void glDrawFilledQuad(final double x, final double y, final double width, final double height, final int startColour, final int endColour) {
         // Enable blending
         final boolean restore = glEnableBlend();
         // Disable texture drawing
@@ -1284,11 +1173,7 @@ public final class DrawUtil {
         glEnable(GL_TEXTURE_2D);
     }
 
-    public static void glDrawFilledRect(final double x,
-                                        final double y,
-                                        final double x1,
-                                        final double y1,
-                                        final int colour) {
+    public static void glDrawFilledRect(final double x, final double y, final double x1, final double y1, final int colour) {
         // Enable blending
         final boolean restore = glEnableBlend();
         // Disable texture drawing
@@ -1313,13 +1198,7 @@ public final class DrawUtil {
         glEnable(GL_TEXTURE_2D);
     }
 
-    public static void glDrawArcFilled(final double x,
-                                       final double y,
-                                       final float radius,
-                                       final float angleStart,
-                                       final float angleEnd,
-                                       final int segments,
-                                       final int colour) {
+    public static void glDrawArcFilled(final double x, final double y, final float radius, final float angleStart, final float angleEnd, final int segments, final int colour) {
         // Enable blending
         final boolean restore = glEnableBlend();
         // Disable texture drawing
@@ -1355,13 +1234,7 @@ public final class DrawUtil {
         glEnable(GL_TEXTURE_2D);
     }
 
-    public static void glDrawArcOutline(final double x,
-                                        final double y,
-                                        final float radius,
-                                        final float angleStart,
-                                        final float angleEnd,
-                                        final float lineWidth,
-                                        final int colour) {
+    public static void glDrawArcOutline(final double x, final double y, final float radius, final float angleStart, final float angleEnd, final float lineWidth, final int colour) {
         // Derive segments from size
         final int segments = (int) (radius * 4);
         // Enable blending
@@ -1400,12 +1273,7 @@ public final class DrawUtil {
         glEnable(GL_TEXTURE_2D);
     }
 
-
-    public static void glDrawPoint(final double x,
-                                   final double y,
-                                   final float radius,
-                                   final ScaledResolution scaledResolution,
-                                   final int colour) {
+    public static void glDrawPoint(final double x, final double y, final float radius, final ScaledResolution scaledResolution, final int colour) {
         // Enable blending
         final boolean restore = glEnableBlend();
         // Enable anti-aliasing
@@ -1433,14 +1301,7 @@ public final class DrawUtil {
         glEnable(GL_TEXTURE_2D);
     }
 
-    public static void glDrawRoundedOutline(final double x,
-                                            final double y,
-                                            final double width,
-                                            final double height,
-                                            final float lineWidth,
-                                            final RoundingMode roundingMode,
-                                            final float rounding,
-                                            final int colour) {
+    public static void glDrawRoundedOutline(final double x, final double y, final double width, final double height, final float lineWidth, final RoundingMode roundingMode, final float rounding, final int colour) {
         boolean bLeft = false;
         boolean tLeft = false;
         boolean bRight = false;
@@ -1490,26 +1351,22 @@ public final class DrawUtil {
 
         if (tLeft) {
             // Top left
-            glDrawArcOutline(rounding, rounding, rounding,
-                    270.f, 360.f, lineWidth, colour);
+            glDrawArcOutline(rounding, rounding, rounding, 270.f, 360.f, lineWidth, colour);
         }
 
         if (tRight) {
             // Top right
-            glDrawArcOutline(width - rounding, rounding, rounding,
-                    0.f, 90.f, lineWidth, colour);
+            glDrawArcOutline(width - rounding, rounding, rounding, 0.f, 90.f, lineWidth, colour);
         }
 
         if (bLeft) {
             // Bottom left
-            glDrawArcOutline(rounding, height - rounding, rounding,
-                    180, 270, lineWidth, colour);
+            glDrawArcOutline(rounding, height - rounding, rounding, 180, 270, lineWidth, colour);
         }
 
         if (bRight) {
             // Bottom right
-            glDrawArcOutline(width - rounding, height - rounding, rounding,
-                    90, 180, lineWidth, colour);
+            glDrawArcOutline(width - rounding, height - rounding, rounding, 90, 180, lineWidth, colour);
         }
 
         // Disable texture drawing
@@ -1567,44 +1424,7 @@ public final class DrawUtil {
         glEnable(GL_TEXTURE_2D);
     }
 
-    // TODO :: Do this shader (its not hard)
-
-    private static final String CIRCLE_FRAG_SHADER =
-            "#version 120\n" +
-                    "\n" +
-                    "uniform float innerRadius;\n" +
-                    "uniform vec4 colour;\n" +
-                    "\n" +
-                    "void main() {\n" +
-                    "   vec2 pixel = gl_TexCoord[0].st;\n" +
-                    "   vec2 centre = vec2(0.5, 0.5);\n" +
-                    "   float d = length(pixel - centre);\n" +
-                    "   float c = smoothstep(d+innerRadius, d+innerRadius+0.01, 0.5-innerRadius);\n" +
-                    "   float a = smoothstep(0.0, 1.0, c) * colour.a;\n" +
-                    "   gl_FragColor = vec4(colour.rgb, a);\n" +
-                    "}\n";
-
-    public static final String VERTEX_SHADER =
-            "#version 120 \n" +
-                    "\n" +
-                    "void main() {\n" +
-                    "    gl_TexCoord[0] = gl_MultiTexCoord0;\n" +
-                    "    gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;\n" +
-                    "}";
-
-    private static final GLShader CIRCLE_SHADER = new GLShader(VERTEX_SHADER, CIRCLE_FRAG_SHADER) {
-        @Override
-        public void setupUniforms() {
-            this.setupUniform("colour");
-            this.setupUniform("innerRadius");
-        }
-    };
-
-    public static void glDrawSemiCircle(final double x, final double y,
-                                        final double diameter,
-                                        final float innerRadius,
-                                        final double percentage,
-                                        final int colour) {
+    public static void glDrawSemiCircle(final double x, final double y, final double diameter, final float innerRadius, final double percentage, final int colour) {
         final boolean restore = glEnableBlend();
 
         final boolean alphaTest = glIsEnabled(GL_ALPHA_TEST);
@@ -1612,11 +1432,7 @@ public final class DrawUtil {
 
         glUseProgram(CIRCLE_SHADER.getProgram());
         glUniform1f(CIRCLE_SHADER.getUniformLocation("innerRadius"), innerRadius);
-        glUniform4f(CIRCLE_SHADER.getUniformLocation("colour"),
-                (colour >> 16 & 0xFF) / 255.f,
-                (colour >> 8 & 0xFF) / 255.f,
-                (colour & 0xFF) / 255.f,
-                (colour >> 24 & 0xFF) / 255.f);
+        glUniform4f(CIRCLE_SHADER.getUniformLocation("colour"), (colour >> 16 & 0xFF) / 255.f, (colour >> 8 & 0xFF) / 255.f, (colour & 0xFF) / 255.f, (colour >> 24 & 0xFF) / 255.f);
 
         glBegin(GL_QUADS);
         {
@@ -1641,41 +1457,7 @@ public final class DrawUtil {
         glRestoreBlend(restore);
     }
 
-    private static final String ROUNDED_QUAD_FRAG_SHADER =
-            "#version 120\n" +
-                    "uniform float width;\n" +
-                    "uniform float height;\n" +
-                    "uniform float radius;\n" +
-                    "uniform vec4 colour;\n" +
-                    "\n" +
-                    "float SDRoundedRect(vec2 p, vec2 b, float r) {\n" +
-                    "    vec2 q = abs(p) - b + r;\n" +
-                    "    return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;\n" +
-                    "}\n" +
-                    "\n" +
-                    "void main() {\n" +
-                    "    vec2 size = vec2(width, height);\n" +
-                    "    vec2 pixel = gl_TexCoord[0].st * size;\n" +
-                    "    vec2 centre = 0.5 * size;\n" +
-                    "    float b = SDRoundedRect(pixel - centre, centre, radius);\n" +
-                    "    float a = 1.0 - smoothstep(0, 1.0, b);\n" +
-                    "    gl_FragColor = vec4(colour.rgb, colour.a * a);\n" +
-                    "}";
-
-    private static final GLShader ROUNDED_QUAD_SHADER = new GLShader(VERTEX_SHADER, ROUNDED_QUAD_FRAG_SHADER) {
-        @Override
-        public void setupUniforms() {
-            this.setupUniform("width");
-            this.setupUniform("height");
-            this.setupUniform("colour");
-            this.setupUniform("radius");
-        }
-    };
-
-    public static void glDrawRoundedQuad(final double x, final double y,
-                                         final float width, final float height,
-                                         final float radius,
-                                         final int colour) {
+    public static void glDrawRoundedQuad(final double x, final double y, final float width, final float height, final float radius, final int colour) {
         final boolean restore = glEnableBlend();
 
         final boolean alphaTest = glIsEnabled(GL_ALPHA_TEST);
@@ -1685,11 +1467,7 @@ public final class DrawUtil {
         glUniform1f(ROUNDED_QUAD_SHADER.getUniformLocation("width"), width);
         glUniform1f(ROUNDED_QUAD_SHADER.getUniformLocation("height"), height);
         glUniform1f(ROUNDED_QUAD_SHADER.getUniformLocation("radius"), radius);
-        glUniform4f(ROUNDED_QUAD_SHADER.getUniformLocation("colour"),
-                (colour >> 16 & 0xFF) / 255.f,
-                (colour >> 8 & 0xFF) / 255.f,
-                (colour & 0xFF) / 255.f,
-                (colour >> 24 & 0xFF) / 255.f);
+        glUniform4f(ROUNDED_QUAD_SHADER.getUniformLocation("colour"), (colour >> 16 & 0xFF) / 255.f, (colour >> 8 & 0xFF) / 255.f, (colour & 0xFF) / 255.f, (colour >> 24 & 0xFF) / 255.f);
 
         glDisable(GL_TEXTURE_2D);
 
@@ -1717,46 +1495,6 @@ public final class DrawUtil {
 
         glRestoreBlend(restore);
     }
-
-    private static final String RAINBOW_FRAG_SHADER =
-            "#version 120\n" +
-                    "uniform float width;\n" +
-                    "uniform float height;\n" +
-                    "uniform float radius;\n" +
-                    "uniform float u_time;\n" +
-                    "\n" +
-                    "float SDRoundedRect(vec2 p, vec2 b, float r) {\n" +
-                    "    vec2 q = abs(p) - b + r;\n" +
-                    "    return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;\n" +
-                    "}\n" +
-                    "\n" +
-                    "void main() {\n" +
-                    "    vec2 size = vec2(width, height);\n" +
-                    "    vec2 pixel = gl_TexCoord[0].st * size;\n" +
-                    "    vec2 centre = 0.5 * size;\n" +
-                    "    float b = SDRoundedRect(pixel - centre, centre, radius);\n" +
-                    "    float a = 1.0 - smoothstep(0, 1.0, b);\n" +
-                    "    vec3 colour = 0.5 + 0.5*cos(u_time+gl_TexCoord[0].st.x+vec3(0,2,4));\n" +
-                    "    gl_FragColor = vec4(colour, a);\n" +
-                    "}";
-
-    private static final GLShader GL_COLOUR_SHADER = new GLShader(VERTEX_SHADER, RAINBOW_FRAG_SHADER) {
-
-        private final long initTime = System.currentTimeMillis();
-
-        @Override
-        public void setupUniforms() {
-            this.setupUniform("width");
-            this.setupUniform("height");
-            this.setupUniform("radius");
-            this.setupUniform("u_time");
-        }
-
-        @Override
-        public void updateUniforms() {
-            glUniform1f(glGetUniformLocation(getProgram(), "u_time"), (System.currentTimeMillis() - initTime) / 1000.0f);
-        }
-    };
 
     public static void glDrawRoundedQuadRainbow(final double x, final double y, final float width, final float height, final float radius) {
         final boolean restore = glEnableBlend();
@@ -1797,15 +1535,7 @@ public final class DrawUtil {
         glRestoreBlend(restore);
     }
 
-
-    public static void glDrawRoundedRect(final double x,
-                                         final double y,
-                                         final double width,
-                                         final double height,
-                                         final RoundingMode roundingMode,
-                                         final float rounding,
-                                         final float scaleFactor,
-                                         final int colour) {
+    public static void glDrawRoundedRect(final double x, final double y, final double width, final double height, final RoundingMode roundingMode, final float rounding, final float scaleFactor, final int colour) {
         boolean bLeft = false;
         boolean tLeft = false;
         boolean bRight = false;
@@ -1944,15 +1674,9 @@ public final class DrawUtil {
         glEnable(GL_TEXTURE_2D);
     }
 
+    // TODO :: Do this shader (its not hard)
 
-    public static void glDrawRoundedRectEllipse(final double x,
-                                                final double y,
-                                                final double width,
-                                                final double height,
-                                                final RoundingMode roundingMode,
-                                                final int roundingDef,
-                                                final double roundingLevel,
-                                                final int colour) {
+    public static void glDrawRoundedRectEllipse(final double x, final double y, final double width, final double height, final RoundingMode roundingMode, final int roundingDef, final double roundingLevel, final int colour) {
         boolean bLeft = false;
         boolean tLeft = false;
         boolean bRight = false;
@@ -2005,30 +1729,22 @@ public final class DrawUtil {
 
         if (tLeft) {
             // Top left
-            glDrawFilledEllipse(roundingLevel, roundingLevel, roundingLevel,
-                    (int) (roundingDef * 0.5), (int) (roundingDef * 0.75),
-                    roundingDef, false, colour);
+            glDrawFilledEllipse(roundingLevel, roundingLevel, roundingLevel, (int) (roundingDef * 0.5), (int) (roundingDef * 0.75), roundingDef, false, colour);
         }
 
         if (tRight) {
             // Top right
-            glDrawFilledEllipse(width - roundingLevel, roundingLevel, roundingLevel,
-                    (int) (roundingDef * 0.75), roundingDef,
-                    roundingDef, false, colour);
+            glDrawFilledEllipse(width - roundingLevel, roundingLevel, roundingLevel, (int) (roundingDef * 0.75), roundingDef, roundingDef, false, colour);
         }
 
         if (bLeft) {
             // Bottom left
-            glDrawFilledEllipse(roundingLevel, height - roundingLevel, roundingLevel,
-                    (int) (roundingDef * 0.25), (int) (roundingDef * 0.5),
-                    roundingDef, false, colour);
+            glDrawFilledEllipse(roundingLevel, height - roundingLevel, roundingLevel, (int) (roundingDef * 0.25), (int) (roundingDef * 0.5), roundingDef, false, colour);
         }
 
         if (bRight) {
             // Bottom right
-            glDrawFilledEllipse(width - roundingLevel, height - roundingLevel, roundingLevel,
-                    0, (int) (roundingDef * 0.25),
-                    roundingDef, false, colour);
+            glDrawFilledEllipse(width - roundingLevel, height - roundingLevel, roundingLevel, 0, (int) (roundingDef * 0.25), roundingDef, false, colour);
         }
 
         // Enable triangle anti-aliasing (to save performance on next poly draw)
@@ -2116,33 +1832,19 @@ public final class DrawUtil {
 
     public static Vec3 interpolate(final Vec3 old, final Vec3 now, final double progress) {
         final Vec3 difVec = now.subtract(old);
-        return new Vec3(old.xCoord + difVec.xCoord * progress,
-                old.yCoord + difVec.yCoord * progress,
-                old.zCoord + difVec.zCoord * progress);
+        return new Vec3(old.xCoord + difVec.xCoord * progress, old.yCoord + difVec.yCoord * progress, old.zCoord + difVec.zCoord * progress);
     }
 
     public static double[] interpolate(final Entity entity, final float partialTicks) {
-        return new double[]{
-                interpolate(entity.prevPosX, entity.posX, partialTicks),
-                interpolate(entity.prevPosY, entity.posY, partialTicks),
-                interpolate(entity.prevPosZ, entity.posZ, partialTicks),
-        };
+        return new double[]{interpolate(entity.prevPosX, entity.posX, partialTicks), interpolate(entity.prevPosY, entity.posY, partialTicks), interpolate(entity.prevPosZ, entity.posZ, partialTicks),};
     }
 
-    public static AxisAlignedBB interpolate(final Entity entity,
-                                            final AxisAlignedBB boundingBox,
-                                            final float partialTicks) {
+    public static AxisAlignedBB interpolate(final Entity entity, final AxisAlignedBB boundingBox, final float partialTicks) {
         final float invertedPT = 1.0f - partialTicks;
-        return boundingBox.offset(
-                (entity.posX - entity.prevPosX) * -invertedPT,
-                (entity.posY - entity.prevPosY) * -invertedPT,
-                (entity.posZ - entity.prevPosZ) * -invertedPT
-        );
+        return boundingBox.offset((entity.posX - entity.prevPosX) * -invertedPT, (entity.posY - entity.prevPosY) * -invertedPT, (entity.posZ - entity.prevPosZ) * -invertedPT);
     }
 
-    public static void glDrawBoundingBox(final AxisAlignedBB bb,
-                                         final float lineWidth,
-                                         final boolean filled) {
+    public static void glDrawBoundingBox(final AxisAlignedBB bb, final float lineWidth, final boolean filled) {
         if (filled) {
             // 4 sides
             glBegin(GL_QUAD_STRIP);
@@ -2232,17 +1934,61 @@ public final class DrawUtil {
         }
     }
 
+    public void circle(final double x, final double y, final double radius, final boolean filled, final Color color) {
+        polygon(x, y, radius, 360, filled, color);
+    }
+
+    public void circle(final double x, final double y, final double radius, final boolean filled) {
+        polygon(x, y, radius, 360, filled);
+    }
+
+    public void push() {
+        GL11.glPushMatrix();
+    }
+
+    public void pop() {
+        GL11.glPopMatrix();
+    }
+
+    public void color(final double red, final double green, final double blue) {
+        color(red, green, blue, 1);
+    }
+
+    public void color(Color color, final int alpha) {
+        if (color == null) color = Color.white;
+        color(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 0.5);
+    }
+
+    public void lineWidth(final double width) {
+        GL11.glLineWidth((float) width);
+    }
+
+    public void startSmooth() {
+        enable(GL11.GL_POLYGON_SMOOTH);
+        enable(GL11.GL_LINE_SMOOTH);
+        enable(GL11.GL_POINT_SMOOTH);
+    }
+
+    public void endSmooth() {
+        disable(GL11.GL_POINT_SMOOTH);
+        disable(GL11.GL_LINE_SMOOTH);
+        disable(GL11.GL_POLYGON_SMOOTH);
+    }
+
+    public void rect(final double x, final double y, final double width, final double height, final boolean filled) {
+        rect(x, y, width, height, filled, null);
+    }
+
+    public void rect(final double x, final double y, final double width, final double height) {
+        rect(x, y, width, height, true, null);
+    }
+
     public enum RoundingMode {
-        TOP_LEFT,
-        BOTTOM_LEFT,
-        TOP_RIGHT,
-        BOTTOM_RIGHT,
+        TOP_LEFT, BOTTOM_LEFT, TOP_RIGHT, BOTTOM_RIGHT,
 
-        LEFT,
-        RIGHT,
+        LEFT, RIGHT,
 
-        TOP,
-        BOTTOM,
+        TOP, BOTTOM,
 
         FULL
     }

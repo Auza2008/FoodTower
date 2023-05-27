@@ -96,6 +96,7 @@ public class ModuleManager implements Manager {
 
         // Render
         modules.add(new Animations());
+        modules.add(new TargetDebug());
         modules.add(new Breadcrumbs());
         modules.add(new HUD());
         modules.add(new Chinahat());

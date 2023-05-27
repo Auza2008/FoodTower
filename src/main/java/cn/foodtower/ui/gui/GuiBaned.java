@@ -13,18 +13,21 @@ import org.lwjgl.opengl.Display;
 import java.awt.*;
 
 public class GuiBaned extends GuiScreen {
-    public ParticleEngine pe = new ParticleEngine(new Color(255,0,0));
+    public ParticleEngine pe = new ParticleEngine(new Color(255, 0, 0));
+
     @Override
-    public void initGui(){
+    public void initGui() {
 
     }
+
     @Override
     protected void keyTyped(char var1, int var2) {
 
     }
+
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        Display.setTitle( Client.name + " " + Client.ClientVersion + " | 请联系客服申诉! Locked! 已锁定!");
+        Display.setTitle(Client.name + " " + Client.ClientVersion + " | 请联系客服申诉! Locked! 已锁定!");
         ScaledResolution sr = new ScaledResolution(mc);
         int h = new ScaledResolution(this.mc).getScaledHeight();
         int w = new ScaledResolution(this.mc).getScaledWidth();

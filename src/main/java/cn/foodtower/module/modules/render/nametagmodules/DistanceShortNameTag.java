@@ -1,16 +1,16 @@
 package cn.foodtower.module.modules.render.nametagmodules;
 
+import cn.foodtower.Client;
+import cn.foodtower.fastuni.FastUniFontRenderer;
+import cn.foodtower.manager.FriendManager;
 import cn.foodtower.module.modules.combat.AntiBot;
 import cn.foodtower.module.modules.combat.HypixelAntibot;
 import cn.foodtower.module.modules.world.Teams;
-import cn.foodtower.Client;
-import cn.foodtower.manager.FriendManager;
 import cn.foodtower.ui.font.FontLoaders;
+import cn.foodtower.util.SuperLib;
 import cn.foodtower.util.misc.Helper;
 import cn.foodtower.util.render.Colors;
 import cn.foodtower.util.render.RenderUtil;
-import cn.foodtower.util.SuperLib;
-import cn.foodtower.fastuni.FastUniFontRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
@@ -31,9 +31,9 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class DistanceShortNameTag {
-    public static DecimalFormat format = new DecimalFormat("0.0");
     private static final Minecraft mc = Helper.mc;
     private static final ScaledResolution scaledResolution = new ScaledResolution(mc);
+    public static DecimalFormat format = new DecimalFormat("0.0");
 
     public static void renderNameTag(EntityLivingBase entity, boolean invis, Map<EntityLivingBase, double[]> entityPositions, boolean armor, int alpha) {
         if (entity != mc.thePlayer && (invis || !entity.isInvisible())) {
@@ -50,9 +50,9 @@ public class DistanceShortNameTag {
                 scale();
                 GlStateManager.translate(0.0D, 5D, 0.0D);
                 String s;
-                if ( HypixelAntibot.isBot(entity)) {
+                if (HypixelAntibot.isBot(entity)) {
                     s = "§c§l[Bot]§r§7";
-                } else if ( AntiBot.isServerBot(entity)) {
+                } else if (AntiBot.isServerBot(entity)) {
                     s = "§1§l[Bot]§r§7";
                 } else {
                     s = "";
@@ -64,7 +64,7 @@ public class DistanceShortNameTag {
                     s2 = "";
                 }
                 String s3 = "";
-                if ( Teams.isOnSameTeam(entity)) {
+                if (Teams.isOnSameTeam(entity)) {
                     s3 = "§a[T]";
                 } else {
                     s3 = "";
@@ -121,7 +121,7 @@ public class DistanceShortNameTag {
                         GLUtils.enableGUIStandardItemLighting();
                         mc.getRenderItem().zLevel = -150.0f;
                         fixGlintShit();
-                        mc.getRenderItem().renderItemIntoGUI(p_getEnchantmentLevel_1_, (int) (p_renderItemOverlays_3_ + 6), (int) (-42.0f));
+                        mc.getRenderItem().renderItemIntoGUI(p_getEnchantmentLevel_1_, p_renderItemOverlays_3_ + 6, (int) (-42.0f));
                         mc.getRenderItem().renderItemOverlays(mc.fontRendererObj, p_getEnchantmentLevel_1_, p_renderItemOverlays_3_, -42);
                         mc.getRenderItem().zLevel = 0.0f;
                         p_renderItemOverlays_3_ += 3;

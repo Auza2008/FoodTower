@@ -1,8 +1,6 @@
 package cn.foodtower.module.modules.render.tabguis;
 
 
-import cn.foodtower.module.modules.render.HUD;
-import cn.foodtower.module.modules.render.TabGui;
 import cn.foodtower.Client;
 import cn.foodtower.api.EventBus;
 import cn.foodtower.api.EventHandler;
@@ -16,6 +14,8 @@ import cn.foodtower.manager.Manager;
 import cn.foodtower.manager.ModuleManager;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
+import cn.foodtower.module.modules.render.HUD;
+import cn.foodtower.module.modules.render.TabGui;
 import cn.foodtower.ui.font.CFontRenderer;
 import cn.foodtower.ui.font.FontLoaders;
 import cn.foodtower.util.anim.AnimationUtil;
@@ -33,6 +33,13 @@ import java.awt.*;
 
 public class ETBTabUI
         implements Manager {
+    public static Color RainbowColor = Color.getHSBColor(HUD.hue / 255.0F, 0.55F, 0.9F);
+    private static int colorss;
+    private static /* synthetic */ int[] QwQ;
+    double AnimY = 0;
+    double AnimmodY = 0;
+    double AnimValY = 0;
+    double animtab = 0d;
     private Section section = Section.TYPES;
     private ModuleType selectedType = ModuleType.values()[0];
     private Module selectedModule = null;
@@ -40,16 +47,33 @@ public class ETBTabUI
     private int currentType = 0;
     private int currentModule = 0;
     private int currentValue = 0;
-    private int height = 22;
+    private final int height = 22;
     private int maxType;
     private int maxModule;
     private int maxValue;
-    double AnimY = 0;
-    double AnimmodY = 0;
-    double AnimValY = 0;
-    private static int colorss;
-    public static Color RainbowColor = Color.getHSBColor( HUD.hue / 255.0F, 0.55F, 0.9F);
-    private static /* synthetic */ int[] QwQ;
+
+    static /* synthetic */ int[] QwQ() {
+        int[] arrn;
+        int[] arrn2 = QwQ;
+        if (arrn2 != null) {
+            return arrn2;
+        }
+        arrn = new int[Section.values().length];
+        try {
+            arrn[Section.MODULES.ordinal()] = 2;
+        } catch (NoSuchFieldError noSuchFieldError) {
+        }
+        try {
+            arrn[Section.TYPES.ordinal()] = 1;
+        } catch (NoSuchFieldError noSuchFieldError) {
+        }
+        try {
+            arrn[Section.VALUES.ordinal()] = 3;
+        } catch (NoSuchFieldError noSuchFieldError) {
+        }
+        QwQ = arrn;
+        return QwQ;
+    }
 
     @Override
     public void init() {
@@ -64,19 +88,20 @@ public class ETBTabUI
             ++n2;
         }
         for (Module m : ModuleManager.getModules()) {
-            if (m.wasRemoved()){
+            if (m.wasRemoved()) {
                 continue;
             }
             if (this.maxModule > FontLoaders.Arial18.getStringWidth(m.getName().toUpperCase()) + 4) continue;
             this.maxModule = FontLoaders.Arial18.getStringWidth(m.getName().toUpperCase()) + 4;
         }
         for (Module m : ModuleManager.getModules()) {
-            if (m.wasRemoved()){
+            if (m.wasRemoved()) {
                 continue;
             }
             if (m.getValues().isEmpty()) continue;
             for (Value val : m.getValues()) {
-                if (this.maxValue > FontLoaders.Arial18.getStringWidth(val.getDisplayName().toUpperCase()) + 4) continue;
+                if (this.maxValue > FontLoaders.Arial18.getStringWidth(val.getDisplayName().toUpperCase()) + 4)
+                    continue;
                 this.maxValue = FontLoaders.Arial18.getStringWidth(val.getDisplayName().toUpperCase()) + 4;
             }
         }
@@ -99,8 +124,6 @@ public class ETBTabUI
         }
         this.maxValue += this.maxModule;
     }
-
-    double animtab = 0d;
 
     @EventHandler
     private void renderTabGUI(EventRender2D e) {
@@ -156,7 +179,7 @@ public class ETBTabUI
             if (this.selectedType == mt) {
                 moduleY = categoryY;
                 AnimY = AnimationUtils.animate(categoryY, AnimY, 14f / Minecraft.getDebugFPS());
-                RenderUtil.drawGradientSideways(2.5, AnimY + 0.5, (double) this.maxType - 25.5 - 25, (double) (AnimY + Helper.mc.fontRendererObj.FONT_HEIGHT) + 2.5, colorss, new Color(0, 0, 0, 0).getRGB());
+                RenderUtil.drawGradientSideways(2.5, AnimY + 0.5, (double) this.maxType - 25.5 - 25, AnimY + Helper.mc.fontRendererObj.FONT_HEIGHT + 2.5, colorss, new Color(0, 0, 0, 0).getRGB());
             }
             if (this.selectedType == mt) {
                 font.drawStringWithShadow(mt.name(), 7.0f, categoryY + 3, -1);
@@ -166,66 +189,67 @@ public class ETBTabUI
             categoryY += 12;
             ++mA2;
         }
-        if (Double.isNaN(animtab))animtab = 0d;
+        if (Double.isNaN(animtab)) animtab = 0d;
         if (this.section == Section.MODULES || this.section == Section.VALUES) {
-            animtab = AnimationUtil.moveUD(animtab, this.section == Section.MODULES? this.maxModule - 38 : this.maxValue - 25, 10.0f / Minecraft.getDebugFPS(), 5.0f / Minecraft.getDebugFPS());
-        }else {
+            animtab = AnimationUtil.moveUD(animtab, this.section == Section.MODULES ? this.maxModule - 38 : this.maxValue - 25, 10.0f / Minecraft.getDebugFPS(), 5.0f / Minecraft.getDebugFPS());
+        } else {
             animtab = AnimationUtil.moveUD(animtab, this.maxType - 20 - 25, 10.0f / Minecraft.getDebugFPS(), 5.0f / Minecraft.getDebugFPS());
         }
         RenderUtil.prepareScissorBox(0, 0, (float) animtab, new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight());
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         RenderUtil.drawRect(this.maxType - 20 - 25, moduleY, this.maxModule - 38, moduleY + 12 * ModuleManager.getModulesInType(this.selectedType).size(), new Color(0, 0, 0, 130).getRGB());
-            for (Module m : ModuleManager.getModulesInType(this.selectedType)) {
-                if (m.wasRemoved()) {
-                    continue;
-                }
-                if (this.selectedModule == m) {
-                    AnimmodY = AnimationUtils.animate(moduleY, AnimmodY, 14f / Minecraft.getDebugFPS());
-                    RenderUtil.drawGradientSideways((double) this.maxType - 19.5 - 25, (double) AnimmodY + 0.5, (double) this.maxModule - 38.5, (double) (AnimmodY + Helper.mc.fontRendererObj.FONT_HEIGHT) + 2.5, colorss, new Color(0, 0, 0, 0).getRGB());
+        for (Module m : ModuleManager.getModulesInType(this.selectedType)) {
+            if (m.wasRemoved()) {
+                continue;
+            }
+            if (this.selectedModule == m) {
+                AnimmodY = AnimationUtils.animate(moduleY, AnimmodY, 14f / Minecraft.getDebugFPS());
+                RenderUtil.drawGradientSideways((double) this.maxType - 19.5 - 25, AnimmodY + 0.5, (double) this.maxModule - 38.5, AnimmodY + Helper.mc.fontRendererObj.FONT_HEIGHT + 2.5, colorss, new Color(0, 0, 0, 0).getRGB());
 
-                    valueY = moduleY;
-                }
+                valueY = moduleY;
+            }
+            if (this.selectedModule == m) {
+                font.drawStringWithShadow(m.getName(), this.maxType - 15 - 25, moduleY + 3, m.isEnabled() ? -1 : 11184810);
+            } else {
+                font.drawStringWithShadow(m.getName(), this.maxType - 17 - 25, moduleY + 3, m.isEnabled() ? -1 : 11184810);
+            }
+            if (!m.getValues().isEmpty()) {
+                Gui.drawRect(this.maxModule - 38, (double) moduleY + 0.5, this.maxModule - 39, (double) (moduleY + Helper.mc.fontRendererObj.FONT_HEIGHT) + 2.5, new Color(153, 200, 255).getRGB());
                 if (this.selectedModule == m) {
-                    font.drawStringWithShadow(m.getName(), this.maxType - 15 - 25, moduleY + 3, m.isEnabled() ? -1 : 11184810);
-                } else {
-                    font.drawStringWithShadow(m.getName(), this.maxType - 17 - 25, moduleY + 3, m.isEnabled() ? -1 : 11184810);
-                }
-                if (!m.getValues().isEmpty()) {
-                    Gui.drawRect(this.maxModule - 38, (double) moduleY + 0.5, this.maxModule - 39, (double) (moduleY + Helper.mc.fontRendererObj.FONT_HEIGHT) + 2.5, new Color(153, 200, 255).getRGB());
-                    if (this.selectedModule == m) {
-                        RenderUtil.drawRect(this.maxModule - 32, valueY, this.maxValue - 25, valueY + 12 * this.selectedModule.getValues().size(), new Color(10, 10, 10, 130).getRGB());
-                        //AnimValY = (int)AnimationUtils.animate(valueY,AnimValY,14f / Minecraft.getDebugFPS());
-                        RenderUtil.drawGradientSideways(this.maxModule - 31.5, AnimValY + 0.5, this.maxValue - 25.5, (AnimValY + Helper.mc.fontRendererObj.FONT_HEIGHT) + 2.5, colorss, new Color(0, 0, 0, 0).getRGB());
-                        for (Value<?> val : this.selectedModule.getValues()) {
-                            if (this.selectedValue == val) {
-                                AnimValY = AnimationUtils.animate(valueY, AnimValY, 14f / Minecraft.getDebugFPS());
-                            }
-                            if (val instanceof Option) {
-                                font.drawStringWithShadow(val.getDisplayName(), this.selectedValue == val ? this.maxModule - 27 : this.maxModule - 29, valueY + 3, (Boolean) val.getValue() != false ? new Color(153, 200, 255).getRGB() : 11184810);
-                            } else {
-                                String toRender = String.format("%s: \u00a77%s", val.getDisplayName(), val.getValue().toString());
-                                if (this.selectedValue == val) {
-                                    font.drawStringWithShadow(toRender, this.maxModule - 27, valueY + 3, -1);
-                                } else {
-                                    font.drawStringWithShadow(toRender, this.maxModule - 29, valueY + 3, -1);
-                                }
-                            }
-                            valueY += 12;
+                    RenderUtil.drawRect(this.maxModule - 32, valueY, this.maxValue - 25, valueY + 12 * this.selectedModule.getValues().size(), new Color(10, 10, 10, 130).getRGB());
+                    //AnimValY = (int)AnimationUtils.animate(valueY,AnimValY,14f / Minecraft.getDebugFPS());
+                    RenderUtil.drawGradientSideways(this.maxModule - 31.5, AnimValY + 0.5, this.maxValue - 25.5, (AnimValY + Helper.mc.fontRendererObj.FONT_HEIGHT) + 2.5, colorss, new Color(0, 0, 0, 0).getRGB());
+                    for (Value<?> val : this.selectedModule.getValues()) {
+                        if (this.selectedValue == val) {
+                            AnimValY = AnimationUtils.animate(valueY, AnimValY, 14f / Minecraft.getDebugFPS());
                         }
+                        if (val instanceof Option) {
+                            font.drawStringWithShadow(val.getDisplayName(), this.selectedValue == val ? this.maxModule - 27 : this.maxModule - 29, valueY + 3, (Boolean) val.getValue() ? new Color(153, 200, 255).getRGB() : 11184810);
+                        } else {
+                            String toRender = String.format("%s: \u00a77%s", val.getDisplayName(), val.getValue().toString());
+                            if (this.selectedValue == val) {
+                                font.drawStringWithShadow(toRender, this.maxModule - 27, valueY + 3, -1);
+                            } else {
+                                font.drawStringWithShadow(toRender, this.maxModule - 29, valueY + 3, -1);
+                            }
+                        }
+                        valueY += 12;
                     }
                 }
-                moduleY += 12;
             }
+            moduleY += 12;
+        }
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
     }
 
     @EventHandler
     private void onKey(EventKey e) {
-        if (!TabGui.modes.getValue().equals(TabGui.tabguimode.Novoline)){
+        if (!TabGui.modes.getValue().equals(TabGui.tabguimode.Novoline)) {
             return;
         }
         if (!Helper.mc.gameSettings.showDebugInfo) {
-            block0 : switch (e.getKey()) {
+            block0:
+            switch (e.getKey()) {
                 case 208: {
                     switch (TabUI.QwQ()[this.section.ordinal()]) {
                         case 1: {
@@ -238,10 +262,10 @@ public class ETBTabUI
                         }
                         case 2: {
                             ++this.currentModule;
-                            if (this.currentModule > Client.instance.getModuleManager().getModulesInType(this.selectedType).size() - 1) {
+                            if (this.currentModule > ModuleManager.getModulesInType(this.selectedType).size() - 1) {
                                 this.currentModule = 0;
                             }
-                            this.selectedModule = Client.instance.getModuleManager().getModulesInType(this.selectedType).get(this.currentModule);
+                            this.selectedModule = ModuleManager.getModulesInType(this.selectedType).get(this.currentModule);
                             break block0;
                         }
                         case 3: {
@@ -302,16 +326,16 @@ public class ETBTabUI
                             if (this.selectedValue instanceof Option) {
                                 this.selectedValue.setValue(!((Boolean) this.selectedValue.getValue()));
                             } else if (this.selectedValue instanceof Numbers) {
-                                Numbers value = (Numbers)this.selectedValue;
-                                double inc = (Double)value.getValue();
+                                Numbers value = (Numbers) this.selectedValue;
+                                double inc = (Double) value.getValue();
                                 inc += value.getIncrement().doubleValue();
-                                if ((inc = MathUtil.toDecimalLength(inc, 1)) > (Double)value.getMaximum()) {
-                                    inc = (Double)((Numbers)this.selectedValue).getMinimum();
+                                if ((inc = MathUtil.toDecimalLength(inc, 1)) > (Double) value.getMaximum()) {
+                                    inc = (Double) ((Numbers) this.selectedValue).getMinimum();
                                 }
                                 this.selectedValue.setValue(inc);
                             } else if (this.selectedValue instanceof Mode) {
-                                Mode theme = (Mode)this.selectedValue;
-                                Enum current = (Enum)theme.getValue();
+                                Mode theme = (Mode) this.selectedValue;
+                                Enum current = theme.getValue();
                                 int next = current.ordinal() + 1 >= theme.getModes().length ? 0 : current.ordinal() + 1;
                                 this.selectedValue.setValue(theme.getModes()[next]);
                             }
@@ -347,18 +371,18 @@ public class ETBTabUI
                         }
                         case 3: {
                             if (this.selectedValue instanceof Option) {
-                                this.selectedValue.setValue((Boolean)this.selectedValue.getValue() == false);
+                                this.selectedValue.setValue(!((Boolean) this.selectedValue.getValue()));
                             } else if (this.selectedValue instanceof Numbers) {
-                                Numbers value = (Numbers)this.selectedValue;
-                                double inc = (Double)value.getValue();
-                                inc -= ((Double)value.getIncrement()).doubleValue();
-                                if ((inc = MathUtil.toDecimalLength(inc, 1)) < (Double)value.getMinimum()) {
-                                    inc = (Double)((Numbers)this.selectedValue).getMaximum();
+                                Numbers value = (Numbers) this.selectedValue;
+                                double inc = (Double) value.getValue();
+                                inc -= value.getIncrement().doubleValue();
+                                if ((inc = MathUtil.toDecimalLength(inc, 1)) < (Double) value.getMinimum()) {
+                                    inc = (Double) ((Numbers) this.selectedValue).getMaximum();
                                 }
                                 this.selectedValue.setValue(inc);
                             } else if (this.selectedValue instanceof Mode) {
-                                Mode theme = (Mode)this.selectedValue;
-                                Enum current = (Enum)theme.getValue();
+                                Mode theme = (Mode) this.selectedValue;
+                                Enum current = theme.getValue();
                                 int next = current.ordinal() - 1 < 0 ? theme.getModes().length - 1 : current.ordinal() - 1;
                                 this.selectedValue.setValue(theme.getModes()[next]);
                             }
@@ -366,7 +390,8 @@ public class ETBTabUI
                             for (Value val : this.selectedModule.getValues()) {
                                 int off;
                                 int n = off = val instanceof Option ? 6 : Minecraft.getMinecraft().fontRendererObj.getStringWidth(String.format(" \u00a77%s", val.getValue().toString())) + 6;
-                                if (this.maxValue > Minecraft.getMinecraft().fontRendererObj.getStringWidth(val.getDisplayName().toUpperCase()) + off) continue;
+                                if (this.maxValue > Minecraft.getMinecraft().fontRendererObj.getStringWidth(val.getDisplayName().toUpperCase()) + off)
+                                    continue;
                                 this.maxValue = Minecraft.getMinecraft().fontRendererObj.getStringWidth(val.getDisplayName().toUpperCase()) + off;
                             }
                             this.maxValue += this.maxModule;
@@ -377,33 +402,10 @@ public class ETBTabUI
         }
     }
 
-    static /* synthetic */ int[] QwQ() {
-        int[] arrn;
-        int[] arrn2 = QwQ;
-        if (arrn2 != null) {
-            return arrn2;
-        }
-        arrn = new int[Section.values().length];
-        try {
-            arrn[Section.MODULES.ordinal()] = 2;
-        }
-        catch (NoSuchFieldError noSuchFieldError) {}
-        try {
-            arrn[Section.TYPES.ordinal()] = 1;
-        }
-        catch (NoSuchFieldError noSuchFieldError) {}
-        try {
-            arrn[Section.VALUES.ordinal()] = 3;
-        }
-        catch (NoSuchFieldError noSuchFieldError) {}
-        QwQ = arrn;
-        return QwQ;
-    }
-
-    public static enum Section {
+    public enum Section {
         TYPES,
         MODULES,
-        VALUES;
+        VALUES
     }
 
 }

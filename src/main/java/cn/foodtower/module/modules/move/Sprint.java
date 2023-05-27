@@ -27,12 +27,7 @@ public class Sprint extends Module {
 
     @EventHandler
     private void onUpdate(EventPreUpdate event) {
-        if (!MovementUtils.isMoving() || mc.thePlayer.isSneaking() ||
-                (blindnessValue.getValue() && mc.thePlayer.isPotionActive(Potion.blindness)) ||
-                (foodValue.getValue() && !(mc.thePlayer.getFoodStats().getFoodLevel() > 6.0F || mc.thePlayer.capabilities.allowFlying))
-                || (checkServerSide.getValue() && (mc.thePlayer.onGround || !checkServerSideGround.getValue())
-                && !allDirectionsValue.getValue() && RotationUtil.targetRotation != null &&
-                RotationUtil.getRotationDifference(new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch)) > 30)) {
+        if (!MovementUtils.isMoving() || mc.thePlayer.isSneaking() || (blindnessValue.getValue() && mc.thePlayer.isPotionActive(Potion.blindness)) || (foodValue.getValue() && !(mc.thePlayer.getFoodStats().getFoodLevel() > 6.0F || mc.thePlayer.capabilities.allowFlying)) || (checkServerSide.getValue() && (mc.thePlayer.onGround || !checkServerSideGround.getValue()) && !allDirectionsValue.getValue() && RotationUtil.targetRotation != null && RotationUtil.getRotationDifference(new Rotation(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch)) > 30)) {
             mc.thePlayer.setSprinting(false);
             return;
         }

@@ -28,19 +28,18 @@ import java.awt.*;
 
 
 public class MiniMap
-extends Module {
-    private boolean dragging;
+        extends Module {
     private final Numbers<Double> scale = new Numbers<>("Scale", "Scale", 2.0, 1.0, 5.0, 0.1);
     private final Numbers<Double> x = new Numbers<>("X", "X", 0.0, 1.0, 1920.0, 1.0);
     private final Numbers<Double> y = new Numbers<>("Y", "Y", 80.0, 1.0, 1080.0, 1.0);
     private final Numbers<Double> size = new Numbers<>("Size", "Size", 50.0, 50.0, 500.0, 1.0);
-
-    private final Option blur = new Option("Blur",true);
+    private final Option blur = new Option("Blur", true);
     public Mode mode = new Mode("Mode", "mode", RadarMode.values(), RadarMode.Normal);
+    private boolean dragging;
 
     public MiniMap() {
         super("Radar", new String[]{"Radar", "minimap"}, ModuleType.Render);
-        this.addValues(this.scale, this.x, this.y, this.size,blur, this.mode);
+        this.addValues(this.scale, this.x, this.y, this.size, blur, this.mode);
     }
 
     @EventHandler
@@ -53,8 +52,8 @@ extends Module {
             float yOffset = this.y.getValue().floatValue();
             float playerOffsetX = (float) mc.thePlayer.posX;
             float playerOffSetZ = (float) mc.thePlayer.posZ;
-            int var141 = sr.getScaledWidth();
-            int var151 = sr.getScaledHeight();
+            int var141 = ScaledResolution.getScaledWidth();
+            int var151 = ScaledResolution.getScaledHeight();
             int mouseX = Mouse.getX() * var141 / mc.displayWidth;
             int mouseY = var151 - Mouse.getY() * var151 / mc.displayHeight - 1;
             if ((float) mouseX >= xOffset && (float) mouseX <= xOffset + (float) size1 && (float) mouseY >= yOffset - 3.0f && (float) mouseY <= yOffset + 10.0f && Mouse.getEventButton() == 0) {
@@ -71,10 +70,10 @@ extends Module {
             if (blur.get()) {
                 Blur.blurAreaBoarderXY((int) xOffset, (int) yOffset, (int) (xOffset + size), (int) (yOffset + size));
             }
-            RenderUtil.drawRect(xOffset, yOffset, (xOffset + size), (yOffset + size), RenderUtil.reAlpha(Colors.WHITE.c, blur.get()?0.2f:0.4f));
+            RenderUtil.drawRect(xOffset, yOffset, (xOffset + size), (yOffset + size), RenderUtil.reAlpha(Colors.WHITE.c, blur.get() ? 0.2f : 0.4f));
 
-            RenderUtil.drawRect(xOffset + ((size / 2f) - 0.5f), yOffset + 3.5f, xOffset + (size / 2f) + 0.5f, (yOffset + (float) size) - 3.5f, new Color(235,235,235,120).getRGB());
-            RenderUtil.drawRect(xOffset + 3.5f, yOffset + ((size / 2f) - 0.5f), (xOffset + (float) size) - 3.5f, yOffset + ((size / 2f) + 0.5f), new Color(235,235,235,120).getRGB());
+            RenderUtil.drawRect(xOffset + ((size / 2f) - 0.5f), yOffset + 3.5f, xOffset + (size / 2f) + 0.5f, (yOffset + (float) size) - 3.5f, new Color(235, 235, 235, 120).getRGB());
+            RenderUtil.drawRect(xOffset + 3.5f, yOffset + ((size / 2f) - 0.5f), (xOffset + (float) size) - 3.5f, yOffset + ((size / 2f) + 0.5f), new Color(235, 235, 235, 120).getRGB());
 
             for (Object o : mc.theWorld.getLoadedEntityList()) {
                 EntityPlayer ent;
@@ -105,7 +104,7 @@ extends Module {
         }
         if (this.mode.getValue() == RadarMode.Round) {
             Timer timer = new Timer();
-            ScaledResolution sr = new ScaledResolution(this.mc);
+            ScaledResolution sr = new ScaledResolution(mc);
             int size = this.size.getValue().intValue();
             float xOffset = this.x.getValue().floatValue();
             float yOffset = this.y.getValue().floatValue();
@@ -137,8 +136,8 @@ extends Module {
             y2 = ((size / 2f + 4) * MathHelper.sin(Math.toRadians(angle2 - 90))) + yOffset + size / 2f;
             normal.drawStringWithShadow("W", x2 - normal.getStringWidth("W") / 2f, y2 - 1, -1);
 
-            int var141 = sr.getScaledWidth();
-            int var151 = sr.getScaledHeight();
+            int var141 = ScaledResolution.getScaledWidth();
+            int var151 = ScaledResolution.getScaledHeight();
             final int mouseX = Mouse.getX() * var141 / mc.displayWidth;
             final int mouseY = var151 - Mouse.getY() * var151 / mc.displayHeight - 1;
             if (mouseX >= xOffset && mouseX <= xOffset + size && mouseY >= yOffset - 3 && mouseY <= yOffset + 10 && Mouse.getEventButton() == 0) {
@@ -217,6 +216,6 @@ extends Module {
 
     public enum RadarMode {
         Normal,
-        Round;
+        Round
     }
 }

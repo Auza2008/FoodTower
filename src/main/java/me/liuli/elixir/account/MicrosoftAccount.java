@@ -24,6 +24,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import me.ihatekotlin.KtReaderHelper;
+import me.liuli.elixir.compat.OAuthServer;
+import me.liuli.elixir.compat.Session;
+import me.liuli.elixir.exception.LoginException;
+import me.liuli.elixir.utils.GsonExtensionKt;
+import me.liuli.elixir.utils.HttpUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,13 +41,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import me.ihatekotlin.KtReaderHelper;
-import me.liuli.elixir.compat.OAuthServer;
-import me.liuli.elixir.compat.Session;
-import me.liuli.elixir.exception.LoginException;
-import me.liuli.elixir.utils.GsonExtensionKt;
-import me.liuli.elixir.utils.HttpUtils;
-
 public final class MicrosoftAccount
 extends MinecraftAccount {
     public static final Companion Companion = new Companion();
@@ -50,7 +49,7 @@ extends MinecraftAccount {
     private String accessToken = "";
     private String refreshToken = "";
     private AuthMethod authMethod = AuthMethod.MICROSOFT;
-    public static final String XBOX_PRE_AUTH_URL = "https://login.live.com/oauth20_authorize.srf?client_id=<client_id>&redirect_uri=<redirect_uri>&response_type=code&display=touch&scope=<scope>";
+    public static final String XBOX_PRE_AUTH_URL = "https://login.live.com/oauth20_authorize.srf?client_id=<client_id>&redirect_uri=<redirect_uri>&response_type=code&display=touch&scope=<scope>&prompt=select_account";
     public static final String XBOX_AUTH_URL = "https://login.live.com/oauth20_token.srf";
     public static final String XBOX_XBL_URL = "https://user.auth.xboxlive.com/user/authenticate";
     public static final String XBOX_XSTS_URL = "https://xsts.auth.xboxlive.com/xsts/authorize";

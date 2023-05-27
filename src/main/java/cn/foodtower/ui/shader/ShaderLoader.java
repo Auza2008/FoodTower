@@ -1,10 +1,5 @@
 package cn.foodtower.ui.shader;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-
 import cn.foodtower.util.render.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -13,6 +8,11 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.*;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+
 public class ShaderLoader {
     private int vertexShaderId;
     private int fragmentShaderId;
@@ -20,15 +20,16 @@ public class ShaderLoader {
     private int fboTextureID;
     private int fboID;
     private int renderBufferID;
-    private String vertexShaderFileName;
-    private String fragmenShaderFileName;
+    private final String vertexShaderFileName;
+    private final String fragmenShaderFileName;
     private int resolutionUniformId;
     private int timeUniformID;
     private int mouseUniformId;
     private int texelUniformId;
-    private int frameBufferTextureId;
+    private final int frameBufferTextureId;
     private int diffuseSamperUniformID;
     private float time = 0.0F;
+    private long lastFrame = System.currentTimeMillis();
 
     public ShaderLoader(String fragmentShader, int frameBufferTextureId) {
         this.reset();
@@ -50,7 +51,7 @@ public class ShaderLoader {
         GL11.glTexParameterf(3553, 10243, 10496.0F);
         GL11.glBindTexture(3553, 0);
         GL11.glBindTexture(3553, this.fboTextureID);
-        GL11.glTexImage2D(3553, 0, 32856, Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight, 0, 6408, 5121, (ByteBuffer)null);
+        GL11.glTexImage2D(3553, 0, 32856, Minecraft.getMinecraft().displayWidth, Minecraft.getMinecraft().displayHeight, 0, 6408, 5121, (ByteBuffer) null);
         EXTFramebufferObject.glBindFramebufferEXT(36160, this.fboID);
         EXTFramebufferObject.glFramebufferTexture2DEXT(36160, 36064, 3553, this.fboTextureID, 0);
         EXTFramebufferObject.glBindRenderbufferEXT(36161, this.renderBufferID);
@@ -71,14 +72,14 @@ public class ShaderLoader {
                 String fragmentShader;
                 if (this.vertexShaderId == -1) {
                     in = Minecraft.getMinecraft().getResourceManager()
-                            .getResource(new ResourceLocation("FoodTower/shader/"+this.vertexShaderFileName)).getInputStream();
+                            .getResource(new ResourceLocation("FoodTower/shader/" + this.vertexShaderFileName)).getInputStream();
                     fragmentShader = RenderUtil.getShaderCode(new InputStreamReader(in));
                     this.vertexShaderId = RenderUtil.createShader(fragmentShader, ARBVertexShader.GL_VERTEX_SHADER_ARB);
                 }
 
                 if (this.fragmentShaderId == -1) {
                     in = Minecraft.getMinecraft().getResourceManager()
-                            .getResource(new ResourceLocation("FoodTower/shader/fragment/"+this.fragmenShaderFileName)).getInputStream();
+                            .getResource(new ResourceLocation("FoodTower/shader/fragment/" + this.fragmenShaderFileName)).getInputStream();
                     fragmentShader = RenderUtil.getShaderCode(new InputStreamReader(in));
                     this.fragmentShaderId = RenderUtil.createShader(fragmentShader, ARBFragmentShader.GL_FRAGMENT_SHADER_ARB);
                 }
@@ -114,7 +115,6 @@ public class ShaderLoader {
         }
 
     }
-    private long lastFrame = System.currentTimeMillis();
 
     public ShaderLoader update() {
         if (this.fboID != -1 && this.renderBufferID != -1 && this.programmId != -1) {
@@ -128,18 +128,18 @@ public class ShaderLoader {
             ScaledResolution res = new ScaledResolution(Minecraft.getMinecraft());
             FloatBuffer resolutionBuffer = BufferUtils.createFloatBuffer(2);
             resolutionBuffer.position(0);
-            resolutionBuffer.put((float)(Minecraft.getMinecraft().displayWidth));
-            resolutionBuffer.put((float)(Minecraft.getMinecraft().displayHeight));
+            resolutionBuffer.put((float) (Minecraft.getMinecraft().displayWidth));
+            resolutionBuffer.put((float) (Minecraft.getMinecraft().displayHeight));
             resolutionBuffer.flip();
             ARBShaderObjects.glUniform2ARB(this.resolutionUniformId, resolutionBuffer);
             FloatBuffer texelSizeBuffer = BufferUtils.createFloatBuffer(2);
             texelSizeBuffer.position(0);
-            texelSizeBuffer.put(1.0F / (float)Minecraft.getMinecraft().displayWidth * 2.0F);
-            texelSizeBuffer.put(1.0F / (float)Minecraft.getMinecraft().displayHeight * 2.0F);
+            texelSizeBuffer.put(1.0F / (float) Minecraft.getMinecraft().displayWidth * 2.0F);
+            texelSizeBuffer.put(1.0F / (float) Minecraft.getMinecraft().displayHeight * 2.0F);
             texelSizeBuffer.flip();
             ARBShaderObjects.glUniform2ARB(this.texelUniformId, texelSizeBuffer);
-            float mouseX = (float)Mouse.getX() / (float)Minecraft.getMinecraft().displayWidth;
-            float mouseY = (float)Mouse.getY() / (float)Minecraft.getMinecraft().displayHeight;
+            float mouseX = (float) Mouse.getX() / (float) Minecraft.getMinecraft().displayWidth;
+            float mouseY = (float) Mouse.getY() / (float) Minecraft.getMinecraft().displayHeight;
             FloatBuffer mouseBuffer = BufferUtils.createFloatBuffer(2);
             mouseBuffer.position(0);
             mouseBuffer.put(mouseX);
@@ -150,8 +150,8 @@ public class ShaderLoader {
             time += (thisFrame - this.lastFrame) / 700f;
             this.lastFrame = thisFrame;
             ARBShaderObjects.glUniform1fARB(this.timeUniformID, this.time);
-            double width = res.getScaledWidth();
-            double height = res.getScaledHeight();
+            double width = ScaledResolution.getScaledWidth();
+            double height = ScaledResolution.getScaledHeight();
             GL11.glDisable(3553);
             GL11.glBegin(4);
             GL11.glTexCoord2d(0.0D, 1.0D);
@@ -161,7 +161,7 @@ public class ShaderLoader {
             GL11.glTexCoord2d(1.0D, 0.0D);
             GL11.glVertex2d(width, height);
             GL11.glTexCoord2d(1.0D, 0.0D);
-            GL11.glVertex2d(width, height );
+            GL11.glVertex2d(width, height);
             GL11.glTexCoord2d(1.0D, 1.0D);
             GL11.glVertex2d(width, 0.0D);
             GL11.glTexCoord2d(0.0D, 1.0D);

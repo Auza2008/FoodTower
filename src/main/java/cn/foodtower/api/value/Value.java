@@ -1,47 +1,57 @@
 package cn.foodtower.api.value;
 
 public abstract class Value<V> {
-	private String displayName;
-	private String name;
-	private V value;
-	public Mode modes;
-	public Enum<?>[] targetModes;
+    private final String displayName;
+    private final String name;
+    public Mode modes;
+    public Option options;
+    public Enum<?>[] targetModes;
+    public Boolean[] targetModesB;
+    private V value;
 
-	public Value(String displayName, String name) {
-		this.displayName = displayName;
-		this.name = name;
-	}
+    public Value(String displayName, String name) {
+        this.displayName = displayName;
+        this.name = name;
+    }
 
 
-	public String getDisplayName() {
-		return this.displayName;
-	}
+    public String getDisplayName() {
+        return this.displayName;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public String getName() {
+        return this.name;
+    }
 
-	public V getValue() {
-		return this.value;
-	}
+    public V getValue() {
+        return this.value;
+    }
 
-	public V get() {
-		return this.value;
-	}
+    public void setValue(V value) {
+        this.value = value;
+    }
 
-	public boolean isDisplayable() {
-		if (targetModes != null){
-			for (Enum<?> targetMode : targetModes) {
-				if (targetMode.equals(modes.getValue())) {
-					return true;
-				}
-			}
-			return false;
-		}
-		return true;
-	}
+    public V get() {
+        return this.value;
+    }
 
-	public void setValue(V value) {
-		this.value = value;
-	}
+    public boolean isDisplayable() {
+        if (targetModes != null) {
+            for (Enum<?> targetMode : targetModes) {
+                if (targetMode.equals(modes.getValue())) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        if (targetModesB != null) {
+            for (Boolean targetModeB : targetModesB) {
+                if (targetModeB.equals(options.getValue())) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return true;
+    }
 }

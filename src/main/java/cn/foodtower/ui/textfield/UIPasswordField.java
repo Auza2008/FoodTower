@@ -20,10 +20,10 @@ import net.minecraft.util.MathHelper;
 public class UIPasswordField extends GuiTextField {
     private final int id;
     private final FastUniFontRenderer fontRendererInstance;
-    public int xPosition;
-    public int yPosition;
     private final int width;
     private final int height;
+    public int xPosition;
+    public int yPosition;
     private String text = "";
     private int maxStringLength = 32;
     private int cursorCounter;
@@ -58,6 +58,10 @@ public class UIPasswordField extends GuiTextField {
         ++this.cursorCounter;
     }
 
+    public String getText() {
+        return this.text;
+    }
+
     public void setText(String p_146180_1_) {
         if (this.field_175209_y.apply(p_146180_1_)) {
             if (p_146180_1_.length() > this.maxStringLength) {
@@ -69,10 +73,6 @@ public class UIPasswordField extends GuiTextField {
             this.setCursorPositionEnd();
         }
 
-    }
-
-    public String getText() {
-        return this.text;
     }
 
     public String getSelectedText() {
@@ -179,23 +179,23 @@ public class UIPasswordField extends GuiTextField {
         boolean flag = p_146197_1_ < 0;
         int j = Math.abs(p_146197_1_);
 
-        for(int k = 0; k < j; ++k) {
+        for (int k = 0; k < j; ++k) {
             if (!flag) {
                 int l = this.text.length();
                 i = this.text.indexOf(32, i);
                 if (i == -1) {
                     i = l;
                 } else {
-                    while(p_146197_3_ && i < l && this.text.charAt(i) == ' ') {
+                    while (p_146197_3_ && i < l && this.text.charAt(i) == ' ') {
                         ++i;
                     }
                 }
             } else {
-                while(p_146197_3_ && i > 0 && this.text.charAt(i - 1) == ' ') {
+                while (p_146197_3_ && i > 0 && this.text.charAt(i - 1) == ' ') {
                     --i;
                 }
 
-                while(i > 0 && this.text.charAt(i - 1) != ' ') {
+                while (i > 0 && this.text.charAt(i - 1) != ' ') {
                     --i;
                 }
             }
@@ -208,13 +208,6 @@ public class UIPasswordField extends GuiTextField {
         this.setCursorPosition(this.selectionEnd + p_146182_1_);
     }
 
-    public void setCursorPosition(int p_146190_1_) {
-        this.cursorPosition = p_146190_1_;
-        int i = this.text.length();
-        this.cursorPosition = MathHelper.clamp_int(this.cursorPosition, 0, i);
-        this.setSelectionPos(this.cursorPosition);
-    }
-
     public void setCursorPositionZero() {
         this.setCursorPosition(0);
     }
@@ -222,7 +215,6 @@ public class UIPasswordField extends GuiTextField {
     public void setCursorPositionEnd() {
         this.setCursorPosition(this.text.length());
     }
-
 
     public void mouseClicked(int p_146192_1_, int p_146192_2_, int p_146192_3_) {
         boolean flag = p_146192_1_ >= this.xPosition && p_146192_1_ < this.xPosition + this.width && p_146192_2_ >= this.yPosition && p_146192_2_ < this.yPosition + this.height;
@@ -245,7 +237,7 @@ public class UIPasswordField extends GuiTextField {
     public void drawTextBox() {
         if (this.getVisible()) {
             if (this.getEnableBackgroundDrawing()) {
-                RenderUtil.drawBorderedRect((float)this.xPosition, (float)this.yPosition, (float)(this.xPosition + this.width), (float)(this.yPosition + this.height), this.isFocused ? Colors.DARKGREY.c : Colors.GREY.c, 0);
+                RenderUtil.drawBorderedRect((float) this.xPosition, (float) this.yPosition, (float) (this.xPosition + this.width), (float) (this.yPosition + this.height), this.isFocused ? Colors.DARKGREY.c : Colors.GREY.c, 0);
             }
 
             int var10000;
@@ -269,7 +261,7 @@ public class UIPasswordField extends GuiTextField {
 
             if (s.length() > 0) {
                 String s1 = flag ? s.substring(0, j) : s;
-                j1 = (int)this.fontRendererInstance.drawString(s1, (float)l, (float)i1, Colors.DARKGREY.c);
+                j1 = this.fontRendererInstance.drawString(s1, (float) l, (float) i1, Colors.DARKGREY.c);
             }
 
             boolean flag2 = this.cursorPosition < this.text.length() || this.text.length() >= this.getMaxStringLength();
@@ -282,14 +274,14 @@ public class UIPasswordField extends GuiTextField {
             }
 
             if (s.length() > 0 && flag && j < s.length()) {
-                var10000 = (int)this.fontRendererInstance.drawString(s.substring(j), (float)j1, (float)i1, Colors.DARKGREY.c);
+                var10000 = this.fontRendererInstance.drawString(s.substring(j), (float) j1, (float) i1, Colors.DARKGREY.c);
             }
 
             if (flag1) {
                 if (flag2) {
                     Gui.drawRect(k1, i1 - 1, k1 + 1, i1 + 1 + this.fontRendererInstance.FONT_HEIGHT, -3092272);
                 } else {
-                    this.fontRendererInstance.drawString("_", (float)k1, (float)i1, Colors.DARKGREY.c);
+                    this.fontRendererInstance.drawString("_", (float) k1, (float) i1, Colors.DARKGREY.c);
                 }
             }
 
@@ -330,13 +322,17 @@ public class UIPasswordField extends GuiTextField {
         GlStateManager.enableColorLogic();
         GlStateManager.colorLogicOp(5387);
         worldrenderer.begin(7, DefaultVertexFormats.POSITION);
-        worldrenderer.pos((double)p_146188_1_, (double)p_146188_4_, 0.0D).endVertex();
-        worldrenderer.pos((double)p_146188_3_, (double)p_146188_4_, 0.0D).endVertex();
-        worldrenderer.pos((double)p_146188_3_, (double)p_146188_2_, 0.0D).endVertex();
-        worldrenderer.pos((double)p_146188_1_, (double)p_146188_2_, 0.0D).endVertex();
+        worldrenderer.pos(p_146188_1_, p_146188_4_, 0.0D).endVertex();
+        worldrenderer.pos(p_146188_3_, p_146188_4_, 0.0D).endVertex();
+        worldrenderer.pos(p_146188_3_, p_146188_2_, 0.0D).endVertex();
+        worldrenderer.pos(p_146188_1_, p_146188_2_, 0.0D).endVertex();
         tessellator.draw();
         GlStateManager.disableColorLogic();
         GlStateManager.enableTexture2D();
+    }
+
+    public int getMaxStringLength() {
+        return this.maxStringLength;
     }
 
     public void setMaxStringLength(int p_146203_1_) {
@@ -347,12 +343,15 @@ public class UIPasswordField extends GuiTextField {
 
     }
 
-    public int getMaxStringLength() {
-        return this.maxStringLength;
-    }
-
     public int getCursorPosition() {
         return this.cursorPosition;
+    }
+
+    public void setCursorPosition(int p_146190_1_) {
+        this.cursorPosition = p_146190_1_;
+        int i = this.text.length();
+        this.cursorPosition = MathHelper.clamp_int(this.cursorPosition, 0, i);
+        this.setSelectionPos(this.cursorPosition);
     }
 
     public boolean getEnableBackgroundDrawing() {
@@ -371,16 +370,16 @@ public class UIPasswordField extends GuiTextField {
         this.disabledColor = p_146204_1_;
     }
 
+    public boolean isFocused() {
+        return this.isFocused;
+    }
+
     public void setFocused(boolean p_146195_1_) {
         if (p_146195_1_ && !this.isFocused) {
             this.cursorCounter = 0;
         }
 
         this.isFocused = p_146195_1_;
-    }
-
-    public boolean isFocused() {
-        return this.isFocused;
     }
 
     public void setEnabled(boolean p_146184_1_) {

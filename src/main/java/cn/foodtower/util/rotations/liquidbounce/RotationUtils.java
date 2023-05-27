@@ -6,9 +6,7 @@
 package cn.foodtower.util.rotations.liquidbounce;
 
 
-
 import cn.foodtower.api.EventBus;
-
 import cn.foodtower.api.EventHandler;
 import cn.foodtower.api.events.World.EventPacketSend;
 import cn.foodtower.api.events.World.EventTick;
@@ -30,14 +28,10 @@ public final class RotationUtils {
     private static final Minecraft mc = Minecraft.getMinecraft();
 
     private static final Random random = new Random();
-
-    private static int keepLength;
-
     public static Rotation targetRotation;
     public static Rotation serverRotation = new Rotation(0F, 0F);
-
     public static boolean keepCurrentRotation = false;
-
+    private static int keepLength;
     private static double x = random.nextDouble();
     private static double y = random.nextDouble();
     private static double z = random.nextDouble();
@@ -523,25 +517,6 @@ public final class RotationUtils {
     }
 
     /**
-     * Handle minecraft tick
-     *
-     * @param event Tick event
-     */
-    @EventHandler
-    public void onTick(final EventTick event) {
-        if (targetRotation != null) {
-            keepLength--;
-
-            if (keepLength <= 0)
-                reset();
-        }
-
-        if (random.nextGaussian() > 0.8D) x = Math.random();
-        if (random.nextGaussian() > 0.8D) y = Math.random();
-        if (random.nextGaussian() > 0.8D) z = Math.random();
-    }
-
-    /**
      * Set your target rotation
      *
      * @param rotation your target rotation
@@ -562,28 +537,6 @@ public final class RotationUtils {
      */
     public static void setTargetRotation(final Rotation rotation) {
         setTargetRotation(rotation, 0);
-    }
-
-    /**
-     * Handle packet
-     *
-     * @param event Packet Event
-     */
-    @EventHandler
-    public void onPacket(final EventPacketSend event) {
-        final Packet<?> packet = event.getPacket();
-        if (packet instanceof C03PacketPlayer) {
-            final C03PacketPlayer packetPlayer = (C03PacketPlayer) packet;
-            if (targetRotation != null && !keepCurrentRotation && (targetRotation.getYaw() != serverRotation.getYaw() || targetRotation.getPitch() != serverRotation.getPitch())) {
-                packetPlayer.yaw = targetRotation.getYaw();
-                packetPlayer.pitch = targetRotation.getPitch();
-                packetPlayer.rotating = true;
-            }
-
-            if (packetPlayer.rotating) {
-                serverRotation = new Rotation(packetPlayer.getYaw(), packetPlayer.getPitch());
-            }
-        }
     }
 
     /**
@@ -613,5 +566,46 @@ public final class RotationUtils {
     public static void reset() {
         keepLength = 0;
         targetRotation = null;
+    }
+
+    /**
+     * Handle minecraft tick
+     *
+     * @param event Tick event
+     */
+    @EventHandler
+    public void onTick(final EventTick event) {
+        if (targetRotation != null) {
+            keepLength--;
+
+            if (keepLength <= 0)
+                reset();
+        }
+
+        if (random.nextGaussian() > 0.8D) x = Math.random();
+        if (random.nextGaussian() > 0.8D) y = Math.random();
+        if (random.nextGaussian() > 0.8D) z = Math.random();
+    }
+
+    /**
+     * Handle packet
+     *
+     * @param event Packet Event
+     */
+    @EventHandler
+    public void onPacket(final EventPacketSend event) {
+        final Packet<?> packet = event.getPacket();
+        if (packet instanceof C03PacketPlayer) {
+            final C03PacketPlayer packetPlayer = (C03PacketPlayer) packet;
+            if (targetRotation != null && !keepCurrentRotation && (targetRotation.getYaw() != serverRotation.getYaw() || targetRotation.getPitch() != serverRotation.getPitch())) {
+                packetPlayer.yaw = targetRotation.getYaw();
+                packetPlayer.pitch = targetRotation.getPitch();
+                packetPlayer.rotating = true;
+            }
+
+            if (packetPlayer.rotating) {
+                serverRotation = new Rotation(packetPlayer.getYaw(), packetPlayer.getPitch());
+            }
+        }
     }
 }

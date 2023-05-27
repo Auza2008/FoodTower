@@ -2,8 +2,8 @@ package cn.foodtower.ui.cloudmusic.ui;
 
 import cn.foodtower.fastuni.FontLoader;
 import cn.foodtower.ui.cloudmusic.MusicManager;
-import cn.foodtower.util.render.RenderUtil;
 import cn.foodtower.ui.cloudmusic.utils.Track;
+import cn.foodtower.util.render.RenderUtil;
 
 import java.awt.*;
 
@@ -21,7 +21,7 @@ public class TrackSlot {
         this.x = a;
         this.y = b;
 
-        RenderUtil.drawRoundedRect(x, y, x + 137, y + 20, 2, new Color(230,230,230).getRGB());
+        RenderUtil.drawRoundedRect(x, y, x + 137, y + 20, 2, new Color(230, 230, 230).getRGB());
 
         FontLoader.msFont16.drawString(track.name, x + 2, y + 3, Color.BLACK.getRGB());
         FontLoader.msFont13.drawString(track.artists, x + 2, y + 12, Color.BLACK.getRGB());
@@ -35,7 +35,7 @@ public class TrackSlot {
     }
 
     public void click(int mouseX, int mouseY, int mouseButton) {
-        if(RenderUtil.isHovering(mouseX, mouseY, x + 125, y + 5, x + 135, y + 15) && mouseButton == 0) {
+        if (RenderUtil.isHovering(mouseX, mouseY, x + 125, y + 5, x + 135, y + 15) && mouseButton == 0) {
             MusicManager.INSTANCE.play(track);
         }
     }

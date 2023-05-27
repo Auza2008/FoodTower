@@ -7,20 +7,17 @@ import cn.foodtower.api.events.World.EventPreUpdate;
 import cn.foodtower.api.value.Mode;
 import cn.foodtower.api.value.Numbers;
 import cn.foodtower.api.value.Option;
+import cn.foodtower.api.value.Value;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.ui.notifications.user.Notifications;
 import cn.foodtower.util.entity.MoveUtils;
 import cn.foodtower.util.math.MathUtil;
 import cn.foodtower.util.time.MSTimer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraft.network.play.server.S27PacketExplosion;
 import net.minecraft.util.MathHelper;
-
-import java.util.stream.IntStream;
 
 public class Velocity extends Module {
     private final Mode mode;
@@ -46,13 +43,14 @@ public class Velocity extends Module {
 
     public Velocity() {
         super("Velocity", new String[]{"AntiKB"}, ModuleType.Combat);
-        mode = new Mode("Velocity", modes.values(), modes.Simple);
+        mode = new Mode("Velocity", modes.values(), modes.Cancel);
         this.vertical = new Numbers<>("Vertical", 0.0, 0.0, 1.0, 0.01);
         this.horizontal = new Numbers<>("Horizontal", 0.0, 0.0, 1.0, 0.01);
         this.velocitytickvalue = new Numbers<Double>("VelocityTick", 0.0, 0.0, 24.0, 1.0);
         this.reverseStrengthValue = new Numbers<Double>("ReverseStrengthValue", 1.0, 0.0, 1.0, 0.1);
         this.addValues(mode, vertical, horizontal, velocitytickvalue, reverseStrengthValue, legitDisableInAirValue, legitChanceValue);
         velocityTimer.reset();
+        setValueDisplayable(new Value<?>[]{vertical, horizontal}, mode, new Enum<?>[]{modes.Simple, modes.Tick});
         setValueDisplayable(velocitytickvalue, mode, modes.Tick);
         setValueDisplayable(reverseStrengthValue, mode, modes.Reverse);
         setValueDisplayable(legitDisableInAirValue, mode, modes.Legit);
@@ -76,7 +74,8 @@ public class Velocity extends Module {
                 break;
             case Legit:
                 if (legitDisableInAirValue.getValue() && !MoveUtils.isOnGround(0.5)) return;
-                if (mc.thePlayer.maxHurtResistantTime != mc.thePlayer.hurtResistantTime || mc.thePlayer.maxHurtResistantTime == 0) return;
+                if (mc.thePlayer.maxHurtResistantTime != mc.thePlayer.hurtResistantTime || mc.thePlayer.maxHurtResistantTime == 0)
+                    return;
                 if (MathUtil.randomNumber(100, 1) < legitChanceValue.get()) {
                     mc.thePlayer.motionX *= horizontal.getValue();
                     mc.thePlayer.motionZ *= horizontal.getValue();
@@ -189,26 +188,27 @@ public class Velocity extends Module {
                 if (event.getPacket() instanceof S12PacketEntityVelocity) {
                     S12PacketEntityVelocity packet = (S12PacketEntityVelocity) event.getPacket();
                     if (packet.getEntityID() == mc.thePlayer.getEntityId()) {
-                        if (this.vertical.getValue() == 0.0D && this.horizontal.getValue() == 0.0D) {
-                            event.setCancelled(true);
-                        } else {
-                            packet.motionX = (int) (packet.motionX * this.horizontal.getValue());
-                            packet.motionZ = (int) (packet.motionZ * this.horizontal.getValue());
-                            packet.motionY = (int) (packet.motionY * this.vertical.getValue());
-                        }
+                        packet.motionX = (int) (packet.motionX * this.horizontal.getValue());
+                        packet.motionZ = (int) (packet.motionZ * this.horizontal.getValue());
+                        packet.motionY = (int) (packet.motionY * this.vertical.getValue());
                     }
                 }
-
-
                 if (event.getPacket() instanceof S27PacketExplosion) {
                     S27PacketExplosion packet = (S27PacketExplosion) event.getPacket();
-                    if (this.vertical.getValue() == 0.0D && this.horizontal.getValue() == 0.0D) {
+                    packet.field_149152_f = (float) (packet.field_149152_f * this.horizontal.getValue());
+                    packet.field_149153_g = (float) (packet.field_149153_g * this.horizontal.getValue());
+                    packet.field_149159_h = (float) (packet.field_149159_h * this.vertical.getValue());
+                }
+                break;
+            case Cancel:
+                if (event.getPacket() instanceof S12PacketEntityVelocity) {
+                    S12PacketEntityVelocity packet = (S12PacketEntityVelocity) event.getPacket();
+                    if (packet.getEntityID() == mc.thePlayer.getEntityId()) {
                         event.setCancelled(true);
-                    } else {
-                        packet.field_149152_f = (float) (packet.field_149152_f * this.horizontal.getValue());
-                        packet.field_149153_g = (float) (packet.field_149153_g * this.horizontal.getValue());
-                        packet.field_149159_h = (float) (packet.field_149159_h * this.vertical.getValue());
                     }
+                }
+                if (event.getPacket() instanceof S27PacketExplosion) {
+                    event.setCancelled(true);
                 }
                 break;
             case AAC520:
@@ -260,7 +260,7 @@ public class Velocity extends Module {
     }
 
     enum modes {
-        Simple, Legit, Tick, Reverse, AAC, AAC1, AAC520, AAC5Reduce, AAC5Combat, Hypixel
+        Cancel, Simple, Legit, Tick, Reverse, AAC, AAC1, AAC520, AAC5Reduce, AAC5Combat, Hypixel
     }
 
 }

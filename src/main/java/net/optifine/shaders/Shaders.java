@@ -122,7 +122,7 @@ import org.lwjgl.util.vector.Vector4f;
 public class Shaders
 {
     static Minecraft mc = Minecraft.getMinecraft();
-    static EntityRenderer entityRenderer;
+    public static EntityRenderer entityRenderer;
     public static boolean isInitializedOnce = false;
     public static boolean isShaderPackInitialized = false;
     public static ContextCapabilities capabilities;

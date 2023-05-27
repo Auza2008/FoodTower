@@ -50,15 +50,15 @@ public class Criticals extends Module {
         setValueDisplayable(hypixelmode, mode, CritMode.Hypixel);
     }
 
-    public static void Crit2(Double[] value) {
+    public static void Crit(Double[] value, Boolean onGround) {
         double curX = mc.thePlayer.posX;
         double curY = mc.thePlayer.posY;
         double curZ = mc.thePlayer.posZ;
         for (double offset : value) {
             if (!C06.getValue()) {
-                sendPacket(new C03PacketPlayer.C04PacketPlayerPosition(curX, curY + offset, curZ, false));
+                sendPacket(new C03PacketPlayer.C04PacketPlayerPosition(curX, curY + offset, curZ, onGround));
             } else {
-                sendPacket(new C03PacketPlayer.C06PacketPlayerPosLook(curX, curY + offset, curZ, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch, false));
+                sendPacket(new C03PacketPlayer.C06PacketPlayerPosLook(curX, curY + offset, curZ, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch, onGround));
             }
         }
     }
@@ -119,6 +119,12 @@ public class Criticals extends Module {
     private void onUpdate(EventMotionUpdate e10) {
         if (mode.getValue().equals(CritMode.Hypixel)) {
             setSuffix("Hyp-" + hypixelmode.getValue());
+        } else if (mode.getValue().equals(CritMode.TpHop)) {
+            if (C06.getValue()) {
+                setSuffix(mode.getValue() + "-C06");
+            } else {
+                setSuffix(mode.getValue() + "-C04");
+            }
         } else {
             setSuffix(mode.getValue());
         }
@@ -160,19 +166,23 @@ public class Criticals extends Module {
                     case Jump:
                         mc.thePlayer.jump();
                         break;
+                    case TpHop:
+                        Crit(new Double[]{0.02, 0.01}, false);
+                        mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.01, mc.thePlayer.posZ);
+                        break;
                     case Hypixel:
                         switch (((HypixelMode) hypixelmode.getValue())) {
                             case Minimum:
-                                Crit2(new Double[]{(double) 0, new Random().nextBoolean() ? 0.102888018147468 : 0.105888018147468 * (new Random().nextBoolean() ? 0.98 : 0.99) + mc.thePlayer.ticksExisted % 0.0215 * 0.94, (new Random().nextBoolean() ? 0.01063469198817 : 0.013999999) * (new Random().nextBoolean() ? 0.98 : 0.99) * y1[new Random().nextInt(y1.length)] * 10});
+                                Crit(new Double[]{(double) 0, new Random().nextBoolean() ? 0.102888018147468 : 0.105888018147468 * (new Random().nextBoolean() ? 0.98 : 0.99) + mc.thePlayer.ticksExisted % 0.0215 * 0.94, (new Random().nextBoolean() ? 0.01063469198817 : 0.013999999) * (new Random().nextBoolean() ? 0.98 : 0.99) * y1[new Random().nextInt(y1.length)] * 10}, false);
                                 break;
                             case Packetor:
-                                Crit2(new Double[]{new Random().nextBoolean() ? 0.082888018147468 * y1[new Random().nextInt(y1.length)] * 10 * (new Random().nextBoolean() ? 0.98 : 0.99) + mc.thePlayer.ticksExisted % 0.0215 * 0.94 : 0.09634532004642 * y1[new Random().nextInt(y1.length)] * 10 + mc.thePlayer.ticksExisted % 0.0115 * 0.94, (new Random().nextBoolean() ? 0.03125 : 0.01125) * (new Random().nextBoolean() ? 0.98 : 0.99) * y1[new Random().nextInt(y1.length)] * 10 + mc.thePlayer.ticksExisted % 0.0215 - mc.thePlayer.ticksExisted % 0.0115});
+                                Crit(new Double[]{new Random().nextBoolean() ? 0.082888018147468 * y1[new Random().nextInt(y1.length)] * 10 * (new Random().nextBoolean() ? 0.98 : 0.99) + mc.thePlayer.ticksExisted % 0.0215 * 0.94 : 0.09634532004642 * y1[new Random().nextInt(y1.length)] * 10 + mc.thePlayer.ticksExisted % 0.0115 * 0.94, (new Random().nextBoolean() ? 0.03125 : 0.01125) * (new Random().nextBoolean() ? 0.98 : 0.99) * y1[new Random().nextInt(y1.length)] * 10 + mc.thePlayer.ticksExisted % 0.0215 - mc.thePlayer.ticksExisted % 0.0115}, false);
                                 break;
                             case Complex:
-                                Crit2(new Double[]{y1[new Random().nextInt(y1.length)] * (y1[new Random().nextInt(y1.length)] - 0.003) * 10 + mc.thePlayer.ticksExisted % 0.0215 * 0.94, 0.01125 * (y1[new Random().nextInt(y1.length)] - 0.003) * 10, (0.03125 + ThreadLocalRandom.current().nextDouble(0.03, 0.06)) * (new Random().nextBoolean() ? 0.98 : 0.99) * y1[new Random().nextInt(y1.length)] * 10, (new Random().nextBoolean() ? 0.01063469198817 : 0.013999999) * (new Random().nextBoolean() ? 0.98 : 0.99) * y1[new Random().nextInt(y1.length)] * 10 + mc.thePlayer.ticksExisted % 0.0215 - mc.thePlayer.ticksExisted % 0.0115});
+                                Crit(new Double[]{y1[new Random().nextInt(y1.length)] * (y1[new Random().nextInt(y1.length)] - 0.003) * 10 + mc.thePlayer.ticksExisted % 0.0215 * 0.94, 0.01125 * (y1[new Random().nextInt(y1.length)] - 0.003) * 10, (0.03125 + ThreadLocalRandom.current().nextDouble(0.03, 0.06)) * (new Random().nextBoolean() ? 0.98 : 0.99) * y1[new Random().nextInt(y1.length)] * 10, (new Random().nextBoolean() ? 0.01063469198817 : 0.013999999) * (new Random().nextBoolean() ? 0.98 : 0.99) * y1[new Random().nextInt(y1.length)] * 10 + mc.thePlayer.ticksExisted % 0.0215 - mc.thePlayer.ticksExisted % 0.0115}, false);
                                 break;
                             case GetDown:
-                                Crit2(new Double[]{-0.0091165721 * y1[new Random().nextInt(y1.length)] * 10, 0.0176063469198817 * y1[new Random().nextInt(y1.length)] * 10});
+                                Crit(new Double[]{-0.0091165721 * y1[new Random().nextInt(y1.length)] * 10, 0.0176063469198817 * y1[new Random().nextInt(y1.length)] * 10}, false);
                                 break;
                         }
                         break;
@@ -185,17 +195,17 @@ public class Criticals extends Module {
                     case Edit:
                         readycrit = true;
                     case OldNCPacket:
-                        Crit2(new Double[]{0.05, 0.0, 0.012511, 0.0});
+                        Crit(new Double[]{0.05, 0.0, 0.012511, 0.0}, false);
                         break;
                     case AAC440Packet:
-                        Crit2(new Double[]{0.05250000001304, 0.00150000001304, 0.01400000001304, 0.00150000001304});
+                        Crit(new Double[]{0.05250000001304, 0.00150000001304, 0.01400000001304, 0.00150000001304}, false);
                         break;
                     case AACV5:
                         mc.thePlayer.motionY = 0.104514886;
                         break;
                     case NCP:
                         if (ncpcrit >= 3) {
-                            Crit2(new Double[]{0.00001100134977413, 0.00000000013487744, 0.00000571003114589, 0.00000001578887744});
+                            Crit(new Double[]{0.00001100134977413, 0.00000000013487744, 0.00000571003114589, 0.00000001578887744}, false);
                             ncpcrit = 0;
                         } else {
                             ++ncpcrit;
@@ -212,7 +222,7 @@ public class Criticals extends Module {
     }
 
     public enum CritMode {
-        AAC440Packet, NCP, AAC440NoG, Jump, Packet, NoGround, OldNCPacket, Hypixel, AACV5, Edit, Motion
+        AAC440Packet, NCP, AAC440NoG, Jump, Packet, NoGround, OldNCPacket, Hypixel, AACV5, Edit, Motion, TpHop
     }
 
 }

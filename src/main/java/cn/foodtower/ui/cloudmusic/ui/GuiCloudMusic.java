@@ -3,11 +3,11 @@ package cn.foodtower.ui.cloudmusic.ui;
 import cn.foodtower.fastuni.FontLoader;
 import cn.foodtower.ui.cloudmusic.MusicManager;
 import cn.foodtower.ui.cloudmusic.utils.CloudMusicAPI;
+import cn.foodtower.ui.cloudmusic.utils.Track;
 import cn.foodtower.util.SuperLib;
 import cn.foodtower.util.anim.Palette;
 import cn.foodtower.util.misc.Helper;
 import cn.foodtower.util.render.RenderUtil;
-import cn.foodtower.ui.cloudmusic.utils.Track;
 import javafx.scene.media.MediaPlayer.Status;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.MathHelper;
@@ -20,26 +20,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class GuiCloudMusic extends GuiScreen {
+    public static float volume = 1.0f;
     public float x = 10;
     public float y = 10;
     public float x2 = 0;
     public float y2 = 0;
-
     public boolean drag = false;
-
-
     public float width = 150;
     public float height = 250;
-
     public float sidebarAnimation = 0;
-
     // 滚动
     public float scrollY = 0;
     public float scrollAni = 0;
     public float minY = -100;
-
-    public static float volume = 1.0f;
-
     public CustomTextField textField = new CustomTextField("");
 
     @Override
@@ -60,11 +53,11 @@ public class GuiCloudMusic extends GuiScreen {
         if (Math.ceil(sidebarAnimation) > 1) {
             float newX = x + sidebarAnimation;
             float newWidth = x + width + sidebarAnimation;
-            RenderUtil.drawRoundedRect(newX - 10, y, newWidth, y + height, 2, new Color(255,255,255).getRGB());
+            RenderUtil.drawRoundedRect(newX - 10, y, newWidth, y + height, 2, new Color(255, 255, 255).getRGB());
 
             //歌单导入输入框
             textField.draw(newX + 6, y + 2);
-            RenderUtil.drawRoundedRect(newWidth - 26, y + 5, newWidth - 7, y + 17, 2, RenderUtil.isHovering(mouseX, mouseY, newWidth - 26, y + 5, newWidth - 7, y + 17) || MusicManager.INSTANCE.analyzeThread != null ? new Color(235,20,20).getRGB() : new Color(255,40,40).getRGB());
+            RenderUtil.drawRoundedRect(newWidth - 26, y + 5, newWidth - 7, y + 17, 2, RenderUtil.isHovering(mouseX, mouseY, newWidth - 26, y + 5, newWidth - 7, y + 17) || MusicManager.INSTANCE.analyzeThread != null ? new Color(235, 20, 20).getRGB() : new Color(255, 40, 40).getRGB());
             FontLoader.msFont13.drawString("导入", newWidth - 23f, y + 8f, new Color(240, 240, 240).getRGB());
 
             if (textField.textString.isEmpty()) {
@@ -85,7 +78,7 @@ public class GuiCloudMusic extends GuiScreen {
                 Mouse.getDWheel(); //用于刷新滚轮数据
             }
 
-            this.scrollAni = SuperLib.getAnimationState(this.scrollAni, scrollY, (float) (Math.max(10, (Math.abs(this.scrollAni - (scrollY))) * 50) * 0.3f));
+            this.scrollAni = SuperLib.getAnimationState(this.scrollAni, scrollY, Math.max(10, (Math.abs(this.scrollAni - (scrollY))) * 50) * 0.3f);
             float startY = y + 21 + this.scrollAni;
             float yShouldbe = 0;
 
@@ -130,9 +123,9 @@ public class GuiCloudMusic extends GuiScreen {
         }
 
         //主框架
-        RenderUtil.drawRoundedRect(x, y, x + width, y + height, 2, new Color(245,245,245).getRGB());
-        RenderUtil.drawRoundedRect(x, y + height - 60, x + width, y + height, 2, new Color(230,230,230).getRGB());
-        RenderUtil.drawRect(x, y + height - 60, x + width, y + height - 58, new Color(230,230,230).getRGB());
+        RenderUtil.drawRoundedRect(x, y, x + width, y + height, 2, new Color(245, 245, 245).getRGB());
+        RenderUtil.drawRoundedRect(x, y + height - 60, x + width, y + height, 2, new Color(230, 230, 230).getRGB());
+        RenderUtil.drawRect(x, y + height - 60, x + width, y + height - 58, new Color(230, 230, 230).getRGB());
 
         FontLoader.msFont16.drawString("网易云音乐", x + 15, y + 8, Color.BLACK.getRGB());
 
@@ -143,8 +136,8 @@ public class GuiCloudMusic extends GuiScreen {
 
         //音量
         RenderUtil.drawRoundedRect(x + 10, y + 24, x + width - 10, y + 28, 1.4f, Color.GRAY.getRGB());
-        RenderUtil.drawRoundedRect(x + 10, y + 24, x + 10 + (130 * volume), y + 28, 1.4f, new Color(255,40,40).getRGB());
-        RenderUtil.circle(x + 10 + (130 * volume), y + 26, 3, new Color(255,40,40).getRGB());
+        RenderUtil.drawRoundedRect(x + 10, y + 24, x + 10 + (130 * volume), y + 28, 1.4f, new Color(255, 40, 40).getRGB());
+        RenderUtil.circle(x + 10 + (130 * volume), y + 26, 3, new Color(255, 40, 40).getRGB());
 
         if (Mouse.isButtonDown(0) && RenderUtil.isHovering(mouseX, mouseY, x + 10, y + 21, x + width - 10, y + 32)) {
             volume = (mouseX - (x + 10)) / 130f;
@@ -160,13 +153,13 @@ public class GuiCloudMusic extends GuiScreen {
             RenderUtil.circle(x + 10 + (1.3f * MusicManager.INSTANCE.downloadProgress), y + height - 48, 3, Palette.fade(new Color(255, 50, 50, 255)).getRGB());
             RenderUtil.circle(x + 10 + (1.3f * MusicManager.INSTANCE.downloadProgress), y + height - 48, 2, Color.WHITE.getRGB());
         } else {
-            RenderUtil.drawRoundedRect(x + 10, y + height - 50, x + 10 + (1.3f * progress), y + height - 46, 1.4f, new Color(255,40,40).getRGB());
-            RenderUtil.circle(x + 10 + (1.3f * progress), y + height - 48, 3, new Color(255,40,40).getRGB());
-            RenderUtil.circle(x + 10 + (1.3f * progress), y + height - 48, 2, new Color(255,255,255).getRGB());
+            RenderUtil.drawRoundedRect(x + 10, y + height - 50, x + 10 + (1.3f * progress), y + height - 46, 1.4f, new Color(255, 40, 40).getRGB());
+            RenderUtil.circle(x + 10 + (1.3f * progress), y + height - 48, 3, new Color(255, 40, 40).getRGB());
+            RenderUtil.circle(x + 10 + (1.3f * progress), y + height - 48, 2, new Color(255, 255, 255).getRGB());
         }
 
         //按钮
-        RenderUtil.circle(x + (width / 2), y + height - 24, 12, new Color(255,40,40).brighter().getRGB()); //播放和暂停
+        RenderUtil.circle(x + (width / 2), y + height - 24, 12, new Color(255, 40, 40).brighter().getRGB()); //播放和暂停
 
         FontLoader.micon15.drawString("R", x + 5, y + 8.5f, Color.BLACK.getRGB());
 
@@ -197,13 +190,13 @@ public class GuiCloudMusic extends GuiScreen {
         if (MusicManager.INSTANCE.repeat) {
             FontLoader.micon15.drawString("O", x + width - 20, y + height - 26f, Color.BLACK.getRGB());
         } else {
-            FontLoader.micon15.drawString("N", x + width - 20, y + height - 26f, new Color(50,50,50).getRGB());
+            FontLoader.micon15.drawString("N", x + width - 20, y + height - 26f, new Color(50, 50, 50).getRGB());
         }
 
         if (MusicManager.INSTANCE.lyric) {
             FontLoader.micon15.drawString("P", x + 10, y + height - 26f, Color.BLACK.getRGB());
         } else {
-            FontLoader.micon15.drawString("P", x + 10, y + height - 26f, new Color(50,50,50).getRGB());
+            FontLoader.micon15.drawString("P", x + 10, y + height - 26f, new Color(50, 50, 50).getRGB());
         }
 
         if (MusicManager.INSTANCE.currentTrack != null) {

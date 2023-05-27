@@ -1,7 +1,7 @@
 package cn.foodtower.ui;
 
-import cn.foodtower.util.ClientSetting;
 import cn.foodtower.ui.shader.Shader;
+import cn.foodtower.util.ClientSetting;
 import cn.foodtower.util.render.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -31,13 +31,13 @@ public class BackGroundRenderer {
         //Shader
         GL11.glPushMatrix();
         ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
-        int var141 = sr.getScaledWidth();
-        int var151 = sr.getScaledHeight();
+        int var141 = ScaledResolution.getScaledWidth();
+        int var151 = ScaledResolution.getScaledHeight();
         int mouseX = Mouse.getX() * var141 / Minecraft.getMinecraft().displayWidth;
         int mouseY = var151 - Mouse.getY() * var151 / Minecraft.getMinecraft().displayHeight - 1;
 
-        float xDiff = ((mouseX - sr.getScaledWidth() / 2f) - currentX) / sr.getScaleFactor();
-        float yDiff = ((mouseY - sr.getScaledHeight() / 2f) - currentY) / sr.getScaleFactor();
+        float xDiff = ((mouseX - ScaledResolution.getScaledWidth() / 2f) - currentX) / sr.getScaleFactor();
+        float yDiff = ((mouseY - ScaledResolution.getScaledHeight() / 2f) - currentY) / sr.getScaleFactor();
         currentX += xDiff * 0.3F;
         currentY += yDiff * 0.3F;
         GlStateManager.translate(currentX / 80, currentY / 80, 0);
@@ -46,7 +46,7 @@ public class BackGroundRenderer {
             sha.stopShader();
         } else {
             //Picture
-            RenderUtil.drawRect(-10,-10, sr.getScaledWidth() + 10, sr.getScaledHeight() + 10, Color.BLACK.getRGB());
+            RenderUtil.drawRect(-10, -10, ScaledResolution.getScaledWidth() + 10, ScaledResolution.getScaledHeight() + 10, Color.BLACK.getRGB());
             String bg = ((ClientSetting.backgrounds) ClientSetting.backGround.getValue()).getFileName();
 //            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
 //            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);

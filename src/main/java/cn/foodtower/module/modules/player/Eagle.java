@@ -13,7 +13,6 @@ import net.minecraft.util.BlockPos;
 
 
 public class Eagle extends Module {
-
     public Eagle() {
         super("Eagle", new String[]{"Eagle"}, ModuleType.Movement);
     }
@@ -28,7 +27,7 @@ public class Eagle extends Module {
 
     @EventHandler
     public void onUpdate(EventPreUpdate event) {
-        if (this.getBlockUnderPlayer(mc.thePlayer) instanceof BlockAir) {
+        if (this.getBlockUnderPlayer(mc.thePlayer) instanceof BlockAir && !mc.gameSettings.keyBindJump.pressed) {
             if (mc.thePlayer.onGround) {
                 KeyBinding.setKeyBindState(mc.gameSettings.keyBindSneak.getKeyCode(), true);
             }

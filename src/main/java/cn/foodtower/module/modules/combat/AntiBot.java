@@ -45,6 +45,8 @@ public class AntiBot extends Module {
     private final Option needHitValue = new Option("NeedHit", false);
     private final Option duplicateInWorldValue = new Option("DuplicateInWorld", false);
     private final Option duplicateInTabValue = new Option("DuplicateInTab", false);
+    private final Option unLegitSpeed = new Option("UnLegitSpeed", false);
+    private final Numbers<Double> speedValue = new Numbers<>("MaxUnLegitSpeed", 0.2d, 0.2d, 10d, 0.01d);
 
     private final List<Integer> ground = new ArrayList<>();
     private final List<Integer> air = new ArrayList<>();
@@ -55,64 +57,51 @@ public class AntiBot extends Module {
 
     public AntiBot() {
         super("AdvancedAntiBot", new String[]{"AAB"}, ModuleType.Combat);
-        this.addValues(tabValue, tabModeValue, entityIDValue, colorValue, livingTimeValue, livingTimeTicksValue, groundValue, airValue, invalidGroundValue, swingValue
-                , healthValue, derpValue, wasInvisibleValue, armorValue, pingValue, needHitValue, duplicateInWorldValue, duplicateInTabValue);
+        this.addValues(tabValue, tabModeValue, entityIDValue, colorValue, livingTimeValue, livingTimeTicksValue, groundValue, airValue, invalidGroundValue, swingValue, healthValue, derpValue, wasInvisibleValue, armorValue, pingValue, needHitValue, duplicateInWorldValue, duplicateInTabValue, unLegitSpeed, speedValue);
     }
 
     public static boolean isServerBot(final Entity entity) {
-        if (!(entity instanceof EntityPlayer))
-            return false;
+        if (!(entity instanceof EntityPlayer)) return false;
 
         final AntiBot antiBot = (AntiBot) ModuleManager.getModuleByClass(AntiBot.class);
 
-        if (antiBot == null || !antiBot.isEnabled())
-            return false;
+        if (antiBot == null || !antiBot.isEnabled()) return false;
 
-        if (antiBot.colorValue.getValue() && !entity.getDisplayName().getFormattedText()
-                .replace("§r", "").contains("§"))
+        if (antiBot.colorValue.getValue() && !entity.getDisplayName().getFormattedText().replace("§r", "").contains("§"))
             return true;
 
         if (antiBot.livingTimeValue.getValue() && entity.ticksExisted < antiBot.livingTimeTicksValue.getValue())
             return true;
 
-        if (antiBot.groundValue.getValue() && !antiBot.ground.contains(entity.getEntityId()))
-            return true;
+        if (antiBot.groundValue.getValue() && !antiBot.ground.contains(entity.getEntityId())) return true;
 
-        if (antiBot.airValue.getValue() && !antiBot.air.contains(entity.getEntityId()))
-            return true;
+        if (antiBot.airValue.getValue() && !antiBot.air.contains(entity.getEntityId())) return true;
 
-        if (antiBot.swingValue.getValue() && !antiBot.swing.contains(entity.getEntityId()))
-            return true;
+        if (antiBot.swingValue.getValue() && !antiBot.swing.contains(entity.getEntityId())) return true;
 
-        if (antiBot.healthValue.getValue() && ((EntityLivingBase) entity).getHealth() > 20F)
-            return true;
+        if (antiBot.healthValue.getValue() && ((EntityLivingBase) entity).getHealth() > 20F) return true;
 
         if (antiBot.entityIDValue.getValue() && (entity.getEntityId() >= 1000000000 || entity.getEntityId() <= -1))
             return true;
 
-        if (antiBot.derpValue.getValue() && (entity.rotationPitch > 90F || entity.rotationPitch < -90F))
-            return true;
+        if (antiBot.derpValue.getValue() && (entity.rotationPitch > 90F || entity.rotationPitch < -90F)) return true;
 
-        if (antiBot.wasInvisibleValue.getValue() && antiBot.invisible.contains(entity.getEntityId()))
-            return true;
+        if (antiBot.wasInvisibleValue.getValue() && antiBot.invisible.contains(entity.getEntityId())) return true;
 
         if (antiBot.armorValue.getValue()) {
             final EntityPlayer player = (EntityPlayer) entity;
 
-            if (player.inventory.armorInventory[0] == null && player.inventory.armorInventory[1] == null &&
-                    player.inventory.armorInventory[2] == null && player.inventory.armorInventory[3] == null)
+            if (player.inventory.armorInventory[0] == null && player.inventory.armorInventory[1] == null && player.inventory.armorInventory[2] == null && player.inventory.armorInventory[3] == null)
                 return true;
         }
 
         if (antiBot.pingValue.getValue()) {
             EntityPlayer player = (EntityPlayer) entity;
 
-            if (mc.getNetHandler().getPlayerInfo(player.getUniqueID()).getResponseTime() == 0)
-                return true;
+            if (mc.getNetHandler().getPlayerInfo(player.getUniqueID()).getResponseTime() == 0) return true;
         }
 
-        if (antiBot.needHitValue.getValue() && !antiBot.hitted.contains(entity.getEntityId()))
-            return true;
+        if (antiBot.needHitValue.getValue() && !antiBot.hitted.contains(entity.getEntityId())) return true;
 
         if (antiBot.invalidGroundValue.getValue() && antiBot.invalidGround.getOrDefault(entity.getEntityId(), 0) >= 10)
             return true;
@@ -125,11 +114,9 @@ public class AntiBot extends Module {
                 for (final NetworkPlayerInfo networkPlayerInfo : mc.getNetHandler().getPlayerInfoMap()) {
                     final String networkName = ColorUtils.stripColor(EntityUtils.getName(networkPlayerInfo));
 
-                    if (networkName == null)
-                        continue;
+                    if (networkName == null) continue;
 
-                    if (equals ? targetName.equals(networkName) : targetName.contains(networkName))
-                        return false;
+                    if (equals ? targetName.equals(networkName) : targetName.contains(networkName)) return false;
                 }
 
                 return true;
@@ -137,21 +124,28 @@ public class AntiBot extends Module {
         }
 
         if (antiBot.duplicateInWorldValue.getValue()) {
-            if (mc.theWorld.loadedEntityList.stream()
-                    .filter(currEntity -> currEntity instanceof EntityPlayer && currEntity
-                            .getDisplayName().equals(currEntity.getDisplayName()))
-                    .count() > 1)
+            if (mc.theWorld.loadedEntityList.stream().filter(currEntity -> currEntity instanceof EntityPlayer && currEntity.getDisplayName().equals(currEntity.getDisplayName())).count() > 1)
                 return true;
         }
 
         if (antiBot.duplicateInTabValue.getValue()) {
-            if (mc.getNetHandler().getPlayerInfoMap().stream()
-                    .filter(networkPlayer -> entity.getName().equals(ColorUtils.stripColor(EntityUtils.getName(networkPlayer))))
-                    .count() > 1)
+            if (mc.getNetHandler().getPlayerInfoMap().stream().filter(networkPlayer -> entity.getName().equals(ColorUtils.stripColor(EntityUtils.getName(networkPlayer)))).count() > 1)
+                return true;
+        }
+
+        if (antiBot.unLegitSpeed.getValue()) {
+            if (getSpeed(entity) > antiBot.speedValue.getValue())
                 return true;
         }
 
         return entity.getName().isEmpty() || entity.getName().equals(mc.thePlayer.getName());
+    }
+
+    private static double getSpeed(Entity e) {
+        final double motionX = e.motionX;
+        final double n = motionX * e.motionX;
+        final double motionZ = e.motionZ;
+        return Math.sqrt(n + motionZ * e.motionZ);
     }
 
     public void onDisable() {
@@ -161,8 +155,7 @@ public class AntiBot extends Module {
 
     @EventHandler
     public void onPacket(final EventPacketReceive event) {
-        if (mc.thePlayer == null || mc.theWorld == null)
-            return;
+        if (mc.thePlayer == null || mc.theWorld == null) return;
 
         final Packet<?> packet = event.getPacket();
 
@@ -174,8 +167,7 @@ public class AntiBot extends Module {
                 if (packetEntity.getOnGround() && !ground.contains(entity.getEntityId()))
                     ground.add(entity.getEntityId());
 
-                if (!packetEntity.getOnGround() && !air.contains(entity.getEntityId()))
-                    air.add(entity.getEntityId());
+                if (!packetEntity.getOnGround() && !air.contains(entity.getEntityId())) air.add(entity.getEntityId());
 
                 if (packetEntity.getOnGround()) {
                     if (entity.prevPosY != entity.posY)
@@ -183,10 +175,8 @@ public class AntiBot extends Module {
                 } else {
                     final int currentVL = invalidGround.getOrDefault(entity.getEntityId(), 0) / 2;
 
-                    if (currentVL <= 0)
-                        invalidGround.remove(entity.getEntityId());
-                    else
-                        invalidGround.put(entity.getEntityId(), currentVL);
+                    if (currentVL <= 0) invalidGround.remove(entity.getEntityId());
+                    else invalidGround.put(entity.getEntityId(), currentVL);
                 }
 
                 if (entity.isInvisible() && !invisible.contains(entity.getEntityId()))
@@ -225,7 +215,6 @@ public class AntiBot extends Module {
     }
 
     enum AABmode {
-        Equals,
-        Contains
+        Equals, Contains
     }
 }

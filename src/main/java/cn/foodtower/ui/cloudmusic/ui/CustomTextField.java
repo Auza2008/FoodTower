@@ -25,7 +25,11 @@ public class CustomTextField {
     public int selectedChar;
     public float offset;
 //	public ModuleSlot parent;
-
+    public float newTextWidth;
+    public float oldTextWidth;
+    public float charWidth;
+    public String oldString;
+    public StringBuilder stringBuilder;
     public CustomTextField(String text) {
         this.textString = text;
         this.selectedChar = this.textString.length();
@@ -42,7 +46,7 @@ public class CustomTextField {
 
         int selectedChar = this.selectedChar;
 
-        RenderUtil.drawRoundedRect(this.x, this.y + 3f, this.x + 115f, this.y + 15f, 1, new Color(200,200,200).getRGB());
+        RenderUtil.drawRoundedRect(this.x, this.y + 3f, this.x + 115f, this.y + 15f, 1, new Color(200, 200, 200).getRGB());
 
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
@@ -80,12 +84,6 @@ public class CustomTextField {
 
     }
 
-    public float newTextWidth;
-    public float oldTextWidth;
-    public float charWidth;
-    public String oldString;
-    public StringBuilder stringBuilder;
-
     public void keyPressed(int key) {
         if (key == Keyboard.KEY_ESCAPE) {
             this.isFocused = false;
@@ -95,7 +93,7 @@ public class CustomTextField {
         if (this.isFocused) {
             float width;
             float barOffset;
-            if (GuiScreen.isKeyComboCtrlV(key)){
+            if (GuiScreen.isKeyComboCtrlV(key)) {
                 this.textString = (GuiScreen.getClipboardString());
                 return;
             }

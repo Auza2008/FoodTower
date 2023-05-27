@@ -8,7 +8,10 @@ package cn.foodtower.module.modules.move;
 
 import cn.foodtower.api.EventHandler;
 import cn.foodtower.api.events.Render.EventRender2D;
-import cn.foodtower.api.events.World.*;
+import cn.foodtower.api.events.World.EventMotionUpdate;
+import cn.foodtower.api.events.World.EventMove;
+import cn.foodtower.api.events.World.EventPacket;
+import cn.foodtower.api.events.World.EventWorldChanged;
 import cn.foodtower.api.value.Numbers;
 import cn.foodtower.api.value.Option;
 import cn.foodtower.module.Module;
@@ -41,16 +44,14 @@ public class BowJump extends Module {
 
     private final Option autoDisable = new Option("AutoDisable", true);
     private final Option renderValue = new Option("RenderStatus", true);
+    private int bowState = 0;
+    private long lastPlayerTick = 0;
+    private int lastSlot = -1;
 
     public BowJump() {
         super("BowJump", new String[]{"Use Bow to longjump"}, ModuleType.Movement);
         this.addValues(boostValue, heightValue, timerValue, delayBeforeLaunch, autoDisable, renderValue);
     }
-
-    private int bowState = 0;
-    private long lastPlayerTick = 0;
-
-    private int lastSlot = -1;
 
     public void onEnable() {
         if (mc.thePlayer == null) return;
@@ -58,20 +59,20 @@ public class BowJump extends Module {
         lastPlayerTick = -1;
         lastSlot = mc.thePlayer.inventory.currentItem;
 
-        MoveUtils.strafe( 0 );
+        MoveUtils.strafe(0);
     }
 
     @EventHandler
-    public void onMove( EventMove event) {
-        if (mc.thePlayer.onGround && bowState < 3){
-            MovementUtils.setSpeed(event,0  );
+    public void onMove(EventMove event) {
+        if (mc.thePlayer.onGround && bowState < 3) {
+            MovementUtils.setSpeed(event, 0);
 
         }
 
     }
 
     @EventHandler
-    public void onPacket( EventPacket event) {
+    public void onPacket(EventPacket event) {
         if (event.getPacket() instanceof C09PacketHeldItemChange) {
             C09PacketHeldItemChange c09 = (C09PacketHeldItemChange) event.getPacket();
             lastSlot = c09.getSlotId();
@@ -85,7 +86,7 @@ public class BowJump extends Module {
     }
 
     @EventHandler
-    public void onUpdate( EventMotionUpdate event) {
+    public void onUpdate(EventMotionUpdate event) {
         mc.timer.timerSpeed = 1F;
 
         boolean forceDisable = false;
@@ -145,7 +146,7 @@ public class BowJump extends Module {
     }
 
     @EventHandler
-    public void onWorld( EventWorldChanged event) {
+    public void onWorld(EventWorldChanged event) {
         this.setEnabled(false); //prevent weird things
     }
 
@@ -171,9 +172,9 @@ public class BowJump extends Module {
 
         float width = (float) bowState / 5F * 60F;
 
-        FontLoaders.GoogleSans20.drawCenteredString(getBowStatus(), scaledRes.getScaledWidth() / 2F, scaledRes.getScaledHeight() / 2F + 14F, -1);
-        RenderUtil.drawRect(scaledRes.getScaledWidth() / 2F - 31F, scaledRes.getScaledHeight() / 2F + 25F, scaledRes.getScaledWidth() / 2F + 31F, scaledRes.getScaledHeight() / 2F + 29F, 0xA0000000);
-        RenderUtil.drawRect(scaledRes.getScaledWidth() / 2F - 30F, scaledRes.getScaledHeight() / 2F + 26F, scaledRes.getScaledWidth() / 2F - 30F + width, scaledRes.getScaledHeight() / 2F + 28F, getStatusColor().getRGB());
+        FontLoaders.GoogleSans20.drawCenteredString(getBowStatus(), ScaledResolution.getScaledWidth() / 2F, ScaledResolution.getScaledHeight() / 2F + 14F, -1);
+        RenderUtil.drawRect(ScaledResolution.getScaledWidth() / 2F - 31F, ScaledResolution.getScaledHeight() / 2F + 25F, ScaledResolution.getScaledWidth() / 2F + 31F, ScaledResolution.getScaledHeight() / 2F + 29F, 0xA0000000);
+        RenderUtil.drawRect(ScaledResolution.getScaledWidth() / 2F - 30F, ScaledResolution.getScaledHeight() / 2F + 26F, ScaledResolution.getScaledWidth() / 2F - 30F + width, ScaledResolution.getScaledHeight() / 2F + 28F, getStatusColor().getRGB());
 
     }
 

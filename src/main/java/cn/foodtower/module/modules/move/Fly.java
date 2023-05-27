@@ -10,8 +10,8 @@ import cn.foodtower.api.value.Value;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.module.modules.move.flymode.FlyModule;
-import cn.foodtower.module.modules.move.flymode.fly.HypixelZoomFly;
 import cn.foodtower.module.modules.move.flymode.fly.HytFly;
+import cn.foodtower.module.modules.move.flymode.fly.NCPPacketFly;
 import cn.foodtower.module.modules.move.flymode.fly.VanillaFly;
 import cn.foodtower.module.modules.move.flymode.fly.VulcanFly;
 import cn.foodtower.ui.notifications.user.Notifications;
@@ -21,15 +21,11 @@ import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 public class Fly extends Module {
     public Mode mode = new Mode("Mode", FlyMode.values(), FlyMode.Vanilla);
     public static final Option lagBackCheck = new Option("LagBackCheck", false);
-    public static Numbers<Double> speed = new Numbers<>("Speed", 2d, 0d, 5d, 0.5d);
+    public static Numbers<Double> speed = new Numbers<>("Speed", 2d, 0.1d, 5d, 0.1d);
+    public static Numbers<Double> ncpSpeed = new Numbers<>("Speed", 0.28d, 0.27d, 0.29d, 0.01d);
+    public static Numbers<Double> timer = new Numbers<>("Timer", 1.1d, 1.0d, 1.3d, 0.1d);
     private final Option bob = new Option("Bobbing", false);
     public static Option vanillaFlyAntiKick = new Option("AntiKick", false);
-
-    public static final Option hypZoom_uhc = new Option("UHC", false);
-    public static final Numbers<Double> hypZoom_MultiplySpeed = new Numbers<>("MultiplySpeed", 1.25, 1.0, 2.5, 0.05);
-    public static final Option hypZoom_Multiplier = new Option("Multiply", true);
-    public static final Numbers<Double> hypZoom_MultiplyTime = new Numbers<>("MultiplyLength", 500.0, 100.0, 1200.0, 50.0);
-
     public static Numbers<Integer> aac520Purse = new Numbers<>("Purse", 7, 3, 20, 1);
     public static Option aac520UseC04 = new Option("UseC04", false);
 
@@ -37,12 +33,11 @@ public class Fly extends Module {
 
     public Fly() {
         super("Fly", new String[]{"flight"}, ModuleType.Movement);
-        addValues(mode, speed, bob, lagBackCheck, hypZoom_uhc, hypZoom_Multiplier, hypZoom_MultiplySpeed, hypZoom_MultiplyTime, vanillaFlyAntiKick, aac520Purse, aac520UseC04,vulcan_canClipValue);
-
+        addValues(mode, speed, ncpSpeed, timer, bob, lagBackCheck, vanillaFlyAntiKick, aac520Purse, aac520UseC04,vulcan_canClipValue);
         setValueDisplayable(vulcan_canClipValue, mode, FlyMode.Vulcan);
-        setValueDisplayable(new Value<?>[]{hypZoom_Multiplier, hypZoom_MultiplySpeed, hypZoom_MultiplyTime, hypZoom_uhc}, mode, FlyMode.HypixelZoom);
         setValueDisplayable(vanillaFlyAntiKick, mode, FlyMode.Vanilla);
         setValueDisplayable(speed, mode, new Enum<?>[]{FlyMode.Vanilla, FlyMode.HuaYuTing});
+        setValueDisplayable(new Value<?>[] {ncpSpeed, timer}, mode, FlyMode.NCPPacket);
         setValueDisplayable(new Value<?>[]{aac520Purse, aac520UseC04}, mode, FlyMode.HuaYuTing);
     }
 
@@ -109,8 +104,8 @@ public class Fly extends Module {
 
     enum FlyMode {
         Vanilla(new VanillaFly()),
+        NCPPacket(new NCPPacketFly()),
         HuaYuTing(new HytFly()),
-        HypixelZoom(new HypixelZoomFly()),
         Vulcan(new VulcanFly());
 
         final FlyModule flyModule;

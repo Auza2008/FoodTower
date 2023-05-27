@@ -43,9 +43,16 @@ public class ColorUtils {
         return new Color(200, 75, 75).getRGB();
     }
 
-    public static Color getHealthColor(float health, float maxHealth) {
+    public static Color getHanabiHealthColor(float health, float maxHealth) {
         float[] fractions = new float[]{0.0f, 0.5f, 1.0f};
         Color[] colors = new Color[]{new Color(0, 81, 179), new Color(0, 153, 255), Client.getBlueColor(255)};
+        float progress = health / maxHealth;
+        return ColorUtils.blendColors(fractions, colors, progress).brighter();
+    }
+
+    public static Color getHealthColor(float health, float maxHealth) {
+        float[] fractions = new float[]{0.0f, 0.5f, 1.0f};
+        Color[] colors = new Color[]{new Color(255, 0, 0), new Color(255, 255, 0), new Color(0, 255, 0)};
         float progress = health / maxHealth;
         return ColorUtils.blendColors(fractions, colors, progress).brighter();
     }

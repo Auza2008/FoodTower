@@ -32,6 +32,7 @@ public class TargetStrafe extends Module {
     private final Option thirdPerson = new Option("ThirdPerson", true);
     private final Option directionKeys = new Option("DirectionKeys", true);
     private final Option space = new Option("OnJump", false);
+    private final Option behind = new Option("Bhind", false);
     private final EntityValidator targetValidator;
     private KillAura aura;
     private boolean hasChangedThirdPerson = true;
@@ -40,7 +41,7 @@ public class TargetStrafe extends Module {
 
     public TargetStrafe() {
         super("TargetStrafe", new String[]{"TargetStrafe"}, ModuleType.Combat);
-        this.addValues(radius, Esp, thirdPerson, directionKeys, space);
+        this.addValues(radius, behind, Esp, thirdPerson, directionKeys, space);
         this.targetValidator = new EntityValidator();
         this.targetValidator.add(new VoidCheck());
         this.targetValidator.add(new WallCheck());
@@ -52,8 +53,8 @@ public class TargetStrafe extends Module {
         double y = posY - (player.posY + (double) player.getEyeHeight());
         double z = posZ - player.posZ;
         double dist = MathHelper.sqrt_double(x * x + z * z);
-        float yaw = (float) (Math.atan2(z, x) * 180.0 / Math.PI) - 90.0f;
-        float pitch = (float) (-(Math.atan2(y, dist) * 180.0 / Math.PI));
+        float yaw = (float) (Math.atan2(z, x) * 180.0 / 3.141592653589793) - 90.0f;
+        float pitch = (float) (-(Math.atan2(y, dist) * 180.0 / 3.141592653589793));
         return new float[]{yaw, pitch};
     }
 
@@ -63,6 +64,17 @@ public class TargetStrafe extends Module {
 
     public static double getSpeed(double motionX, double motionZ) {
         return Math.sqrt(motionX * motionX + motionZ * motionZ);
+    }
+
+    public static float[] getRotations1(double posX, double posY, double posZ) {
+        EntityPlayerSP player = mc.thePlayer;
+        double x = posX - player.posX;
+        double y = posY - (player.posY + (double) player.getEyeHeight());
+        double z = posZ - player.posZ;
+        double dist = MathHelper.sqrt_double(x * x + z * z);
+        float yaw = (float) (Math.atan2(z, x) * 180.0D / Math.PI) - 90.0F;
+        float pitch = (float) -(Math.atan2(y, dist) * 180.0D / Math.PI);
+        return new float[]{yaw, pitch};
     }
 
     @Override
@@ -100,12 +112,22 @@ public class TargetStrafe extends Module {
     }
 
     public void strafe(EventMove event, double moveSpeed) {
+        if (KillAura.curTarget == null) return;
         EntityLivingBase target = KillAura.curTarget;
-        float[] rotations = getRotationsEntity(target);
-        if ((double) mc.thePlayer.getDistanceToEntity(target) <= this.radius.getValue()) {
-            MovementUtils.setSpeed(event, moveSpeed, rotations[0], this.direction, 0.0);
+        float rotYaw = getRotationsEntity(target)[0];
+        if (mc.thePlayer.getDistanceToEntity(target) <= radius.get())
+            MovementUtils.setSpeed(event, moveSpeed, rotYaw, direction, 0.0);
+        else MovementUtils.setSpeed(event, moveSpeed, rotYaw, direction, 1.0);
+
+        if (behind.get()) {
+            double xPos = target.posX + -Math.sin(Math.toRadians(target.rotationYaw)) * -2;
+            double zPos = target.posZ + Math.cos(Math.toRadians(target.rotationYaw)) * -2;
+            event.setX(moveSpeed * -MathHelper.sin(Math.toRadians(getRotations1(xPos, target.posY, zPos)[0])));
+            event.setZ(moveSpeed * MathHelper.cos((float) Math.toRadians(getRotations1(xPos, target.posY, zPos)[0])));
         } else {
-            MovementUtils.setSpeed(event, moveSpeed, rotations[0], this.direction, 1.0);
+            if (mc.thePlayer.getDistanceToEntity(target) <= radius.get())
+                MovementUtils.setSpeed(event, moveSpeed, rotYaw, direction, 0.0);
+            else MovementUtils.setSpeed(event, moveSpeed, rotYaw, direction, 1.0);
         }
     }
 

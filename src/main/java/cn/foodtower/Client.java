@@ -33,12 +33,12 @@ import java.util.Random;
 public class Client {
 
     public final static String name = "FoodTower";
-    public final static String version = "4.11";
+    public final static String version = "4.21 pre 1.21.1.2";
     public static float Yaw;
     public static float Pitch;
     public static boolean Baned = false;
     public static String author = "Auza, LittleGod";
-    public static String releaseNumber = "230430[5.1version]";
+    public static String releaseNumber = "052123";
     public static String releaseType = Main.isbeta ? "Beta" : "Release";
     public static String releaseVersion = releaseType + version + "_" + releaseNumber;
     public static String ClientVersion = version;

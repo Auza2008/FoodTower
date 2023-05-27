@@ -15,14 +15,14 @@ import java.awt.*;
 
 public class GuiButton extends Gui {
     protected static final ResourceLocation buttonTextures = new ResourceLocation("textures/gui/widgets.png");
-    protected int width;
-    protected int height;
     public int xPosition;
     public int yPosition;
     public String displayString;
     public int id;
     public boolean enabled;
     public boolean visible;
+    protected int width;
+    protected int height;
     protected boolean hovered;
     private double animation;
 
@@ -62,23 +62,23 @@ public class GuiButton extends Gui {
             this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
             int i = this.getHoverState(this.hovered);
             GlStateManager.enableBlend();
-            this.animation = AnimationUtil.moveUD(this.animation, (this.hovered ? 0.3F : 0.1F), 10f / Minecraft.getDebugFPS(),4f / Minecraft.getDebugFPS());
+            this.animation = AnimationUtil.moveUD(this.animation, (this.hovered ? 0.3F : 0.1F), 10f / Minecraft.getDebugFPS(), 4f / Minecraft.getDebugFPS());
             if (this.enabled) {
-                RenderUtil.drawGradientSideways((float)this.xPosition, (float)(this.yPosition + this.height) - 1.5F, (float)(this.xPosition + this.width), (float)(this.yPosition + this.height), SuperLib.reAlpha(new Color(10, 90, 205).getRGB(), 0.95F),SuperLib.reAlpha(new Color(1, 190, 206).getRGB(),0.95F));
-            }else {
-                //this.displayString = "\247o" + this.displayString;
-                RenderUtil.drawGradientSideways((float)this.xPosition, (float)(this.yPosition + this.height) - 1.5F, (float)(this.xPosition + this.width), (float)(this.yPosition + this.height), SuperLib.reAlpha(new Color(255, 10, 10).getRGB(), 0.95F),SuperLib.reAlpha(new Color(255, 111, 0).getRGB(),0.95F));
-            }
-            RenderUtil.drawRect((float)this.xPosition, (float)this.yPosition, (float)(this.xPosition + this.width), (float)(this.yPosition + this.height) - 1.5F, new Color(0,0,0,180).getRGB());
-            if (this.enabled) {
-                RenderUtil.drawRect((float)this.xPosition, (float)this.yPosition, (float)(this.xPosition + this.width), (float)(this.yPosition + this.height), SuperLib.reAlpha(new Color(225, 225, 225).getRGB(), (float)this.animation));
+                RenderUtil.drawGradientSideways((float) this.xPosition, (float) (this.yPosition + this.height) - 1.5F, (float) (this.xPosition + this.width), (float) (this.yPosition + this.height), SuperLib.reAlpha(new Color(10, 90, 205).getRGB(), 0.95F), SuperLib.reAlpha(new Color(1, 190, 206).getRGB(), 0.95F));
             } else {
-                RenderUtil.drawRect((float)this.xPosition, (float)this.yPosition, (float)(this.xPosition + this.width), (float)(this.yPosition + this.height), SuperLib.reAlpha(new Color(255, 255, 255).getRGB(), 0.1F));
+                //this.displayString = "\247o" + this.displayString;
+                RenderUtil.drawGradientSideways((float) this.xPosition, (float) (this.yPosition + this.height) - 1.5F, (float) (this.xPosition + this.width), (float) (this.yPosition + this.height), SuperLib.reAlpha(new Color(255, 10, 10).getRGB(), 0.95F), SuperLib.reAlpha(new Color(255, 111, 0).getRGB(), 0.95F));
+            }
+            RenderUtil.drawRect((float) this.xPosition, (float) this.yPosition, (float) (this.xPosition + this.width), (float) (this.yPosition + this.height) - 1.5F, new Color(0, 0, 0, 180).getRGB());
+            if (this.enabled) {
+                RenderUtil.drawRect((float) this.xPosition, (float) this.yPosition, (float) (this.xPosition + this.width), (float) (this.yPosition + this.height), SuperLib.reAlpha(new Color(225, 225, 225).getRGB(), (float) this.animation));
+            } else {
+                RenderUtil.drawRect((float) this.xPosition, (float) this.yPosition, (float) (this.xPosition + this.width), (float) (this.yPosition + this.height), SuperLib.reAlpha(new Color(255, 255, 255).getRGB(), 0.1F));
             }
 
             this.mouseDragged(mc, mouseX, mouseY);
 
-            fr.drawStringWithShadow(this.displayString, (float)this.xPosition + ((float)this.width - fr.getStringWidth(SuperLib.removeColorCode(this.displayString)) + 2.0F) / 2.0F, (float)(this.yPosition + (this.height - 8) / 2) + 1.5f, -1);
+            fr.drawStringWithShadow(this.displayString, (float) this.xPosition + ((float) this.width - fr.getStringWidth(SuperLib.removeColorCode(this.displayString)) + 2.0F) / 2.0F, (float) (this.yPosition + (this.height - 8) / 2) + 1.5f, -1);
         }
 
     }

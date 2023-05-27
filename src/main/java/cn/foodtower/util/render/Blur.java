@@ -16,14 +16,14 @@ import java.io.IOException;
 import java.util.List;
 
 public class Blur {
-    private static ShaderGroup blurShader;
-    private static List<Shader> listShaders;
     private static final Minecraft mc = Minecraft.getMinecraft();
+    private static final ResourceLocation shader = new ResourceLocation("shaders/post/blurArea.json");
+    private static ShaderGroup blurShader;
+    private static final List<Shader> listShaders;
     private static Framebuffer buffer;
     private static int lastScale;
     private static int lastScaleWidth;
     private static int lastScaleHeight;
-    private static final ResourceLocation shader = new ResourceLocation("shaders/post/blurArea.json");
 
     static {
         if (blurShader == null) {
@@ -65,11 +65,11 @@ public class Blur {
     }
 
     public static void blurArea(int x, int y, int width, int height, float intensity, float blurWidth, float blurHeight) {
-        if ( GuiNeedBlur.isBlurEnabled()) {
+        if (GuiNeedBlur.isBlurEnabled()) {
             ScaledResolution scale = new ScaledResolution(mc);
             int factor = scale.getScaleFactor();
-            int factor2 = scale.getScaledWidth();
-            int factor3 = scale.getScaledHeight();
+            int factor2 = ScaledResolution.getScaledWidth();
+            int factor3 = ScaledResolution.getScaledHeight();
             if (lastScale != factor || lastScaleWidth != factor2 || lastScaleHeight != factor3 || buffer == null || blurShader == null) {
                 initFboAndShader();
             }
@@ -88,7 +88,7 @@ public class Blur {
                 GlStateManager.enableBlend();
                 GlStateManager.tryBlendFuncSeparate(770, 771, 0, 1);
                 GlStateManager.disableBlend();
-                GL11.glScalef((float) factor, (float) factor, (float) 0.0f);
+                GL11.glScalef((float) factor, (float) factor, 0.0f);
             }
         }
     }
@@ -97,8 +97,8 @@ public class Blur {
         if (GuiNeedBlur.isBlurEnabled()) {
             ScaledResolution scale = new ScaledResolution(mc);
             int factor = scale.getScaleFactor();
-            int factor2 = scale.getScaledWidth();
-            int factor3 = scale.getScaledHeight();
+            int factor2 = ScaledResolution.getScaledWidth();
+            int factor3 = ScaledResolution.getScaledHeight();
             if (lastScale != factor || lastScaleWidth != factor2 || lastScaleHeight != factor3 || buffer == null || blurShader == null) {
                 initFboAndShader();
             }
@@ -116,7 +116,7 @@ public class Blur {
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(770, 771, 0, 1);
             GlStateManager.disableBlend();
-            GL11.glScalef((float) factor, (float) factor, (float) 0.0f);
+            GL11.glScalef((float) factor, (float) factor, 0.0f);
             RenderHelper.enableGUIStandardItemLighting();
         }
     }
@@ -125,8 +125,8 @@ public class Blur {
         if (GuiNeedBlur.isBlurEnabled()) {
             ScaledResolution scale = new ScaledResolution(mc);
             int factor = scale.getScaleFactor();
-            int factor2 = scale.getScaledWidth();
-            int factor3 = scale.getScaledHeight();
+            int factor2 = ScaledResolution.getScaledWidth();
+            int factor3 = ScaledResolution.getScaledHeight();
             if (lastScale != factor || lastScaleWidth != factor2 || lastScaleHeight != factor3 || buffer == null || blurShader == null) {
                 initFboAndShader();
             }
@@ -147,8 +147,8 @@ public class Blur {
         if (GuiNeedBlur.isBlurEnabled()) {
             ScaledResolution scale = new ScaledResolution(mc);
             int factor = scale.getScaleFactor();
-            int factor2 = scale.getScaledWidth();
-            int factor3 = scale.getScaledHeight();
+            int factor2 = ScaledResolution.getScaledWidth();
+            int factor3 = ScaledResolution.getScaledHeight();
             if (lastScale != factor || lastScaleWidth != factor2 || lastScaleHeight != factor3 || buffer == null || blurShader == null) {
                 initFboAndShader();
             }
@@ -169,8 +169,8 @@ public class Blur {
         if (GuiNeedBlur.isBlurEnabled()) {
             ScaledResolution scale = new ScaledResolution(mc);
             int factor = scale.getScaleFactor();
-            int factor2 = scale.getScaledWidth();
-            int factor3 = scale.getScaledHeight();
+            int factor2 = ScaledResolution.getScaledWidth();
+            int factor3 = ScaledResolution.getScaledHeight();
             if (lastScale != factor || lastScaleWidth != factor2 || lastScaleHeight != factor3 || buffer == null || blurShader == null) {
                 initFboAndShader();
             }
@@ -191,8 +191,8 @@ public class Blur {
         if (GuiNeedBlur.isBlurEnabled()) {
             ScaledResolution scale = new ScaledResolution(mc);
             int factor = scale.getScaleFactor();
-            int factor2 = scale.getScaledWidth();
-            int factor3 = scale.getScaledHeight();
+            int factor2 = ScaledResolution.getScaledWidth();
+            int factor3 = ScaledResolution.getScaledHeight();
             if (lastScale != factor || lastScaleWidth != factor2 || lastScaleHeight != factor3 || buffer == null || blurShader == null) {
                 initFboAndShader();
             }
@@ -216,8 +216,8 @@ public class Blur {
             float height = Math.max(y, y2) - Math.min(y2, y);
             ScaledResolution scale = new ScaledResolution(mc);
             int factor = scale.getScaleFactor();
-            int factor2 = scale.getScaledWidth();
-            int factor3 = scale.getScaledHeight();
+            int factor2 = ScaledResolution.getScaledWidth();
+            int factor3 = ScaledResolution.getScaledHeight();
             if (lastScale != factor || lastScaleWidth != factor2 || lastScaleHeight != factor3 || buffer == null || blurShader == null) {
                 initFboAndShader();
             }
@@ -239,8 +239,8 @@ public class Blur {
         if (GuiNeedBlur.isBlurEnabled()) {
             ScaledResolution scale = new ScaledResolution(mc);
             int factor = scale.getScaleFactor();
-            int factor2 = scale.getScaledWidth();
-            int factor3 = scale.getScaledHeight();
+            int factor2 = ScaledResolution.getScaledWidth();
+            int factor3 = ScaledResolution.getScaledHeight();
             if (lastScale != factor || lastScaleWidth != factor2 || lastScaleHeight != factor3 || buffer == null || blurShader == null) {
                 initFboAndShader();
             }
@@ -258,8 +258,8 @@ public class Blur {
         if (GuiNeedBlur.isBlurEnabled()) {
             ScaledResolution scale = new ScaledResolution(mc);
             int factor = scale.getScaleFactor();
-            int factor2 = scale.getScaledWidth();
-            int factor3 = scale.getScaledHeight();
+            int factor2 = ScaledResolution.getScaledWidth();
+            int factor3 = ScaledResolution.getScaledHeight();
             if (lastScale != factor || lastScaleWidth != factor2 || lastScaleHeight != factor3 || buffer == null || blurShader == null) {
                 initFboAndShader();
             }

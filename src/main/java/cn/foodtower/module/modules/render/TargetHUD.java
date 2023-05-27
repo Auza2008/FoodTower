@@ -64,7 +64,7 @@ public class TargetHUD extends Module {
     public static int authListPos;
     public static DecimalFormat format0 = new DecimalFormat("0.0");
     public static DecimalFormat format00 = new DecimalFormat("0");
-    public static Mode mode = new Mode("Mode", Modes.values(), Modes.NewPowerX);
+    public static Mode mode = new Mode("Mode", Modes.values(), Modes.FoodTower);
     public static Mode animMode = new Mode("Animation Mode", AnimMode.values(), AnimMode.Scale);
     public static Numbers<Double> hudx = new Numbers<>("X", 70.0d, -400d, 400d, 1d);
     public static Numbers<Double> hudY = new Numbers<>("Y", 80.0d, -400d, 400d, 1d);
@@ -356,21 +356,21 @@ public class TargetHUD extends Module {
     }
 
     private void foodTower() {
-        if (KillAura.curTarget == null) return;
-
-        double w = x;
-        double h = y;
-        final String name = KillAura.curTarget.getName();
-        final double health = KillAura.curTarget.getHealth();
-        this.health = (float) MathUtil.lerp(this.health, KillAura.curTarget.getHealth(), 0.1);
-        final String drawHealth = String.format("%.1f", health);
-        Gui.drawRect(w, h, w + 160, h + 50, 0xcc000000);
-        mc.fontRendererObj.drawStringWithShadow(name, (float) (w + 5), (float) (h + 5), -1);
-//        FontLoaders.ICON10.drawStringWithShadow("s", (float) (w + 100), (float) (h + 94), target.hurtTime > 0 ? new Color(255, 0, 0).getRGB() : -1);
-//        mc.fontRendererObj.drawStringWithShadow(drawHealth, (float) (w + 140), (float) (h + 94), -1);
-        for (int i = 0; i < (this.health / target.getMaxHealth()) * 160; i++) {
-            DrawUtil.rect(w + i, h + 48.5, 1, 1.5, new Color(ColorUtils.getStaticColor(i / 8f, 0.7f, 1)));
+        if (target == null) return;
+        float w = x;
+        float h = y;
+        DrawUtil.roundedRect(w, h, 160, 48, 8, new Color(0, 0, 0, 160));
+        if (target.getHealth() > 0) {
+            DrawUtil.rect(w + 45, h + 40, Math.abs(target.getHealth() / target.getMaxHealth()) * 110, 2, new Color(ColorUtils.getHealthColor(target.getHealth(), target.getMaxHealth()).getRGB()));
         }
+        FontLoaders.GoogleSans22.drawStringWithShadow(target.getName(), w + 50, h + 5, -1);
+        if (target.getTotalArmorValue() != 0) {
+            DrawUtil.rect(w + 45, h + 37, (target.getTotalArmorValue() / 20) * 110, 2, new Color(100, 130, 255, 255));
+        }
+        RenderUtil.drawNormalFace(target, w + 4, h + 4, 40.0f);
+//        for (int i = 0; i < (this.health / target.getMaxHealth()) * 160; i++) {
+//            DrawUtil.rect(w + 5 + i, h + 48.5, 0.5, 1.5, new Color(ColorUtils.getStaticColor(i / 8f, 0.7f, 1)));
+//        }
     }
 
     private void OMG() {

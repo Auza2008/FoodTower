@@ -16,10 +16,10 @@ import java.awt.*;
 import java.util.Random;
 
 public class GuiGoodBye extends GuiScreen {
+    private static final TimerUtil timer = new TimerUtil();
     public ParticleEngine pe = new ParticleEngine();
     Translate translate = new Translate(0, new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight());
     Translate translate2 = new Translate(0, new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight());
-    private static final TimerUtil timer = new TimerUtil();
     boolean skiped = false;
     String[] bye2 = {
             "See you next time",
@@ -38,11 +38,11 @@ public class GuiGoodBye extends GuiScreen {
     String bye2r = bye2[r.nextInt(bye2.length)];
     String byer = bye[r.nextInt(bye.length)];
     boolean rev = false;
-    double anim,anim2,anim3 = new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth();
+    double anim, anim2, anim3 = new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth();
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton){
-        if (mouseButton == 0){
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+        if (mouseButton == 0) {
             skiped = true;
         }
     }
@@ -79,8 +79,8 @@ public class GuiGoodBye extends GuiScreen {
 
         pe.render(0, 0);
         if (!timer.hasReached(3500)) {
-            translate.interpolate((float) sr.getScaledWidth() / 2, (float) sr.getScaledHeight() / 2 - 3f, 0.14f);
-            translate2.interpolate((float) sr.getScaledWidth() / 2, (float) sr.getScaledHeight() / 2 + fontwel.FONT_HEIGHT, 0.14f);
+            translate.interpolate((float) ScaledResolution.getScaledWidth() / 2, (float) ScaledResolution.getScaledHeight() / 2 - 3f, 0.14f);
+            translate2.interpolate((float) ScaledResolution.getScaledWidth() / 2, (float) ScaledResolution.getScaledHeight() / 2 + fontwel.FONT_HEIGHT, 0.14f);
         }
         fontwel.drawCenteredStringWithShadow(bye2r, translate.getX(), translate.getY(), new Color(255, 255, 255).getRGB());
         fontwel2.drawCenteredStringWithShadow(byer, translate2.getX(), translate2.getY(), new Color(255, 255, 255).getRGB());

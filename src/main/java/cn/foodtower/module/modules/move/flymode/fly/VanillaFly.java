@@ -3,15 +3,13 @@ package cn.foodtower.module.modules.move.flymode.fly;
 import cn.foodtower.api.events.World.*;
 import cn.foodtower.module.modules.move.Fly;
 import cn.foodtower.module.modules.move.flymode.FlyModule;
-import cn.foodtower.util.entity.MovementUtils;
+import cn.foodtower.util.entity.MoveUtils;
 import cn.foodtower.util.time.MSTimer;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.AxisAlignedBB;
 
 public class VanillaFly implements FlyModule {
     private final MSTimer groundTimer = new MSTimer();
-    public float vanillaSpeed = Fly.speed.getValue().floatValue();
-
     @Override
     public void onEnabled() {
 
@@ -24,6 +22,7 @@ public class VanillaFly implements FlyModule {
 
     @Override
     public void onMove(EventMove e) {
+        double vanillaSpeed = Fly.speed.getValue();
         mc.thePlayer.capabilities.isFlying = false;
         mc.thePlayer.motionY = 0;
         mc.thePlayer.motionX = 0;
@@ -33,7 +32,7 @@ public class VanillaFly implements FlyModule {
             mc.thePlayer.motionY += vanillaSpeed;
         if (mc.gameSettings.keyBindSneak.isKeyDown())
             mc.thePlayer.motionY -= vanillaSpeed;
-        MovementUtils.strafe(vanillaSpeed);
+        MoveUtils.strafe(vanillaSpeed);
         handleVanillaKickBypass();
     }
 

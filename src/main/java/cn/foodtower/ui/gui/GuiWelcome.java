@@ -20,23 +20,25 @@ public class GuiWelcome extends GuiScreen {
     public ParticleEngine pe = new ParticleEngine();
     boolean rev = false;
     boolean skiped = false;
-    double anim,anim2,anim3 = new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth();
-    Translate translate = new Translate(0,new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight());
-    Translate translate2 = new Translate(new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth(),new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight());
+    double anim, anim2, anim3 = new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth();
+    Translate translate = new Translate(0, new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight());
+    Translate translate2 = new Translate(new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth(), new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight());
+
     @Override
-    public void initGui(){
+    public void initGui() {
         timer.reset();
-        translate = new Translate(0,new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight());
-        translate2 = new Translate(new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth(),new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight());
+        translate = new Translate(0, new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight());
+        translate2 = new Translate(new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth(), new ScaledResolution(Minecraft.getMinecraft()).getScaledHeight());
     }
+
     @Override
     protected void keyTyped(char var1, int var2) {
 
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton){
-        if (mouseButton == 0){
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) {
+        if (mouseButton == 0) {
             skiped = true;
         }
     }
@@ -63,8 +65,8 @@ public class GuiWelcome extends GuiScreen {
         BackGroundRenderer.render();
         pe.render(0, 0);
         if (!timer.hasReached(3500)) {
-            translate.interpolate((float) sr.getScaledWidth() / 2, (float) sr.getScaledHeight() / 2 - 3f, (float) 0.14);
-            translate2.interpolate((float) sr.getScaledWidth() / 2, (float) sr.getScaledHeight() / 2 + fontwel.FONT_HEIGHT, (float) 0.14);
+            translate.interpolate((float) ScaledResolution.getScaledWidth() / 2, (float) ScaledResolution.getScaledHeight() / 2 - 3f, (float) 0.14);
+            translate2.interpolate((float) ScaledResolution.getScaledWidth() / 2, (float) ScaledResolution.getScaledHeight() / 2 + fontwel.FONT_HEIGHT, (float) 0.14);
         }
         fontwel.drawCenteredStringWithShadow("Welcome back to " + Client.name, translate.getX(), translate.getY(), new Color(255, 255, 255).getRGB());
         fontwel2.drawCenteredStringWithShadow("欢迎回来," + Client.userName, translate2.getX(), translate2.getY(), new Color(255, 255, 255).getRGB());
