@@ -33,7 +33,7 @@ import java.util.Random;
 public class Client {
 
     public final static String name = "FoodTower";
-    public final static String version = "4.21 pre 1.21.1.2";
+    public final static String version = "4.22";
     public static float Yaw;
     public static float Pitch;
     public static boolean Baned = false;

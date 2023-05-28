@@ -5,7 +5,10 @@ import cn.foodtower.Client;
 import cn.foodtower.api.EventBus;
 import cn.foodtower.api.EventHandler;
 import cn.foodtower.api.events.Render.EventRender3D;
-import cn.foodtower.api.events.World.*;
+import cn.foodtower.api.events.World.EventAttack;
+import cn.foodtower.api.events.World.EventPostUpdate;
+import cn.foodtower.api.events.World.EventPreUpdate;
+import cn.foodtower.api.events.World.EventTick;
 import cn.foodtower.api.value.Numbers;
 import cn.foodtower.api.value.Option;
 import cn.foodtower.api.value.Value;
@@ -48,7 +51,6 @@ import java.util.List;
 public class KillAura extends Module {
     public static boolean isBlocking;
     public static EntityLivingBase curTarget;
-    private float[] angles;
     public final Option autoBlock = new Option("Auto Block", true);
     public final Option coolDown = new Option("Auto CoolDown", false);
     public final Numbers<Double> aps = new Numbers("MaxCps", 13.0, 1.0, 20.0, 1.0);
@@ -80,6 +82,7 @@ public class KillAura extends Module {
     private final EntityValidator entityValidator = new EntityValidator();
     private final EntityValidator blockValidator = new EntityValidator();
     private final SmoothRotationObject smoothRotationObject = new SmoothRotationObject();
+    private float[] angles;
     private int hitTicks;
     private int targetIndex;
     private boolean changeTarget;
@@ -128,6 +131,9 @@ public class KillAura extends Module {
             KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
             mc.playerController.onStoppedUsingItem(mc.thePlayer);
             isBlocking = false;
+        } else if (autoBlockMode.getValue().equals(AutoBlockMode.PacketAlways) && autoBlock.getValue() && isBlocking) {
+            mc.getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+            isBlocking = false;
         } else if (autoBlock.getValue() && isBlocking) {
             this.unblock();
         }
@@ -156,18 +162,22 @@ public class KillAura extends Module {
                 KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
                 mc.playerController.onStoppedUsingItem(mc.thePlayer);
                 isBlocking = false;
+            } else if (autoBlockMode.getValue().equals(AutoBlockMode.PacketAlways)) {
+                mc.getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+                isBlocking = false;
             } else {
                 this.unblock();
             }
         }
-        if (curTarget != null && autoBlock.getValue()) {
+        if (curTarget != null && autoBlock.getValue() && mc.thePlayer.getHeldItem() != null) {
             if (autoBlockMode.getValue().equals(AutoBlockMode.Always)) {
 //                KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
-                if (mc.thePlayer.getHeldItem() != null) {
-                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
-                    mc.getNetHandler().addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));
-                    isBlocking = true;
-                }
+                KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
+                mc.getNetHandler().addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));
+                isBlocking = true;
+            } else if (autoBlockMode.getValue().equals(AutoBlockMode.PacketAlways)) {
+                mc.getNetHandler().addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));
+                isBlocking = true;
             }
         }
         if (this.canAttack() && curTarget != null) {
@@ -455,7 +465,7 @@ public class KillAura extends Module {
     }
 
     private enum AutoBlockMode {
-        SMART, Always, OFFSET, HVH
+        SMART, Always, PacketAlways, OFFSET, HVH
     }
 
     private enum Mode {
