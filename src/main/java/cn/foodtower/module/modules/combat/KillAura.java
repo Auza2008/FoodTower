@@ -24,6 +24,7 @@ import cn.foodtower.util.render.RenderUtil;
 import cn.foodtower.util.time.TimerUtil;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,6 +48,7 @@ import java.util.List;
 public class KillAura extends Module {
     public static boolean isBlocking;
     public static EntityLivingBase curTarget;
+    private float[] angles;
     public final Option autoBlock = new Option("Auto Block", true);
     public final Option coolDown = new Option("Auto CoolDown", false);
     public final Numbers<Double> aps = new Numbers("MaxCps", 13.0, 1.0, 20.0, 1.0);
@@ -123,8 +125,8 @@ public class KillAura extends Module {
     public void onDisable() {
         if (autoBlockMode.getValue().equals(AutoBlockMode.Always) && autoBlock.getValue() && isBlocking) {
 //            KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
-            mc.gameSettings.keyBindUseItem.Doing = false;
-            mc.thePlayer.stopUsingItem();
+            KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
+            mc.playerController.onStoppedUsingItem(mc.thePlayer);
             isBlocking = false;
         } else if (autoBlock.getValue() && isBlocking) {
             this.unblock();
@@ -151,8 +153,8 @@ public class KillAura extends Module {
         if (curTarget == null && autoBlock.getValue() && autoBlock.getValue() && isBlocking) {
             if (autoBlockMode.getValue().equals(AutoBlockMode.Always)) {
 //                KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
-                mc.gameSettings.keyBindUseItem.Doing = false;
-                mc.thePlayer.stopUsingItem();
+                KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
+                mc.playerController.onStoppedUsingItem(mc.thePlayer);
                 isBlocking = false;
             } else {
                 this.unblock();
@@ -162,7 +164,7 @@ public class KillAura extends Module {
             if (autoBlockMode.getValue().equals(AutoBlockMode.Always)) {
 //                KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
                 if (mc.thePlayer.getHeldItem() != null) {
-                    mc.gameSettings.keyBindUseItem.Doing = true;
+                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
                     mc.getNetHandler().addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));
                     isBlocking = true;
                 }
@@ -173,28 +175,27 @@ public class KillAura extends Module {
                 mc.getNetHandler().addToSendQueueSilent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, mc.thePlayer.onGround));
                 this.updateStopwatch.reset();
             }
-            float[] angles = new float[]{mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch};
-            switch ((Rotations) (rotMode.getValue())) {
-                case Basic:
-                    angles = getRotationsToEnt(curTarget);
-                    break;
-                case Hypixel:
-                    angles = getNeededRotations(curTarget);
-                    break;
-                case HVH:
-                    angles = cn.foodtower.util.math.RotationUtils.getCustomRotation(cn.foodtower.util.math.RotationUtils.getLocation(curTarget.getEntityBoundingBox()));
-                    break;
-                case None:
-                    break;
-            }
-            if (rotSpeed.getValue() == 180d) {
-                e.setYaw(angles[0]);
-                e.setPitch(angles[1]);
-                Client.RenderRotate(angles[0], angles[1]);
-            } else {
-                smoothRotationObject.setWillYawPitch(angles[0], angles[1]);
-                smoothRotationObject.handleRotation(rotSpeed.getValue());
-                smoothRotationObject.setPlayerRotation(e);
+            if (!rotMode.getValue().equals(Rotations.None)) {
+                switch ((Rotations) (rotMode.getValue())) {
+                    case Basic:
+                        angles = getRotationsToEnt(curTarget);
+                        break;
+                    case Hypixel:
+                        angles = getNeededRotations(curTarget);
+                        break;
+                    case HVH:
+                        angles = cn.foodtower.util.math.RotationUtils.getCustomRotation(cn.foodtower.util.math.RotationUtils.getLocation(curTarget.getEntityBoundingBox()));
+                        break;
+                }
+                if (rotSpeed.getValue() == 180d) {
+                    e.setYaw(angles[0]);
+                    e.setPitch(angles[1]);
+                    Client.RenderRotate(angles[0], angles[1]);
+                } else {
+                    smoothRotationObject.setWillYawPitch(angles[0], angles[1]);
+                    smoothRotationObject.handleRotation(rotSpeed.getValue());
+                    smoothRotationObject.setPlayerRotation(e);
+                }
             }
         }
         if (attackTiming.getValue().equals(AttackTiming.Pre)) {
@@ -377,22 +378,20 @@ public class KillAura extends Module {
             mc.thePlayer.setItemInUse(mc.thePlayer.getHeldItem(), 0);
             switch ((AutoBlockMode) this.autoBlockMode.getValue()) {
                 case OFFSET:
-                    mc.gameSettings.keyBindUseItem.Doing = false;
-                    mc.getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-                    isBlocking = false;
-                    break;
-                case Always:
+                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
+                    mc.playerController.onStoppedUsingItem(mc.thePlayer);
+//                    mc.getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
                     break;
                 case HVH:
+                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
                     mc.playerController.onStoppedUsingItem(mc.thePlayer);
                     mc.getNetHandler().addToSendQueueSilent(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-                    isBlocking = false;
                     break;
                 case SMART:
                     mc.getNetHandler().addToSendQueueSilent(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-                    isBlocking = false;
                     break;
             }
+            isBlocking = false;
         }
     }
 
@@ -404,17 +403,16 @@ public class KillAura extends Module {
                     mc.getNetHandler().addToSendQueueSilent(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0.0f, 0.0f, 0.0f));
                     break;
                 case HVH:
-                    mc.gameSettings.keyBindUseItem.Doing = true;
+                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
                     mc.getNetHandler().addToSendQueueSilent(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0.0f, 0.0f, 0.0f));
                     break;
-                case Always:
-                    break;
                 case OFFSET:
-                    mc.gameSettings.keyBindUseItem.Doing = true;
-                    mc.getNetHandler().addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));
-                    isBlocking = true;
+                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
+                    mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
+//                    mc.getNetHandler().addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));
                     break;
             }
+            isBlocking = true;
         }
     }
 

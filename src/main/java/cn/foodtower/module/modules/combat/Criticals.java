@@ -26,7 +26,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 
 public class Criticals extends Module {
-    private static final Numbers<Double> Delay = new Numbers<>("Delay", "Delay", 400.0, 0.0, 1000.0, 1.0);
+    private static final Numbers<Double> Delay = new Numbers<>("Delay", "Delay", 0.0, 0.0, 1000.0, 1.0);
     public static Mode mode = new Mode("Mode", "mode", CritMode.values(), CritMode.Hypixel);
     public static Mode hypixelmode = new Mode("HypixelMode", HypixelMode.values(), HypixelMode.Packetor);
     public static Option Always = new Option("Always", "Always", false);
@@ -48,6 +48,7 @@ public class Criticals extends Module {
         this.addValues(mode, hypixelmode, motionYvalue, HurtTime, Delay, Always, C06, speedCheck);
         setValueDisplayable(new Value<?>[]{motionYvalue}, mode, CritMode.Motion);
         setValueDisplayable(hypixelmode, mode, CritMode.Hypixel);
+        setValueDisplayable(C06, mode, new Enum[]{CritMode.Packet, CritMode.Hypixel, CritMode.AAC440Packet, CritMode.NCP, CritMode.OldNCPacket});
     }
 
     public static void Crit(Double[] value, Boolean onGround) {
@@ -187,10 +188,12 @@ public class Criticals extends Module {
                         }
                         break;
                     case Packet:
-                        mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0625, mc.thePlayer.posZ, true));
-                        mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, false));
-                        mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 1.1E-5, mc.thePlayer.posZ, false));
-                        mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, false));
+                        Crit(new Double[]{0.0625}, true);
+                        Crit(new Double[]{0d, 1.1E-5, 0d}, false);
+//                        mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0625, mc.thePlayer.posZ, true));
+//                        mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, false));
+//                        mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 1.1E-5, mc.thePlayer.posZ, false));
+//                        mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, false));
                         break;
                     case Edit:
                         readycrit = true;

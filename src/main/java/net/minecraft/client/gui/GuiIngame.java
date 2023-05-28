@@ -371,18 +371,8 @@ public class GuiIngame extends Gui {
             float f = zLevel;
             zLevel = -90.0F;
             anim = AnimationUtils.animate(entityplayer.inventory.currentItem * 20, anim, (16.4f / (float) Minecraft.getDebugFPS()));
-            RenderUtil.drawFastRoundedRect(i - 91,
-                    this.mc.ingameGUI.getChatGUI().getChatOpen() ? ScaledResolution.getScaledHeight() - 36
-                            : ScaledResolution.getScaledHeight() - 22,
-                    i + 91,
-                    this.mc.ingameGUI.getChatGUI().getChatOpen() ? ScaledResolution.getScaledHeight() - 15 : ScaledResolution.getScaledHeight() - 1,
-                    2, new Color(28, 28, 28, 200).getRGB());
-            RenderUtil.drawFastRoundedRect(i - 91 + (int) anim,
-                    this.mc.ingameGUI.getChatGUI().getChatOpen() ? ScaledResolution.getScaledHeight() - 36
-                            : ScaledResolution.getScaledHeight() - 22,
-                    i - 69 + (int) anim,
-                    this.mc.ingameGUI.getChatGUI().getChatOpen() ? ScaledResolution.getScaledHeight() - 15 : ScaledResolution.getScaledHeight() - 1,
-                    2, new Color(233, 233, 233, 100).getRGB());
+            RenderUtil.drawFastRoundedRect(i - 91, this.mc.ingameGUI.getChatGUI().getChatOpen() ? ScaledResolution.getScaledHeight() - 36 : ScaledResolution.getScaledHeight() - 22, i + 91, this.mc.ingameGUI.getChatGUI().getChatOpen() ? ScaledResolution.getScaledHeight() - 15 : ScaledResolution.getScaledHeight() - 1, 2, new Color(28, 28, 28, 200).getRGB());
+            RenderUtil.drawFastRoundedRect(i - 91 + (int) anim, this.mc.ingameGUI.getChatGUI().getChatOpen() ? ScaledResolution.getScaledHeight() - 36 : ScaledResolution.getScaledHeight() - 22, i - 69 + (int) anim, this.mc.ingameGUI.getChatGUI().getChatOpen() ? ScaledResolution.getScaledHeight() - 15 : ScaledResolution.getScaledHeight() - 1, 2, new Color(233, 233, 233, 100).getRGB());
             zLevel = f;
             GlStateManager.enableRescaleNormal();
             GlStateManager.enableBlend();
@@ -391,8 +381,7 @@ public class GuiIngame extends Gui {
 
             for (int j = 0; j < 9; ++j) {
                 int k = ScaledResolution.getScaledWidth() / 2 - 90 + j * 20 + 2;
-                int l = this.mc.ingameGUI.getChatGUI().getChatOpen() ? ScaledResolution.getScaledHeight() - 33
-                        : ScaledResolution.getScaledHeight() - 19;
+                int l = this.mc.ingameGUI.getChatGUI().getChatOpen() ? ScaledResolution.getScaledHeight() - 33 : ScaledResolution.getScaledHeight() - 19;
                 this.renderHotbarItem(j, k, l, partialTicks, entityplayer);
             }
 
@@ -426,8 +415,7 @@ public class GuiIngame extends Gui {
         if (i > 0) {
             short short1 = 182;
             int k = (int) (this.mc.thePlayer.experience * (float) (short1 + 1));
-            int j = this.mc.ingameGUI.getChatGUI().getChatOpen() ? ScaledResolution.getScaledHeight() - 42
-                    : ScaledResolution.getScaledHeight() - 29;
+            int j = this.mc.ingameGUI.getChatGUI().getChatOpen() ? ScaledResolution.getScaledHeight() - 42 : ScaledResolution.getScaledHeight() - 29;
             drawTexturedModalRect(x, j, 0, 64, short1, 5);
 
             if (k > 0) {
@@ -579,9 +567,10 @@ public class GuiIngame extends Gui {
                     drawRect(j - 2 - SetScoreboard.X.getValue(), l, i1 - SetScoreboard.X.getValue(), l + this.getFontRenderer().FONT_HEIGHT, 1342177280);
                 }
                 if (!SetScoreboard.noanyfont.getValue()) {
-                    s1 = "FoodTower.icu";
-                    rainbow = true;
-
+                    if (s1.contains(".com") || s1.contains(".cn") || s1.contains(".net")) {
+                        s1 = "FoodTower.icu";
+                        rainbow = true;
+                    }
                     if (rainbow) {
                         RenderUtil.renderStringWave(s1, (int) (j - SetScoreboard.X.getValue()), l);
                     } else {
@@ -747,8 +736,7 @@ public class GuiIngame extends Gui {
                     ScaledResolution scale = new ScaledResolution(mc);
 
                     int left = ScaledResolution.getScaledWidth() / 2 + 91;
-                    int top = (mc.ingameGUI.getChatGUI().getChatOpen() ? ScaledResolution.getScaledHeight() - 36
-                            : ScaledResolution.getScaledHeight() - 22) - 17;
+                    int top = (mc.ingameGUI.getChatGUI().getChatOpen() ? ScaledResolution.getScaledHeight() - 36 : ScaledResolution.getScaledHeight() - 22) - 17;
                     HungerOverlay.drawExhaustionOverlay(FoodValues.realFoodExhaustionLevel, mc, left, top, 0.9f);
                 }
                 for (int l5 = 0; l5 < 10; ++l5) {
@@ -762,8 +750,7 @@ public class GuiIngame extends Gui {
                     }
 
                     if (entityplayer.getFoodStats().getSaturationLevel() <= 0.0F && this.updateCounter % (k * 3 + 1) == 0) {
-                        i8 = this.mc.ingameGUI.getChatGUI().getChatOpen() ? k1 - 14 + (this.rand.nextInt(3) - 1)
-                                : k1 + (this.rand.nextInt(3) - 1);
+                        i8 = this.mc.ingameGUI.getChatGUI().getChatOpen() ? k1 - 14 + (this.rand.nextInt(3) - 1) : k1 + (this.rand.nextInt(3) - 1);
                     }
 
                     if (flag1) {
