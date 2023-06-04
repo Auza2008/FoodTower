@@ -1,5 +1,5 @@
 
-package cn.foodtower.util;
+package cn.foodtower.util.misc;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;

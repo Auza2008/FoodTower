@@ -7,6 +7,7 @@ import cn.foodtower.api.events.Render.EventRender3D;
 import cn.foodtower.api.value.Mode;
 import cn.foodtower.api.value.Numbers;
 import cn.foodtower.api.value.Option;
+import cn.foodtower.api.value.Value;
 import cn.foodtower.fastuni.FastUniFontRenderer;
 import cn.foodtower.fastuni.FontLoader;
 import cn.foodtower.manager.ModuleManager;
@@ -19,12 +20,13 @@ import cn.foodtower.ui.font.CFontRenderer;
 import cn.foodtower.ui.font.FontLoaders;
 import cn.foodtower.ui.jello.Compass;
 import cn.foodtower.ui.notifications.user.Notifications;
-import cn.foodtower.util.Vec3;
+import cn.foodtower.util.math.Vec3;
 import cn.foodtower.util.anim.AnimationUtil;
 import cn.foodtower.util.anim.AnimationUtils;
 import cn.foodtower.util.anim.Palette;
 import cn.foodtower.util.math.MathUtil;
 import cn.foodtower.util.misc.Helper;
+import cn.foodtower.util.render.ColorUtils;
 import cn.foodtower.util.render.Colors;
 import cn.foodtower.util.render.DrawUtil;
 import cn.foodtower.util.render.RenderUtil;
@@ -52,7 +54,7 @@ import static net.minecraft.util.MathHelper.abs;
 public class HUD extends Module {
     public static Option hideRender = new Option("HideRender", false);
     public static Numbers<Double> ArrayGap = new Numbers<>("ArraylistGap", 0.0D, -10.0D, 10.0D, 1D);
-    public static Mode ArrayMode = new Mode("ArrayColorMode", ArrayModeE.values(), ArrayModeE.BlueIceSakura);
+    public static Mode ArrayMode = new Mode("ArrayColorMode", ArrayModeE.values(), ArrayModeE.Sky);
     public static Mode ArrayFontMode = new Mode("ArrayFont", ArrayFont.values(), ArrayFont.GoogleSans16);
     public static Option customlogo = new Option("Logo", true);
     public static Option lhp = new Option("LowHPWarning", true);
@@ -76,7 +78,12 @@ public class HUD extends Module {
     public static Color RainbowColors = Color.getHSBColor(hue / 255.0F, 0.4f, 0.8f);
     public static Color RainbowColor2 = Client.getClientColor(true);
     public static int PotY;
+    //    skid from awareline
+    private static int count;
     private static CFontRenderer fontarry;
+    private final Numbers<Double> skyDistanceValue = new Numbers<>("SkyDistance", 1d, -4d, 4d, 1d);
+    private final Numbers<Double> skyBrightness = new Numbers<>("SkyBrightness", 1d, 0d, 1d, 0.1);
+    private final Numbers<Double> skySaturation = new Numbers<>("SkySaturation", 0.5, 0d, 1d, 0.1);
     private final Option info = new Option("Information", true);
     private final Option CompassValue = new Option("Compass", false);
     private final long startTime = System.currentTimeMillis();
@@ -90,12 +97,15 @@ public class HUD extends Module {
     float animLogoY = 3;
     boolean firstTime = true;
     int addY;
+    private int[] counter = new int[]{0};
     private int width;
 
     public HUD() {
         super("HUD", new String[]{"gui"}, ModuleType.Render);
-        this.addValues(logomode, Widget, RainbowSpeed, Arraylists, ArrayGap, hideRender, RectMode, info, ArrayShadow, ArrayFontMode, ArrayMode, customlogo, CompassValue, lhp, r, g, b, a, clientCape, Arraybackground, GuiChatBackGround);
+        this.addValues(logomode, Widget, RainbowSpeed, Arraylists, ArrayGap, hideRender, RectMode, info, ArrayShadow, ArrayFontMode, ArrayMode, skySaturation, skyBrightness, skyDistanceValue, customlogo, CompassValue, lhp, r, g, b, a, clientCape, Arraybackground, GuiChatBackGround);
         this.setEnabled(true);
+        setValueDisplayable(RainbowSpeed, ArrayMode, new Enum[]{ArrayModeE.Rainbow, ArrayModeE.BlueIceSakura, ArrayModeE.Rainbow2, ArrayModeE.Wave, ArrayModeE.NEON});
+        setValueDisplayable(new Value[]{skyDistanceValue, skyBrightness, skySaturation}, ArrayMode, ArrayModeE.Sky);
     }
 
     private static int HUDColor() {
@@ -136,11 +146,19 @@ public class HUD extends Module {
         Color color2222 = Color.getHSBColor(hue / 255.0F, 0.55F, 0.9F);
         int c2222 = color2222.getRGB();
         int colorXD;
+        if (!mc.gameSettings.showDebugInfo) {
+            if (ArrayMode.getValue().equals(ArrayModeE.NewRainbow)) {
+                count = 0;
+            }
+        }
         if (CompassValue.getValue()) {
             compass.draw(sr);
         }
         if (ArrayMode.getValue().equals(ArrayModeE.Wave)) {
             colorXD = Palette.fade(Client.getClientColor(false), (addY + 11) / 11, 16).getRGB();
+        } else if (ArrayMode.getValue().equals(ArrayModeE.NewRainbow)) {
+            double rainbowDelay = Math.ceil((double) ((System.currentTimeMillis() + (long) ((double) (++count * -50))) / 8L) + -2.5);
+            colorXD = Color.getHSBColor((double) ((float) (rainbowDelay / 360.0)) < 0.5 ? -((float) (rainbowDelay / 360.0)) : (float) ((rainbowDelay %= 360.0) / 360.0), 0.5f, 1.0f).getRGB();
         } else if (ArrayMode.getValue().equals(ArrayModeE.Rainbow)) {
             colorXD = c2222;
         } else if (ArrayMode.getValue().equals(ArrayModeE.Rainbow2)) {
@@ -149,6 +167,9 @@ public class HUD extends Module {
             colorXD = new Color(rainbowcolors2.getRed(), 190, 255).getRGB();
         } else if (ArrayMode.getValue().equals(ArrayModeE.NEON)) {
             colorXD = new Color(rainbowcolors.getRed(), rainbowcolors.getGreen(), 255).getRGB();
+        } else if (ArrayMode.getValue().equals(ArrayModeE.Sky)) {
+            colorXD = ColorUtils.skyRainbow(counter[0] * (skyDistanceValue.get().intValue() * 50), skySaturation.get().floatValue(), skyBrightness.get().floatValue()).getRGB();
+            counter[0] = counter[0] - 1;
         } else {
             colorXD = Client.getClientColor();
         }
@@ -158,6 +179,7 @@ public class HUD extends Module {
             hue = 0.0F;
         }
         float h = hue;
+        counter[0] = 0;
         if (lhp.getValue()) {
             if (mc.thePlayer.getHealth() < 6 && !lowhealth) {
                 Notifications.getManager().post("Warning!", "当前血量过低！", Notifications.Type.WARNING);
@@ -264,7 +286,7 @@ public class HUD extends Module {
                     fps = "FPS:" + " " + EnumChatFormatting.GRAY + Minecraft.getDebugFPS();
                     speedc = "Speed:" + " " + EnumChatFormatting.GRAY + speed;
                     xyz = "XYZ:" + " " + EnumChatFormatting.GRAY + MathHelper.floor_double(mc.thePlayer.posX) + " " + MathHelper.floor_double(mc.thePlayer.posY) + " " + MathHelper.floor_double(mc.thePlayer.posZ);
-                    DrawUtil.roundedRect(ScaledResolution.getScaledWidth() / 250 - this.width - 1.5, 1.0, FontLoaders.Baloo18.getStringWidth("  v" + version + " | " + Client.userName + " | " + Minecraft.getDebugFPS() + "FPS") + 63.5, 12, 8, new Color(0, 0, 0, 120));
+                    DrawUtil.drawRoundedRect((float) (ScaledResolution.getScaledWidth() / 250 - this.width - 1.5), 1.0F, (float) (FontLoaders.Baloo18.getStringWidth("  v" + version + " | " + Client.userName + " | " + Minecraft.getDebugFPS() + "FPS") + 63.5), 12, 8, new Color(0, 0, 0, 120).getRGB(), 2, colorXD);
 //                    FontLoaders.SF18.drawStringWithShadow(user, RenderUtil.width() - FontLoaders.SF18.getStringWidth(user) - 80, RenderUtil.height() - 9, colorXD);
                     new ScaledResolution(mc);
                     FontLoaders.SF18.drawStringWithShadow(xyz, ScaledResolution.getScaledWidth() / 250 - this.width, ScaledResolution.getScaledHeight() - 9, -1);
@@ -341,6 +363,14 @@ public class HUD extends Module {
                     }
                     if (ArrayMode.getValue().equals(ArrayModeE.Wave)) {
                         color = Palette.fade(Client.getClientColor(false), (int) ((nextY - m.posYRend) / 11), 11);
+                    }
+                    if (ArrayMode.getValue().equals(ArrayModeE.NewRainbow)) {
+                        double rainbowDelay = Math.ceil((double) ((System.currentTimeMillis() + (long) ((double) (++count * -50))) / 8L) + -2.5);
+                        color = Color.getHSBColor((double) ((float) (rainbowDelay / 360.0)) < 0.5 ? -((float) (rainbowDelay / 360.0)) : (float) ((rainbowDelay %= 360.0) / 360.0), 0.5f, 1.0f);
+                    }
+                    if (ArrayMode.getValue().equals(ArrayModeE.Sky)) {
+                        color = ColorUtils.skyRainbow(counter[0] * (skyDistanceValue.get().intValue() * 50), skySaturation.get().floatValue(), skyBrightness.get().floatValue());
+                        this.counter[0] = this.counter[0] - 1;
                     }
                     if (ArrayMode.getValue().equals(ArrayModeE.Rainbow)) {
                         color = Color.getHSBColor(h / 255.0f, 0.5f, 0.9f);
@@ -439,6 +469,7 @@ public class HUD extends Module {
                     }
                     addY = nextY;
                     counter[0]++;
+                    this.counter[0] = 0;
                     if (sorted.size() == counter[0]) {
                         if (RectMode.getValue().equals(RectModes.Full) || RectMode.getValue().equals(RectModes.Bottom)) {
                             RenderUtil.drawRect(lastX - (RectMode.getValue().equals(RectModes.Full) ? 4 : 3) - 1, nextY + m.posYRend, RenderUtil.width(), nextY + m.posYRend + 1, color.getRGB());
@@ -478,6 +509,9 @@ public class HUD extends Module {
                     }
                     this.drawPotionStatus(sr);
                 }
+            }
+            if (ArrayMode.getValue().equals(ArrayModeE.NewRainbow) && (count += 3) > 100) {
+                count = 0;
             }
         }
     }
@@ -599,7 +633,7 @@ public class HUD extends Module {
     }
 
     public enum ArrayModeE {
-        Wave, Rainbow, Rainbow2, NEON, BlueIceSakura, None
+        Wave, Sky, NewRainbow, Rainbow, Rainbow2, NEON, BlueIceSakura, None
     }
 
     public enum RectModes {
@@ -619,5 +653,6 @@ public class HUD extends Module {
             this.height = height;
         }
     }
+
 }
 

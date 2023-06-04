@@ -548,7 +548,7 @@ public class BlockUtils {
             BlockPos neighbor = pos.offset(side);
             EnumFacing side2 = side.getOpposite();
             if (eyesPos.squareDistanceTo(new Vec3(pos).addVector(0.5, 0.5, 0.5)) < eyesPos.squareDistanceTo(new Vec3(neighbor).addVector(0.5, 0.5, 0.5)) && BlockUtils.canBeClicked(neighbor) && eyesPos.squareDistanceTo(hitVec = new Vec3(neighbor).addVector(0.5, 0.5, 0.5).add(new Vec3(side2.getDirectionVec()).scale(0.5))) <= 18.0625) {
-                RotationUtils.faceVectorPacketInstant(hitVec);
+                RotationUtils.faceVectorPacketInstant((cn.foodtower.util.math.Vec3) hitVec);
                 PlayerControllerMP playerController = mc.playerController;
                 mc.thePlayer.swingItem();
                 mc.rightClickDelayTimer = 4;

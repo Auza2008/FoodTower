@@ -11,7 +11,7 @@ import cn.foodtower.manager.ModuleManager;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.module.modules.world.Scaffold;
-import cn.foodtower.util.PacketUtils;
+import cn.foodtower.util.world.PacketUtils;
 import cn.foodtower.util.time.Timer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;

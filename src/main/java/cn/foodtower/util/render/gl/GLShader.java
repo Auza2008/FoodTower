@@ -7,9 +7,8 @@ import static org.lwjgl.opengl.GL20.*;
 
 public class GLShader {
 
-    private int program;
-
     private final Map<String, Integer> uniformLocationMap = new HashMap<>();
+    private int program;
 
     public GLShader(final String vertexSource, final String fragSource) {
         this.program = glCreateProgram();
@@ -55,9 +54,11 @@ public class GLShader {
         return program;
     }
 
-    public void setupUniforms() {}
+    public void setupUniforms() {
+    }
 
-    public void updateUniforms() {}
+    public void updateUniforms() {
+    }
 
     public void setupUniform(final String uniform) {
         this.uniformLocationMap.put(uniform, glGetUniformLocation(this.program, uniform));

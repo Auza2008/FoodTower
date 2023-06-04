@@ -2,7 +2,7 @@ package cn.foodtower.ui.particles.particle;
 
 import java.util.Random;
 
-import cn.foodtower.util.SuperLib;
+import cn.foodtower.util.misc.SuperLib;
 import cn.foodtower.util.render.gl.GLUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;

@@ -3,7 +3,7 @@ package cn.foodtower.ui;
 import cn.foodtower.Client;
 import cn.foodtower.fastuni.FastUniFontRenderer;
 import cn.foodtower.module.modules.render.HUD;
-import cn.foodtower.util.SuperLib;
+import cn.foodtower.util.misc.SuperLib;
 import cn.foodtower.util.anim.AnimationUtils;
 import cn.foodtower.util.render.RenderUtil;
 import cn.foodtower.util.time.StopWatchs;

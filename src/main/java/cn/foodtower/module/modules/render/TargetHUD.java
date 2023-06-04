@@ -365,7 +365,7 @@ public class TargetHUD extends Module {
         }
         FontLoaders.GoogleSans22.drawStringWithShadow(target.getName(), w + 50, h + 5, -1);
         if (target.getTotalArmorValue() != 0) {
-            DrawUtil.rect(w + 45, h + 37, (target.getTotalArmorValue() / 20) * 110, 2, new Color(100, 130, 255, 255));
+            DrawUtil.rect(w + 45, h + 37, (target.getTotalArmorValue() / 20d) * 110, 2, new Color(100, 130, 255, 255));
         }
         RenderUtil.drawNormalFace(target, w + 4, h + 4, 40.0f);
 //        for (int i = 0; i < (this.health / target.getMaxHealth()) * 160; i++) {

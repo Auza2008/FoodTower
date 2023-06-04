@@ -5,9 +5,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.util.AxisAlignedBB;
-
 import org.lwjgl.opengl.GL11;
-
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -16,37 +14,39 @@ public class RenderingUtil {
 
     public static void drawOutlinedString(String str, float x, float y, int color) {
         Minecraft mc = Minecraft.getMinecraft();
-        mc.fontRendererObj.drawString(str,(int) (x - 0.3f),(int)  y, Colors.getColor(0));
-        mc.fontRendererObj.drawString(str,(int) ( x + 0.3f), (int) y, Colors.getColor(0));
-        mc.fontRendererObj.drawString(str, (int) x,(int)  (y + 0.3f), Colors.getColor(0));
+        mc.fontRendererObj.drawString(str, (int) (x - 0.3f), (int) y, Colors.getColor(0));
+        mc.fontRendererObj.drawString(str, (int) (x + 0.3f), (int) y, Colors.getColor(0));
+        mc.fontRendererObj.drawString(str, (int) x, (int) (y + 0.3f), Colors.getColor(0));
         mc.fontRendererObj.drawString(str, (int) x, (int) (y - 0.3f), Colors.getColor(0));
         mc.fontRendererObj.drawString(str, (int) x, (int) y, color);
     }
+
     public static void drawIcon(double x, double y, float u, float v, double width, double height, float textureWidth, float textureHeight) {
         float var8 = 1.0F / textureWidth;
         float var9 = 1.0F / textureHeight;
         Tessellator var10 = Tessellator.getInstance();
         WorldRenderer var11 = var10.getWorldRenderer();
         var11.startDrawingQuads();
-        var11.addVertexWithUV(x, y + height, 0.0D, (double)(u * var8), (double)((v + (float)height) * var9));
-        var11.addVertexWithUV(x + width, y + height, 0.0D, (double)((u + (float)width) * var8), (double)((v + (float)height) * var9));
-        var11.addVertexWithUV(x + width, y, 0.0D, (double)((u + (float)width) * var8), (double)(v * var9));
-        var11.addVertexWithUV(x, y, 0.0D, (double)(u * var8), (double)(v * var9));
+        var11.addVertexWithUV(x, y + height, 0.0D, u * var8, (v + (float) height) * var9);
+        var11.addVertexWithUV(x + width, y + height, 0.0D, (u + (float) width) * var8, (v + (float) height) * var9);
+        var11.addVertexWithUV(x + width, y, 0.0D, (u + (float) width) * var8, v * var9);
+        var11.addVertexWithUV(x, y, 0.0D, u * var8, v * var9);
         var10.draw();
     }
+
     public static void drawCenteredGradient(double x, double y, double x2, double y2, int col1, int col2) {
-        float width = (float)Math.abs(x-x2);
-        float height = (float)Math.abs(y-y2);
+        float width = (float) Math.abs(x - x2);
+        float height = (float) Math.abs(y - y2);
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        int bright= 50;
+        int bright = 50;
         float var1 = 1;
         double left = Math.max(x, x2);
 
         double right = Math.min(x, x2);
-        for(double i = Math.min(x, x2); i < Math.min(x, x2) + width/2; i+=1){
-            drawBorderRect(i, y, x2, y2,  Colors.getColor(255, 255, 255, 255), 2);
+        for (double i = Math.min(x, x2); i < Math.min(x, x2) + width / 2; i += 1) {
+            drawBorderRect(i, y, x2, y2, Colors.getColor(255, 255, 255, 255), 2);
         }
     /*    for(float i = (height > width? width/2:height/2); i > 0; i-=0.5f){
         	if(bright > 0 && i%1 ==0)
@@ -61,14 +61,16 @@ public class RenderingUtil {
 
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
-        GlStateManager.color(0,0, 0, 0);
+        GlStateManager.color(0, 0, 0, 0);
     }
+
     public static void drawBorderRect(double x, double y, double x1, double y1, int color, double lwidth) {
-        drawHLine(x, y, x1, y, (float)lwidth, color);
-        drawHLine(x1, y, x1, y1, (float)lwidth, color);
-        drawHLine(x, y1, x1, y1, (float)lwidth, color);
-        drawHLine(x, y1, x, y, (float)lwidth, color);
+        drawHLine(x, y, x1, y, (float) lwidth, color);
+        drawHLine(x1, y, x1, y1, (float) lwidth, color);
+        drawHLine(x, y1, x1, y1, (float) lwidth, color);
+        drawHLine(x, y1, x, y, (float) lwidth, color);
     }
+
     public static void drawFancy(double d, double e, double f2, double f3, int paramColor) {
         float alpha = (paramColor >> 24 & 0xFF) / 255.0F;
         float red = (paramColor >> 16 & 0xFF) / 255.0F;
@@ -481,6 +483,7 @@ public class RenderingUtil {
         drawRect(x + 0.5F, y1 - 0.5F, x1 - 0.5F, y1, insideC);
         drawRect(x, y + 0.5F, x1, y1 - 0.5F, insideC);
     }
+
     public static void drawRoundedRect(int xCoord, int yCoord, int xSize, int ySize, int colour) {
         int width = xCoord + xSize;
         int height = yCoord + ySize;
@@ -628,71 +631,74 @@ public class RenderingUtil {
         GlStateManager.color(1, 1, 1, 1);
         GL11.glPopMatrix();
     }
+
     public static void drawBorderedCircle(double x, double y, float radius, int outsideC, int insideC) {
         //  GL11.glEnable((int)3042);
-        GL11.glDisable((int)3553);
-        GL11.glBlendFunc((int)770, (int)771);
-        GL11.glEnable((int)2848);
+        GL11.glDisable(3553);
+        GL11.glBlendFunc(770, 771);
+        GL11.glEnable(2848);
         GL11.glPushMatrix();
         float scale = 0.1f;
-        GL11.glScalef((float)0.1f, (float)0.1f, (float)0.1f);
+        GL11.glScalef(0.1f, 0.1f, 0.1f);
         drawCircle(x *= 10, y *= 10, radius *= 10.0f, insideC);
         // drawUnfilledCircle(x, y, radius, 1.0f, outsideC);
-        GL11.glScalef((float)10.0f, (float)10.0f, (float)10.0f);
+        GL11.glScalef(10.0f, 10.0f, 10.0f);
         GL11.glPopMatrix();
-        GL11.glEnable((int)3553);
+        GL11.glEnable(3553);
         //  GL11.glDisable((int)3042);
-        GL11.glDisable((int)2848);
+        GL11.glDisable(2848);
     }
+
     public static void drawBorderedCircle(final float circleX, final float circleY, final double radius, final double width, final int borderColor, final int innerColor) {
         enableGL2D();
         GlStateManager.enableBlend();
         GL11.glEnable(2881);
-        drawCircle(circleX, circleY, (float)(radius - 0.5 + width), 72, borderColor);
-        drawFullCircle(circleX, circleY, (float)radius, innerColor);
+        drawCircle(circleX, circleY, (float) (radius - 0.5 + width), 72, borderColor);
+        drawFullCircle(circleX, circleY, (float) radius, innerColor);
         GlStateManager.disableBlend();
         GL11.glDisable(2881);
         GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         disableGL2D();
     }
+
     public static void drawCircle(double x, double y, float radius, int color) {
-        float alpha = (float)(color >> 24 & 255) / 255.0f;
-        float red = (float)(color >> 16 & 255) / 255.0f;
-        float green = (float)(color >> 8 & 255) / 255.0f;
-        float blue = (float)(color & 255) / 255.0f;
-        GL11.glColor4f((float)red, (float)green, (float)blue, (float)alpha);
-        GL11.glBegin((int)9);
+        float alpha = (float) (color >> 24 & 255) / 255.0f;
+        float red = (float) (color >> 16 & 255) / 255.0f;
+        float green = (float) (color >> 8 & 255) / 255.0f;
+        float blue = (float) (color & 255) / 255.0f;
+        GL11.glColor4f(red, green, blue, alpha);
+        GL11.glBegin(9);
         int i = 0;
         while (i <= 360) {
-            GL11.glVertex2d((double)((double)x + Math.sin((double)i * 3.141526 / 180.0) * (double)radius), (double)((double)y + Math.cos((double)i * 3.141526 / 180.0) * (double)radius));
+            GL11.glVertex2d(x + Math.sin((double) i * 3.141526 / 180.0) * (double) radius, y + Math.cos((double) i * 3.141526 / 180.0) * (double) radius);
             ++i;
         }
         GL11.glEnd();
     }
 
 
-    public static void drawFilledTriangle(float x, float y, float r, int c, int borderC){
+    public static void drawFilledTriangle(float x, float y, float r, int c, int borderC) {
         enableGL2D();
         glColor(c);
         glEnable(GL_POLYGON_SMOOTH);
         glBegin(GL_TRIANGLES);
-        glVertex2f(x+r/2,y+r/2);
-        glVertex2f(x+r/2,y-r/2);
-        glVertex2f(x-r/2, y);
+        glVertex2f(x + r / 2, y + r / 2);
+        glVertex2f(x + r / 2, y - r / 2);
+        glVertex2f(x - r / 2, y);
         glEnd();
         glLineWidth(1.3f);
         glColor(borderC);
         glBegin(GL_LINE_STRIP);
-        glVertex2f(x+r/2,y+r/2);
-        glVertex2f(x+r/2,y-r/2);
+        glVertex2f(x + r / 2, y + r / 2);
+        glVertex2f(x + r / 2, y - r / 2);
         glEnd();
         glBegin(GL_LINE_STRIP);
-        glVertex2f(x-r/2, y);
-        glVertex2f(x+r/2,y-r/2);
+        glVertex2f(x - r / 2, y);
+        glVertex2f(x + r / 2, y - r / 2);
         glEnd();
         glBegin(GL_LINE_STRIP);
-        glVertex2f(x+r/2,y+r/2);
-        glVertex2f(x-r/2, y);
+        glVertex2f(x + r / 2, y + r / 2);
+        glVertex2f(x - r / 2, y);
         glEnd();
         glDisable(GL_POLYGON_SMOOTH);
         disableGL2D();

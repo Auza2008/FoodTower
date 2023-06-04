@@ -1,9 +1,9 @@
 package cn.foodtower.util.render;
 
-import java.awt.Color;
+import java.awt.*;
 
 public enum Colors {
-	BLACK(-16711423),
+    BLACK(-16711423),
     BLUE(-12028161),
     DARKBLUE(-12621684),
     GREEN(-9830551),
@@ -21,10 +21,10 @@ public enum Colors {
     DARKYELLOW(-2702025),
     MAGENTA(-18751),
     DARKMAGENTA(-2252579);
-    
+
     public int c;
 
-    private Colors(int co) {
+    Colors(int co) {
         this.c = co;
     }
 

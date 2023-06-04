@@ -4,17 +4,18 @@ package cn.foodtower.module.modules.combat;
 import cn.foodtower.Client;
 import cn.foodtower.api.EventBus;
 import cn.foodtower.api.EventHandler;
+import cn.foodtower.api.events.Misc.EventLivingUpdate;
 import cn.foodtower.api.events.Render.EventRender3D;
 import cn.foodtower.api.events.World.EventAttack;
-import cn.foodtower.api.events.World.EventPostUpdate;
+import cn.foodtower.api.events.World.EventMotionUpdate;
 import cn.foodtower.api.events.World.EventPreUpdate;
-import cn.foodtower.api.events.World.EventTick;
 import cn.foodtower.api.value.Numbers;
 import cn.foodtower.api.value.Option;
 import cn.foodtower.api.value.Value;
 import cn.foodtower.manager.ModuleManager;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
+import cn.foodtower.module.modules.move.Sprint;
 import cn.foodtower.module.modules.world.Scaffold;
 import cn.foodtower.util.entity.entitycheck.EntityValidator;
 import cn.foodtower.util.entity.entitycheck.checks.ConstantDistanceCheck;
@@ -22,12 +23,12 @@ import cn.foodtower.util.entity.entitycheck.checks.DistanceCheck;
 import cn.foodtower.util.entity.entitycheck.checks.EntityCheck;
 import cn.foodtower.util.entity.entitycheck.checks.TeamsCheck;
 import cn.foodtower.util.math.MathUtil;
+import cn.foodtower.util.math.RotationUtils;
 import cn.foodtower.util.math.SmoothRotationObject;
 import cn.foodtower.util.render.RenderUtil;
-import cn.foodtower.util.time.TimerUtil;
+import cn.foodtower.util.time.MSTimer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -56,7 +57,7 @@ public class KillAura extends Module {
     public final Numbers<Double> aps = new Numbers("MaxCps", 13.0, 1.0, 20.0, 1.0);
     public final Numbers<Double> minAps = new Numbers<>("MinCps", 10.0, 1.0, 20.0, 1.0);
     public final cn.foodtower.api.value.Mode mode = new cn.foodtower.api.value.Mode("Mode", Mode.values(), Mode.SWITCH);
-    public final cn.foodtower.api.value.Mode autoBlockMode = new cn.foodtower.api.value.Mode("Auto Block Mode", AutoBlockMode.values(), AutoBlockMode.OFFSET);
+    public final cn.foodtower.api.value.Mode autoBlockMode = new cn.foodtower.api.value.Mode("Auto Block Mode", AutoBlockMode.values(), AutoBlockMode.KeyBind);
     public final Numbers<Double> switchDelay = new Numbers("Switch Delay", 3.0, 1.0, 10.0, 1.0);
     public final cn.foodtower.api.value.Mode sortingMode = new cn.foodtower.api.value.Mode("Sorting Mode", SortingMode.values(), SortingMode.DISTANCE);
     public final Numbers<Double> range = new Numbers("Range", 4.2, 3.0, 7.0, 0.1);
@@ -69,16 +70,17 @@ public class KillAura extends Module {
     public final Option forceUpdate = new Option("Force Update", false);
     public final Option disableOnDeath = new Option("Disable on death", true);
     public final java.util.List<EntityLivingBase> targets = new ArrayList<>();
+    private final Numbers<Double> fov = new Numbers<>("Fov", 180d, 10d, 180d, 10d);
     private final Numbers<Double> rotSpeed = new Numbers<>("RotationSpeed", 180d, 1d, 180d, 1d);
     private final Option wall = new Option("Through Wall", true);
     private final Option swing = new Option("Swing", true);
     private final Option dbtap = new Option("Double Tap", false);
-    private final cn.foodtower.api.value.Mode attackTiming = new cn.foodtower.api.value.Mode("AttackTiming", AttackTiming.values(), AttackTiming.Post);
-    private final cn.foodtower.api.value.Mode abTiming = new cn.foodtower.api.value.Mode("BlockTiming", ABTiming.values(), ABTiming.Post);
+    private final cn.foodtower.api.value.Mode attackTiming = new cn.foodtower.api.value.Mode("AttackTiming", AttackTiming.values(), AttackTiming.Update);
+    private final cn.foodtower.api.value.Mode abTiming = new cn.foodtower.api.value.Mode("BlockTiming", ABTiming.values(), ABTiming.Update);
     private final cn.foodtower.api.value.Mode rotMode = new cn.foodtower.api.value.Mode("RotationMode", Rotations.values(), Rotations.Basic);
-    private final TimerUtil attackStopwatch = new TimerUtil();
-    private final TimerUtil updateStopwatch = new TimerUtil();
-    private final TimerUtil critStopwatch = new TimerUtil();
+    private final MSTimer attackStopwatch = new MSTimer();
+    private final MSTimer updateStopwatch = new MSTimer();
+    private final MSTimer critStopwatch = new MSTimer();
     private final EntityValidator entityValidator = new EntityValidator();
     private final EntityValidator blockValidator = new EntityValidator();
     private final SmoothRotationObject smoothRotationObject = new SmoothRotationObject();
@@ -97,21 +99,11 @@ public class KillAura extends Module {
         this.blockValidator.add(new ConstantDistanceCheck(8.0f));
         this.blockValidator.add(entityCheck);
         this.blockValidator.add(teamsCheck);
-        addValues(this.mode, this.sortingMode, this.autoBlockMode, this.aps, minAps, this.range, attackTiming, abTiming, rotMode, rotSpeed, this.switchDelay, wall, this.teams, this.players, this.prioritizePlayers, this.animals, this.monsters, this.invisibles, this.autoBlock, swing, coolDown, dbtap, this.forceUpdate, this.disableOnDeath);
+        addValues(this.mode, this.sortingMode, this.autoBlockMode, this.aps, minAps, this.range, attackTiming, abTiming, rotMode, rotSpeed, this.switchDelay, wall, this.teams, this.players, this.prioritizePlayers, this.animals, this.monsters, this.invisibles, this.autoBlock, swing, fov, coolDown, dbtap, this.forceUpdate, this.disableOnDeath);
         setValueDisplayable(sortingMode, mode, Mode.SINGLE);
         setValueDisplayable(switchDelay, mode, Mode.SWITCH);
-        setValueDisplayable(new Value[]{aps, minAps}, coolDown, !coolDown.getValue());
-    }
-
-    public static float[] getRotationsToEnt(EntityLivingBase ent) {
-        double differenceX = ent.posX - mc.thePlayer.posX;
-        double differenceY = ent.posY + (double) ent.height - (mc.thePlayer.posY + (double) mc.thePlayer.height) - 0.5;
-        double differenceZ = ent.posZ - mc.thePlayer.posZ;
-        float rotationYaw = (float) (Math.atan2(differenceZ, differenceX) * 180.0 / Math.PI) - 90.0f;
-        float rotationPitch = (float) (Math.atan2(differenceY, mc.thePlayer.getDistanceToEntity(ent)) * 180.0 / Math.PI);
-        float finishedYaw = mc.thePlayer.rotationYaw + MathHelper.wrapAngleTo180_float(rotationYaw - mc.thePlayer.rotationYaw);
-        float finishedPitch = mc.thePlayer.rotationPitch + MathHelper.wrapAngleTo180_float(rotationPitch - mc.thePlayer.rotationPitch);
-        return new float[]{finishedYaw, -MathHelper.clamp_float(finishedPitch, -90.0f, 90.0f)};
+        setValueDisplayable(new Value[]{autoBlockMode, abTiming}, autoBlock, autoBlock.getValue());
+        setValueDisplayable(prioritizePlayers, players, players.getValue());
     }
 
     private static float[] getNeededRotations(EntityLivingBase entityIn) {
@@ -126,17 +118,16 @@ public class KillAura extends Module {
 
     @Override
     public void onDisable() {
-        if (autoBlockMode.getValue().equals(AutoBlockMode.Always) && autoBlock.getValue() && isBlocking) {
-//            KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
-            KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
-            mc.playerController.onStoppedUsingItem(mc.thePlayer);
-            isBlocking = false;
-        } else if (autoBlockMode.getValue().equals(AutoBlockMode.PacketAlways) && autoBlock.getValue() && isBlocking) {
-            mc.getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-            isBlocking = false;
-        } else if (autoBlock.getValue() && isBlocking) {
-            this.unblock();
+        if (autoBlock.getValue()) {
+            if (autoBlockMode.getValue().equals(AutoBlockMode.Always)) {
+                mc.gameSettings.keyBindUseItem.Doing = false;
+                mc.playerController.onStoppedUsingItem(mc.thePlayer);
+                isBlocking = false;
+            } else {
+                this.unblock();
+            }
         }
+        curTarget = null;
     }
 
     @Override
@@ -152,49 +143,31 @@ public class KillAura extends Module {
     private void onPre(EventPreUpdate e) {
         this.updateTargets();
         this.sortTargets();
+        if (curTarget != null) {
+            mc.thePlayer.setSprinting(ModuleManager.getModuleByClass(KeepSprint.class).isEnabled() && ModuleManager.getModuleByClass(Sprint.class).isEnabled());
+        }
         ++hitTicks;
         if (!isHoldingSword()) {
             isBlocking = false;
         }
-        if (curTarget == null && autoBlock.getValue() && autoBlock.getValue() && isBlocking) {
-            if (autoBlockMode.getValue().equals(AutoBlockMode.Always)) {
-//                KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
-                KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
-                mc.playerController.onStoppedUsingItem(mc.thePlayer);
-                isBlocking = false;
-            } else if (autoBlockMode.getValue().equals(AutoBlockMode.PacketAlways)) {
-                mc.getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-                isBlocking = false;
-            } else {
-                this.unblock();
-            }
-        }
-        if (curTarget != null && autoBlock.getValue() && mc.thePlayer.getHeldItem() != null) {
-            if (autoBlockMode.getValue().equals(AutoBlockMode.Always)) {
-//                KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
-                KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
-                mc.getNetHandler().addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));
-                isBlocking = true;
-            } else if (autoBlockMode.getValue().equals(AutoBlockMode.PacketAlways)) {
-                mc.getNetHandler().addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));
-                isBlocking = true;
-            }
+        if (curTarget == null && autoBlock.getValue() && isBlocking) {
+            unblock();
         }
         if (this.canAttack() && curTarget != null) {
-            if (this.updateStopwatch.hasReached(56L) && this.forceUpdate.getValue().booleanValue() && !mc.thePlayer.isMoving()) {
+            if (this.updateStopwatch.hasTimePassed(56L) && this.forceUpdate.getValue().booleanValue() && !mc.thePlayer.isMoving()) {
                 mc.getNetHandler().addToSendQueueSilent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, mc.thePlayer.onGround));
                 this.updateStopwatch.reset();
             }
             if (!rotMode.getValue().equals(Rotations.None)) {
                 switch ((Rotations) (rotMode.getValue())) {
                     case Basic:
-                        angles = getRotationsToEnt(curTarget);
+                        angles = RotationUtils.getRotationsEntity(curTarget);
                         break;
                     case Hypixel:
                         angles = getNeededRotations(curTarget);
                         break;
                     case HVH:
-                        angles = cn.foodtower.util.math.RotationUtils.getCustomRotation(cn.foodtower.util.math.RotationUtils.getLocation(curTarget.getEntityBoundingBox()));
+                        angles = RotationUtils.getCustomRotation(RotationUtils.getLocation(curTarget.getEntityBoundingBox()));
                         break;
                 }
                 if (rotSpeed.getValue() == 180d) {
@@ -208,21 +181,35 @@ public class KillAura extends Module {
                 }
             }
         }
-        if (attackTiming.getValue().equals(AttackTiming.Pre)) {
+    }
+
+    @EventHandler
+    private void runAttack(EventMotionUpdate e) {
+        if ((attackTiming.getValue().equals(AttackTiming.Pre) && e.isPre()) || (attackTiming.getValue().equals(AttackTiming.Post) && !e.isPre()) || attackTiming.getValue().equals(AttackTiming.Motion) || attackTiming.getValue().equals(AttackTiming.All)) {
             attack();
         }
-        if (abTiming.getValue().equals(ABTiming.Pre)) {
-            this.block();
+        if ((abTiming.getValue().equals(ABTiming.Pre) && e.isPre()) || (abTiming.getValue().equals(ABTiming.Post) && !e.isPre()) || abTiming.getValue().equals(ABTiming.Motion) || abTiming.getValue().equals(ABTiming.All)) {
+            block();
+        }
+    }
+
+    @EventHandler
+    private void runLivingUpdateAttack(EventLivingUpdate e) {
+        if (attackTiming.getValue().equals(AttackTiming.All) || attackTiming.getValue().equals(AttackTiming.Update)) {
+            attack();
+        }
+        if (abTiming.getValue().equals(ABTiming.All) || abTiming.getValue().equals(ABTiming.Update)) {
+            block();
         }
     }
 
     @EventHandler
     private void onRender(EventRender3D e) {
-        if (attackTiming.getValue().equals(AttackTiming.All)) {
+        if (attackTiming.getValue().equals(AttackTiming.Render3D)) {
             attack();
         }
-        if (abTiming.getValue().equals(ABTiming.All)) {
-            this.block();
+        if (abTiming.getValue().equals(ABTiming.Render3D)) {
+            block();
         }
         if (curTarget != null) {
             Color color = curTarget.hurtTime > 0 ? new Color(-1618884) : new Color(-13330213);
@@ -261,26 +248,6 @@ public class KillAura extends Module {
         }
     }
 
-    @EventHandler
-    public final void onPostUpdate(EventPostUpdate event) {
-        if (attackTiming.getValue().equals(AttackTiming.Post)) {
-            attack();
-        }
-        if (abTiming.getValue().equals(ABTiming.Post)) {
-            this.block();
-        }
-    }
-
-    @EventHandler
-    private void onTick(EventTick tick) {
-        if (attackTiming.getValue().equals(AttackTiming.Tick)) {
-            attack();
-        }
-        if (abTiming.getValue().equals(ABTiming.Tick)) {
-            block();
-        }
-    }
-
 //    @EventHandler
 //    public final void onUpdate(EventUpdate eventUpdate) {
 //        if (attackTiming.getValue().equals(AttackTiming.Update) || attackTiming.getValue().equals(AttackTiming.All)) {
@@ -299,31 +266,23 @@ public class KillAura extends Module {
         double delayValue = -1;
         if (this.coolDown.getValue()) {
             delayValue = 4;
-
             if (mc.thePlayer.getHeldItem() != null) {
                 final Item item = mc.thePlayer.getHeldItem().getItem();
-
                 if (item instanceof ItemSpade || item == Items.golden_axe || item == Items.diamond_axe || item == Items.wooden_hoe || item == Items.golden_hoe)
                     delayValue = 20;
-
                 if (item == Items.wooden_axe || item == Items.stone_axe) delayValue = 25;
-
                 if (item instanceof ItemSword) delayValue = 12;
-
                 if (item instanceof ItemPickaxe) delayValue = 17;
-
                 if (item == Items.iron_axe) delayValue = 22;
-
                 if (item == Items.stone_hoe) delayValue = 10;
-
                 if (item == Items.iron_hoe) delayValue = 7;
             }
             delayValue *= Math.max(1, mc.timer.timerSpeed);
         }
         curTarget = this.getTarget();
         if (curTarget != null && this.canAttack()) {
-            if (((!coolDown.getValue() && this.attackStopwatch.hasReached(getAps())) || (coolDown.getValue() && hitTicks > delayValue))) {
-                EventBus.getInstance().register(new EventAttack(curTarget, true));
+            if (((!coolDown.getValue() && this.attackStopwatch.hasTimePassed(getAps())) || (coolDown.getValue() && hitTicks > delayValue))) {
+                EventBus.getInstance().register(new EventAttack(curTarget));
                 this.attack(curTarget);
                 this.attackStopwatch.reset();
                 hitTicks = 0;
@@ -335,6 +294,9 @@ public class KillAura extends Module {
     }
 
     private Integer getAps() {
+        if (minAps.getValue().equals(20.0)) {
+            return 1000 / 20;
+        }
         if (minAps.getValue().equals(aps.getValue())) {
             return 1000 / aps.getValue().intValue();
         }
@@ -364,40 +326,44 @@ public class KillAura extends Module {
         for (Object o : loadedEntityList) {
             Entity entity = (Entity) o;
             if (((Entity) o).isDead || !this.blockValidator.validate(entity)) continue;
-            return true;
+            return fov.getValue().equals(180d) || RotationUtils.isVisibleFOV(entity, fov.getValue().intValue());
         }
         return false;
     }
 
     private void attack(EntityLivingBase entity) {
         EntityPlayerSP player = mc.thePlayer;
-        this.unblock();
+        if (autoBlockMode.getValue().equals(AutoBlockMode.Always) && isBlocking && curTarget != null) {
+            isBlocking = false;
+        }
+        unblock();
         if (swing.getValue()) {
             player.swingItem();
         } else {
-            sendPacket(new C0APacketAnimation());
+            mc.getNetHandler().addToSendQueue(new C0APacketAnimation());
         }
         if (dbtap.getValue()) {
-            sendPacket(new C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK));
+            mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK));
         }
-        sendPacket(new C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK));
+        mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK));
     }
 
+    //    取消格挡
     private void unblock() {
         if ((this.autoBlock.getValue().booleanValue() || mc.thePlayer.isBlocking()) && isHoldingSword() && isBlocking) {
-            mc.thePlayer.setItemInUse(mc.thePlayer.getHeldItem(), 0);
+//            mc.thePlayer.setItemInUse(mc.thePlayer.getHeldItem(), 0);
             switch ((AutoBlockMode) this.autoBlockMode.getValue()) {
-                case OFFSET:
-                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
+                case KeyBind:
+                case Always:
+                    mc.gameSettings.keyBindUseItem.Doing = false;
                     mc.playerController.onStoppedUsingItem(mc.thePlayer);
-//                    mc.getNetHandler().addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
                     break;
                 case HVH:
-                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
-                    mc.playerController.onStoppedUsingItem(mc.thePlayer);
+                    mc.gameSettings.keyBindUseItem.Doing = false;
                     mc.getNetHandler().addToSendQueueSilent(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+                    mc.playerController.onStoppedUsingItem(mc.thePlayer);
                     break;
-                case SMART:
+                case Packet:
                     mc.getNetHandler().addToSendQueueSilent(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
                     break;
             }
@@ -406,20 +372,20 @@ public class KillAura extends Module {
     }
 
     private void block() {
-        if (this.autoBlock.getValue().booleanValue() && isHoldingSword() && this.isEntityNearby() && !isBlocking) {
-            mc.thePlayer.setItemInUse(mc.thePlayer.getHeldItem(), mc.thePlayer.getHeldItem().getMaxItemUseDuration());
+        if (this.autoBlock.getValue() && isHoldingSword() && this.isEntityNearby() && !isBlocking) {
+//            mc.thePlayer.setItemInUse(mc.thePlayer.getHeldItem(), mc.thePlayer.getHeldItem().getMaxItemUseDuration());
             switch ((AutoBlockMode) this.autoBlockMode.getValue()) {
-                case SMART:
+                case Packet:
                     mc.getNetHandler().addToSendQueueSilent(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0.0f, 0.0f, 0.0f));
                     break;
                 case HVH:
-                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
+                    mc.gameSettings.keyBindUseItem.Doing = true;
                     mc.getNetHandler().addToSendQueueSilent(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0.0f, 0.0f, 0.0f));
                     break;
-                case OFFSET:
-                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
-                    mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.inventory.getCurrentItem());
-//                    mc.getNetHandler().addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));
+                case KeyBind:
+                case Always:
+//                    Doing比pressed有用
+                    mc.gameSettings.keyBindUseItem.Doing = true;
                     break;
             }
             isBlocking = true;
@@ -437,7 +403,8 @@ public class KillAura extends Module {
             EntityLivingBase entityLivingBase;
             if (!(o instanceof EntityLivingBase) || o.isDead || ((EntityLivingBase) o).getHealth() <= 0 || !this.entityValidator.validate(entityLivingBase = (EntityLivingBase) o))
                 continue;
-            this.targets.add(entityLivingBase);
+            if (fov.getValue().equals(180d) || RotationUtils.isVisibleFOV(o, fov.getValue().intValue()))
+                this.targets.add(entityLivingBase);
         }
     }
 
@@ -465,7 +432,7 @@ public class KillAura extends Module {
     }
 
     private enum AutoBlockMode {
-        SMART, Always, PacketAlways, OFFSET, HVH
+        Packet, KeyBind, HVH, Always
     }
 
     private enum Mode {
@@ -473,11 +440,11 @@ public class KillAura extends Module {
     }
 
     private enum AttackTiming {
-        Pre, Post, Tick, All
+        Pre, Post, Motion, Update, All, Render3D
     }
 
     private enum ABTiming {
-        Pre, Post, Tick, All
+        Pre, Post, Motion, Update, All, Render3D
     }
 
     private enum Rotations {

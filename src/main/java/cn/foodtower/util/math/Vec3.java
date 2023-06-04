@@ -1,4 +1,4 @@
-package cn.foodtower.util;
+package cn.foodtower.util.math;
 
 import net.minecraft.util.Vec3i;
 

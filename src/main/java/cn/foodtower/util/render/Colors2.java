@@ -1,7 +1,6 @@
-
 package cn.foodtower.util.render;
 
-import java.awt.Color;
+import java.awt.*;
 
 public class Colors2 {
     public static int getColor(Color color) {

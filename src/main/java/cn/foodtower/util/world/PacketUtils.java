@@ -1,4 +1,4 @@
-package cn.foodtower.util;
+package cn.foodtower.util.world;
 
 
 import net.minecraft.client.Minecraft;

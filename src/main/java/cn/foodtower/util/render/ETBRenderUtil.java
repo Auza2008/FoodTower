@@ -1,12 +1,6 @@
 package cn.foodtower.util.render;
 
 import cn.foodtower.util.math.MathUtil;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.EXTFramebufferObject;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.Cylinder;
-import org.lwjgl.util.glu.GLU;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -21,6 +15,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ResourceLocation;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.EXTFramebufferObject;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.Cylinder;
+import org.lwjgl.util.glu.GLU;
 
 import javax.vecmath.Vector3d;
 import java.awt.*;
@@ -35,13 +34,13 @@ import static org.lwjgl.opengl.GL11.*;
  * @since 5/29/2019
  **/
 public class ETBRenderUtil {
-    private static Minecraft mc = Minecraft.getMinecraft();
-    private static ScaledResolution scaledResolution = new ScaledResolution(mc);
-    private static Frustum frustrum = new Frustum();
-    private static FloatBuffer screen_coords = GLAllocation.createDirectFloatBuffer(3);
-    private static IntBuffer viewport = GLAllocation.createDirectIntBuffer(16);
-    private static FloatBuffer modelview = GLAllocation.createDirectFloatBuffer(16);
-    private static FloatBuffer projection = GLAllocation.createDirectFloatBuffer(16);
+    private static final Minecraft mc = Minecraft.getMinecraft();
+    private static final ScaledResolution scaledResolution = new ScaledResolution(mc);
+    private static final Frustum frustrum = new Frustum();
+    private static final FloatBuffer screen_coords = GLAllocation.createDirectFloatBuffer(3);
+    private static final IntBuffer viewport = GLAllocation.createDirectIntBuffer(16);
+    private static final FloatBuffer modelview = GLAllocation.createDirectFloatBuffer(16);
+    private static final FloatBuffer projection = GLAllocation.createDirectFloatBuffer(16);
 
     public static double interpolate(double current, double old, double scale) {
         return old + (current - old) * scale;
@@ -50,6 +49,7 @@ public class ETBRenderUtil {
     public static ScaledResolution getResolution() {
         return new ScaledResolution(mc);
     }
+
     public static void checkSetupFBO() {
         final Framebuffer fbo = Minecraft.getMinecraft().getFramebuffer();
         if (fbo != null && fbo.depthBuffer > -1) {
@@ -62,6 +62,7 @@ public class ETBRenderUtil {
             fbo.depthBuffer = -1;
         }
     }
+
     public static void drawHorizontalLine(float x, float y, float x1, float thickness, int color) {
         drawRect2(x, y, x1, y + thickness, color);
     }
@@ -69,6 +70,7 @@ public class ETBRenderUtil {
     public static void drawVerticalLine(float x, float y, float y1, float thickness, int color) {
         drawRect2(x, y, x + thickness, y1, color);
     }
+
     public static void drawHollowBox(float x, float y, float x1, float y1, float thickness, int color) {
         /* Top */
         drawHorizontalLine(x, y, x1, thickness, color);
@@ -79,12 +81,14 @@ public class ETBRenderUtil {
         /* Right */
         drawVerticalLine(x1 - thickness, y, y1, thickness, color);
     }
+
     public static int getRainbow(int speed, int offset) {
         float hue = (System.currentTimeMillis() + offset) % speed;
         hue /= speed;
         return Color.getHSBColor(hue, 0.75f, 1f).getRGB();
 
     }
+
     public static int reAlpha(int color, float alpha) {
         Color c = new Color(color);
         float r = ((float) 1 / 255) * c.getRed();
@@ -94,8 +98,8 @@ public class ETBRenderUtil {
     }
 
     public static float[] getRGBAs(int rgb) {
-        return new float[] { ((rgb >> 16) & 255) / 255F, ((rgb >> 8) & 255) / 255F, (rgb & 255) / 255F,
-                ((rgb >> 24) & 255) / 255F };
+        return new float[]{((rgb >> 16) & 255) / 255F, ((rgb >> 8) & 255) / 255F, (rgb & 255) / 255F,
+                ((rgb >> 24) & 255) / 255F};
     }
 
     public static void drawImage(ResourceLocation image, int x, int y, int width, int height) {
@@ -112,6 +116,7 @@ public class ETBRenderUtil {
         drawOutlinedBoundingBox(bb);
         disable3D();
     }
+
     public static void BB(AxisAlignedBB bb, int color) {
         enable3D();
         color(color);
@@ -302,6 +307,7 @@ public class ETBRenderUtil {
         worldRenderer.pos(aa.maxX, aa.minY, aa.maxZ).endVertex();
         tessellator.draw();
     }
+
     public static Vector3d project2D(float x, float y, float z) {
         boolean ret;
         GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, modelview);
@@ -345,11 +351,11 @@ public class ETBRenderUtil {
         return frustrum.isBoundingBoxInFrustum(bb);
     }
 
-    public static void prepareScissorBox(ScaledResolution sr,float x, float y, float width, float height) {
+    public static void prepareScissorBox(ScaledResolution sr, float x, float y, float width, float height) {
         float x2 = x + width;
         float y2 = y + height;
         int factor = sr.getScaleFactor();
-        GL11.glScissor((int) (x * factor), (int) ((sr.getScaledHeight() - y2) * factor), (int) ((x2 - x) * factor), (int) ((y2 - y) * factor));
+        GL11.glScissor((int) (x * factor), (int) ((ScaledResolution.getScaledHeight() - y2) * factor), (int) ((x2 - x) * factor), (int) ((y2 - y) * factor));
     }
 
     public static void drawBorderedRect(double x, double y, double width, double height, double lineSize, int borderColor, int color) {
@@ -387,16 +393,18 @@ public class ETBRenderUtil {
     public static void drawRect2(double x, double y, double x2, double y2, int color) {
         Gui.drawRect(x, y, x2, y2, color);
     }
-    public static void startDrawing(){
+
+    public static void startDrawing() {
         GL11.glEnable(3042);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glEnable(GL11.GL_LINE_SMOOTH);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(2929);
-        mc.entityRenderer.setupCameraTransform(mc.timer.renderPartialTicks,0);
+        mc.entityRenderer.setupCameraTransform(mc.timer.renderPartialTicks, 0);
     }
-    public static void stopDrawing(){
+
+    public static void stopDrawing() {
         GL11.glDisable(3042);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_LINE_SMOOTH);

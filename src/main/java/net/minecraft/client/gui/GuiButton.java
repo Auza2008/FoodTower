@@ -2,7 +2,7 @@ package net.minecraft.client.gui;
 
 import cn.foodtower.Client;
 import cn.foodtower.fastuni.FastUniFontRenderer;
-import cn.foodtower.util.SuperLib;
+import cn.foodtower.util.misc.SuperLib;
 import cn.foodtower.util.anim.AnimationUtil;
 import cn.foodtower.util.render.RenderUtil;
 import net.minecraft.client.Minecraft;

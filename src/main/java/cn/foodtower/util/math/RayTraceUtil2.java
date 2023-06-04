@@ -1,4 +1,4 @@
-package cn.foodtower.util;
+package cn.foodtower.util.math;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;

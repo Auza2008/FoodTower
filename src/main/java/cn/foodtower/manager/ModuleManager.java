@@ -75,8 +75,6 @@ public class ModuleManager implements Manager {
 
     @Override
     public void init() {
-        //Helper.Verifys();
-        // Combat
         modules.add(new HypixelAntibot());
         modules.add(new TargetStrafe());
         modules.add(new AimAssist());
@@ -93,8 +91,6 @@ public class ModuleManager implements Manager {
         modules.add(new Reach());
         modules.add(new Regen());
         modules.add(new SuperKnockback());
-
-        // Render
         modules.add(new Animations());
         modules.add(new TargetDebug());
         modules.add(new Breadcrumbs());
@@ -124,9 +120,6 @@ public class ModuleManager implements Manager {
         modules.add(new MiniMap());
         modules.add(new NameProtect());
         modules.add(new HungerOverlay());
-
-
-        // Move
         modules.add(new BowJump());
         modules.add(new AirLadder());
         modules.add(new AntiFall());
@@ -141,8 +134,6 @@ public class ModuleManager implements Manager {
         modules.add(new Fly());
         modules.add(new Jesus());
         modules.add(new NoWeb());
-
-        // world
         modules.add(new AutoArmor());
         modules.add(new AutoL());
         modules.add(new BedNuker());
@@ -174,8 +165,6 @@ public class ModuleManager implements Manager {
         modules.add(new InvCleaner());
 //		modules.add(new IRC());
         modules.add(new MusicPlayer());
-
-        // player
         modules.add(new ArrowDodge());
         modules.add(new AutoFish());
         modules.add(new AutoSay());
@@ -193,6 +182,8 @@ public class ModuleManager implements Manager {
         //modules.add(new KeepSprint());
         modules.add(new Strafe());
         modules.add(new NoClickDelay());
+        modules.add(new Baned());
+        modules.add(new KeepSprint());
 
         this.readSettings();
         for (Module m : modules) {

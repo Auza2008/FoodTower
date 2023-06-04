@@ -1,4 +1,4 @@
-package cn.foodtower.util;
+package cn.foodtower.util.misc;
 
 // TIQS's Shit code(2019)!
 

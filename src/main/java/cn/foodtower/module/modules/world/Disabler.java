@@ -107,10 +107,12 @@ public class Disabler extends Module {
     }
 
     @EventHandler
-    public void onTick(EventTick e) {((Modes) (mode.getValue())).get().onTick(e);}
+    public void onTick(EventTick e) {
+        ((Modes) (mode.getValue())).get().onTick(e);
+    }
 
     enum Modes {
-        Hypxiel(new DisablerHypixelDisabler()), OldNCP(new OldNCPDisabler()), NewSpoof(new NewSpoofDisabler()), AAC4LessFlag(new AAC4LessFlagDisabler()), AAC5Test(new AAC5TestDisabler()), VulcanCombat(new VulcanCombatDisabler()), DCJNetWork(new DCJNetWorkDisabler()), DCJPacket(new DCJPacketDisabler());
+        Hypxiel(new DisablerHypixelDisabler()), OldNCP(new OldNCPDisabler()), NewSpoof(new NewSpoofDisabler()), AAC4LessFlag(new AAC4LessFlagDisabler()), AAC5Test(new AAC5TestDisabler()), VulcanCombat(new VulcanCombatDisabler()), DCJNetWork(new DCJNetWorkDisabler()), DCJPacket(new DCJPacketDisabler()), DCJFastStop(new DCJFastStop());
 
         final DisablerModule disablerModule;
 

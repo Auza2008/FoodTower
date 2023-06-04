@@ -7,7 +7,7 @@ import cn.foodtower.api.events.World.*;
 import cn.foodtower.module.modules.world.Disabler;
 import cn.foodtower.module.modules.world.dis.DisablerModule;
 import cn.foodtower.ui.notifications.user.Notifications;
-import cn.foodtower.util.PacketUtils;
+import cn.foodtower.util.world.PacketUtils;
 import cn.foodtower.util.time.MSTimer;
 import cn.foodtower.util.time.TimeHelper;
 import cn.foodtower.util.time.TimerUtil;

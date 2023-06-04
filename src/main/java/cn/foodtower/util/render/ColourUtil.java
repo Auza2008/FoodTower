@@ -1,16 +1,11 @@
 package cn.foodtower.util.render;
 
 
-
-
 import cn.foodtower.module.modules.render.HUD;
 
 import java.awt.*;
 
 public final class ColourUtil {
-
-    private ColourUtil() {
-    }
 
     private static final int[] HEALTH_COLOURS = {
             0xFF00FF59, // Green
@@ -19,18 +14,20 @@ public final class ColourUtil {
             0xFFFF0000, // Red
             0xFF800000 // Dark-red
     };
-
     private static final int[] RAINBOW_COLOURS = {
             0xfffc6a8c, 0xfffc6ad5, 0xffda6afc, 0xff916afc, 0xff6a8cfc, 0xff6ad5fc, 0xffda6afc, 0xfffc6a8c,
     };
-
     private static final int[] CZECHIA_COLOURS = {
             0xFF11457E, 0xFF11457E, 0xFFD7141A, 0xFFD7141A, 0xFFFFFFFF, 0xFF11457E,
     };
-
     private static final int[] GERMAN_COLOURS = {
             0xFF000000, 0xFFFE0000, 0xFFFFCF00, 0xFF000000,
     };
+    public static int clientColour = Colors.getColor(0);
+    public static int secondaryColour = new Color(HUD.r.getValue().intValue(), HUD.g.getValue().intValue(), HUD.b.getValue().intValue()).getRGB();
+
+    private ColourUtil() {
+    }
 
     public static int blendHealthColours(final double progress) {
         return blendColours(HEALTH_COLOURS, progress);
@@ -78,9 +75,6 @@ public final class ColourUtil {
         return blendRainbowColours(0);
     }
 
-    public static int clientColour = Colors.getColor(0);
-
-
     public static int getClientColour() {
         return clientColour;
     }
@@ -88,8 +82,6 @@ public final class ColourUtil {
     public static void setClientColour(final int colour) {
         clientColour = colour;
     }
-
-    public static int secondaryColour = new Color(HUD.r.getValue().intValue(),HUD.g.getValue().intValue(),HUD.b.getValue().intValue()).getRGB();;
 
     public static int getSecondaryColour() {
         return secondaryColour;

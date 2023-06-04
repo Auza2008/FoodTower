@@ -18,7 +18,7 @@ import cn.foodtower.ui.gui.GuiBaned;
 import cn.foodtower.ui.gui.GuiGoodBye;
 import cn.foodtower.ui.login.AltManager;
 import cn.foodtower.util.ClientSetting;
-import cn.foodtower.util.WebUtils;
+import cn.foodtower.util.misc.WebUtils;
 import cn.foodtower.util.misc.Helper;
 import cn.foodtower.util.misc.liquidbounce.RotationUtils;
 import net.minecraft.client.Minecraft;
@@ -33,7 +33,7 @@ import java.util.Random;
 public class Client {
 
     public final static String name = "FoodTower";
-    public final static String version = "4.22";
+    public final static String version = "4.31";
     public static float Yaw;
     public static float Pitch;
     public static boolean Baned = false;

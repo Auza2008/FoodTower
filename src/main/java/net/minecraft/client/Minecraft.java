@@ -3,7 +3,6 @@ package net.minecraft.client;
 import cn.foodtower.Client;
 import cn.foodtower.api.EventBus;
 import cn.foodtower.api.events.Misc.EventKey;
-import cn.foodtower.api.events.World.EventAttack;
 import cn.foodtower.api.events.World.EventTick;
 import cn.foodtower.api.events.World.EventWorldChanged;
 import cn.foodtower.manager.ModuleManager;
@@ -1407,8 +1406,6 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
             } else {
                 switch (this.objectMouseOver.typeOfHit) {
                     case ENTITY:
-                        EventAttack ej = new EventAttack(this.objectMouseOver.entityHit, true);
-                        EventBus.getInstance().register(ej);
                         AttackOrder.sendFixedAttack(this.thePlayer, this.objectMouseOver.entityHit);
                         break;
 

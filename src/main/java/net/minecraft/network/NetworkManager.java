@@ -514,7 +514,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
             this.flushOutboundQueue();
             this.dispatchPacket(packet, null);
         } else {
-            this.outboundPacketsQueue.add(new InboundHandlerTuplePacketListener(packet, null));
+            this.outboundPacketsQueue.add(new InboundHandlerTuplePacketListener(packet, (GenericFutureListener<? extends Future<? super Void>>[])null));
         }
     }
 

@@ -255,7 +255,7 @@ public class Velocity extends Module {
     @EventHandler
     public void onEnable() {
         if (mode.getValue() == modes.Hypixel) {
-            Notifications.getManager().post("Velocity", "You ' d better try Hypixel Mode On HighPing!");
+            Notifications.getManager().post("Velocity", "You'd better try Hypixel Mode On Ground!");
         }
     }
 

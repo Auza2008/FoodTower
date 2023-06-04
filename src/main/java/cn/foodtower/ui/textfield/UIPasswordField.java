@@ -2,7 +2,7 @@ package cn.foodtower.ui.textfield;
 
 import cn.foodtower.Client;
 import cn.foodtower.fastuni.FastUniFontRenderer;
-import cn.foodtower.util.SuperLib;
+import cn.foodtower.util.misc.SuperLib;
 import cn.foodtower.util.render.Colors;
 import cn.foodtower.util.render.RenderUtil;
 import com.google.common.base.Predicate;

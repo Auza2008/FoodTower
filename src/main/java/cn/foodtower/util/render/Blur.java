@@ -18,8 +18,8 @@ import java.util.List;
 public class Blur {
     private static final Minecraft mc = Minecraft.getMinecraft();
     private static final ResourceLocation shader = new ResourceLocation("shaders/post/blurArea.json");
-    private static ShaderGroup blurShader;
     private static final List<Shader> listShaders;
+    private static ShaderGroup blurShader;
     private static Framebuffer buffer;
     private static int lastScale;
     private static int lastScaleWidth;

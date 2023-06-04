@@ -7,6 +7,10 @@ import java.util.Random;
 public class MathUtil {
     private static final Random rng;
 
+    static {
+        rng = new Random();
+    }
+
     public static float map(float x, float prev_min, float prev_max, float new_min, float new_max) {
         return (x - prev_min) / (prev_max - prev_min) * (new_max - new_min) + new_min;
     }
@@ -21,10 +25,6 @@ public class MathUtil {
 
     public static boolean contains(float x, float y, float minX, float minY, float maxX, float maxY) {
         return x > minX && x < maxX && y > minY && y < maxY;
-    }
-
-    static {
-        rng = new Random();
     }
 
     public static boolean isInteger(final String num) {

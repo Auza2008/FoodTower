@@ -11,7 +11,7 @@ import cn.foodtower.manager.ModuleManager;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.ui.font.FontLoaders;
-import cn.foodtower.util.SuperLib;
+import cn.foodtower.util.misc.SuperLib;
 import cn.foodtower.util.anim.AnimationUtil;
 import cn.foodtower.util.anim.AnimationUtils;
 import cn.foodtower.util.anim.Palette;

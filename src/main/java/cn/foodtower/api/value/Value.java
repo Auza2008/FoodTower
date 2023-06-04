@@ -6,7 +6,7 @@ public abstract class Value<V> {
     public Mode modes;
     public Option options;
     public Enum<?>[] targetModes;
-    public Boolean[] targetModesB;
+    public Boolean targetModesB;
     private V value;
 
     public Value(String displayName, String name) {
@@ -45,12 +45,7 @@ public abstract class Value<V> {
             return false;
         }
         if (targetModesB != null) {
-            for (Boolean targetModeB : targetModesB) {
-                if (targetModeB.equals(options.getValue())) {
-                    return false;
-                }
-            }
-            return true;
+            return targetModesB.equals(options.getValue());
         }
         return true;
     }

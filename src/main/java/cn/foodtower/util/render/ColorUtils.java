@@ -127,16 +127,14 @@ public class ColorUtils {
     }
 
     public static int transparency(Color color, double alpha) {
-        return new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) alpha)
-                .getRGB();
+        return new Color(color.getRed(), color.getGreen(), color.getBlue(), (int) alpha).getRGB();
     }
 
     public static Color rainbow(long offset, float fade) {
         float hue = (float) (System.nanoTime() + offset) / 1.0E10f % 1.0f;
         long color = Long.parseLong(Integer.toHexString(Color.HSBtoRGB(hue, 1.0f, 1.0f)), 16);
         Color c = new Color((int) color);
-        return new Color((float) c.getRed() / 255.0f * fade, (float) c.getGreen() / 255.0f * fade,
-                (float) c.getBlue() / 255.0f * fade, (float) c.getAlpha() / 255.0f);
+        return new Color((float) c.getRed() / 255.0f * fade, (float) c.getGreen() / 255.0f * fade, (float) c.getBlue() / 255.0f * fade, (float) c.getAlpha() / 255.0f);
     }
 
     public static float[] getRGBA(int color) {
@@ -225,12 +223,7 @@ public class ColorUtils {
         String rHex = Integer.toString(r, 16);
         String gHex = Integer.toString(g, 16);
         String bHex = Integer.toString(b, 16);
-        return (rHex.length() == 2 ? rHex
-				: "0" + rHex)
-                + (gHex.length() == 2 ? gHex
-                : "0" + gHex)
-                + (bHex.length() == 2 ? bHex
-                : "0" + bHex);
+        return (rHex.length() == 2 ? rHex : "0" + rHex) + (gHex.length() == 2 ? gHex : "0" + gHex) + (bHex.length() == 2 ? bHex : "0" + bHex);
     }
 
     public static double colorDistance(double r1, double g1, double b1, double r2, double g2, double b2) {
@@ -255,8 +248,8 @@ public class ColorUtils {
     public static boolean isDark(double r, double g, double b) {
         double dWhite = ColorUtils.colorDistance(r, g, b, 1.0, 1.0, 1.0);
         double dBlack = ColorUtils.colorDistance(r, g, b, 0.0, 0.0, 0.0);
-		return dBlack < dWhite;
-	}
+        return dBlack < dWhite;
+    }
 
     public static boolean isDark(Color color) {
         float r = (float) color.getRed() / 255.0f;
@@ -275,5 +268,10 @@ public class ColorUtils {
         float g = 0.003921569F * (float) c.getGreen();
         float b = 0.003921569F * (float) c.getBlue();
         return (new Color(r, g, b, alpha)).getRGB();
+    }
+
+    public static Color skyRainbow(int var2, float st, float bright) {
+        double v1 = Math.ceil(System.currentTimeMillis() + (var2 * 109L)) / 5;
+        return Color.getHSBColor(((float) ((v1 %= 360.0) / 360.0)) < 0.5 ? -((float) (v1 / 360.0)) : (float) (v1 / 360.0), st, bright);
     }
 }

@@ -9,7 +9,7 @@ import cn.foodtower.util.misc.AStarCustomPathFinder;
 import cn.foodtower.util.misc.CustomVec3;
 import cn.foodtower.util.misc.Helper;
 import cn.foodtower.util.time.StopWatchs;
-import cn.foodtower.util.Vec3;
+import cn.foodtower.util.math.Vec3;
 import cn.foodtower.api.EventHandler;
 
 import cn.foodtower.api.value.Mode;

@@ -3,7 +3,7 @@ package cn.foodtower.util.render;
 import cn.foodtower.libraries.tessellate.Tessellation;
 import cn.foodtower.module.modules.render.HUD;
 import cn.foodtower.module.modules.render.TargetHUD;
-import cn.foodtower.util.Vec3;
+import cn.foodtower.util.math.Vec3;
 import cn.foodtower.util.math.Vec2f;
 import cn.foodtower.util.math.Vec3f;
 import cn.foodtower.util.misc.Helper;

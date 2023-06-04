@@ -1,6 +1,6 @@
 package cn.foodtower.util.misc;
 
-import cn.foodtower.util.Vec3;
+import cn.foodtower.util.math.Vec3;
 import net.minecraft.block.BlockCactus;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockEnderChest;

@@ -1,4 +1,4 @@
-package cn.foodtower.util;
+package cn.foodtower.util.misc;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;

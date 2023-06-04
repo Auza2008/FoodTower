@@ -178,29 +178,16 @@ public class Module {
     }
 
     public void setValueDisplayable(Value<?> value, Option modes, Boolean targetMode) {
-        value.targetModesB = new Boolean[]{targetMode};
-        value.options = modes;
-    }
-
-    public void setValueDisplayable(Value<?> value, Option modes, Boolean[] targetMode) {
         value.targetModesB = targetMode;
         value.options = modes;
     }
 
     public void setValueDisplayable(Value<?>[] values, Option modes, Boolean targetMode) {
         for (Value<?> value : values) {
-            value.targetModesB = new Boolean[]{targetMode};
-            value.options = modes;
-        }
-    }
-
-    public void setValueDisplayable(Value<?>[] values, Option modes, Boolean[] targetMode) {
-        for (Value<?> value : values) {
             value.targetModesB = targetMode;
             value.options = modes;
         }
     }
-
 
     public int getColor() {
         return this.color;

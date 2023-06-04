@@ -6,6 +6,6 @@ public class ClientBrandRetriever
 {
     public static String getClientModName()
     {
-        return ClientSetting.fakeForge.getValue() ? "fml,forge" : "vanilla";
+        return (ClientSetting.fakeForge.getValue() ? "fml,forge" : "vanilla");
     }
 }

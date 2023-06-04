@@ -7,7 +7,7 @@ import cn.foodtower.module.modules.combat.AntiBot;
 import cn.foodtower.module.modules.combat.HypixelAntibot;
 import cn.foodtower.module.modules.world.Teams;
 import cn.foodtower.ui.font.FontLoaders;
-import cn.foodtower.util.SuperLib;
+import cn.foodtower.util.misc.SuperLib;
 import cn.foodtower.util.misc.Helper;
 import cn.foodtower.util.render.Colors;
 import cn.foodtower.util.render.RenderUtil;

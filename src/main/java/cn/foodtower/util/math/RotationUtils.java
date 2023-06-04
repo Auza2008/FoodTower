@@ -1,17 +1,20 @@
 package cn.foodtower.util.math;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.network.play.client.C03PacketPlayer;
-import net.minecraft.util.*;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MathHelper;
 
 public class RotationUtils {
     private static final Minecraft mc = net.minecraft.client.Minecraft.getMinecraft();
 
-    public static float[] getCustomRotation(cn.foodtower.util.Vec3 vec) {
-        cn.foodtower.util.Vec3 playerVector = new cn.foodtower.util.Vec3(mc.thePlayer.posX, mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
+    public static float[] getCustomRotation(Vec3 vec) {
+        Vec3 playerVector = new Vec3(mc.thePlayer.posX, mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
         double y = vec.yCoord - playerVector.yCoord;
         double x = vec.xCoord - playerVector.xCoord;
         double z = vec.zCoord - playerVector.zCoord;
@@ -26,7 +29,7 @@ public class RotationUtils {
         for (double xSearch = 0.15; xSearch < 0.85; xSearch += 0.1) {
             for (double ySearch = 0.15; ySearch < 1.0; ySearch += 0.1) {
                 for (double zSearch = 0.15; zSearch < 0.85; zSearch += 0.1) {
-                    cn.foodtower.util.Vec3 vec3 = new cn.foodtower.util.Vec3(bb.minX + (bb.maxX - bb.minX) * xSearch, bb.minY + (bb.maxY - bb.minY) * ySearch, bb.minZ + (bb.maxZ - bb.minZ) * zSearch);
+                    Vec3 vec3 = new Vec3(bb.minX + (bb.maxX - bb.minX) * xSearch, bb.minY + (bb.maxY - bb.minY) * ySearch, bb.minZ + (bb.maxZ - bb.minZ) * zSearch);
                     Rotation rotation = toRotationMisc(vec3, predict);
                     cn.foodtower.util.misc.scaffold.VecRotation currentVec = new cn.foodtower.util.misc.scaffold.VecRotation(vec3, rotation);
                     if (vecRotation != null && !(cn.foodtower.util.misc.scaffold.RotationUtil.getRotationDifference(currentVec.getRotation()) < cn.foodtower.util.misc.scaffold.RotationUtil.getRotationDifference(vecRotation.getRotation())))
@@ -38,8 +41,8 @@ public class RotationUtils {
         return vecRotation;
     }
 
-    public static Rotation toRotationMisc(cn.foodtower.util.Vec3 vec, boolean predict) {
-        cn.foodtower.util.Vec3 eyesPos = new cn.foodtower.util.Vec3(mc.thePlayer.posX, mc.thePlayer.getEntityBoundingBox().minY + (double) mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
+    public static Rotation toRotationMisc(Vec3 vec, boolean predict) {
+        Vec3 eyesPos = new Vec3(mc.thePlayer.posX, mc.thePlayer.getEntityBoundingBox().minY + (double) mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
         if (predict) {
             eyesPos.addVector(mc.thePlayer.motionX, mc.thePlayer.motionY, mc.thePlayer.motionZ);
         }
@@ -49,11 +52,11 @@ public class RotationUtils {
         return new Rotation(MathHelper.wrapAngleTo180_float((float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90.0f), MathHelper.wrapAngleTo180_float((float) (-Math.toDegrees(Math.atan2(diffY, Math.sqrt(diffX * diffX + diffZ * diffZ))))));
     }
 
-    public static cn.foodtower.util.Vec3 getLocation(AxisAlignedBB bb) {
+    public static Vec3 getLocation(AxisAlignedBB bb) {
         double yaw = 0.5;
         double pitch = 0.5;
         cn.foodtower.util.misc.scaffold.VecRotation rotation = searchCenter(bb, true);
-        return rotation != null ? (cn.foodtower.util.Vec3) rotation.getVec() : new cn.foodtower.util.Vec3(bb.minX + (bb.maxX - bb.minX) * yaw, bb.minY + (bb.maxY - bb.minY) * pitch, bb.minZ + (bb.maxZ - bb.minZ) * yaw);
+        return rotation != null ? (Vec3) rotation.getVec() : new Vec3(bb.minX + (bb.maxX - bb.minX) * yaw, bb.minY + (bb.maxY - bb.minY) * pitch, bb.minZ + (bb.maxZ - bb.minZ) * yaw);
     }
 
     public static float[] getBlockRotations(int x2, int y2, int z2, EnumFacing facing) {
@@ -132,23 +135,19 @@ public class RotationUtils {
         return new float[]{RotationUtils.getYawChangeToEntity(e2) + mc.thePlayer.rotationYaw, RotationUtils.getPitchChangeToEntity(e2) + mc.thePlayer.rotationPitch};
     }
 
-    public static float[] getRotations(Entity entity) {
-        double diffY;
-        if (entity == null) {
-            return null;
-        }
-        double diffX = entity.posX - mc.thePlayer.posX;
-        double diffZ = entity.posZ - mc.thePlayer.posZ;
-        if (entity instanceof EntityLivingBase) {
-            EntityLivingBase elb = (EntityLivingBase) entity;
-            diffY = elb.posY + ((double) elb.getEyeHeight() - 0.2) - (mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight());
-        } else {
-            diffY = (entity.boundingBox.minY + entity.boundingBox.maxY) / 2.0 - (mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight());
-        }
-        double dist = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
-        float yaw = (float) (Math.atan2(diffZ, diffX) * 180.0 / 3.141592653589793) - 90.0f;
-        float pitch = (float) ((-Math.atan2(diffY, dist)) * 180.0 / 3.141592653589793) - 60.0f;
+    public static float[] getRotations(double posX, double posY, double posZ) {
+        EntityPlayerSP player = mc.thePlayer;
+        double x = posX - player.posX;
+        double y = posY - (player.posY + (double) player.getEyeHeight());
+        double z = posZ - player.posZ;
+        double dist = MathHelper.sqrt_double(x * x + z * z);
+        float yaw = (float) (Math.atan2(z, x) * 180.0 / 3.141592653589793) - 90.0f;
+        float pitch = (float) (-(Math.atan2(y, dist) * 180.0 / 3.141592653589793));
         return new float[]{yaw, pitch};
+    }
+
+    public static float[] getRotationsEntity(Entity entity) {
+        return getRotations(entity.posX, entity.posY + (double) entity.getEyeHeight() - 0.4, entity.posZ);
     }
 
     public static float getYawChangeToEntity(Entity entity) {
@@ -198,11 +197,11 @@ public class RotationUtils {
     }
 
     public static float[] getRotations(Vec3 position) {
-        return RotationUtils.getRotations(mc.thePlayer.getPositionVector().addVector(0.0, mc.thePlayer.getEyeHeight(), 0.0), position);
+        return RotationUtils.getRotations((Vec3) mc.thePlayer.getPositionVector().addVector(0.0, mc.thePlayer.getEyeHeight(), 0.0), position);
     }
 
     public static float[] getRotations(Vec3 origin, Vec3 position) {
-        Vec3 difference = position.subtract(origin);
+        Vec3 difference = (Vec3) position.subtract(origin);
         double distance = difference.flat().lengthVector();
         float yaw = (float) Math.toDegrees(Math.atan2(difference.zCoord, difference.xCoord)) - 90.0f;
         float pitch = (float) (-Math.toDegrees(Math.atan2(difference.yCoord, distance)));
@@ -210,7 +209,7 @@ public class RotationUtils {
     }
 
     public static float[] getRotations(BlockPos pos) {
-        return RotationUtils.getRotations(mc.thePlayer.getPositionVector().addVector(0.0, mc.thePlayer.getEyeHeight(), 0.0), new Vec3((double) pos.getX() + 0.5, (double) pos.getY() + 0.5, (double) pos.getZ() + 0.5));
+        return RotationUtils.getRotations((Vec3) mc.thePlayer.getPositionVector().addVector(0.0, mc.thePlayer.getEyeHeight(), 0.0), new Vec3((double) pos.getX() + 0.5, (double) pos.getY() + 0.5, (double) pos.getZ() + 0.5));
     }
 
     public static float[] getBowAngles(Entity entity) {
@@ -303,5 +302,7 @@ public class RotationUtils {
         return MathHelper.wrapAngleTo180_float(-(mc.thePlayer.rotationYaw - (float) yawToEntity));
     }
 
-
+    public static boolean isVisibleFOV(final Entity e, final float fov) {
+        return ((Math.abs(getRotationsEntity(e)[0] - mc.thePlayer.rotationYaw) % 360.0f > 180.0f) ? (360.0f - Math.abs(getRotationsEntity(e)[0] - mc.thePlayer.rotationYaw) % 360.0f) : (Math.abs(getRotationsEntity(e)[0] - mc.thePlayer.rotationYaw) % 360.0f)) <= fov;
+    }
 }

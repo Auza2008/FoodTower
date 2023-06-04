@@ -1,5 +1,5 @@
 
-package cn.foodtower.util;
+package cn.foodtower.util.world;
 
 
 import cn.foodtower.api.EventHandler;

@@ -27,7 +27,7 @@ public class RotationUtil {
         for (double xSearch = 0.15; xSearch < 0.85; xSearch += 0.1) {
             for (double ySearch = 0.15; ySearch < 1.0; ySearch += 0.1) {
                 for (double zSearch = 0.15; zSearch < 0.85; zSearch += 0.1) {
-                    cn.foodtower.util.Vec3 vec3 = new cn.foodtower.util.Vec3(bb.minX + (bb.maxX - bb.minX) * xSearch, bb.minY + (bb.maxY - bb.minY) * ySearch, bb.minZ + (bb.maxZ - bb.minZ) * zSearch);
+                    cn.foodtower.util.math.Vec3 vec3 = new cn.foodtower.util.math.Vec3(bb.minX + (bb.maxX - bb.minX) * xSearch, bb.minY + (bb.maxY - bb.minY) * ySearch, bb.minZ + (bb.maxZ - bb.minZ) * zSearch);
                     Rotation rotation = toRotationMisc(vec3, predict);
                     cn.foodtower.util.misc.scaffold.VecRotation currentVec = new cn.foodtower.util.misc.scaffold.VecRotation(vec3, rotation);
                     if (vecRotation != null && !(cn.foodtower.util.misc.scaffold.RotationUtil.getRotationDifference(currentVec.getRotation()) < cn.foodtower.util.misc.scaffold.RotationUtil.getRotationDifference(vecRotation.getRotation())))
@@ -39,8 +39,8 @@ public class RotationUtil {
         return vecRotation;
     }
 
-    public static Rotation toRotationMisc(cn.foodtower.util.Vec3 vec, boolean predict) {
-        cn.foodtower.util.Vec3 eyesPos = new cn.foodtower.util.Vec3(mc.thePlayer.posX, mc.thePlayer.getEntityBoundingBox().minY + (double) mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
+    public static Rotation toRotationMisc(cn.foodtower.util.math.Vec3 vec, boolean predict) {
+        cn.foodtower.util.math.Vec3 eyesPos = new cn.foodtower.util.math.Vec3(mc.thePlayer.posX, mc.thePlayer.getEntityBoundingBox().minY + (double) mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
         if (predict) {
             eyesPos.addVector(mc.thePlayer.motionX, mc.thePlayer.motionY, mc.thePlayer.motionZ);
         }

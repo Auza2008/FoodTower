@@ -18,7 +18,7 @@ import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.ui.font.FontLoaders;
 import cn.foodtower.ui.notifications.user.Notifications;
-import cn.foodtower.util.PacketUtil;
+import cn.foodtower.util.world.PacketUtil;
 import cn.foodtower.util.entity.MoveUtils;
 import cn.foodtower.util.entity.MovementUtils;
 import cn.foodtower.util.render.RenderUtil;

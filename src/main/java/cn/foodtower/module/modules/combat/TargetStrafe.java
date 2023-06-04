@@ -12,10 +12,14 @@ import cn.foodtower.api.value.Option;
 import cn.foodtower.manager.ModuleManager;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
+import cn.foodtower.module.modules.move.CustomSpeed;
+import cn.foodtower.module.modules.move.Fly;
+import cn.foodtower.module.modules.move.Speed;
 import cn.foodtower.util.entity.MovementUtils;
 import cn.foodtower.util.entity.entitycheck.EntityValidator;
 import cn.foodtower.util.entity.entitycheck.checks.VoidCheck;
 import cn.foodtower.util.entity.entitycheck.checks.WallCheck;
+import cn.foodtower.util.math.RotationUtils;
 import cn.foodtower.util.render.RenderUtil;
 import cn.foodtower.util.render.gl.GLUtils;
 import net.minecraft.client.entity.EntityPlayerSP;
@@ -45,21 +49,6 @@ public class TargetStrafe extends Module {
         this.targetValidator = new EntityValidator();
         this.targetValidator.add(new VoidCheck());
         this.targetValidator.add(new WallCheck());
-    }
-
-    public static float[] getRotations(double posX, double posY, double posZ) {
-        EntityPlayerSP player = mc.thePlayer;
-        double x = posX - player.posX;
-        double y = posY - (player.posY + (double) player.getEyeHeight());
-        double z = posZ - player.posZ;
-        double dist = MathHelper.sqrt_double(x * x + z * z);
-        float yaw = (float) (Math.atan2(z, x) * 180.0 / 3.141592653589793) - 90.0f;
-        float pitch = (float) (-(Math.atan2(y, dist) * 180.0 / 3.141592653589793));
-        return new float[]{yaw, pitch};
-    }
-
-    public static float[] getRotationsEntity(EntityLivingBase entity) {
-        return getRotations(entity.posX, entity.posY + (double) entity.getEyeHeight() - 0.4, entity.posZ);
     }
 
     public static double getSpeed(double motionX, double motionZ) {
@@ -114,7 +103,7 @@ public class TargetStrafe extends Module {
     public void strafe(EventMove event, double moveSpeed) {
         if (KillAura.curTarget == null) return;
         EntityLivingBase target = KillAura.curTarget;
-        float rotYaw = getRotationsEntity(target)[0];
+        float rotYaw = RotationUtils.getRotationsEntity(target)[0];
         if (mc.thePlayer.getDistanceToEntity(target) <= radius.get())
             MovementUtils.setSpeed(event, moveSpeed, rotYaw, direction, 0.0);
         else MovementUtils.setSpeed(event, moveSpeed, rotYaw, direction, 1.0);
@@ -135,7 +124,7 @@ public class TargetStrafe extends Module {
         if (this.aura == null) {
             this.aura = (KillAura) ModuleManager.getModuleByClass(KillAura.class);
         }
-        return this.aura.isEnabled() && KillAura.curTarget != null && this.isEnabled() && this.targetValidator.validate(KillAura.curTarget) && (!this.space.getValue() || mc.gameSettings.keyBindJump.isKeyDown());
+        return this.aura.isEnabled() && KillAura.curTarget != null && this.isEnabled() && this.targetValidator.validate(KillAura.curTarget) && (!this.space.getValue() || mc.gameSettings.keyBindJump.isKeyDown()) && (ModuleManager.getModuleByClass(Speed.class).isEnabled() || ModuleManager.getModuleByClass(Fly.class).isEnabled() || ModuleManager.getModuleByClass(CustomSpeed.class).isEnabled());
     }
 
     @EventHandler
@@ -184,7 +173,7 @@ public class TargetStrafe extends Module {
         double y = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double) partialTicks - mc.getRenderManager().viewerPosY;
         Color color = Color.WHITE;
         double z = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double) partialTicks - mc.getRenderManager().viewerPosZ;
-        if (entity == KillAura.curTarget && ModuleManager.getModuleByName("Speed").isEnabled()) {
+        if (entity == KillAura.curTarget && (ModuleManager.getModuleByName("Speed").isEnabled() || ModuleManager.getModuleByClass(CustomSpeed.class).isEnabled() || ModuleManager.getModuleByClass(Fly.class).isEnabled())) {
             color = Client.getBlueColor(1);
         }
 

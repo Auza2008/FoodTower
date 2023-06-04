@@ -1,6 +1,5 @@
 package cn.foodtower.ui;
 
-import cn.foodtower.ui.shader.Shader;
 import cn.foodtower.util.ClientSetting;
 import cn.foodtower.util.render.RenderUtil;
 import net.minecraft.client.Minecraft;
@@ -18,9 +17,6 @@ import java.awt.*;
  * @author TIQS
  */
 public class BackGroundRenderer {
-
-    private static final Shader sha = new Shader("Waves.shader");
-
     /**
      * Start Render BackGround
      */
@@ -41,17 +37,13 @@ public class BackGroundRenderer {
         currentX += xDiff * 0.3F;
         currentY += yDiff * 0.3F;
         GlStateManager.translate(currentX / 80, currentY / 80, 0);
-        if (ClientSetting.shaderBG.getValue() && !Minecraft.getMinecraft().gameSettings.ofFastRender) {
-            sha.startShader();
-            sha.stopShader();
-        } else {
-            //Picture
-            RenderUtil.drawRect(-10, -10, ScaledResolution.getScaledWidth() + 10, ScaledResolution.getScaledHeight() + 10, Color.BLACK.getRGB());
-            String bg = ((ClientSetting.backgrounds) ClientSetting.backGround.getValue()).getFileName();
+
+        //Picture
+        RenderUtil.drawRect(-10, -10, ScaledResolution.getScaledWidth() + 10, ScaledResolution.getScaledHeight() + 10, Color.BLACK.getRGB());
+        String bg = ((ClientSetting.backgrounds) ClientSetting.backGround.getValue()).getFileName();
 //            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
 //            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-            RenderUtil.drawImage(new ResourceLocation("FoodTower/BACKGROUND/" + bg), -5, -5, (new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() + 15), (int) ((new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() + 15) / 1.74));
-        }
+        RenderUtil.drawImage(new ResourceLocation("FoodTower/BACKGROUND/" + bg), -5, -5, (new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() + 15), (int) ((new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() + 15) / 1.74));
         GL11.glPopMatrix();
     }
 }

@@ -13,7 +13,7 @@ public class Circle {
     public double lastProgress;
     public boolean complete;
 
-    public Circle(double x, double y, double rad, double speed, int key){
+    public Circle(double x, double y, double rad, double speed, int key) {
         this.x = x;
         this.y = y;
         topRadius = rad;

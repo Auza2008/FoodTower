@@ -1,7 +1,7 @@
 package cn.foodtower.ui.cloudmusic.ui;
 
 import cn.foodtower.fastuni.FontLoader;
-import cn.foodtower.util.SuperLib;
+import cn.foodtower.util.misc.SuperLib;
 import cn.foodtower.util.render.RenderUtil;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ChatAllowedCharacters;

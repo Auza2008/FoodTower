@@ -4,7 +4,7 @@ import cn.foodtower.fastuni.FontLoader;
 import cn.foodtower.ui.cloudmusic.MusicManager;
 import cn.foodtower.ui.cloudmusic.utils.CloudMusicAPI;
 import cn.foodtower.ui.cloudmusic.utils.Track;
-import cn.foodtower.util.SuperLib;
+import cn.foodtower.util.misc.SuperLib;
 import cn.foodtower.util.anim.Palette;
 import cn.foodtower.util.misc.Helper;
 import cn.foodtower.util.render.RenderUtil;
