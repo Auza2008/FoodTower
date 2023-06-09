@@ -23,8 +23,8 @@ public class VulcanCombatDisabler implements DisablerModule {
 
     @Override
     public void onPacket(EventPacketSend event) {
-        if (event.packet instanceof C0FPacketConfirmTransaction) {
-            C0FPacketConfirmTransaction packet = (C0FPacketConfirmTransaction) event.packet;
+        if (event.getPacket() instanceof C0FPacketConfirmTransaction) {
+            C0FPacketConfirmTransaction packet = (C0FPacketConfirmTransaction) event.getPacket();
             if (Math.abs((Math.abs((packet.getUid())) - Math.abs(vulTickCounterUID))) <= 4) {
                 vulTickCounterUID = packet.getUid();
                 packetBuffer.add(packet);

@@ -4,7 +4,7 @@ public abstract class Event {
 	public static double y;
 	public static double x;
 	public static double z;
-	public boolean cancelled;
+	private boolean cancelled;
 	public byte type;
 
 	public boolean isCancelled() {

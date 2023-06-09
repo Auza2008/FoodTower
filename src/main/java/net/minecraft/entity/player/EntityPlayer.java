@@ -1,5 +1,7 @@
 package net.minecraft.entity.player;
 
+import cn.foodtower.api.EventBus;
+import cn.foodtower.api.events.World.EventAttack;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.mojang.authlib.GameProfile;
@@ -1311,6 +1313,11 @@ public abstract class EntityPlayer extends EntityLivingBase
      */
     public void attackTargetEntityWithCurrentItem(Entity targetEntity)
     {
+        EventAttack attack = new EventAttack(targetEntity);
+        EventBus.getInstance().register(attack);
+        if (attack.isCancelled()) {
+            return;
+        }
         if (targetEntity.canAttackWithItem())
         {
             if (!targetEntity.hitByEntity(this))

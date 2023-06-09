@@ -1,7 +1,5 @@
 package cn.foodtower.module.modules.world;
 
-import java.awt.*;
-
 import cn.foodtower.api.EventHandler;
 import cn.foodtower.api.events.World.EventDamageBlock;
 import cn.foodtower.api.events.World.EventPacketSend;
@@ -13,9 +11,13 @@ import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
-import net.minecraft.network.play.client.*;
-import net.minecraft.potion.*;
-import net.minecraft.util.*;
+import net.minecraft.network.play.client.C07PacketPlayerDigging;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+
+import java.awt.*;
 
 public class SpeedMine extends Module {
 
@@ -106,8 +108,8 @@ public class SpeedMine extends Module {
     public void onDamageBlock(EventPacketSend event) {
 
         if (mode.get() == SpeedMineMode.MiniPacket) {
-            if (event.packet instanceof C07PacketPlayerDigging && !mc.playerController.extendedReach() && mc.playerController != null) {
-                C07PacketPlayerDigging c07PacketPlayerDigging = (C07PacketPlayerDigging) event.packet;
+            if (event.getPacket() instanceof C07PacketPlayerDigging && !mc.playerController.extendedReach() && mc.playerController != null) {
+                C07PacketPlayerDigging c07PacketPlayerDigging = (C07PacketPlayerDigging) event.getPacket();
                 if (c07PacketPlayerDigging.getStatus() == C07PacketPlayerDigging.Action.START_DESTROY_BLOCK) {
                     this.bzs = true;
                     this.blockPos = c07PacketPlayerDigging.getPosition();

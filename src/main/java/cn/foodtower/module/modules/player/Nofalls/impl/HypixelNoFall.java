@@ -30,7 +30,7 @@ public class HypixelNoFall implements NofallModule {
     @Override
     public void onPacketSend( EventPacketSend e ) {
         if(e.getPacket() instanceof C03PacketPlayer){
-            C03PacketPlayer playerPacket = (C03PacketPlayer ) e.packet;
+            C03PacketPlayer playerPacket = (C03PacketPlayer ) e.getPacket();
             if (mc.thePlayer != null && mc.thePlayer.fallDistance > 1.5)
                 playerPacket.onGround = mc.thePlayer.ticksExisted % 2 == 0;
         }

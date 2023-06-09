@@ -21,11 +21,15 @@ public class DCJHopCrit extends CriticalsModule {
 
     @Override
     public void onAttack(EventAttack e) {
+        Criticals criticals = new Criticals();
+        if (KillAura.curTarget == null) return;
+        if (criticals.canCrit(KillAura.curTarget)) {
+            mc.thePlayer.motionY = Criticals.motionYvalue.get();
+        }
     }
 
     @Override
     public void onPacketSend(EventPacketSend e) {
-
     }
 
     @Override
@@ -35,10 +39,6 @@ public class DCJHopCrit extends CriticalsModule {
 
     @Override
     public void onUpdate(EventMotionUpdate e) {
-        Criticals criticals = new Criticals();
-        if (KillAura.curTarget == null) return;
-        if (criticals.canCrit(KillAura.curTarget)) {
-            mc.thePlayer.motionY = Criticals.motionYvalue.get();
-        }
+
     }
 }

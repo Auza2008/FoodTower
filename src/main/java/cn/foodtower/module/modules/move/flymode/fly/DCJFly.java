@@ -48,7 +48,7 @@ public class DCJFly implements FlyModule {
     @Override
     public void onPacketSend(EventPacketSend e) {
         if (e.getPacket() instanceof C03PacketPlayer) {
-            C03PacketPlayer packet = (C03PacketPlayer) e.packet;
+            C03PacketPlayer packet = (C03PacketPlayer) e.getPacket();
             packet.onGround = false;
         }
     }

@@ -7,7 +7,7 @@ import cn.foodtower.api.Event;
 import net.minecraft.network.Packet;
 
 public class EventPacketSend extends Event {
-	public Packet packet;
+	private Packet packet;
 
 	public EventPacketSend(Packet packet) {
 		this.packet = packet;

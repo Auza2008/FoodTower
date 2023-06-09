@@ -22,8 +22,8 @@ public class VulcanNoFall implements NofallModule {
 
     @Override
     public void onPacketSend(EventPacketSend e) {
-        if (e.packet instanceof C03PacketPlayer) {
-            C03PacketPlayer packet = (C03PacketPlayer) e.packet;
+        if (e.getPacket() instanceof C03PacketPlayer) {
+            C03PacketPlayer packet = (C03PacketPlayer) e.getPacket();
             if (doSpoof) {
                 packet.onGround = true;
                 doSpoof = false;
