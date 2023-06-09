@@ -46,24 +46,25 @@ import java.util.List;
 public class KillAura extends Module {
     public static boolean isBlocking;
     public static EntityLivingBase curTarget;
-    public final Option autoBlock = new Option("Auto Block", true);
-    public final Option coolDown = new Option("Auto CoolDown", false);
-    public final Numbers<Double> aps = new Numbers("MaxCps", 13.0, 1.0, 20.0, 1.0);
-    public final Numbers<Double> minAps = new Numbers<>("MinCps", 10.0, 1.0, 20.0, 1.0);
-    public final cn.foodtower.api.value.Mode mode = new cn.foodtower.api.value.Mode("Mode", Mode.values(), Mode.SWITCH);
-    public final cn.foodtower.api.value.Mode autoBlockMode = new cn.foodtower.api.value.Mode("Auto Block Mode", AutoBlockMode.values(), AutoBlockMode.Packet);
-    public final Numbers<Double> switchDelay = new Numbers("Switch Delay", 3.0, 1.0, 10.0, 1.0);
-    public final cn.foodtower.api.value.Mode sortingMode = new cn.foodtower.api.value.Mode("Sorting Mode", SortingMode.values(), SortingMode.DISTANCE);
-    public final Numbers<Double> range = new Numbers("Range", 4.2, 3.0, 8.0, 0.1);
-    public final Option teams = new Option("Teams", true);
-    public final Option players = new Option("Players", true);
-    public final Option animals = new Option("Animals", false);
-    public final Option monsters = new Option("Monsters", false);
-    public final Option prioritizePlayers = new Option("Prioritize Players", true);
-    public final Option invisibles = new Option("Invisibles", false);
-    public final Option forceUpdate = new Option("Force Update", false);
-    public final Option disableOnDeath = new Option("Disable on death", true);
-    public final java.util.List<EntityLivingBase> targets = new ArrayList<>();
+    private final Option autoBlock = new Option("Auto Block", true);
+    private final Option coolDown = new Option("Auto CoolDown", false);
+    private final Option esp = new Option("ESP", true);
+    private final Numbers<Double> aps = new Numbers("MaxCps", 13.0, 1.0, 20.0, 1.0);
+    private final Numbers<Double> minAps = new Numbers<>("MinCps", 10.0, 1.0, 20.0, 1.0);
+    private final cn.foodtower.api.value.Mode mode = new cn.foodtower.api.value.Mode("Mode", Mode.values(), Mode.SWITCH);
+    private final cn.foodtower.api.value.Mode autoBlockMode = new cn.foodtower.api.value.Mode("Auto Block Mode", AutoBlockMode.values(), AutoBlockMode.Packet);
+    private final Numbers<Double> switchDelay = new Numbers("Switch Delay", 3.0, 1.0, 10.0, 1.0);
+    private final cn.foodtower.api.value.Mode sortingMode = new cn.foodtower.api.value.Mode("Sorting Mode", SortingMode.values(), SortingMode.DISTANCE);
+    private final Numbers<Double> range = new Numbers("Range", 4.2, 3.0, 8.0, 0.1);
+    private final Option teams = new Option("Teams", true);
+    private final Option players = new Option("Players", true);
+    private final Option animals = new Option("Animals", false);
+    private final Option monsters = new Option("Monsters", false);
+    private final Option prioritizePlayers = new Option("Prioritize Players", true);
+    private final Option invisibles = new Option("Invisibles", false);
+    private final Option forceUpdate = new Option("Force Update", false);
+    private final Option disableOnDeath = new Option("Disable on death", true);
+    private final java.util.List<EntityLivingBase> targets = new ArrayList<>();
     private final Option silent = new Option("SilentRotation", true);
     private final Numbers<Double> fov = new Numbers<>("Fov", 180d, 10d, 180d, 10d);
     private final Numbers<Double> rotSpeed = new Numbers<>("RotationSpeed", 180d, 1d, 180d, 1d);
@@ -79,9 +80,9 @@ public class KillAura extends Module {
     private final EntityValidator entityValidator = new EntityValidator();
     private final EntityValidator blockValidator = new EntityValidator();
     private final SmoothRotationObject smoothRotationObject = new SmoothRotationObject();
+    private final TimerUtil espTimer = new TimerUtil();
     boolean direction = true;
     double yPos;
-    private final TimerUtil espTimer = new TimerUtil();
     private float[] angles;
     private int hitTicks;
     private int targetIndex;
@@ -97,7 +98,7 @@ public class KillAura extends Module {
         this.blockValidator.add(new ConstantDistanceCheck(8.0f));
         this.blockValidator.add(entityCheck);
         this.blockValidator.add(teamsCheck);
-        addValues(this.mode, this.sortingMode, this.autoBlockMode, this.aps, minAps, this.range, attackTiming, abTiming, rotMode, rotSpeed, silent, this.switchDelay, wall, this.teams, this.players, this.prioritizePlayers, this.animals, this.monsters, this.invisibles, this.autoBlock, swing, fov, coolDown, dbtap, this.forceUpdate, this.disableOnDeath);
+        addValues(this.mode, this.sortingMode, this.autoBlockMode, this.aps, minAps, this.range, attackTiming, abTiming, rotMode, rotSpeed, silent, this.switchDelay, wall, this.teams, this.players, this.prioritizePlayers, this.animals, this.monsters, this.invisibles, esp, this.autoBlock, swing, fov, coolDown, dbtap, this.forceUpdate, this.disableOnDeath);
         setValueDisplayable(sortingMode, mode, Mode.SINGLE);
         setValueDisplayable(switchDelay, mode, Mode.SWITCH);
         setValueDisplayable(new Value[]{autoBlockMode, abTiming}, autoBlock, autoBlock.get());
@@ -165,7 +166,7 @@ public class KillAura extends Module {
                         break;
                     case HVH2:
                         angles[0] = RotationUtils.getCustomRotation(RotationUtils.getLocation(curTarget.getEntityBoundingBox()))[0];
-                        angles[1] = curTarget.getEyeHeight();
+                        angles[1] = mc.thePlayer.getEyeHeight();
                         break;
                 }
                 if (!silent.get()) {
@@ -210,7 +211,7 @@ public class KillAura extends Module {
         if (abTiming.get().equals(ABTiming.Render3D)) {
             block();
         }
-        if (curTarget != null) {
+        if (curTarget != null && esp.get()) {
             RenderUtil.drawShadow(curTarget, e.getPartialTicks(), (float) yPos, direction);
             RenderUtil.drawCircle(curTarget, e.getPartialTicks(), (float) yPos);
         }
