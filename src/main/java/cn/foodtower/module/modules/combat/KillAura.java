@@ -169,6 +169,10 @@ public class KillAura extends Module {
                     case HVH:
                         angles = RotationUtils.getCustomRotation(RotationUtils.getLocation(curTarget.getEntityBoundingBox()));
                         break;
+                    case HVH2:
+                        angles[0] = RotationUtils.getCustomRotation(RotationUtils.getLocation(curTarget.getEntityBoundingBox()))[0];
+                        angles[1] = curTarget.getEyeHeight();
+                        break;
                 }
                 if (!silent.get()) {
                     mc.thePlayer.rotationYaw = angles[0];
@@ -444,6 +448,6 @@ public class KillAura extends Module {
     }
 
     private enum Rotations {
-        Basic, Predict, HVH, None
+        Basic, Predict, HVH, HVH2, None
     }
 }
