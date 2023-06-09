@@ -297,7 +297,7 @@ public abstract class EntityLivingBase extends Entity {
      * Gets called every tick from main Entity class
      */
     public void onEntityUpdate() {
-        EventBus.getInstance().register(new EventLivingUpdate((EntityLivingBase) (Object) this));
+        EventBus.getInstance().register(new EventLivingUpdate(this));
 
         this.prevSwingProgress = this.swingProgress;
         super.onEntityUpdate();
@@ -1180,7 +1180,7 @@ public abstract class EntityLivingBase extends Entity {
         if (this.isPotionActive(Potion.digSpeed)) {
             return 6 - (1 + this.getActivePotionEffect(Potion.digSpeed).getAmplifier());
         } else {
-            return this.isPotionActive(Potion.digSlowdown) ? 6 + (1 + this.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2 : (ModuleManager.getModByClass(Animations.class).isEnabled() ? 6 + (Animations.SwingSpeed.getValue().intValue()) * 2 : 6);
+            return this.isPotionActive(Potion.digSlowdown) ? 6 + (1 + this.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2 : (ModuleManager.getModByClass(Animations.class).isEnabled() ? 6 + (Animations.SwingSpeed.get().intValue()) * 2 : 6);
         }
     }
 

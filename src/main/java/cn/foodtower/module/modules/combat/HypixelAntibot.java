@@ -88,9 +88,9 @@ public class HypixelAntibot extends Module {
 
     @EventHandler
     public void onUpdate(final EventPreUpdate event) {
-        this.setSuffix(this.mode.getValue());
+        this.setSuffix(this.mode.get());
         //if (delayTimer.hasReached(500L)) {
-        if (this.mode.getValue() == AntiMode.Hypixel) {
+        if (this.mode.get() == AntiMode.Hypixel) {
             if (timer.hasReached(1000L)) {
                 Bots.clear();
                 timer.reset();
@@ -124,7 +124,7 @@ public class HypixelAntibot extends Module {
                             continue;
                         }
                         if (!getTabPlayerList().contains(ent) && mc.thePlayer.ticksExisted > 100) {
-                            if (remove.getValue()) {
+                            if (remove.get()) {
                                 mc.theWorld.removeEntity(ent);
                                 bots++;
                             } else if (!RemoveBots.contains(ent)) {
@@ -138,7 +138,7 @@ public class HypixelAntibot extends Module {
                 Notifications.getManager().post("Watchdog Killer", "移除了" + bots + "个假人 =ω=", Notifications.Type.INFO);
                 bots = 0;
             }
-        } else if (this.mode.getValue() == AntiMode.Huayuting) {
+        } else if (this.mode.get() == AntiMode.Huayuting) {
             for (Map.Entry<String, Long> entry : botMap.entrySet()) {
                 if (entry.getValue() <= (System.currentTimeMillis())) {
                     botMap.remove(entry.getKey());
@@ -151,7 +151,7 @@ public class HypixelAntibot extends Module {
 
     @EventHandler
     public void onChat(EventChat e) {
-        if (this.mode.getValue() == AntiMode.Huayuting) {
+        if (this.mode.get() == AntiMode.Huayuting) {
             if (e.getMessage().contains("杀死了") && e.getMessage().startsWith("起床战争")) {
                 String[] names = e.getMessage().split("杀死了");
                 if (names.length <= 2) {
@@ -168,12 +168,12 @@ public class HypixelAntibot extends Module {
     }
 
     public boolean isInGodMode(final Entity entity) {
-        return this.isEnabled() && this.mode.getValue() == AntiMode.Hypixel && entity.ticksExisted <= 25;
+        return this.isEnabled() && this.mode.get() == AntiMode.Hypixel && entity.ticksExisted <= 25;
     }
 
     public boolean isBots(Entity entity) {
         if (isEnabled()) {
-            if (mode.getValue() == AntiMode.Hypixel) {
+            if (mode.get() == AntiMode.Hypixel) {
                 if (Bots.contains(entity)) {
                     return true;
                 }
@@ -194,7 +194,7 @@ public class HypixelAntibot extends Module {
                 }
                 return true;
             }
-            if (mode.getValue().equals(AntiMode.Huayuting)) {
+            if (mode.get().equals(AntiMode.Huayuting)) {
                 if ((entity.getEntityBoundingBox().maxX - entity.getEntityBoundingBox().minX) < 0.21) {
                     return true;
                 }
@@ -202,7 +202,7 @@ public class HypixelAntibot extends Module {
                     return true;
                 }
             }
-            if (this.mode.getValue() == AntiMode.Mineplex) {
+            if (this.mode.get() == AntiMode.Mineplex) {
                 return !entity.onGround;
             }
         }

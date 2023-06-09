@@ -22,11 +22,11 @@ public class HytJump extends Module {
         timer.reset();
         if (!ModuleManager.getModuleByClass( Blink.class).isEnabled())ModuleManager.getModuleByClass(Blink.class).setEnabled(true);
         mc.timer.timerSpeed = 2.0f;
-        mc.thePlayer.motionY = motionY.getValue();
+        mc.thePlayer.motionY = motionY.get();
     }
     @EventHandler
     public void onUpdate( EventPreUpdate e){
-        if(timer.hasReached(DisableDelay.getValue())){
+        if(timer.hasReached(DisableDelay.get())){
             setEnabled(false);
         }
     }

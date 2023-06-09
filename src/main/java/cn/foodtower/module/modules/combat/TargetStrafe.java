@@ -81,10 +81,10 @@ public class TargetStrafe extends Module {
             if (mc.thePlayer.isCollidedHorizontally) {
                 this.switchDirection();
             }
-            if (mc.gameSettings.keyBindLeft.isPressed() && directionKeys.getValue()) {
+            if (mc.gameSettings.keyBindLeft.isPressed() && directionKeys.get()) {
                 this.direction = 1;
             }
-            if (mc.gameSettings.keyBindRight.isPressed() && directionKeys.getValue()) {
+            if (mc.gameSettings.keyBindRight.isPressed() && directionKeys.get()) {
                 this.direction = -1;
             }
         }
@@ -104,10 +104,9 @@ public class TargetStrafe extends Module {
         if (KillAura.curTarget == null) return;
         EntityLivingBase target = KillAura.curTarget;
         float rotYaw = RotationUtils.getRotationsEntity(target)[0];
-        if (mc.thePlayer.getDistanceToEntity(target) <= radius.get())
-            MovementUtils.setSpeed(event, moveSpeed, rotYaw, direction, 0.0);
-        else MovementUtils.setSpeed(event, moveSpeed, rotYaw, direction, 1.0);
-
+//        if (mc.thePlayer.getDistanceToEntity(target) <= radius.get())
+//            MovementUtils.setSpeed(event, moveSpeed, rotYaw, direction, 0.0);
+//        else MovementUtils.setSpeed(event, moveSpeed, rotYaw, direction, 1.0);
         if (behind.get()) {
             double xPos = target.posX + -Math.sin(Math.toRadians(target.rotationYaw)) * -2;
             double zPos = target.posZ + Math.cos(Math.toRadians(target.rotationYaw)) * -2;
@@ -124,7 +123,7 @@ public class TargetStrafe extends Module {
         if (this.aura == null) {
             this.aura = (KillAura) ModuleManager.getModuleByClass(KillAura.class);
         }
-        return this.aura.isEnabled() && KillAura.curTarget != null && this.isEnabled() && this.targetValidator.validate(KillAura.curTarget) && (!this.space.getValue() || mc.gameSettings.keyBindJump.isKeyDown()) && (ModuleManager.getModuleByClass(Speed.class).isEnabled() || ModuleManager.getModuleByClass(Fly.class).isEnabled() || ModuleManager.getModuleByClass(CustomSpeed.class).isEnabled());
+        return this.aura.isEnabled() && KillAura.curTarget != null && this.isEnabled() && this.targetValidator.validate(KillAura.curTarget) && (!this.space.get() || mc.gameSettings.keyBindJump.isKeyDown()) && (ModuleManager.getModuleByClass(Speed.class).isEnabled() || ModuleManager.getModuleByClass(Fly.class).isEnabled() || ModuleManager.getModuleByClass(CustomSpeed.class).isEnabled());
     }
 
     @EventHandler
@@ -143,17 +142,17 @@ public class TargetStrafe extends Module {
 
     @EventHandler
     public final void onRender3D(EventRender3D event) {
-        switch ((EspMode) Esp.getValue()) {
+        switch ((EspMode) Esp.get()) {
             case Round: {
                 if (canStrafe()) {
-                    drawCircle(KillAura.curTarget, event.getPartialTicks(), radius.getValue());
+                    drawCircle(KillAura.curTarget, event.getPartialTicks(), radius.get());
                 }
                 break;
             }
             case Polygon: {
                 if (canStrafe()) {
-                    drawPolygon(KillAura.curTarget, event.getPartialTicks(), radius.getValue(), 2.0f, new Color(255, 255, 255));
-                    //drawPolygon(KillAura.target, event.getPartialTicks(), Radius.getValue(),2.5f,new Color(0,0,0));
+                    drawPolygon(KillAura.curTarget, event.getPartialTicks(), radius.get(), 2.0f, new Color(255, 255, 255));
+                    //drawPolygon(KillAura.target, event.getPartialTicks(), Radius.get(),2.5f,new Color(0,0,0));
                 }
                 break;
             }

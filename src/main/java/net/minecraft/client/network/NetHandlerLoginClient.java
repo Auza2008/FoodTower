@@ -54,7 +54,7 @@ public class NetHandlerLoginClient implements INetHandlerLoginClient
         if (this.mc.getCurrentServerData() != null && this.mc.getCurrentServerData().isOnLAN())
         {
             try {
-                if (ClientSetting.clMode.getValue())
+                if (ClientSetting.clMode.get())
                     CLUtil.joinServer(this.mc.getSession().getProfile(), this.mc.getSession().getToken(), s1);
                 else
                     this.getSessionService().joinServer(this.mc.getSession().getProfile(), this.mc.getSession().getToken(), s1);
@@ -68,7 +68,7 @@ public class NetHandlerLoginClient implements INetHandlerLoginClient
         {
             try
             {
-                if (ClientSetting.clMode.getValue())
+                if (ClientSetting.clMode.get())
                     CLUtil.joinServer(this.mc.getSession().getProfile(), this.mc.getSession().getToken(), s1);
                 else
                     this.getSessionService().joinServer(this.mc.getSession().getProfile(), this.mc.getSession().getToken(), s1);

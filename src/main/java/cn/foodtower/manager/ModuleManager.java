@@ -88,6 +88,7 @@ public class ModuleManager implements Manager {
         modules.add(new AutoPot());
         modules.add(new Criticals());
         modules.add(new TPAura());
+        modules.add(new PlayerDebug());
         modules.add(new Reach());
         modules.add(new Regen());
         modules.add(new SuperKnockback());
@@ -196,7 +197,7 @@ public class ModuleManager implements Manager {
             return -Integer.compare(char1, char0);
         });
 
-        BetterFpsConfig.getConfig().algorithm = ((ClientSetting.betterfps) ClientSetting.betterFPS.getValue()).get();
+        BetterFpsConfig.getConfig().algorithm = ((ClientSetting.betterfps) ClientSetting.betterFPS.get()).get();
         EventBus.getInstance().register(this);
         loaded = true;
     }

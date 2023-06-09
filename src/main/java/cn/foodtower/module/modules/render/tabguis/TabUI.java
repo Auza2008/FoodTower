@@ -112,7 +112,7 @@ public class TabUI implements Manager {
         for (Value<? extends Object> val : this.selectedModule.getValues()) {
             int off;
             int n = off = val instanceof Option ? 6
-                    : Helper.mc.fontRendererObj.getStringWidth(String.format(" \u00a77%s", val.getValue().toString()))
+                    : Helper.mc.fontRendererObj.getStringWidth(String.format(" \u00a77%s", val.get().toString()))
                     + 6;
             if (this.maxValue > Helper.mc.fontRendererObj.getStringWidth(val.getDisplayName().toUpperCase()) + off)
                 continue;
@@ -130,16 +130,16 @@ public class TabUI implements Manager {
         if (!ModuleManager.getModuleByClass(TabGui.class).isEnabled()) {
             return;
         }
-        if (TabGui.modes.getValue().equals(TabGui.tabguimode.Novoline)) {
+        if (TabGui.modes.get().equals(TabGui.tabguimode.Novoline)) {
             return;
         }
         CFontRenderer font = FontLoaders.GoogleSans16;
         CFontRenderer icon = FontLoaders.NovICON28;
-        int categoryY = 22 + TabGui.y.getValue().intValue();
+        int categoryY = 22 + TabGui.y.get().intValue();
         int moduleY = categoryY + 20;
         int valueY = categoryY;
-        int color1 = !HUD.logomode.getValue().equals(HUD.logomodeE.Dark_Distance) ? new Color(234, 234, 234).getRGB() : new Color(15, 15, 15).getRGB();
-        int color2 = !HUD.logomode.getValue().equals(HUD.logomodeE.Dark_Distance) ? new Color(108, 108, 108).getRGB() : new Color(230, 230, 230).getRGB();
+        int color1 = !HUD.logomode.get().equals(HUD.logomodeE.Dark_Distance) ? new Color(234, 234, 234).getRGB() : new Color(15, 15, 15).getRGB();
+        int color2 = !HUD.logomode.get().equals(HUD.logomodeE.Dark_Distance) ? new Color(108, 108, 108).getRGB() : new Color(230, 230, 230).getRGB();
         RenderUtil.drawRoundedRect(2, categoryY + 13, 65, categoryY - 2 + 18 * ModuleType.values().length,
                 3f, color1);
         //FontLoaders.googlesans20.drawString("Mixed", 13, 8, color2);
@@ -234,11 +234,11 @@ public class TabUI implements Manager {
                         }
                         if (val instanceof Option) {
                             font.drawString(val.getDisplayName(), this.maxModule - 27, valueY + 26,
-                                    (Boolean) val.getValue() ? new Color(47, 154, 241).getRGB()
+                                    (Boolean) val.get() ? new Color(47, 154, 241).getRGB()
                                             : color2);
                         } else {
                             String toRender = String.format("%s: \u00a77%s", val.getDisplayName(),
-                                    val.getValue().toString());
+                                    val.get().toString());
                             font.drawString(toRender, this.maxModule - 27, valueY + 20 + 6,
                                     color2);
                         }
@@ -257,7 +257,7 @@ public class TabUI implements Manager {
 
     @EventHandler
     private void onKey(EventKey e) {
-        if (!TabGui.modes.getValue().equals(TabGui.tabguimode.Distance)) {
+        if (!TabGui.modes.get().equals(TabGui.tabguimode.Distance)) {
             return;
         }
         if (!Helper.mc.gameSettings.showDebugInfo) {
@@ -351,10 +351,10 @@ public class TabUI implements Manager {
                         }
                         case 3: {
                             if (this.selectedValue instanceof Option) {
-                                this.selectedValue.setValue(!((Boolean) this.selectedValue.getValue()));
+                                this.selectedValue.setValue(!((Boolean) this.selectedValue.get()));
                             } else if (this.selectedValue instanceof Numbers) {
                                 Numbers value = (Numbers) this.selectedValue;
-                                double inc = (Double) value.getValue();
+                                double inc = (Double) value.get();
                                 inc += value.getIncrement().doubleValue();
                                 if ((inc = MathUtil.toDecimalLength(inc, 1)) > (Double) value.getMaximum()) {
                                     inc = (Double) ((Numbers) this.selectedValue).getMinimum();
@@ -362,7 +362,7 @@ public class TabUI implements Manager {
                                 this.selectedValue.setValue(inc);
                             } else if (this.selectedValue instanceof Mode) {
                                 Mode theme = (Mode) this.selectedValue;
-                                Enum current = theme.getValue();
+                                Enum current = theme.get();
                                 int next = current.ordinal() + 1 >= theme.getModes().length ? 0 : current.ordinal() + 1;
                                 this.selectedValue.setValue(theme.getModes()[next]);
                             }
@@ -398,10 +398,10 @@ public class TabUI implements Manager {
                         }
                         case 3: {
                             if (this.selectedValue instanceof Option) {
-                                this.selectedValue.setValue(!((Boolean) this.selectedValue.getValue()));
+                                this.selectedValue.setValue(!((Boolean) this.selectedValue.get()));
                             } else if (this.selectedValue instanceof Numbers) {
                                 Numbers value = (Numbers) this.selectedValue;
-                                double inc = (Double) value.getValue();
+                                double inc = (Double) value.get();
                                 inc -= value.getIncrement().doubleValue();
                                 if ((inc = MathUtil.toDecimalLength(inc, 1)) < (Double) value.getMinimum()) {
                                     inc = (Double) ((Numbers) this.selectedValue).getMaximum();
@@ -409,7 +409,7 @@ public class TabUI implements Manager {
                                 this.selectedValue.setValue(inc);
                             } else if (this.selectedValue instanceof Mode) {
                                 Mode theme = (Mode) this.selectedValue;
-                                Enum current = theme.getValue();
+                                Enum current = theme.get();
                                 int next = current.ordinal() - 1 < 0 ? theme.getModes().length - 1 : current.ordinal() - 1;
                                 this.selectedValue.setValue(theme.getModes()[next]);
                             }
@@ -418,7 +418,7 @@ public class TabUI implements Manager {
                                 int off;
                                 int n = off = val instanceof Option ? 6
                                         : Minecraft.getMinecraft().fontRendererObj
-                                        .getStringWidth(String.format(" \u00a77%s", val.getValue().toString())) + 6;
+                                        .getStringWidth(String.format(" \u00a77%s", val.get().toString())) + 6;
                                 if (this.maxValue > Minecraft.getMinecraft().fontRendererObj
                                         .getStringWidth(val.getDisplayName().toUpperCase()) + off)
                                     continue;

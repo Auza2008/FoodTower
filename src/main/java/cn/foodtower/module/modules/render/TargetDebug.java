@@ -2,6 +2,7 @@ package cn.foodtower.module.modules.render;
 
 import cn.foodtower.api.EventHandler;
 import cn.foodtower.api.events.Render.EventRender2D;
+import cn.foodtower.api.value.Numbers;
 import cn.foodtower.manager.ModuleManager;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
@@ -14,11 +15,15 @@ import net.minecraft.entity.EntityLivingBase;
 import java.awt.*;
 
 public class TargetDebug extends Module {
+    private final Numbers<Double> x = new Numbers<>("X", 5d, 0d, 300d, 1d);
+    private final Numbers<Double> y = new Numbers<>("Y", 20d, 0d, 300d, 1d);
+
     public TargetDebug() {
         super("TargetDebug", null, ModuleType.Render);
+        addValues(x, y);
     }
 
-    private static double getSpeed(Entity e) {
+    private double getSpeed(Entity e) {
         final double motionX = e.motionX;
         final double n = motionX * e.motionX;
         final double motionZ = e.motionZ;
@@ -27,7 +32,7 @@ public class TargetDebug extends Module {
 
     @EventHandler
     private void on2D(EventRender2D e) {
-        DrawUtil.roundedRect(5, 20, 165, 160, 8, new Color(0, 0, 0, 160));
+        DrawUtil.roundedRect(x.get(), y.get(), 165, 160, 8, new Color(0, 0, 0, 120));
         float x = 5;
         float y = 25;
         if (ModuleManager.getModuleByClass(KillAura.class).isEnabled() && KillAura.curTarget != null) {

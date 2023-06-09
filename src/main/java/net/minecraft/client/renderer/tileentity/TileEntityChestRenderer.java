@@ -151,7 +151,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntit
             modelchest.chestLid.rotateAngleX = -(f * (float) Math.PI / 2.0F);
             if (ModuleManager.getModuleByClass(ChestESP.class).isEnabled() && te.hasWorldObj()) {
                 ChestESP chestESP = new ChestESP();
-                if (chestESP.modeValue.getValue().equals(ChestESP.Modes.Outline)) {
+                if (chestESP.modeValue.get().equals(ChestESP.Modes.Outline)) {
                     float[] hexColor = chestESP.getColorForTileEntity();
                     int color = chestESP.toRGBAHex(hexColor[0] / 255.0f, hexColor[1] / 255.0f, hexColor[2] / 255.0f, 1.0f);
                     this.simpleChest.renderAll();

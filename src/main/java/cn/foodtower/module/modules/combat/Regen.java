@@ -21,13 +21,13 @@ public class Regen extends Module {
 
     @EventHandler
     public void onMotion(EventPreUpdate event) {
-        setSuffix(packet.getValue());
-        if (delay.isDelayComplete(regendelay.getValue().intValue())) {
+        setSuffix(packet.get());
+        if (delay.isDelayComplete(regendelay.get().intValue())) {
             if (!ModuleManager.getModuleByName("Fly").isEnabled()) {
                 if (!(mc.thePlayer.fallDistance > 2.0F)) {
                     if (mc.thePlayer.getHealth() < mc.thePlayer.getMaxHealth() && mc.thePlayer.getFoodStats().getFoodLevel() >= 19) {
                         if (mc.thePlayer.onGround) {
-                            for (int i = 0; (double) i < this.packet.getValue(); ++i) {
+                            for (int i = 0; (double) i < this.packet.get(); ++i) {
                                 if (mc.thePlayer.onGround) {
                                     mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer());
                                     delay.reset();

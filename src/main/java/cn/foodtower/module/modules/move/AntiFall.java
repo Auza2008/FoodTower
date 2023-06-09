@@ -46,13 +46,13 @@ public class AntiFall extends Module {
 			needBlink = false;
 			timer.reset();
 		}
-		int dist = distance.getValue().intValue();
+		int dist = distance.get().intValue();
 		if (mc.thePlayer.fallDistance >= dist && !mc.thePlayer.capabilities.allowFlying) {
-			if (!((Boolean) Void.getValue()) || !isBlockUnder()) {
+			if (!((Boolean) Void.get()) || !isBlockUnder()) {
 				if (!saveMe) {
 					saveMe = true;
 					needBlink = true;
-					switch ((AntiMode) mode.getValue()) {
+					switch ((AntiMode) mode.get()) {
 						case Basic:
 							PacketUtils.sendPacket(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX,
 									mc.thePlayer.posY + 11, mc.thePlayer.posZ, false));
@@ -62,10 +62,10 @@ public class AntiFall extends Module {
 							mc.thePlayer.fallDistance = 0F;
 							break;
 						case Hypixel:
-							mc.getNetHandler().getNetworkManager().sendPacket(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + distance.getValue().intValue() + 3 + RandomUtils.nextDouble(0.07, 0.09), mc.thePlayer.posZ, true));
+							mc.getNetHandler().getNetworkManager().sendPacket(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + distance.get().intValue() + 3 + RandomUtils.nextDouble(0.07, 0.09), mc.thePlayer.posZ, true));
 							break;
 					}
-					if( scaffoldvalue.getValue()){
+					if( scaffoldvalue.get()){
 						ModuleManager.getModByClass( Scaffold.class ).setEnabled( true );
 					}
 					timer.reset();

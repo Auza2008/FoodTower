@@ -40,18 +40,18 @@ public class ItemEsp extends Module {
             GL11.glDisable(3553);
             GL11.glDisable(2929);
             GL11.glDepthMask(false);
-            if (outlinedboundingBox.getValue() && heigh.getValue() == height.High) {
+            if (outlinedboundingBox.get() && heigh.get() == height.High) {
                 RenderUtil.drawOutlinedBoundingBox(new AxisAlignedBB(x - .2D, y - 0.05, z - .2D, x + .2D, y - 0.45d, z + .2D));
             }
-            if (outlinedboundingBox.getValue() && heigh.getValue() == height.Low) {
+            if (outlinedboundingBox.get() && heigh.get() == height.Low) {
                 RenderUtil.drawOutlinedBoundingBox(new AxisAlignedBB(x - .2D, y - 0.3d, z - .2D, x + .2D, y - 0.4d, z + .2D));
             }
             GL11.glColor4f(1, 1, 1, 0.15f);
-            if (boundingBox.getValue() && heigh.getValue() == height.High) {
+            if (boundingBox.get() && heigh.get() == height.High) {
                 RenderUtil.drawBoundingBox(new AxisAlignedBB(x - .2D, y - 0.05, z - .2D, x + .2D, y - 0.45d, z + .2D));
             }
             GL11.glColor4f(1, 1, 1, 0.15f);
-            if (boundingBox.getValue() && heigh.getValue() == height.Low) {
+            if (boundingBox.get() && heigh.get() == height.Low) {
                 RenderUtil.drawBoundingBox(new AxisAlignedBB(x - .2D, y - 0.3d, z - .2D, x + .2D, y - 0.4d, z + .2D));
             }
             GL11.glEnable(3553);

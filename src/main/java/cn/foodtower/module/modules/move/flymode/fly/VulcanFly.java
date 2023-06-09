@@ -13,7 +13,7 @@ public class VulcanFly implements FlyModule {
 
     @Override
     public void onEnabled() {
-        if (mc.thePlayer.onGround && Fly.vulcan_canClipValue.getValue()) {
+        if (mc.thePlayer.onGround && Fly.vulcan_canClipValue.get()) {
             clip(0f, -0.1f);
             waitFlag = true;
             canGlide = false;

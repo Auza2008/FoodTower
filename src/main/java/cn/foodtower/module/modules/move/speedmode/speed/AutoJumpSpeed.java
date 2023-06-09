@@ -30,7 +30,7 @@ public class AutoJumpSpeed extends SpeedModule {
             }
 
             if (shoulddamageboost && !timer.hasTimePassed(500)) {
-                setSpeed(Math.max(Speed.dmspeed.getValue().doubleValue() + (double) MoveUtils.getSpeedEffect() * 0.1, this.getBaseMoveSpeed()));
+                setSpeed(Math.max(Speed.dmspeed.get().doubleValue() + (double) MoveUtils.getSpeedEffect() * 0.1, this.getBaseMoveSpeed()));
                 mc.timer.timerSpeed = 1.0f;
                 System.out.println("damageboost");
             } else {

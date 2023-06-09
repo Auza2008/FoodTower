@@ -23,9 +23,9 @@ public abstract class Value<V> {
         return this.name;
     }
 
-    public V getValue() {
-        return this.value;
-    }
+//    public V getValue() {
+//        return this.value;
+//    }
 
     public void setValue(V value) {
         this.value = value;
@@ -38,14 +38,14 @@ public abstract class Value<V> {
     public boolean isDisplayable() {
         if (targetModes != null) {
             for (Enum<?> targetMode : targetModes) {
-                if (targetMode.equals(modes.getValue())) {
+                if (targetMode.equals(modes.get())) {
                     return true;
                 }
             }
             return false;
         }
         if (targetModesB != null) {
-            return targetModesB.equals(options.getValue());
+            return targetModesB.equals(options.get());
         }
         return true;
     }

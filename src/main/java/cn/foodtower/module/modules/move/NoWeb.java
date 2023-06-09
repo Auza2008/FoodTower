@@ -21,7 +21,7 @@ public class NoWeb extends Module {
 
     @EventHandler
     public void onJump( EventJump e){
-        if (mode.getValue().equals(Modes.AAC4)) {
+        if (mode.get().equals(Modes.AAC4)) {
             e.setCancelled(true);
         }
     }
@@ -37,7 +37,7 @@ public class NoWeb extends Module {
         }
 
 
-        switch ((Modes) mode.getValue()) {
+        switch ((Modes) mode.get()) {
             case None:
                 mc.thePlayer.isInWeb = false;
                 break;

@@ -44,13 +44,13 @@ public class Crosshair extends Module {
     @EventHandler(priority = Priority.LOW)
     public void onGui(final EventRender2D e) {
         gaps = AnimationUtils.animate(isMoving() ? 4 : 0, gaps, 20f / Minecraft.getDebugFPS());
-        final int red = r.getValue().intValue();
-        final int green = g.getValue().intValue();
-        final int blue = b.getValue().intValue();
+        final int red = r.get().intValue();
+        final int green = g.get().intValue();
+        final int blue = b.get().intValue();
         final int alph = 255;
-        final double gap = Crosshair.GAP.getValue();
-        final double width = this.WIDTH.getValue();
-        final double size = Crosshair.SIZE.getValue();
+        final double gap = Crosshair.GAP.get();
+        final double width = this.WIDTH.get();
+        final double size = Crosshair.SIZE.get();
         final ScaledResolution scaledRes = new ScaledResolution(Crosshair.mc);
         RenderUtil.rectangleBordered(ScaledResolution.getScaledWidth() / 2f - width, ScaledResolution.getScaledHeight() / 2f - gap - size - (gaps), ScaledResolution.getScaledWidth() / 2f + 1.0f + width, ScaledResolution.getScaledHeight() / 2f - gap - (gaps), 0.5, Colors2.getColor(red, green, blue, alph), new Color(25, 25, 25, alph).getRGB());
         RenderUtil.rectangleBordered(ScaledResolution.getScaledWidth() / 2f - width, ScaledResolution.getScaledHeight() / 2f + gap + 1.0 + (gaps) - 0.15, ScaledResolution.getScaledWidth() / 2f + 1.0f + width, ScaledResolution.getScaledHeight() / 2f + 1 + gap + size + (gaps) - 0.15, 0.5, Colors2.getColor(red, green, blue, alph), new Color(25, 25, 25, alph).getRGB());
@@ -59,7 +59,7 @@ public class Crosshair extends Module {
     }
 
     public boolean isMoving() {
-        if (this.DYNAMIC.getValue()) {
+        if (this.DYNAMIC.get()) {
             final Minecraft mc = Crosshair.mc;
             if (!mc.thePlayer.isCollidedHorizontally) {
                 final Minecraft mc2 = Crosshair.mc;

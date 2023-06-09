@@ -46,7 +46,7 @@ extends Module {
             event.setCancelled(true);
 
             synchronized(packetsMap) {
-                packetsMap.put(packet, System.currentTimeMillis() + RandomUtil.randomDelay(minDelay.getValue().intValue(),maxDelay.getValue().intValue()));
+                packetsMap.put(packet, System.currentTimeMillis() + RandomUtil.randomDelay(minDelay.get().intValue(),maxDelay.get().intValue()));
             }
         }
     }

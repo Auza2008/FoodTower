@@ -26,7 +26,7 @@ public class ClickGui extends GuiScreen implements GuiYesNoCallback {
             ? ModuleManager.getModulesInType(currentModuleType).get(0)
             : null;
     public static float startX = 200, startY = 85;
-    private final int ClientColors = cn.foodtower.module.modules.render.ClickGui.CustomColor.getValue() ? Client.getClientColor() : Client.getBBlueColor();
+    private final int ClientColors = cn.foodtower.module.modules.render.ClickGui.CustomColor.get() ? Client.getClientColor() : Client.getBBlueColor();
     public int moduleStart = 0;
     public int valueStart = 0;
     public Opacity opacity = new Opacity(0);
@@ -219,7 +219,7 @@ public class ClickGui extends GuiScreen implements GuiYesNoCallback {
                 if (value instanceof Option) {
                     x = startX + 190.0f;
                     Client.FontLoaders.GoogleSans16.drawString(value.getName(), startX + 185, mY + 3, new Color(136, 136, 136).getRGB());
-                    if ((Boolean) value.getValue()) {
+                    if ((Boolean) value.get()) {
                         RenderUtil.drawRoundedRect(x + 65.0f, mY, x + 75.0f, mY + 10.0f, 4, new Color(66, 134, 245).getRGB());
                         RenderUtil.drawCircle2(x + 70.0f, mY + 5.0f, 4.0, new Color(255, 255, 255).getRGB());
                     } else {
@@ -233,7 +233,7 @@ public class ClickGui extends GuiScreen implements GuiYesNoCallback {
                             this.mouse = true;
                         }
                         if (this.mouse) {
-                            value.setValue(!((Boolean) value.getValue()));
+                            value.setValue(!((Boolean) value.get()));
                             this.mouse = false;
                         }
                     }
@@ -250,7 +250,7 @@ public class ClickGui extends GuiScreen implements GuiYesNoCallback {
                     if (this.isStringHovered(x - 10.0f, mY + 6.0f, x + 75.0f, mY + 22.0f, mouseX, mouseY)) {
                         if (Mouse.isButtonDown(0) && !this.previousmouse) {
                             mc.thePlayer.playSound("random.click", 1.0f, 1.0f);
-                            Enum current = ((Mode) value).getValue();
+                            Enum current = ((Mode) value).get();
                             int next = current.ordinal() + 1 >= ((Mode) value).getModes().length ? 0 : current.ordinal() + 1;
                             value.setValue(((Mode) value).getModes()[next]);
                             this.previousmouse = true;
@@ -264,7 +264,7 @@ public class ClickGui extends GuiScreen implements GuiYesNoCallback {
                 if (value instanceof Numbers) {
                     x = startX + 190;
                     double render = 68.0F
-                            * (((Number) value.getValue()).floatValue() - ((Numbers) value).getMinimum().floatValue())
+                            * (((Number) value.get()).floatValue() - ((Numbers) value).getMinimum().floatValue())
                             / (((Numbers) value).getMaximum().floatValue()
                             - ((Numbers) value).getMinimum().floatValue());
                     RenderUtil.drawRect(x - 11, mY + 7, (float) ((double) x + 70), mY + 8,
@@ -272,7 +272,7 @@ public class ClickGui extends GuiScreen implements GuiYesNoCallback {
                     RenderUtil.drawRect(x - 11, mY + 7, (float) ((double) x + render + 0.5D), mY + 8,
                             (new Color(88, 182, 255, (int) opacity.getOpacity())).getRGB());
                     RenderUtil.circle((float) (x + render + 2D), mY + 7, 2, new Color(0, 144, 255).getRGB());
-                    font.drawString(value.getName() + ": " + value.getValue(), startX + 185, mY - 3, new Color(136, 136, 136).getRGB());
+                    font.drawString(value.getName() + ": " + value.get(), startX + 185, mY - 3, new Color(136, 136, 136).getRGB());
                     if (!Mouse.isButtonDown(0)) {
                         this.previousmouse = false;
                     }

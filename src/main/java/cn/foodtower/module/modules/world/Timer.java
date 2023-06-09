@@ -21,7 +21,7 @@ extends Module {
         super.addValues(Speed);
     }
     public void onEnable() {
-    	mc.timer.timerSpeed = Speed.getValue().floatValue();
+    	mc.timer.timerSpeed = Speed.get().floatValue();
         super.onEnable();
     }
 

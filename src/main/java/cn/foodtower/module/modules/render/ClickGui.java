@@ -20,7 +20,7 @@ public class ClickGui extends Module {
 	public void onEnable() {
 
         new SoundFxPlayer().playSound(SoundFxPlayer.SoundType.ClickGuiOpen,-4);
-	    switch ((modes)mode.getValue()){
+	    switch ((modes)mode.get()){
             case Nov:{
                 mc.displayGuiScreen(new ClickUi());
                 break;

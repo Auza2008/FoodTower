@@ -546,7 +546,7 @@ public class GuiIngame extends Gui {
         }
 
         int j1 = arraylist1.size() * this.getFontRenderer().FONT_HEIGHT;
-        int k1 = (int) (ScaledResolution.getScaledHeight() / 2 + j1 / 3 + SetScoreboard.Y.getValue());
+        int k1 = (int) (ScaledResolution.getScaledHeight() / 2 + j1 / 3 + SetScoreboard.Y.get());
         byte b0 = 3;
         int j = ScaledResolution.getScaledWidth() - i - b0;
         int k = 0;
@@ -563,35 +563,35 @@ public class GuiIngame extends Gui {
             int i1 = ScaledResolution.getScaledWidth() - b0 + 2;
             boolean rainbow = false;
             if (ModuleManager.getModuleByClass(SetScoreboard.class).isEnabled()) {
-                if (!SetScoreboard.fastbord.getValue()) {
-                    drawRect(j - 2 - SetScoreboard.X.getValue(), l, i1 - SetScoreboard.X.getValue(), l + this.getFontRenderer().FONT_HEIGHT, 1342177280);
+                if (!SetScoreboard.fastbord.get()) {
+                    drawRect(j - 2 - SetScoreboard.X.get(), l, i1 - SetScoreboard.X.get(), l + this.getFontRenderer().FONT_HEIGHT, 1342177280);
                 }
-                if (!SetScoreboard.noanyfont.getValue()) {
+                if (!SetScoreboard.noanyfont.get()) {
                     if (s1.contains(".com") || s1.contains(".cn") || s1.contains(".net")) {
                         s1 = "FoodTower.icu";
                         rainbow = true;
                     }
                     if (rainbow) {
-                        RenderUtil.renderStringWave(s1, (int) (j - SetScoreboard.X.getValue()), l);
+                        RenderUtil.renderStringWave(s1, (int) (j - SetScoreboard.X.get()), l);
                     } else {
-                        this.getFontRenderer().drawStringWithShadow(s1, (int) (j - SetScoreboard.X.getValue()), l, 553648127);
+                        this.getFontRenderer().drawStringWithShadow(s1, (int) (j - SetScoreboard.X.get()), l, 553648127);
                     }
                 }
-                if (!SetScoreboard.Norednumber.getValue()) {
-                    this.getFontRenderer().drawStringWithShadow(s2, (int) (i1 - this.getFontRenderer().getStringWidth(s2) - SetScoreboard.X.getValue()), l, 553648127);
+                if (!SetScoreboard.Norednumber.get()) {
+                    this.getFontRenderer().drawStringWithShadow(s2, (int) (i1 - this.getFontRenderer().getStringWidth(s2) - SetScoreboard.X.get()), l, 553648127);
                 }
                 if (k == arraylist1.size()) {
                     String s3 = objective.getDisplayName();
                     //System.out.println("S3:            " + s3);
-                    if (!SetScoreboard.fastbord.getValue()) {
-                        drawRect(j - 2 - SetScoreboard.X.getValue(), l - this.getFontRenderer().FONT_HEIGHT - 1, i1 - SetScoreboard.X.getValue(), l - 1, 1610612736);
-                        drawRect(j - 2 - SetScoreboard.X.getValue(), l - 1, i1 - SetScoreboard.X.getValue(), l, 1342177280);
+                    if (!SetScoreboard.fastbord.get()) {
+                        drawRect(j - 2 - SetScoreboard.X.get(), l - this.getFontRenderer().FONT_HEIGHT - 1, i1 - SetScoreboard.X.get(), l - 1, 1610612736);
+                        drawRect(j - 2 - SetScoreboard.X.get(), l - 1, i1 - SetScoreboard.X.get(), l, 1342177280);
                     }
-                    if (!SetScoreboard.noServername.getValue()) {
+                    if (!SetScoreboard.noServername.get()) {
                         if (s3.contains("梦世界") && s3.contains("花雨庭")) {
                             s3 = EnumChatFormatting.UNDERLINE + "" + EnumChatFormatting.AQUA + EnumChatFormatting.BOLD + "FoodTower";
                         }
-                        this.getFontRenderer().drawStringWithShadow(s3, (int) (j + i / 2 - this.getFontRenderer().getStringWidth(s3) / 2 - SetScoreboard.X.getValue()), l - this.getFontRenderer().FONT_HEIGHT, 553648127);
+                        this.getFontRenderer().drawStringWithShadow(s3, (int) (j + i / 2 - this.getFontRenderer().getStringWidth(s3) / 2 - SetScoreboard.X.get()), l - this.getFontRenderer().FONT_HEIGHT, 553648127);
                     }
                 }
             }

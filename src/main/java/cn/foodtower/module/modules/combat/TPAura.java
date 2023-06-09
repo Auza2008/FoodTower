@@ -83,7 +83,7 @@ public class TPAura extends Module {
     @Override
     public void onDisable() {
 //        if (mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItem() instanceof ItemSword
-//                && AUTOBLOCK.getValue() && mc.thePlayer.isBlocking()){
+//                && AUTOBLOCK.get() && mc.thePlayer.isBlocking()){
 //            KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(),false);
 //            mc.playerController.onStoppedUsingItem(mc.thePlayer);
 //        }
@@ -91,7 +91,7 @@ public class TPAura extends Module {
 
     @EventHandler
     public void onTick(EventTick e) {
-        if (TPMode.getValue() == Modes.ETB) {
+        if (TPMode.get() == Modes.ETB) {
             ++this.ticks;
             ++this.tpdelay;
             if (this.ticks >= 20 - this.speed()) {
@@ -110,18 +110,18 @@ public class TPAura extends Module {
                 }
             }
         } else {
-            float delayValue = (20f / CPS.getValue().floatValue()) * 50f;
+            float delayValue = (20f / CPS.get().floatValue()) * 50f;
             targets = getTargets();
             if (cps.check(delayValue)) {
                 if (targets.size() > 0) {
-//                    if ((mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItem() instanceof ItemSword)&&AUTOBLOCK.getValue()) {
+//                    if ((mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItem() instanceof ItemSword)&&AUTOBLOCK.get()) {
 //                        KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
 //                        if (mc.playerController.sendUseItem(this.mc.thePlayer, this.mc.theWorld, this.mc.thePlayer.inventory.getCurrentItem())) {
 //                            mc.getItemRenderer().resetEquippedProgress2();
 //                        }
 //                    }
                     test = new ArrayList[50];
-                    for (int i = 0; i < (targets.size() > MAXT.getValue() ? MAXT.getValue() : targets.size()); i++) {
+                    for (int i = 0; i < (targets.size() > MAXT.get() ? MAXT.get() : targets.size()); i++) {
                         EntityLivingBase T = targets.get(i);
                         Vec3 topFrom = new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
                         Vec3 to = new Vec3(T.posX, T.posY, T.posZ);
@@ -141,7 +141,7 @@ public class TPAura extends Module {
                     cps.reset();
                 } else {
 //                    if (mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItem() instanceof ItemSword
-//                            && AUTOBLOCK.getValue() && mc.thePlayer.isBlocking()){
+//                            && AUTOBLOCK.get() && mc.thePlayer.isBlocking()){
 //                        KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(),false);
 //                        mc.playerController.onStoppedUsingItem(mc.thePlayer);
 //                    }
@@ -152,27 +152,27 @@ public class TPAura extends Module {
 
     @EventHandler
     public void onRender2D(EventRender2D e) {
-        this.setSuffix(TPMode.getValue());
+        this.setSuffix(TPMode.get());
     }
 
     @EventHandler
     public void onUpdate(EventPreUpdate event) {
-        if (TPMode.getValue() == Modes.ETB) {
+        if (TPMode.get() == Modes.ETB) {
         }
     }
 
     @EventHandler
     public void onRender(EventRender3D event) {
-        if (!targets.isEmpty() && ESP.getValue()) {
+        if (!targets.isEmpty() && ESP.get()) {
             if (targets.size() > 0) {
-                for (int i = 0; i < (targets.size() > MAXT.getValue() ? MAXT.getValue() : targets.size()); i++) {
+                for (int i = 0; i < (targets.size() > MAXT.get() ? MAXT.get() : targets.size()); i++) {
                     int color = targets.get(i).hurtResistantTime > 15 ? SuperLib.reAlpha(Colors.RED.c, 0.2f) : SuperLib.reAlpha(Colors.AQUA.c, 0.2f);
                     drawESP(targets.get(i), color);
                 }
 
             }
         }
-        if (!path.isEmpty() && PATHESP.getValue()) {
+        if (!path.isEmpty() && PATHESP.get()) {
             for (int i = 0; i < targets.size(); i++) {
                 try {
                     if (test != null)
@@ -252,9 +252,9 @@ public class TPAura extends Module {
 
 
     boolean validEntity(EntityLivingBase entity) {
-        double range = RANGE.getValue();
-        boolean players = PLAYERS.getValue();
-        boolean animals = ANIMALS.getValue();
+        double range = RANGE.get();
+        boolean players = PLAYERS.get();
+        boolean animals = ANIMALS.get();
 
         if ((mc.thePlayer.isEntityAlive())
                 && !(entity instanceof EntityPlayerSP)) {
@@ -281,10 +281,10 @@ public class TPAura extends Module {
                                 && player.getHealth() == 0.0) {
                             return false;
                         } else if (Teams.isOnSameTeam(player)
-                                && TEAMS.getValue()) {
+                                && TEAMS.get()) {
                             return false;
                         } else if (player.isInvisible()
-                                && !INVISIBLES.getValue()) {
+                                && !INVISIBLES.get()) {
                             return false;
                         } else return !FriendManager.isFriend(player.getName());
                     }

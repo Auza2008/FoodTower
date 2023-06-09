@@ -1,7 +1,7 @@
 package cn.foodtower.module.modules.move;
 
 import cn.foodtower.api.EventHandler;
-import cn.foodtower.api.events.Misc.EventCollideWithBlock;
+import cn.foodtower.api.events.Misc.EventBlockBB;
 import cn.foodtower.api.events.World.EventPacketSend;
 import cn.foodtower.api.events.World.EventPreUpdate;
 import cn.foodtower.api.value.Mode;
@@ -72,8 +72,8 @@ public class Jesus extends Module {
 
 	@EventHandler
 	public void onPre( EventPreUpdate e) {
-		this.setSuffix(this.mode.getValue());
-		if (this.mode.getValue() == JMode.Dolphin) {
+		this.setSuffix(this.mode.get());
+		if (this.mode.get() == JMode.Dolphin) {
 			if (mc.thePlayer.isInWater() && !mc.thePlayer.isSneaking() && this.shouldJesus()) {
 				mc.thePlayer.motionY = 0.3;
 				mc.timer.timerSpeed = timer1 - (rheight >= 1 ? Math.abs(1-(float)rheight)*((float)timer1*0.85f) : 0);
@@ -106,7 +106,7 @@ public class Jesus extends Module {
 					this.wasWater = true;
 				}
 			}
-		} else if (this.mode.getValue() == JMode.Solid) {
+		} else if (this.mode.get() == JMode.Solid) {
 			if (PlayerUtil.isInLiquid() && !this.mc.thePlayer.isSneaking()
 					&& !this.mc.gameSettings.keyBindJump.isPressed()) {
 				this.mc.thePlayer.motionY = 0.05105;
@@ -187,7 +187,7 @@ public class Jesus extends Module {
 
 	@EventHandler
 	public void onPacket( EventPacketSend e) {
-		if (this.mode.getValue() == JMode.Solid) {
+		if (this.mode.get() == JMode.Solid) {
 			if (e.getPacket() instanceof C03PacketPlayer && this.canJeboos() && PlayerUtil.isOnLiquid()) {
 				C03PacketPlayer packet = (C03PacketPlayer) e.getPacket();
 				packet.y = this.mc.thePlayer.ticksExisted % 2 == 0 ? packet.y + 0.01 : packet.y - 0.01;
@@ -196,8 +196,8 @@ public class Jesus extends Module {
 	}
 
 	@EventHandler
-	public void onBB( EventCollideWithBlock e) {
-		if (this.mode.getValue() == JMode.Solid) {
+	public void onBB( EventBlockBB e) {
+		if (this.mode.get() == JMode.Solid) {
 			if (e.getBlock() instanceof BlockLiquid && this.canJeboos()) {
 				e.setBoundingBox(new AxisAlignedBB(e.getPos().getX(), e.getPos().getY(), e.getPos().getZ(),
 						(double) e.getPos().getX() + 1.0, (double) e.getPos().getY() + 1.0,

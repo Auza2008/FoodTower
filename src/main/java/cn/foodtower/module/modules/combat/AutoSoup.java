@@ -46,8 +46,8 @@ public class AutoSoup extends Module {
     @EventHandler
     public void onEvent(EventPreUpdate event) {
         int soupSlot = getSoupFromInventory();
-        if (soupSlot != -1 && mc.thePlayer.getHealth() < (HEALTH.getValue().floatValue())
-                && timer.delay(DELAY.getValue().floatValue())) {
+        if (soupSlot != -1 && mc.thePlayer.getHealth() < (HEALTH.get().floatValue())
+                && timer.delay(DELAY.get().floatValue())) {
             swap(getSoupFromInventory(), 6);
             mc.getNetHandler().addToSendQueue(new C09PacketHeldItemChange(6));
             mc.getNetHandler().addToSendQueue(new C08PacketPlayerBlockPlacement(mc.thePlayer.inventory.getCurrentItem()));

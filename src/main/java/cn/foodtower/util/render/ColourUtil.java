@@ -24,7 +24,7 @@ public final class ColourUtil {
             0xFF000000, 0xFFFE0000, 0xFFFFCF00, 0xFF000000,
     };
     public static int clientColour = Colors.getColor(0);
-    public static int secondaryColour = new Color(HUD.r.getValue().intValue(), HUD.g.getValue().intValue(), HUD.b.getValue().intValue()).getRGB();
+    public static int secondaryColour = new Color(HUD.r.get().intValue(), HUD.g.get().intValue(), HUD.b.get().intValue()).getRGB();
 
     private ColourUtil() {
     }

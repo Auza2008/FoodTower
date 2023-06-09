@@ -25,11 +25,11 @@ public class Sprint extends Module {
 
     @EventHandler
     private void onUpdate(EventPreUpdate event) {
-        if (!MovementUtils.isMoving() || mc.thePlayer.isSneaking() || (blindnessValue.getValue() && mc.thePlayer.isPotionActive(Potion.blindness)) || (foodValue.getValue() && !(mc.thePlayer.getFoodStats().getFoodLevel() > 6.0F || mc.thePlayer.capabilities.allowFlying)) || (checkServerSide.getValue() && (mc.thePlayer.onGround || !checkServerSideGround.getValue()) && !allDirectionsValue.getValue())) {
+        if (!MovementUtils.isMoving() || mc.thePlayer.isSneaking() || (blindnessValue.get() && mc.thePlayer.isPotionActive(Potion.blindness)) || (foodValue.get() && !(mc.thePlayer.getFoodStats().getFoodLevel() > 6.0F || mc.thePlayer.capabilities.allowFlying)) || (checkServerSide.get() && (mc.thePlayer.onGround || !checkServerSideGround.get()) && !allDirectionsValue.get())) {
             mc.thePlayer.setSprinting(false);
             return;
         }
-        if (allDirectionsValue.getValue() || mc.thePlayer.movementInput.moveForward >= 0.8F)
+        if (allDirectionsValue.get() || mc.thePlayer.movementInput.moveForward >= 0.8F)
             mc.thePlayer.setSprinting(true);
     }
 }

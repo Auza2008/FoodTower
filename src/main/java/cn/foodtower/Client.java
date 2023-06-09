@@ -28,17 +28,18 @@ import org.lwjgl.opengl.Display;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Random;
 
 public class Client {
 
     public final static String name = "FoodTower";
-    public final static String version = "4.31";
+    public final static String version = "4.4";
     public static float Yaw;
     public static float Pitch;
     public static boolean Baned = false;
     public static String author = "Auza, LittleGod";
-    public static String releaseNumber = "052123";
+    public static String releaseNumber = "060823";
     public static String releaseType = Main.isbeta ? "Beta" : "Release";
     public static String releaseVersion = releaseType + version + "_" + releaseNumber;
     public static String ClientVersion = version;
@@ -68,7 +69,7 @@ public class Client {
     }
 
     static {
-        String[] userStr = new String[]{"User", "Dimples_1337", "Ho3", "Skidder", "蔡徐坤"};
+        String[] userStr = new String[]{"User", "Dimples_1337", "Ho3", "Skidder"};
         userName = userStr[new Random().nextInt(userStr.length)];
     }
 
@@ -89,17 +90,17 @@ public class Client {
     }
 
     public static int getClientColor() {
-        java.awt.Color color = new java.awt.Color(HUD.r.getValue().intValue(), HUD.g.getValue().intValue(), HUD.b.getValue().intValue());
+        java.awt.Color color = new java.awt.Color(HUD.r.get().intValue(), HUD.g.get().intValue(), HUD.b.get().intValue());
         return color.getRGB();
     }
 
     public static int getClientColor(int Alpha) {
-        java.awt.Color color = new java.awt.Color(HUD.r.getValue().intValue(), HUD.g.getValue().intValue(), HUD.b.getValue().intValue(), Alpha);
+        java.awt.Color color = new java.awt.Color(HUD.r.get().intValue(), HUD.g.get().intValue(), HUD.b.get().intValue(), Alpha);
         return color.getRGB();
     }
 
     public static java.awt.Color getClientColor(boolean RGBcolor) {
-        java.awt.Color color = new java.awt.Color(HUD.r.getValue().intValue(), HUD.g.getValue().intValue(), HUD.b.getValue().intValue());
+        java.awt.Color color = new java.awt.Color(HUD.r.get().intValue(), HUD.g.get().intValue(), HUD.b.get().intValue());
         return color;
     }
 
@@ -120,7 +121,7 @@ public class Client {
             StringBuilder values = new StringBuilder();
             for (Module m : ModuleManager.getModules()) {
                 for (Value v : m.getValues()) {
-                    values.append(String.format("%s:%s:%s%s", m.getName(), v.getName(), v.getValue(), System.lineSeparator()));
+                    values.append(String.format("%s:%s:%s%s", m.getName(), v.getName(), v.get(), System.lineSeparator()));
                 }
             }
             FileManager.save("Values.txt", values.toString(), false);
@@ -142,7 +143,7 @@ public class Client {
 
             }
             FileManager.save("Hidden.txt", Hiddens.toString(), false);
-            FileManager.save("NeedBlur.txt", String.valueOf(ClientSetting.enableBlur.getValue()), false);
+            FileManager.save("NeedBlur.txt", String.valueOf(ClientSetting.enableBlur.get()), false);
         }
     }
 
@@ -157,7 +158,7 @@ public class Client {
 
     public void initiate() {
         words = word;
-        if (releaseType == "Beta") {
+        if (Objects.equals(releaseType, "Beta")) {
             title = name + " " + ClientVersion + " Beta | " + words;
         } else {
             title = name + " " + ClientVersion + " | " + words;

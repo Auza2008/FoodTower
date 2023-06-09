@@ -17,7 +17,7 @@ public class AirLadder extends Module {
     boolean enable = true;
     @EventHandler
     public void onUpdate( EventMotionUpdate e){
-        if (hytBypass.getValue()) {
+        if (hytBypass.get()) {
             setSuffix("HuaYuTing" + " " + (enable ? "On" : "Off"));
             if (timer.hasReached(2000)) {
                 enable = !enable;

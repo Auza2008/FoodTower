@@ -42,21 +42,21 @@ public class SpeedMine extends Module {
     @EventHandler
     private void onUpdate(EventDamageBlock e) {
 
-        if (SendPacket.getValue())
+        if (SendPacket.get())
             mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK, e.getpos(), e.getfac()));
-        if (Pot.getValue().intValue() != 0) {
-            mc.thePlayer.addPotionEffect(new PotionEffect(Potion.digSpeed.getId(), 100, Pot.getValue().intValue() - 1));
+        if (Pot.get().intValue() != 0) {
+            mc.thePlayer.addPotionEffect(new PotionEffect(Potion.digSpeed.getId(), 100, Pot.get().intValue() - 1));
         } else {
             mc.thePlayer.removePotionEffect(Potion.digSpeed.getId());
         }
-        if (mode.getValue() == SpeedMineMode.Packet) {
+        if (mode.get() == SpeedMineMode.Packet) {
             mc.playerController.blockHitDelay = 0;
-            if (mc.playerController.curBlockDamageMP >= SpeedMine.speed.getValue()) {
+            if (mc.playerController.curBlockDamageMP >= SpeedMine.speed.get()) {
                 mc.playerController.curBlockDamageMP = 1.0f;
             }
 
         }
-        if (mode.getValue() == SpeedMineMode.NewPacket2) {
+        if (mode.get() == SpeedMineMode.NewPacket2) {
             if (mc.playerController.curBlockDamageMP == 0.2f) {
                 mc.playerController.curBlockDamageMP += 0.1f;
             }
@@ -73,7 +73,7 @@ public class SpeedMine extends Module {
         }
 
 
-        if (mode.getValue() == SpeedMineMode.NewPacket) {
+        if (mode.get() == SpeedMineMode.NewPacket) {
             if (mc.playerController.curBlockDamageMP == 0.1f) {
                 mc.playerController.curBlockDamageMP += 0.1f;
             }
@@ -84,7 +84,7 @@ public class SpeedMine extends Module {
                 mc.playerController.curBlockDamageMP += 0.1f;
             }
         }
-        if (this.mode.getValue() == SpeedMineMode.ReMix) {
+        if (this.mode.get() == SpeedMineMode.ReMix) {
             if (mc.playerController.extendedReach()) {
                 mc.playerController.blockHitDelay = 0;
             }
@@ -105,7 +105,7 @@ public class SpeedMine extends Module {
     @EventHandler
     public void onDamageBlock(EventPacketSend event) {
 
-        if (mode.getValue() == SpeedMineMode.MiniPacket) {
+        if (mode.get() == SpeedMineMode.MiniPacket) {
             if (event.packet instanceof C07PacketPlayerDigging && !mc.playerController.extendedReach() && mc.playerController != null) {
                 C07PacketPlayerDigging c07PacketPlayerDigging = (C07PacketPlayerDigging) event.packet;
                 if (c07PacketPlayerDigging.getStatus() == C07PacketPlayerDigging.Action.START_DESTROY_BLOCK) {
@@ -120,7 +120,7 @@ public class SpeedMine extends Module {
                 }
             }
         }
-        if (mode.getValue()== SpeedMineMode.ReMix && event.getPacket() instanceof C07PacketPlayerDigging && !mc.playerController.extendedReach() && mc.playerController != null) {
+        if (mode.get()== SpeedMineMode.ReMix && event.getPacket() instanceof C07PacketPlayerDigging && !mc.playerController.extendedReach() && mc.playerController != null) {
             final C07PacketPlayerDigging c07PacketPlayerDigging = (C07PacketPlayerDigging)event.getPacket();
             if (c07PacketPlayerDigging.getStatus() == C07PacketPlayerDigging.Action.START_DESTROY_BLOCK) {
                 this.bzs = true;
@@ -140,8 +140,8 @@ public class SpeedMine extends Module {
 
     @EventHandler
     public void onUpdate(EventPreUpdate event) {
-        this.setSuffix(mode.getValue());
-        if (mode.getValue() == SpeedMineMode.MiniPacket) {
+        this.setSuffix(mode.get());
+        if (mode.get() == SpeedMineMode.MiniPacket) {
             if (mc.playerController.extendedReach()) {
                 mc.playerController.blockHitDelay = 0;
             } else if (this.bzs) {
@@ -155,7 +155,7 @@ public class SpeedMine extends Module {
                 }
             }
         }
-        if (this.mode.getValue() == SpeedMineMode.ReMix) {
+        if (this.mode.get() == SpeedMineMode.ReMix) {
             if (mc.playerController.extendedReach()) {
                 mc.playerController.blockHitDelay = 0;
             } else if (this.bzs) {

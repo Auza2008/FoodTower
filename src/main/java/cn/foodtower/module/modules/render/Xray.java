@@ -58,25 +58,25 @@ public class Xray extends Module {
         if (!(block instanceof BlockOre)) {
             return false;
         }
-        if (block.equals(Blocks.diamond_ore) && DiamondOre.getValue()) {
+        if (block.equals(Blocks.diamond_ore) && DiamondOre.get()) {
             return true;
         }
-        if (block.equals(Blocks.gold_ore) && GoldOre.getValue()) {
+        if (block.equals(Blocks.gold_ore) && GoldOre.get()) {
             return true;
         }
-        if (block.equals(Blocks.lapis_ore) && LapisOre.getValue()) {
+        if (block.equals(Blocks.lapis_ore) && LapisOre.get()) {
             return true;
         }
-        if (block.equals(Blocks.iron_ore) && IronOre.getValue()) {
+        if (block.equals(Blocks.iron_ore) && IronOre.get()) {
             return true;
         }
-        if (block.equals(Blocks.emerald_ore) && EmeraldOre.getValue()) {
+        if (block.equals(Blocks.emerald_ore) && EmeraldOre.get()) {
             return true;
         }
-        if (block.equals(Blocks.redstone_ore) && RedStoneOre.getValue()) {
+        if (block.equals(Blocks.redstone_ore) && RedStoneOre.get()) {
             return true;
         }
-        return block.equals(Blocks.coal_ore) && CoalOre.getValue();
+        return block.equals(Blocks.coal_ore) && CoalOre.get();
     }
 
     private static float getSize(double x, double y, double z) {
@@ -162,7 +162,7 @@ public class Xray extends Module {
 
     @EventHandler
     private void on3DRender(EventRender3D e) {
-        if (Tracers.getValue()) {
+        if (Tracers.get()) {
             for (BlockPos blockPos : renderList) {
                 double[] arrd = new double[3];
                 double posX = blockPos.getX() - RenderManager.renderPosX;
@@ -185,7 +185,7 @@ public class Xray extends Module {
 
     @EventHandler
     public void onEventUpdate(EventPreUpdate e) {
-        int range = Dis.getValue().intValue();
+        int range = Dis.get().intValue();
         if (timerUtil.hasReached(1000L) && !(blockFinderThread != null && blockFinderThread.isAlive())) {
             blockFinderThread = new Thread(() -> {
                 blockList.clear();
@@ -193,28 +193,28 @@ public class Xray extends Module {
                     for (int y = range; y > -range; y--) {
                         for (int z = -range; z < range; z++) {
                             BlockPos pos = new BlockPos(mc.thePlayer.posX + (double) x, mc.thePlayer.posY + (double) y, mc.thePlayer.posZ + (double) z);
-                            if (CAVE.getValue() && !oreTest(pos, 2d)) {
+                            if (CAVE.get() && !oreTest(pos, 2d)) {
                                 continue;
                             }
-                            if (mc.theWorld.getBlockState(pos).getBlock().equals(Blocks.diamond_ore) && DiamondOre.getValue()) {
+                            if (mc.theWorld.getBlockState(pos).getBlock().equals(Blocks.diamond_ore) && DiamondOre.get()) {
                                 blockList.add(pos);
                             }
-                            if (mc.theWorld.getBlockState(pos).getBlock().equals(Blocks.iron_ore) && IronOre.getValue()) {
+                            if (mc.theWorld.getBlockState(pos).getBlock().equals(Blocks.iron_ore) && IronOre.get()) {
                                 blockList.add(pos);
                             }
-                            if (mc.theWorld.getBlockState(pos).getBlock().equals(Blocks.gold_ore) && GoldOre.getValue()) {
+                            if (mc.theWorld.getBlockState(pos).getBlock().equals(Blocks.gold_ore) && GoldOre.get()) {
                                 blockList.add(pos);
                             }
-                            if (mc.theWorld.getBlockState(pos).getBlock().equals(Blocks.coal_ore) && CoalOre.getValue()) {
+                            if (mc.theWorld.getBlockState(pos).getBlock().equals(Blocks.coal_ore) && CoalOre.get()) {
                                 blockList.add(pos);
                             }
-                            if (mc.theWorld.getBlockState(pos).getBlock().equals(Blocks.redstone_ore) && RedStoneOre.getValue()) {
+                            if (mc.theWorld.getBlockState(pos).getBlock().equals(Blocks.redstone_ore) && RedStoneOre.get()) {
                                 blockList.add(pos);
                             }
-                            if (mc.theWorld.getBlockState(pos).getBlock().equals(Blocks.lapis_ore) && LapisOre.getValue()) {
+                            if (mc.theWorld.getBlockState(pos).getBlock().equals(Blocks.lapis_ore) && LapisOre.get()) {
                                 blockList.add(pos);
                             }
-                            if (mc.theWorld.getBlockState(pos).getBlock().equals(Blocks.emerald_ore) && EmeraldOre.getValue()) {
+                            if (mc.theWorld.getBlockState(pos).getBlock().equals(Blocks.emerald_ore) && EmeraldOre.get()) {
                                 blockList.add(pos);
                             }
                         }
@@ -230,7 +230,7 @@ public class Xray extends Module {
 
     @EventHandler
     private void DrawTags(EventRender3D e) {
-        if (Tags.getValue()) {
+        if (Tags.get()) {
             for (BlockPos pos : renderList) {
                 double posX = pos.getX() - RenderManager.renderPosX;
                 double posY = pos.getY() - RenderManager.renderPosY;
@@ -266,7 +266,7 @@ public class Xray extends Module {
         float ULY2 = RenderUtil.height() / 3f;
 
         float last = 2;
-        if (Coord.getValue()) {
+        if (Coord.get()) {
             List<String> aaa = new ArrayList<>();
             for (BlockPos pos : renderList) {
                 if (!aaa.contains(pos.getX() + ", " + pos.getY() + ", " + pos.getZ())) {
@@ -290,7 +290,7 @@ public class Xray extends Module {
 
     @EventHandler
     public void onEvent(EventRender3D event) {
-        if (ESP.getValue()) {
+        if (ESP.get()) {
             for (BlockPos blockPos : renderList) {
                 LiquidRender.drawBlockBox(blockPos,
                         getColor(blockPos), true);
@@ -329,6 +329,6 @@ public class Xray extends Module {
     }
 
     public int getOpacity() {
-        return OPACITY.getValue().intValue();
+        return OPACITY.get().intValue();
     }
 }

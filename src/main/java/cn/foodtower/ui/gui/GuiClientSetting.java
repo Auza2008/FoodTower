@@ -119,7 +119,7 @@ public class GuiClientSetting extends GuiScreen {
             if (value instanceof Numbers) {
                 float x = startX + 320;
                 double render = 74.0F
-                        * (((Number) value.getValue()).floatValue() - ((Numbers) value).getMinimum().floatValue())
+                        * (((Number) value.get()).floatValue() - ((Numbers) value).getMinimum().floatValue())
                         / (((Numbers) value).getMaximum().floatValue()
                         - ((Numbers) value).getMinimum().floatValue());
                 RenderUtil.drawFastRoundedRect(x - 35, mY + 53, x + 75 - 35, mY + 56,
@@ -128,7 +128,7 @@ public class GuiClientSetting extends GuiScreen {
                 //Gui.drawFilledCircle((float) ((double) x + render + 2D) + 3, mY + 53, 1.5, Client.getBlueColor(), 5);
                 font.drawStringWithShadow(value.getName(), startX + 100, mY + 50 + 3,
                         new Color(255, 255, 255, alpha).getRGB());
-                font.drawStringWithShadow(value.getValue().toString(), x - 38 - font.getStringWidth(value.getValue().toString()), mY + 50f + 2.5f,
+                font.drawStringWithShadow(value.get().toString(), x - 38 - font.getStringWidth(value.get().toString()), mY + 50f + 2.5f,
                         new Color(255, 255, 255, alpha).getRGB());
                 if (!Mouse.isButtonDown(0)) {
                     this.previousmouse = false;
@@ -156,7 +156,7 @@ public class GuiClientSetting extends GuiScreen {
                 float x = startX + 270;
                 int xx = 65;
                 int x2x = 65;
-                ((Option) value).anim = AnimationUtil.moveUD(((Option) value).anim, (boolean) value.getValue() ? 5f : 0f, 18f / Minecraft.getDebugFPS(), 7f / Minecraft.getDebugFPS());
+                ((Option) value).anim = AnimationUtil.moveUD(((Option) value).anim, (boolean) value.get() ? 5f : 0f, 18f / Minecraft.getDebugFPS(), 7f / Minecraft.getDebugFPS());
                 font.drawStringWithShadow(value.getName(), startX + 100, mY + 50 + 3,
                         new Color(255, 255, 255, alpha).getRGB());
                 GLUtils.startSmooth();
@@ -172,7 +172,7 @@ public class GuiClientSetting extends GuiScreen {
                     }
 
                     if (this.mouse) {
-                        value.setValue(!(boolean) value.getValue());
+                        value.setValue(!(boolean) value.get());
                         this.mouse = false;
                     }
                 }
@@ -193,7 +193,7 @@ public class GuiClientSetting extends GuiScreen {
                 RenderUtil.drawRoundedRect(x + 75 - 13 - 35, mY + 45, x + 75 - 35, mY + 65, 1, isStringHovered(x + 75 - 13 - 35, mY + 45, x + 75 - 35, mY + 65, mouseX, mouseY) ? new Color(101, 175, 255).getRGB() : new Color(0, 141, 255).getRGB());
                 font.drawCenteredString(">", x + 75 - 35 - (11f / 2f), mY + 53 + 1, new Color(255, 255, 255, alpha).getRGB());
 
-                FontLoaders.GoogleSans14.drawCenteredStringWithShadow((((Enum) value.getValue()).ordinal() + 1) + "/" + (((Mode) value).getModes().length),
+                FontLoaders.GoogleSans14.drawCenteredStringWithShadow((((Enum) value.get()).ordinal() + 1) + "/" + (((Mode) value).getModes().length),
                         (x), mY + 53 + 9, new Color(255, 255, 255, 130).getRGB());
 
                 font.drawCenteredStringWithShadow(((Mode) value).getModeAsString(),
@@ -201,7 +201,7 @@ public class GuiClientSetting extends GuiScreen {
 
                 if (this.isStringHovered(x - 35, mY + 45, x + 13 - 35, mY + 65, mouseX, mouseY)) {
                     if (Mouse.isButtonDown(0) && !this.previousmouse) {
-                        Enum current = (Enum) value.getValue();
+                        Enum current = (Enum) value.get();
                         int next = current.ordinal() - 1 <= -1 ? ((Mode) value).getModes().length - 1
                                 : current.ordinal() - 1;
                         value.setValue(((Mode) value).getModes()[next]);
@@ -211,7 +211,7 @@ public class GuiClientSetting extends GuiScreen {
                 }
                 if (this.isStringHovered(x + 75 - 13 - 35, mY + 45, x + 75 - 35, mY + 65, mouseX, mouseY)) {
                     if (Mouse.isButtonDown(0) && !this.previousmouse) {
-                        Enum current = (Enum) value.getValue();
+                        Enum current = (Enum) value.get();
                         int next = current.ordinal() + 1 >= ((Mode) value).getModes().length ? 0
                                 : current.ordinal() + 1;
                         value.setValue(((Mode) value).getModes()[next]);

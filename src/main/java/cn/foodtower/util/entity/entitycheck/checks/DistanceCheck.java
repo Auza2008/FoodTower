@@ -18,7 +18,7 @@ implements ICheck {
 
     @Override
     public boolean validate(Entity entity) {
-        return (double)Minecraft.getMinecraft().thePlayer.getDistanceToEntity(entity) <= (Double)this.distance.getValue();
+        return (double)Minecraft.getMinecraft().thePlayer.getDistanceToEntity(entity) <= (Double)this.distance.get();
     }
 }
 

@@ -90,8 +90,8 @@ public class TargetHUD extends Module {
     ScaledResolution sr = new ScaledResolution(mc);
     boolean nulltarget = false;
     double healthLocationani;
-    float x = ScaledResolution.getScaledWidth() / 2.0f + hudx.getValue().floatValue();
-    float y = ScaledResolution.getScaledHeight() / 2.0f + hudY.getValue().floatValue();
+    float x = ScaledResolution.getScaledWidth() / 2.0f + hudx.get().floatValue();
+    float y = ScaledResolution.getScaledHeight() / 2.0f + hudY.get().floatValue();
     EntityLivingBase lasttarget = null;
     boolean keeptarget = false;
     MSTimer targettimer = new MSTimer();
@@ -220,7 +220,7 @@ public class TargetHUD extends Module {
             target = mc.thePlayer;
         } else {
             if (KillAura.curTarget == null) {
-                if (Pvp.getValue()) {
+                if (Pvp.get()) {
                     if (mc.pointedEntity != null) {
                         nulltarget = false;
                         if (mc.pointedEntity instanceof EntityLivingBase) {
@@ -245,7 +245,7 @@ public class TargetHUD extends Module {
         if (nulltarget) {
             if (timerUtils.hasReached(1000L)) {
                 introOverCharge = false;
-                this.introAnim = AnimationUtils.animate(animMode.get().equals(AnimMode.Scale) ? 0f : (ScaledResolution.getScaledWidth() / 2.0f) - (hudx.getValue().floatValue()), this.introAnim, 14f / Minecraft.getDebugFPS());
+                this.introAnim = AnimationUtils.animate(animMode.get().equals(AnimMode.Scale) ? 0f : (ScaledResolution.getScaledWidth() / 2.0f) - (hudx.get().floatValue()), this.introAnim, 14f / Minecraft.getDebugFPS());
             } else {
                 if (!introOverCharge && introAnim > 110) {
                     introOverCharge = true;
@@ -259,8 +259,8 @@ public class TargetHUD extends Module {
             }
             this.introAnim = AnimationUtils.animate(animMode.get().equals(AnimMode.Scale) ? introOverCharge ? 100f : 140f : 0f, this.introAnim, 14f / Minecraft.getDebugFPS());
         }
-        x = ScaledResolution.getScaledWidth() / 2.0f + hudx.getValue().floatValue();
-        y = ScaledResolution.getScaledHeight() / 2.0f + hudY.getValue().floatValue();
+        x = ScaledResolution.getScaledWidth() / 2.0f + hudx.get().floatValue();
+        y = ScaledResolution.getScaledHeight() / 2.0f + hudY.get().floatValue();
 
         if (animMode.get().equals(AnimMode.Scale)) {
             float value = (float) Math.max(0, introAnim / 100f);
@@ -270,7 +270,7 @@ public class TargetHUD extends Module {
             GlStateManager.translate(introAnim, 0, 0);
         }
 
-        if (animMode.get().equals(AnimMode.Slide) && introAnim == ScaledResolution.getScaledWidth() / 2.0f - hudx.getValue().floatValue()) {
+        if (animMode.get().equals(AnimMode.Slide) && introAnim == ScaledResolution.getScaledWidth() / 2.0f - hudx.get().floatValue()) {
             if (mode.get().equals(Modes.Distance)) {
                 this.healthBarWidth2 = 92;
                 this.healthBarWidth = 92;
@@ -281,7 +281,7 @@ public class TargetHUD extends Module {
                 this.healthBarWidth = 92;
             }
         } else {
-            switch ((Modes) mode.getValue()) {
+            switch ((Modes) mode.get()) {
                 case Simple: {
                     simple();
                     break;
@@ -382,8 +382,8 @@ public class TargetHUD extends Module {
 
         this.health = (float) MathUtil.lerp(this.health, enti.getHealth(), 0.1);
         final String distance = String.valueOf(distan).split("\\.")[0] + "." + String.valueOf(distan).split("\\.")[1].charAt(0);
-        final int tx = (int) (ScaledResolution.getScaledWidth() + hudx.getValue().floatValue());
-        final int ty = (int) (ScaledResolution.getScaledHeight() + hudY.getValue().floatValue());
+        final int tx = (int) (ScaledResolution.getScaledWidth() + hudx.get().floatValue());
+        final int ty = (int) (ScaledResolution.getScaledHeight() + hudY.get().floatValue());
 
         DrawUtil.color(new Color(255, 255, 255, 255));
 
@@ -411,8 +411,8 @@ public class TargetHUD extends Module {
         if (target != null) {
             GlStateManager.pushMatrix();
             // Width and height
-            final float width = mc.displayWidth / (float) (mc.gameSettings.guiScale * 2) + 680 + hudx.getValue().floatValue();
-            final float height = mc.displayHeight / (float) (mc.gameSettings.guiScale * 2) + 280 + hudY.getValue().floatValue();
+            final float width = mc.displayWidth / (float) (mc.gameSettings.guiScale * 2) + 680 + hudx.get().floatValue();
+            final float height = mc.displayHeight / (float) (mc.gameSettings.guiScale * 2) + 280 + hudY.get().floatValue();
             GlStateManager.translate(width - 660, height - 160.0f - 90.0f, 0.0f);
             // Border rect.
             RenderUtil.rectangle(2, -6, 156.0, 47.0, new Color(25, 25, 25).getRGB());
@@ -504,7 +504,7 @@ public class TargetHUD extends Module {
 
         final String name = target.getName();
         //Background
-        if (black.getValue()) DrawUtil.roundedRect(posX + 38 + 2, y - 34, 129, 48, 8, new Color(0, 0, 0, 110));
+        if (black.get()) DrawUtil.roundedRect(posX + 38 + 2, y - 34, 129, 48, 8, new Color(0, 0, 0, 110));
 
         GlStateManager.popMatrix();
 
@@ -570,7 +570,7 @@ public class TargetHUD extends Module {
         final float drawBarPosX = posX + nameWidth;
 
         if (displayHealth > 0.1) for (int i = 0; i < displayHealth * 4; i++) {
-            int color = new Color(HUD.r.getValue().intValue(), HUD.g.getValue().intValue(), HUD.b.getValue().intValue()).getRGB();
+            int color = new Color(HUD.r.get().intValue(), HUD.g.get().intValue(), HUD.b.get().intValue()).getRGB();
             final Color color1 = new Color(78, 161, 253, 100);
             final Color color2 = new Color(78, 253, 154, 100);
             color = ColorUtils.mixColors(color1, color2, (Math.sin(DrawUtil.ticks + posX * 0.4f + i * 0.6f / 14f) + 1) * 0.5f).hashCode();
@@ -615,8 +615,8 @@ public class TargetHUD extends Module {
             particles.clear();
             return;
         }
-        final int tx = (int) (ScaledResolution.getScaledWidth() + hudx.getValue().floatValue());
-        final int ty = (int) (ScaledResolution.getScaledHeight() + hudY.getValue().floatValue());
+        final int tx = (int) (ScaledResolution.getScaledWidth() + hudx.get().floatValue());
+        final int ty = (int) (ScaledResolution.getScaledHeight() + hudY.get().floatValue());
 
         final EntityPlayer ent = (EntityPlayer) target;
         final double dista = mc.thePlayer.getDistanceToEntity(target);
@@ -798,11 +798,11 @@ public class TargetHUD extends Module {
         healthBarWidth = DrawUtil.animateProgress(healthBarWidth, hpWidth, 75.f);
         double healthAnimatedPercent = 20.0 * (healthBarWidth / 80.0) * 5.0;
         //color hud
-        final int startColour = ColourUtil.fadeBetween(ColourUtil.getClientColour(), new Color(HUD.r.getValue().intValue(), HUD.g.getValue().intValue(), HUD.b.getValue().intValue()).getRGB(), 0);
-        final int endColour = ColourUtil.fadeBetween(new Color(HUD.r.getValue().intValue(), HUD.g.getValue().intValue(), HUD.b.getValue().intValue()).getRGB(), ColourUtil.getClientColour(), 250);
+        final int startColour = ColourUtil.fadeBetween(ColourUtil.getClientColour(), new Color(HUD.r.get().intValue(), HUD.g.get().intValue(), HUD.b.get().intValue()).getRGB(), 0);
+        final int endColour = ColourUtil.fadeBetween(new Color(HUD.r.get().intValue(), HUD.g.get().intValue(), HUD.b.get().intValue()).getRGB(), ColourUtil.getClientColour(), 250);
         //x y
-        double x = (int) ((double) (ScaledResolution.getScaledWidth() / 2) + hudx.getValue());
-        double y = (int) ((double) ScaledResolution.getScaledHeight() - hudY.getValue());
+        double x = (int) ((double) (ScaledResolution.getScaledWidth() / 2) + hudx.get());
+        double y = (int) ((double) ScaledResolution.getScaledHeight() - hudY.get());
         double margin = 2.0f;
         double width = 85 + margin * 2.0f;
         String text = "Distance: " + format00.format(target.getDistanceToEntity(mc.thePlayer)) + " | Hurt: " + format0.format(target.hurtTime);
@@ -833,8 +833,8 @@ public class TargetHUD extends Module {
 
     //Bitch fuck me Omg!
     private void Bitch() {
-        int targetx = (int) ((double) (ScaledResolution.getScaledWidth() / 2) + hudx.getValue());
-        int targety = (int) ((double) ScaledResolution.getScaledHeight() - hudY.getValue());
+        int targetx = (int) ((double) (ScaledResolution.getScaledWidth() / 2) + hudx.get());
+        int targety = (int) ((double) ScaledResolution.getScaledHeight() - hudY.get());
         float anim = 150;
         if (target != null) {
             RenderUtil.drawRect(targetx + 35, targety + 40, targetx + 195, targety + 72, new Color(33, 36, 41, 255).getRGB());
@@ -876,8 +876,8 @@ public class TargetHUD extends Module {
     }
 
     private void SM() {
-        int x = (int) ((double) (ScaledResolution.getScaledWidth() / 2) + hudx.getValue());
-        int y = (int) ((double) ScaledResolution.getScaledHeight() - hudY.getValue());
+        int x = (int) ((double) (ScaledResolution.getScaledWidth() / 2) + hudx.get());
+        int y = (int) ((double) ScaledResolution.getScaledHeight() - hudY.get());
         double armorlecotion;
         if (!(target instanceof EntityPlayer)) {
             animWidth = 0;
@@ -926,8 +926,8 @@ public class TargetHUD extends Module {
     }
 
     private void NC() {
-        int x = (int) ((double) (ScaledResolution.getScaledWidth() / 2) + hudx.getValue());
-        int y = (int) ((double) ScaledResolution.getScaledHeight() - hudY.getValue());
+        int x = (int) ((double) (ScaledResolution.getScaledWidth() / 2) + hudx.get());
+        int y = (int) ((double) ScaledResolution.getScaledHeight() - hudY.get());
         EntityLivingBase player = target;
         if (player != null) {
             float f = 0;
@@ -1029,9 +1029,9 @@ public class TargetHUD extends Module {
     private void SB() {
         //SB code by Fw
         if (target != null) {
-            int colors = new Color(HUD.r.getValue().intValue(), HUD.g.getValue().intValue(), HUD.b.getValue().intValue(), 255).getRGB();
-            int colors1 = new Color(HUD.r.getValue().intValue(), HUD.g.getValue().intValue(), HUD.b.getValue().intValue(), 150).getRGB();
-            int colors2 = new Color(HUD.r.getValue().intValue(), HUD.g.getValue().intValue(), HUD.b.getValue().intValue(), 50).getRGB();
+            int colors = new Color(HUD.r.get().intValue(), HUD.g.get().intValue(), HUD.b.get().intValue(), 255).getRGB();
+            int colors1 = new Color(HUD.r.get().intValue(), HUD.g.get().intValue(), HUD.b.get().intValue(), 150).getRGB();
+            int colors2 = new Color(HUD.r.get().intValue(), HUD.g.get().intValue(), HUD.b.get().intValue(), 50).getRGB();
 
             final float health = getHealthes(target);
             final float n18 = 125.0f * (health / target.getMaxHealth());
@@ -1060,8 +1060,8 @@ public class TargetHUD extends Module {
     private void Flat() {
 
         //FoodTower TH code by TIQS
-        int blackcolor = black.getValue() ? new Color(0, 0, 0, 180).getRGB() : new Color(200, 200, 200, 180).getRGB();
-        int blackcolor2 = !black.getValue() ? new Color(0, 0, 0).getRGB() : new Color(200, 200, 200).getRGB();
+        int blackcolor = black.get() ? new Color(0, 0, 0, 180).getRGB() : new Color(200, 200, 200, 180).getRGB();
+        int blackcolor2 = !black.get() ? new Color(0, 0, 0).getRGB() : new Color(200, 200, 200).getRGB();
 
         float health;
         double hpPercentage;

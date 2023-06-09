@@ -29,13 +29,13 @@ public class CustomSpeed extends Module {
     public void onMotion(EventMotionUpdate e) {
         if (mc.thePlayer.isSneaking() || !e.isPre()) return;
         if (MovementUtils.isMoving()) {
-            mc.timer.timerSpeed = customTimerValue.getValue().floatValue();
+            mc.timer.timerSpeed = customTimerValue.get().floatValue();
 
             if (mc.thePlayer.onGround) {
-                MovementUtils.strafe(customSpeedValue.getValue().floatValue());
-                mc.thePlayer.motionY = customYValue.getValue();
-            } else if (customStrafeValue.getValue()) {
-                MovementUtils.strafe(customSpeedValue.getValue().floatValue());
+                MovementUtils.strafe(customSpeedValue.get().floatValue());
+                mc.thePlayer.motionY = customYValue.get();
+            } else if (customStrafeValue.get()) {
+                MovementUtils.strafe(customSpeedValue.get().floatValue());
             } else {
                 MovementUtils.strafe();
             }
@@ -45,13 +45,13 @@ public class CustomSpeed extends Module {
 
     @EventHandler
     public void onRender2d(EventRender2D e) {
-        setSuffix(customTimerValue.getValue() + "|" + customSpeedValue.getValue() + "|" + customYValue.getValue());
+        setSuffix(customTimerValue.get() + "|" + customSpeedValue.get() + "|" + customYValue.get());
     }
 
     @Override
     public void onEnable() {
-        if (resetXZValue.getValue()) mc.thePlayer.motionX = mc.thePlayer.motionZ = 0D;
-        if (resetYValue.getValue()) mc.thePlayer.motionY = 0D;
+        if (resetXZValue.get()) mc.thePlayer.motionX = mc.thePlayer.motionZ = 0D;
+        if (resetYValue.get()) mc.thePlayer.motionY = 0D;
         super.onEnable();
     }
 
@@ -66,7 +66,7 @@ public class CustomSpeed extends Module {
         if (mc.thePlayer.isSneaking())
             return;
 
-        if (MovementUtils.isMoving() && customSprint.getValue())
+        if (MovementUtils.isMoving() && customSprint.get())
             mc.thePlayer.setSprinting(true);
     }
 

@@ -111,7 +111,7 @@ public class DMGParticle extends Module {
             RenderUtil.enableGL2D();
             RenderUtil.disableGL2D();
             GL11.glDepthMask(false);
-            mc.fontRendererObj.drawStringWithShadow(class1171.text, (float) (-(FontLoaders.GoogleSans18.getStringWidth(class1171.text) / 2)), (float) (-(FontLoaders.GoogleSans18.getHeight() - 1)), new Color(R.getValue().intValue(), G.getValue().intValue(), B.getValue().intValue()).getRGB());
+            mc.fontRendererObj.drawStringWithShadow(class1171.text, (float) (-(FontLoaders.GoogleSans18.getStringWidth(class1171.text) / 2)), (float) (-(FontLoaders.GoogleSans18.getHeight() - 1)), new Color(R.get().intValue(), G.get().intValue(), B.get().intValue()).getRGB());
             GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
             GL11.glDepthMask(true);
             GlStateManager.doPolygonOffset(1.0f, 1500000.0f);

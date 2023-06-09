@@ -40,7 +40,7 @@ public class BackGroundRenderer {
 
         //Picture
         RenderUtil.drawRect(-10, -10, ScaledResolution.getScaledWidth() + 10, ScaledResolution.getScaledHeight() + 10, Color.BLACK.getRGB());
-        String bg = ((ClientSetting.backgrounds) ClientSetting.backGround.getValue()).getFileName();
+        String bg = ((ClientSetting.backgrounds) ClientSetting.backGround.get()).getFileName();
 //            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
 //            GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
         RenderUtil.drawImage(new ResourceLocation("FoodTower/BACKGROUND/" + bg), -5, -5, (new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() + 15), (int) ((new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth() + 15) / 1.74));

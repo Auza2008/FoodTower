@@ -8,12 +8,12 @@ import net.minecraft.block.Block;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 
-public class EventCollideWithBlock extends Event {
+public class EventBlockBB extends Event {
 	private Block block;
 	private BlockPos blockPos;
 	public AxisAlignedBB boundingBox;
 
-	public EventCollideWithBlock(Block block, BlockPos pos, AxisAlignedBB boundingBox) {
+	public EventBlockBB(Block block, BlockPos pos, AxisAlignedBB boundingBox) {
 		this.block = block;
 		this.blockPos = pos;
 		this.boundingBox = boundingBox;

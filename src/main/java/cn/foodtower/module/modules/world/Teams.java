@@ -22,7 +22,7 @@ public class Teams extends Module {
 	public static boolean isOnSameTeam(Entity entity) {
 		if (!ModuleManager.getModuleByClass(Teams.class).isEnabled())
 			return false;
-		switch ((TeamsMode) mode.getValue()) {
+		switch ((TeamsMode) mode.get()) {
 			case Armor: {
 				if (entity instanceof EntityPlayer) {
 					EntityPlayer entityPlayer = (EntityPlayer) entity;

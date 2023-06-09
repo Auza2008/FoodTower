@@ -70,7 +70,7 @@ public class NoSlow extends Module {
 
     @EventHandler
     public void onRender2D(EventRender2D e) {
-        setSuffix(modeValue.getValue());
+        setSuffix(modeValue.get());
     }
 
     @EventHandler
@@ -79,11 +79,11 @@ public class NoSlow extends Module {
             return;
         }
         Packet<?> packet = event.getPacket();
-        if ((modeValue.getValue() == NoSlowMode.Vulcan) && nextTemp) {
+        if ((modeValue.get() == NoSlowMode.Vulcan) && nextTemp) {
             if ((packet instanceof C07PacketPlayerDigging || packet instanceof C08PacketPlayerBlockPlacement) && isBlocking()) {
                 event.setCancelled(true);
             } else if (packet instanceof C03PacketPlayer || packet instanceof C0APacketAnimation || packet instanceof C0BPacketEntityAction || packet instanceof C07PacketPlayerDigging || packet instanceof C08PacketPlayerBlockPlacement) {
-                if (modeValue.getValue() == NoSlowMode.Vulcan && waitC03 && packet instanceof C03PacketPlayer) {
+                if (modeValue.get() == NoSlowMode.Vulcan && waitC03 && packet instanceof C03PacketPlayer) {
                     waitC03 = false;
                     return;
                 }
@@ -95,7 +95,7 @@ public class NoSlow extends Module {
 
     @EventHandler
     public void onUpdate(EventMotionUpdate e) {
-        if ((modeValue.getValue().equals(NoSlowMode.Vulcan) && (lastBlockingStat || isBlocking()))) {//有一种脑干缺失的美
+        if ((modeValue.get().equals(NoSlowMode.Vulcan) && (lastBlockingStat || isBlocking()))) {//有一种脑干缺失的美
             if (msTimer.hasTimePassed(230) && nextTemp) {
                 nextTemp = false;
                 PacketUtil.sendPacketNoEvent(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, new BlockPos(-1, -1, -1), EnumFacing.DOWN));
@@ -120,7 +120,7 @@ public class NoSlow extends Module {
                 }
                 PacketUtil.sendPacketNoEvent(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.inventory.getCurrentItem(), 0f, 0f, 0f));
                 nextTemp = true;
-                waitC03 = modeValue.getValue() == NoSlowMode.Vulcan;
+                waitC03 = modeValue.get() == NoSlowMode.Vulcan;
                 msTimer.reset();
             }
         }
@@ -185,7 +185,7 @@ public class NoSlow extends Module {
     }
 
     public boolean isUsingFood() {
-        if (!consume.getValue()) return false;
+        if (!consume.get()) return false;
         if (mc.thePlayer.getItemInUse() == null) return false;
         Item usingItem = mc.thePlayer.getItemInUse().getItem();
         return mc.thePlayer.isUsingItem() && (usingItem instanceof ItemFood || usingItem instanceof ItemBucketMilk || usingItem instanceof ItemPotion);

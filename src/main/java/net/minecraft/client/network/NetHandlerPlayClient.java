@@ -796,7 +796,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient
     public void onDisconnect(IChatComponent reason)
     {
         //zeroday 你懂
-        if (ClientSetting.keepWorld.getValue()){
+        if (ClientSetting.keepWorld.get()){
             Helper.sendMessage(EnumChatFormatting.WHITE + "连接丢失 o(TヘTo)");
             Helper.sendMessage(EnumChatFormatting.WHITE + "原因: " + EnumChatFormatting.RED + reason.getUnformattedText());
             Notifications.getManager().post("连接丢失 o(TヘTo)","原因: " + reason.getUnformattedText(),5000L);

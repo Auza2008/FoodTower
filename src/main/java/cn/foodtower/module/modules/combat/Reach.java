@@ -23,9 +23,9 @@ public class Reach extends Module {
 
     public static boolean canReach(Entity e) {
         if (e == null) return false;
-        if (Vertical.getValue() && mc.thePlayer.posY > e.posY)
+        if (Vertical.get() && mc.thePlayer.posY > e.posY)
             return false;
-        return !OnlySprint.getValue() || mc.thePlayer.isSprinting();
+        return !OnlySprint.get() || mc.thePlayer.isSprinting();
     }
 
 }

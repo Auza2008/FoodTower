@@ -32,10 +32,10 @@ public class AutoSay extends Module {
     public void onUpdate(EventPreUpdate event) {
         Random r = new Random();
         String all = "";
-        if(this.delay.isDelayComplete(this.Abusedelay.getValue().longValue())) {
-            if (allmsg.getValue()) all = "@";
+        if(this.delay.isDelayComplete(this.Abusedelay.get().longValue())) {
+            if (allmsg.get()) all = "@";
             String fuck = "?";
-            switch ((Spammode)mode.getValue()){
+            switch ((Spammode)mode.get()){
                 case Distance:
                     fuck = "FoodTower Client | "+"Made by "+ Client.author +" | " + Client.ClientVersion;
                     break;
@@ -67,7 +67,7 @@ public class AutoSay extends Module {
                     fuck = CustomString;
                     break;
             }
-            mc.thePlayer.sendChatMessage( all+"[FoodTower]" + fuck + (Random.getValue()? " " + RandomUtil.randomString(5):""));
+            mc.thePlayer.sendChatMessage( all+"[FoodTower]" + fuck + (Random.get()? " " + RandomUtil.randomString(5):""));
             delay.reset();
         }
 

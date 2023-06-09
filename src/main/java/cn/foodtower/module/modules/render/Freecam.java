@@ -1,7 +1,7 @@
 package cn.foodtower.module.modules.render;
 
 import cn.foodtower.api.EventHandler;
-import cn.foodtower.api.events.Misc.EventCollideWithBlock;
+import cn.foodtower.api.events.Misc.EventBlockBB;
 import cn.foodtower.api.events.World.EventMove;
 import cn.foodtower.api.events.World.EventPacketSend;
 import cn.foodtower.api.value.Numbers;
@@ -76,7 +76,7 @@ public class Freecam
     }
 
     @EventHandler
-    private void onBB(EventCollideWithBlock e) {
+    private void onBB(EventBlockBB e) {
         e.setBoundingBox(null);
     }
 

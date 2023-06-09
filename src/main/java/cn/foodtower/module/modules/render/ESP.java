@@ -107,15 +107,15 @@ public class ESP extends Module {
     public static boolean qualifiesESP(Entity e2) {
         if (e2 == mc.thePlayer) {
             return false;
-        } else if (e2 instanceof EntityPlayer && player.getValue()) {
+        } else if (e2 instanceof EntityPlayer && player.get()) {
             return true;
-        } else if (e2 instanceof EntityMob && mobs.getValue()) {
+        } else if (e2 instanceof EntityMob && mobs.get()) {
             return true;
-        } else if (e2 instanceof EntityAnimal && animals.getValue()) {
+        } else if (e2 instanceof EntityAnimal && animals.get()) {
             return true;
-        } else if (e2 instanceof EntityVillager && animals.getValue()) {
+        } else if (e2 instanceof EntityVillager && animals.get()) {
             return true;
-        } else return e2 instanceof EntityArmorStand && armorstand.getValue();
+        } else return e2 instanceof EntityArmorStand && armorstand.get();
     }
 
     public static void drawBorderedRect(float x, float y, float x2, float y2, float l1, int col1, int col2) {
@@ -191,7 +191,7 @@ public class ESP extends Module {
 
     @EventHandler
     private void on2D(EventRender2D e) {
-        if (mode.getValue().equals(TwoD.Only2DBox)) {
+        if (mode.get().equals(TwoD.Only2DBox)) {
             GlStateManager.pushMatrix();
             for (Entity entity : this.entityConvertedPointsMap.keySet()) {
                 EntityPlayer ent = (EntityPlayer) entity;
@@ -229,7 +229,7 @@ public class ESP extends Module {
                             if (!(bdubs > endy)) continue;
                             endy = bdubs;
                         }
-                        if (mode.getValue().equals(TwoD.Only2DBox)) {
+                        if (mode.get().equals(TwoD.Only2DBox)) {
                             RenderUtil.rectangleBordered(x2 + 0.5, y2 + 0.5, endx - 0.5, endy - 0.5, 1.0, Colors.getColor(0, 0, 0, 0), new Color(-1).getRGB());
                             RenderUtil.rectangleBordered(x2 - 0.5, y2 - 0.5, endx + 0.5, endy + 0.5, 1.0, Colors.getColor(0, 0), Colors.getColor(0, 150));
                             RenderUtil.rectangleBordered(x2 + 1.5, y2 + 1.5, endx - 1.5, endy - 1.5, 1.0, Colors.getColor(0, 0), Colors.getColor(0, 150));
@@ -268,7 +268,7 @@ public class ESP extends Module {
 //                            RenderUtil.rectangle(endx - 1.5, endy - 1.5, endx - x2Diff, endy - 2.5, Colors.getColor(0, 150));
 //                            RenderUtil.rectangle(endx - x2Diff, endy + 0.5, endx - x2Diff - 1.0, endy - 2.5, Colors.getColor(0, 150));
 //                        }
-                        if (HEALTH.getValue() && (mode.getValue().equals(TwoD.Only2DBox))) {
+                        if (HEALTH.get() && (mode.get().equals(TwoD.Only2DBox))) {
                             float health = ent.getHealth();
                             float[] fractions = new float[]{0.0f, 0.5f, 1.0f};
                             Color[] colors = new Color[]{Color.RED, Color.YELLOW, Color.GREEN};
@@ -343,23 +343,23 @@ public class ESP extends Module {
 
     @EventHandler
     public void onRender(EventRender3D event) {
-        if (mode.getValue().equals(TwoD.Box2D)) {
+        if (mode.get().equals(TwoD.Box2D)) {
             doOther2DESP(event);
-        } else if (mode.getValue().equals(TwoD.LB2D)) {
+        } else if (mode.get().equals(TwoD.LB2D)) {
             doCornerESP(event);
         }
         for (final Entity entity : mc.theWorld.loadedEntityList) {
             if (entity instanceof EntityLivingBase) {
                 EntityLivingBase entityLiving = (EntityLivingBase) entity;
-                if (mode.getValue().equals(TwoD.Box3D) && qualifiesESP(entity)) {
+                if (mode.get().equals(TwoD.Box3D) && qualifiesESP(entity)) {
                     if (FriendManager.isFriend(entity.getName())) {
-                        LiquidRender.drawEntityBox(entity, new Color(255, 233, 105, a.getValue().intValue()), false);
+                        LiquidRender.drawEntityBox(entity, new Color(255, 233, 105, a.get().intValue()), false);
                     } else {
-                        LiquidRender.drawEntityBox(entity, new Color(entityLiving.hurtTime > 0 ? 255 : r.getValue().intValue(), entityLiving.hurtTime > 0 ? 0 : g.getValue().intValue(), entityLiving.hurtTime > 0 ? 0 : b.getValue().intValue(), a.getValue().intValue()), false);
+                        LiquidRender.drawEntityBox(entity, new Color(entityLiving.hurtTime > 0 ? 255 : r.get().intValue(), entityLiving.hurtTime > 0 ? 0 : g.get().intValue(), entityLiving.hurtTime > 0 ? 0 : b.get().intValue(), a.get().intValue()), false);
                     }
                 }
-                if (mode.getValue().equals(TwoD.Box3D2) && qualifiesESP(entity)) {
-                    LiquidRender.drawEntityBox(entity, new Color(entityLiving.hurtTime > 0 ? 255 : r.getValue().intValue(), entityLiving.hurtTime > 0 ? 0 : g.getValue().intValue(), entityLiving.hurtTime > 0 ? 0 : b.getValue().intValue(), a.getValue().intValue()), true);
+                if (mode.get().equals(TwoD.Box3D2) && qualifiesESP(entity)) {
+                    LiquidRender.drawEntityBox(entity, new Color(entityLiving.hurtTime > 0 ? 255 : r.get().intValue(), entityLiving.hurtTime > 0 ? 0 : g.get().intValue(), entityLiving.hurtTime > 0 ? 0 : b.get().intValue(), a.get().intValue()), true);
                 }
             }
         }
@@ -372,7 +372,7 @@ public class ESP extends Module {
 
     @EventHandler
     public void onRender3D(EventRender3D e) {
-        if (!skeleton.getValue()) return;
+        if (!skeleton.get()) return;
         startEnd(true);
         GL11.glEnable(GL11.GL_COLOR_MATERIAL);
         GL11.glDisable(2848);
@@ -400,7 +400,7 @@ public class ESP extends Module {
             float[][] entPos = entities.get(e);
             if (entPos != null && e.isEntityAlive() && ETBRenderUtil.isInViewFrustrum(e) && !e.isDead && e != mc.thePlayer && !e.isPlayerSleeping()) {
                 GL11.glPushMatrix();
-                GL11.glLineWidth(skeletonwidth.getValue().floatValue());
+                GL11.glLineWidth(skeletonwidth.get().floatValue());
                 GlStateManager.color(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, 1);
                 Vec3 vec = getVec3(event, e);
                 double x = vec.xCoord - RenderManager.renderPosX;

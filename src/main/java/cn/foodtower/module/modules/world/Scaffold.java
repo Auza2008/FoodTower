@@ -4,10 +4,7 @@ import cn.foodtower.Client;
 import cn.foodtower.api.EventHandler;
 import cn.foodtower.api.events.Render.EventRender2D;
 import cn.foodtower.api.events.Render.EventRender3D;
-import cn.foodtower.api.events.World.EventMove;
-import cn.foodtower.api.events.World.EventPostUpdate;
-import cn.foodtower.api.events.World.EventPreUpdate;
-import cn.foodtower.api.events.World.EventTick;
+import cn.foodtower.api.events.World.*;
 import cn.foodtower.api.value.Mode;
 import cn.foodtower.api.value.Numbers;
 import cn.foodtower.api.value.Option;
@@ -22,6 +19,7 @@ import cn.foodtower.util.math.SmoothRotationObject;
 import cn.foodtower.util.render.RenderUtil;
 import cn.foodtower.util.time.TimerUtil;
 import net.minecraft.block.*;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -38,19 +36,22 @@ import org.lwjgl.opengl.GL11;
 import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Scaffold extends Module {
     public static final List<Block> invalidBlocks = Arrays.asList(Blocks.enchanting_table, Blocks.furnace, Blocks.carpet, Blocks.command_block, Blocks.crafting_table, Blocks.chest, Blocks.trapped_chest, Blocks.ender_chest, Blocks.dispenser, Blocks.air, Blocks.water, Blocks.flowing_water, Blocks.lava, Blocks.flowing_lava, Blocks.sand, Blocks.snow_layer, Blocks.torch, Blocks.anvil, Blocks.jukebox, Blocks.wooden_button, Blocks.stone_button, Blocks.lever, Blocks.noteblock, Blocks.wooden_pressure_plate, Blocks.stone_pressure_plate, Blocks.light_weighted_pressure_plate, Blocks.heavy_weighted_pressure_plate, Blocks.red_mushroom, Blocks.brown_mushroom, Blocks.red_flower, Blocks.yellow_flower, Blocks.ladder, Blocks.web, Blocks.beacon);
     public static final Option sprint = new Option("Sprint", false);
     public static float saveYaw, savePitch;
+    private final Option strafeValue = new Option("Strafe", false);
+    private final Numbers<Double> customPitch = new Numbers<>("CustomPitch", 82.4, -90d, 90d, 0.1);
     private final Mode rotationMode = new Mode("RotationMode", RotMode.values(), RotMode.Normal);
     private final Mode towerMode = new Mode("TowerMode", TowMode.values(), TowMode.Vanilla);
     private final Mode itemMode = new Mode("ItemMode", ItemMode.values(), ItemMode.Spoof);
     private final Mode placeTiming = new Mode("PlaceTiming", "placetiming", PlaceMode.values(), PlaceMode.Post);
     private final Mode eagleMode = new Mode("EagleMode", "eaglemode", EagleMode.values(), EagleMode.Key);
     private final Numbers<Double> delayValue = new Numbers<Double>("Delay", "delay", 0.0, 0.0, 2000.0, 1.0);
-    private final Numbers<Double> expand = new Numbers<Double>("Expand", "expand", 0.0, 0.0, 10.0, 0.1);
+//    private final Numbers<Double> expand = new Numbers<Double>("Expand", "expand", 0.0, 0.0, 10.0, 0.1);
     private final Numbers<Double> rotationSpeed = new Numbers<Double>("RotationSpeed", "rotationspeed", 180.0, 0.0, 180.0, 1.0);
     private final Option slowMove = new Option("SlowMove", "slowmode", false);
     private final Numbers<Double> slowMoveValue = new Numbers<Double>("SlowMoveSoeed", "slowmovesoeed", 0.2, 0.0, 0.3, 0.01);
@@ -69,7 +70,8 @@ public class Scaffold extends Module {
 
     public Scaffold() {
         super("Scaffold", new String[]{"magiccarpet", "blockplacer", "airwalk"}, ModuleType.World);
-        addValues(rotationMode, towerMode, itemMode, placeTiming, sprint, delayValue, expand, rotationSpeed, tower, moveTower, slowMove, slowMoveValue, eagle, eagleMode, down, swing, keepY, swap);
+        addValues(rotationMode, customPitch, towerMode, itemMode, placeTiming, sprint, delayValue, rotationSpeed, tower, moveTower, slowMove, slowMoveValue, eagle, eagleMode, strafeValue, down, swing, keepY, swap);
+        setValueDisplayable(customPitch, rotationMode, RotMode.MoveDirection);
     }
 
     public static int getBestSpoofSlot() {
@@ -84,9 +86,9 @@ public class Scaffold extends Module {
 
     @EventHandler
     public void onTick(EventTick e) {
-        if (!sprint.getValue()) mc.thePlayer.setSprinting(false);
+        if (!sprint.get()) mc.thePlayer.setSprinting(false);
 
-        if (placeTiming.getValue().toString().equals("Tick")) {
+        if (placeTiming.get().toString().equals("Tick")) {
             place();
         }
     }
@@ -133,38 +135,31 @@ public class Scaffold extends Module {
     @EventHandler
     public void onPreUpdate(EventPreUpdate e) {
         blockData = null;
-        switch ((RotMode) rotationMode.getValue()) {
-            case StaticHead:
-                saveYaw = mc.thePlayer.rotationYaw;
-                savePitch = 79.44f;
-                break;
-            case Head:
-                saveYaw = mc.thePlayer.rotationYaw;
-                break;
-            case None:
-                savePitch = mc.thePlayer.rotationPitch;
-                saveYaw = mc.thePlayer.rotationYaw;
-                break;
-            case Back:
-                saveYaw = mc.thePlayer.rotationYaw - 180f;
-                break;
+        /**
+         * 此处为开启模块转头
+         */
+        if (Objects.requireNonNull((RotMode) rotationMode.get()) == RotMode.None) {
+            savePitch = mc.thePlayer.rotationPitch;
+            saveYaw = mc.thePlayer.rotationYaw;
+        } else if (rotationMode.get() == RotMode.MoveDirection) {
+            saveYaw = this.movingYaw() - 180;
+            savePitch = customPitch.get().floatValue();
         }
-        if (rotationSpeed.getValue().equals(180.0)) {
+        if (rotationSpeed.get().equals(180.0)) {
             e.setYaw(saveYaw);
             e.setPitch(savePitch);
             Client.RenderRotate(saveYaw, savePitch);
         } else {
             rotationObject.setWillYawPitch(saveYaw, savePitch);
-            rotationObject.handleRotation(rotationSpeed.getValue());
+            rotationObject.handleRotation(rotationSpeed.get());
             rotationObject.setPlayerRotation(e);
         }
 
-        if (rotationMode.getValue().toString().equals("Head")) {
-            savePitch = mc.thePlayer.rotationPitch;
-        } else if (rotationMode.getValue().toString().equals("NCP")) {
-            savePitch = mc.thePlayer.rotationPitch;
-            saveYaw = mc.thePlayer.rotationYaw;
-        }
+        /**
+         * 此处为放置后恢复转头
+         */
+//        ****
+//        ****
 
         double x = mc.thePlayer.posX;
         double z = mc.thePlayer.posZ;
@@ -172,13 +167,13 @@ public class Scaffold extends Module {
 
         double yOffset = 1;
 
-        final boolean shouldDown = down.getValue() && Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
+        final boolean shouldDown = down.get() && Keyboard.isKeyDown(Keyboard.KEY_LCONTROL);
 
         if (shouldDown) {
             yOffset = 2;
         }
 
-        if (keepY.getValue()) {
+        if (keepY.get()) {
             if (MoveUtils.isMoving()) {
                 y = startY;
             } else {
@@ -186,12 +181,12 @@ public class Scaffold extends Module {
             }
         }
 
-        if (!(expand.getValue() == 0) && !mc.thePlayer.isCollidedHorizontally && !shouldDown) {
-            MovementInput movementInput = new MovementInput();
-            double[] coords = getExpandCoords(x, z, movementInput.moveForward, movementInput.moveStrafe, mc.thePlayer.rotationYaw);
-            x = coords[0];
-            z = coords[1];
-        }
+//        if (!(expand.get() == 0) && !mc.thePlayer.isCollidedHorizontally && !shouldDown) {
+//            MovementInput movementInput = new MovementInput();
+//            double[] coords = getExpandCoords(x, z, movementInput.moveForward, movementInput.moveStrafe, mc.thePlayer.rotationYaw);
+//            x = coords[0];
+//            z = coords[1];
+//        }
 
         if (isAirBlock(mc.theWorld.getBlockState(new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY - yOffset, mc.thePlayer.posZ)).getBlock())) {
             x = mc.thePlayer.posX;
@@ -207,7 +202,7 @@ public class Scaffold extends Module {
             final BlockData data = getBlockData(underPos, shouldDown);
 
             if (isAirBlock(underBlock) && data != null) {
-                if (eagle.getValue() && eagleMode.getValue().toString().equals("Key")) {
+                if (eagle.get() && eagleMode.get().toString().equals("Key")) {
                     mc.thePlayer.movementInput.sneak = true;
                     mc.thePlayer.setSprinting(false);
                     MoveUtils.strafe(0);
@@ -215,42 +210,30 @@ public class Scaffold extends Module {
 
                 blockData = data;
                 final float[] rotations = getRotationsBlock(data.position, data.face);
-                switch ((RotMode) rotationMode.getValue()) {
-                    case Normal:
-                    case NCP:
-                        float yaw = rotations[0];
-                        float pitch = rotations[1];
-                        saveYaw = yaw;
-                        savePitch = pitch;
-                        break;
-                    case Head:
-                        savePitch = 79.44f;
-                        break;
-                    case Facing:
-                        yaw = getYawByFacing(data.face);
-                        pitch = 87.5f;
-                        saveYaw = yaw;
-                        savePitch = pitch;
-                        break;
-                    case Back:
-                        savePitch = rotations[1];
-                        break;
+                /**
+                 * 此处为放置方块时转头(改变转头)
+                 */
+                if (Objects.requireNonNull((RotMode) rotationMode.get()) == RotMode.Normal) {
+                    float yaw = rotations[0];
+                    float pitch = rotations[1];
+                    saveYaw = yaw;
+                    savePitch = pitch;
                 }
             }
         }
 
         label:
         {
-            if (hasBlock && mc.gameSettings.keyBindJump.isKeyDown() && (tower.getValue() || moveTower.getValue())) {
-                if (tower.getValue()) {
-                    if (!moveTower.getValue()) if (MoveUtils.isMoving()) break label;
-                } else if (moveTower.getValue() && !MoveUtils.isMoving()) break label;
+            if (hasBlock && mc.gameSettings.keyBindJump.isKeyDown() && (tower.get() || moveTower.get())) {
+                if (tower.get()) {
+                    if (!moveTower.get()) if (MoveUtils.isMoving()) break label;
+                } else if (moveTower.get() && !MoveUtils.isMoving()) break label;
 
                 if (!MoveUtils.isMoving()) {
                     MoveUtils.strafe(0);
                 }
 
-                if (towerMode.getValue().toString().equals("Hypixel") || (moveTower.getValue() && MoveUtils.isMoving())) {
+                if (towerMode.get().toString().equals("Hypixel") || (moveTower.get() && MoveUtils.isMoving())) {
                     if (mc.thePlayer.onGround) {
                         int posX0 = (int) mc.thePlayer.posX;
                         if (mc.thePlayer.posX < posX0) {
@@ -274,7 +257,7 @@ public class Scaffold extends Module {
                         mc.thePlayer.motionY = 0;
                     }
 
-                    if (towerMode.getValue().toString().equals("Hypixel") && !MoveUtils.isMoving()) {
+                    if (towerMode.get().toString().equals("Hypixel") && !MoveUtils.isMoving()) {
                         if (PlayerUtil.getBlock(new BlockPos(mc.thePlayer).add(0, 2, 0)) instanceof BlockAir) {
                             double var3 = e.getY() % 1.0D;
                             double var4 = MathHelper.floor_double(mc.thePlayer.posY);
@@ -291,10 +274,10 @@ public class Scaffold extends Module {
                             e.setZ(e.getZ() + (mc.thePlayer.ticksExisted % 2 != 0 ? ThreadLocalRandom.current().nextDouble(0.06D, 0.0625D) : -ThreadLocalRandom.current().nextDouble(0.06D, 0.0625D)));
                         }
                     }
-                } else if (towerMode.getValue().toString().equals("Vanilla")) {
+                } else if (towerMode.get().toString().equals("Vanilla")) {
                     mc.thePlayer.motionY = 0.41982;
                     MoveUtils.strafe(0);
-                } else if (towerMode.getValue().toString().equals("TP")) {
+                } else if (towerMode.get().toString().equals("TP")) {
                     mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + 1, mc.thePlayer.posZ);
 
                     if (!MoveUtils.isOnGround(1)) {
@@ -302,12 +285,12 @@ public class Scaffold extends Module {
                     }
 
                     MoveUtils.strafe(0);
-                } else if (towerMode.getValue().toString().equals("Low")) {
+                } else if (towerMode.get().toString().equals("Low")) {
                     if (MoveUtils.isOnGround(0.99)) {
                         mc.thePlayer.motionY = 0.36;
                         MoveUtils.strafe(0);
                     }
-                } else if (towerMode.getValue().toString().equals("Slow")) {
+                } else if (towerMode.get().toString().equals("Slow")) {
                     if (MoveUtils.isOnGround(0.114514)) {
                         mc.thePlayer.jump();
                         MoveUtils.strafe(0);
@@ -316,35 +299,35 @@ public class Scaffold extends Module {
             }
         }
 
-        if (placeTiming.getValue().toString().equals("Pre")) {
+        if (placeTiming.get().toString().equals("Pre")) {
             place();
         }
     }
 
     @EventHandler
     public void onMove(EventMove e) {
-        if (slowMove.getValue()) {
-            MoveUtils.setSpeed(e, slowMoveValue.getValue());
+        if (slowMove.get()) {
+            MoveUtils.setSpeed(e, slowMoveValue.get());
         }
     }
 
     @EventHandler
     public void onPostUpdate(EventPostUpdate e) {
-        if (placeTiming.getValue().toString().equals("Post")) {
+        if (placeTiming.get().toString().equals("Post")) {
             place();
         }
     }
 
     private void place() {
         if (getInventoryBlockSize() > 0 && blockData != null) {
-            if (swap.getValue()) {
+            if (swap.get()) {
                 getBlock(getBestSpoofSlot());
             }
 
-            if (delayValue.getValue().intValue() == 0 || delayTimerUtils.hasReached(delayValue.getValue())) {
+            if (delayValue.get().intValue() == 0 || delayTimerUtils.hasReached(delayValue.get())) {
                 final int slot = getBlockFromHotBar();
                 if (slot != -1) {
-                    final boolean sendSneakPacket = eagle.getValue() && eagleMode.getValue().toString().equals("Packet");
+                    final boolean sendSneakPacket = eagle.get() && eagleMode.get().toString().equals("Packet");
 
                     if (sendSneakPacket) {
                         mc.getNetHandler().addToSendQueue(new C0BPacketEntityAction(mc.thePlayer, C0BPacketEntityAction.Action.START_SNEAKING));
@@ -354,12 +337,12 @@ public class Scaffold extends Module {
                     mc.thePlayer.inventory.currentItem = slot;
 
                     if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getCurrentEquippedItem(), blockData.position, blockData.face, PositionUtils.getVec3(blockData.position, blockData.face))) {
-                        if (swing.getValue()) {
+                        if (swing.get()) {
                             mc.thePlayer.swingItem();
                         } else mc.getNetHandler().addToSendQueue(new C0APacketAnimation());
                     }
 
-                    if (itemMode.getValue().toString().equals("Spoof")) {
+                    if (itemMode.get().toString().equals("Spoof")) {
                         mc.thePlayer.inventory.currentItem = old;
                     }
 
@@ -392,7 +375,7 @@ public class Scaffold extends Module {
 
     @Override
     public void onEnable() {
-        if (itemMode.getValue().toString().equals("Switch")) {
+        if (itemMode.get().toString().equals("Switch")) {
             startSlot = mc.thePlayer.inventory.currentItem;
         }
         startY = mc.thePlayer.posY;
@@ -401,28 +384,11 @@ public class Scaffold extends Module {
 
     @Override
     public void onDisable() {
-        if (itemMode.getValue().toString().equals("Switch")) {
+        if (itemMode.get().toString().equals("Switch")) {
             mc.thePlayer.inventory.currentItem = startSlot;
         }
         blockData = null;
         super.onDisable();
-    }
-
-    private float getYawByFacing(EnumFacing facing) {
-        switch (facing) {
-            case DOWN:
-            case UP:
-            case NORTH:
-                return 0;
-            case SOUTH:
-                return 180;
-            case WEST:
-                return -90;
-            case EAST:
-                return 90;
-        }
-
-        return 0.0f;
     }
 
     private float[] getRotationsBlock(BlockPos block, EnumFacing face) {
@@ -481,31 +447,31 @@ public class Scaffold extends Module {
         return final_;
     }
 
-    public double[] getExpandCoords(double x, double z, double forward, double strafe, float YAW) {
-        BlockPos underPos = new BlockPos(x, mc.thePlayer.posY - 1, z);
-        Block underBlock = mc.theWorld.getBlockState(underPos).getBlock();
-        double xCalc = -999, zCalc = -999;
-        double dist = 0;
-        double expandDist = expand.getValue() * 2;
-        while (!isAirBlock(underBlock)) {
-            xCalc = x;
-            zCalc = z;
-            dist++;
-            if (dist > expandDist) {
-                dist = expandDist;
-            }
-            final double cos = Math.cos(Math.toRadians(YAW + 90.0f));
-            final double sin = Math.sin(Math.toRadians(YAW + 90.0f));
-            xCalc += (forward * 0.45 * cos + strafe * 0.45 * sin) * dist;
-            zCalc += (forward * 0.45 * sin - strafe * 0.45 * cos) * dist;
-            if (dist == expandDist) {
-                break;
-            }
-            underPos = new BlockPos(xCalc, mc.thePlayer.posY - 1, zCalc);
-            underBlock = mc.theWorld.getBlockState(underPos).getBlock();
-        }
-        return new double[]{xCalc, zCalc};
-    }
+//    public double[] getExpandCoords(double x, double z, double forward, double strafe, float YAW) {
+//        BlockPos underPos = new BlockPos(x, mc.thePlayer.posY - 1, z);
+//        Block underBlock = mc.theWorld.getBlockState(underPos).getBlock();
+//        double xCalc = -999, zCalc = -999;
+//        double dist = 0;
+//        double expandDist = expand.get() * 2;
+//        while (!isAirBlock(underBlock)) {
+//            xCalc = x;
+//            zCalc = z;
+//            dist++;
+//            if (dist > expandDist) {
+//                dist = expandDist;
+//            }
+//            final double cos = Math.cos(Math.toRadians(YAW + 90.0f));
+//            final double sin = Math.sin(Math.toRadians(YAW + 90.0f));
+//            xCalc += (forward * 0.45 * cos + strafe * 0.45 * sin) * dist;
+//            zCalc += (forward * 0.45 * sin - strafe * 0.45 * cos) * dist;
+//            if (dist == expandDist) {
+//                break;
+//            }
+//            underPos = new BlockPos(xCalc, mc.thePlayer.posY - 1, zCalc);
+//            underBlock = mc.theWorld.getBlockState(underPos).getBlock();
+//        }
+//        return new double[]{xCalc, zCalc};
+//    }
 
     private boolean isAirBlock(Block block) {
         if (block.getMaterial().isReplaceable()) {
@@ -758,13 +724,128 @@ public class Scaffold extends Module {
         return null;
     }
 
+    @EventHandler
+    private void onStrafe(EventStrafe event) {
+        if (strafeValue.get()) {
+            final int dif = (int) ((MathHelper.wrapAngleTo180_float(mc.thePlayer.rotationYaw - saveYaw - 23.5F - 135) + 180) / 45);
+
+            final float yaw = saveYaw;
+            final float strafe = event.getStrafe();
+            final float forward = event.getForward();
+            final float friction = event.getFriction();
+            float calcForward = 0F;
+
+            float calcStrafe = 0F;
+            /*
+            Rotation Dif
+
+            7 \ 0 / 1     +  +  +      +  |  -
+            6   +   2     -- F --      +  S  -
+            5 / 4 \ 3     -  -  -      +  |  -
+            */
+            switch (dif) {
+                case 0: {
+                    calcForward = forward;
+                    calcStrafe = strafe;
+                    break;
+                }
+                case 1: {
+                    calcForward += forward;
+                    calcStrafe -= forward;
+                    calcForward += strafe;
+                    calcStrafe += strafe;
+                    break;
+                }
+                case 2: {
+                    calcForward = strafe;
+                    calcStrafe = -forward;
+                    break;
+                }
+                case 3: {
+                    calcForward -= forward;
+                    calcStrafe -= forward;
+                    calcForward += strafe;
+                    calcStrafe -= strafe;
+                    break;
+                }
+                case 4: {
+                    calcForward = -forward;
+                    calcStrafe = -strafe;
+                    break;
+                }
+                case 5: {
+                    calcForward -= forward;
+                    calcStrafe += forward;
+                    calcForward -= strafe;
+                    calcStrafe -= strafe;
+                    break;
+                }
+                case 6: {
+                    calcForward = -strafe;
+                    calcStrafe = forward;
+                    break;
+                }
+                case 7: {
+                    calcForward += forward;
+                    calcStrafe += forward;
+                    calcForward -= strafe;
+                    calcStrafe += strafe;
+                    break;
+                }
+            }
+
+            if (calcForward > 1f || calcForward < 0.9f && calcForward > 0.3f || calcForward < -1f || calcForward > -0.9f && calcForward < -0.3f) {
+                calcForward *= 0.5f;
+            }
+
+            if (calcStrafe > 1f || calcStrafe < 0.9f && calcStrafe > 0.3f || calcStrafe < -1f || calcStrafe > -0.9f && calcStrafe < -0.3f) {
+                calcStrafe *= 0.5f;
+            }
+
+            float f = calcStrafe * calcStrafe + calcForward * calcForward;
+
+            if (f >= 1.0E-4F) {
+                f = MathHelper.sqrt_float(f);
+
+                if (f < 1.0F) f = 1.0F;
+
+                f = friction / f;
+                calcStrafe *= f;
+                calcForward *= f;
+
+                final float yawSin = MathHelper.sin((float) (yaw * Math.PI / 180F));
+                final float yawCos = MathHelper.cos((float) (yaw * Math.PI / 180F));
+
+                mc.thePlayer.motionX += calcStrafe * yawCos - calcForward * yawSin;
+                mc.thePlayer.motionZ += calcForward * yawCos + calcStrafe * yawSin;
+            }
+            event.setCancelled(true);
+        }
+    }
+
     private boolean isPosSolid(BlockPos pos) {
         Block block = mc.theWorld.getBlockState(pos).getBlock();
         return (block.getMaterial().isSolid() || !block.isTranslucent() || (block.getMaterial().blocksMovement() && block.isFullCube()) || block instanceof BlockLadder || block instanceof BlockCarpet || block instanceof BlockSnow || block instanceof BlockSkull) && !block.getMaterial().isLiquid() && !(block instanceof BlockContainer);
     }
 
+    private double direction() {
+        EntityPlayerSP thePlayer = mc.thePlayer;
+        float rotationYaw = thePlayer.rotationYaw;
+        if (thePlayer.moveForward < 0f) rotationYaw += 180f;
+        float forward = 1f;
+        if (thePlayer.moveForward < 0f) forward = -0.5f;
+        else if (thePlayer.moveForward > 0f) forward = 0.5f;
+        if (thePlayer.moveStrafing > 0f) rotationYaw -= 90f * forward;
+        if (thePlayer.moveStrafing < 0f) rotationYaw += 90f * forward;
+        return Math.toRadians(rotationYaw);
+    }
+
+    private float movingYaw() {
+        return (float) (this.direction() * 180f / Math.PI);
+    }
+
     enum RotMode {
-        Normal, NCP, Head, StaticHead, Facing, Back, None
+        Normal, MoveDirection, None
     }
 
     enum TowMode {

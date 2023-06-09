@@ -348,9 +348,9 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
     	Chams chams = (Chams) Client.instance.getModuleManager().getModuleByClass(Chams.class);
         ESP outline = (ESP) Client.instance.getModuleManager().getModuleByClass(ESP.class);
     	float[] rgba = RenderUtil.getRGBAs(RenderUtil.getRainbow(6000, -15));
-    	boolean eb = outline.isEnabled() && outline.antiinvis.getValue();
-        boolean flag = !(entitylivingbaseIn.isInvisible() && !((eb) || (chams.invisibles.getValue() && chams.isEnabled())));
-        boolean flag1 = !flag && !(entitylivingbaseIn.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer)&& !(eb) || (chams.invisibles.getValue()) && chams.isEnabled());
+    	boolean eb = outline.isEnabled() && outline.antiinvis.get();
+        boolean flag = !(entitylivingbaseIn.isInvisible() && !((eb) || (chams.invisibles.get() && chams.isEnabled())));
+        boolean flag1 = !flag && !(entitylivingbaseIn.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer)&& !(eb) || (chams.invisibles.get()) && chams.isEnabled());
 
         if (flag || flag1)
         {
@@ -370,7 +370,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 GlStateManager.alphaFunc(516, 0.003921569F);
             }
             if (Client.instance.getModuleManager().getModuleByClass(Chams.class).isEnabled() && chams.isValid(entitylivingbaseIn)) {
-                if (chams.colored.getValue()) {
+                if (chams.colored.get()) {
                     GL11.glPushAttrib(1048575);
                     GL11.glDisable(3008);
                     GL11.glDisable(3553);
@@ -383,11 +383,11 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                     GL11.glDepthMask(false);
                     GL11.glEnable(10754);
                     OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240.0f, 240.0f);
-                    GL11.glColor4d(Client.instance.getFriendManager().isFriend(entitylivingbaseIn.getName()) ? 0.12F : (chams.rainbow.getValue() ? rgba[0] : chams.hiddenred.getValue()), Client.instance.getFriendManager().isFriend(entitylivingbaseIn.getName()) ? 0.5F : (chams.rainbow.getValue() ? rgba[1] : chams.hiddengreen.getValue()), Client.instance.getFriendManager().isFriend(entitylivingbaseIn.getName()) ? 1 : (chams.rainbow.getValue() ? rgba[2] : chams.hiddenblue.getValue()), chams.alpha.getValue());
+                    GL11.glColor4d(Client.instance.getFriendManager().isFriend(entitylivingbaseIn.getName()) ? 0.12F : (chams.rainbow.get() ? rgba[0] : chams.hiddenred.get()), Client.instance.getFriendManager().isFriend(entitylivingbaseIn.getName()) ? 0.5F : (chams.rainbow.get() ? rgba[1] : chams.hiddengreen.get()), Client.instance.getFriendManager().isFriend(entitylivingbaseIn.getName()) ? 1 : (chams.rainbow.get() ? rgba[2] : chams.hiddenblue.get()), chams.alpha.get());
                     this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
                     GL11.glEnable(GL11.GL_DEPTH_TEST);
                     GL11.glDepthMask(true);
-                    GL11.glColor4d(Client.instance.getFriendManager().isFriend(entitylivingbaseIn.getName()) ? 0.12f : (chams.rainbow.getValue() ? rgba[0] : chams.visiblered.getValue()), Client.instance.getFriendManager().isFriend(entitylivingbaseIn.getName()) ? 0.5F : (chams.rainbow.getValue() ? rgba[1] : chams.visiblegreen.getValue()), Client.instance.getFriendManager().isFriend(entitylivingbaseIn.getName()) ? 1 : (chams.rainbow.getValue() ? rgba[2] : chams.visibleblue.getValue()), chams.alpha.getValue());
+                    GL11.glColor4d(Client.instance.getFriendManager().isFriend(entitylivingbaseIn.getName()) ? 0.12f : (chams.rainbow.get() ? rgba[0] : chams.visiblered.get()), Client.instance.getFriendManager().isFriend(entitylivingbaseIn.getName()) ? 0.5F : (chams.rainbow.get() ? rgba[1] : chams.visiblegreen.get()), Client.instance.getFriendManager().isFriend(entitylivingbaseIn.getName()) ? 1 : (chams.rainbow.get() ? rgba[2] : chams.visibleblue.get()), chams.alpha.get());
                     this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, scaleFactor);
                     GL11.glEnable(3042);
                     GL11.glEnable(2896);

@@ -1566,10 +1566,10 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      * Runs the current tick.
      */
     public void runTick() throws IOException {
-        if (ClientSetting.resetBF.getValue()) {
+        if (ClientSetting.resetBF.get()) {
             new SoundFxPlayer().playSound(SoundFxPlayer.SoundType.KeyConfirm, 5f);
             ClientSetting.resetBF.setValue(false);
-            BetterFpsConfig.getConfig().algorithm = ((ClientSetting.betterfps) ClientSetting.betterFPS.getValue()).get();
+            BetterFpsConfig.getConfig().algorithm = ((ClientSetting.betterfps) ClientSetting.betterFPS.get()).get();
         }
 
 

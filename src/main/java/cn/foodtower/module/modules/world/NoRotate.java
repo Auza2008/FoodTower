@@ -31,13 +31,13 @@ extends Module {
 
         if (packet instanceof S08PacketPlayerPosLook) {
         	S08PacketPlayerPosLook thePacket = (S08PacketPlayerPosLook)packet;
-            if (NoZero.getValue() && thePacket.getYaw() == 0F && thePacket.getPitch() == 0F)
+            if (NoZero.get() && thePacket.getYaw() == 0F && thePacket.getPitch() == 0F)
                 return;
 
-            if (ConfirmIllegalRotation.getValue() || thePacket.getPitch() <= 90 && thePacket.getPitch() >= -90 && thePacket.getYaw() != mc.thePlayer.rotationYaw &&
+            if (ConfirmIllegalRotation.get() || thePacket.getPitch() <= 90 && thePacket.getPitch() >= -90 && thePacket.getYaw() != mc.thePlayer.rotationYaw &&
                     		thePacket.getPitch() != mc.thePlayer.rotationPitch) {
 
-                if (Confirm.getValue())
+                if (Confirm.get())
                     mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C05PacketPlayerLook(thePacket.getYaw(), thePacket.getPitch(), mc.thePlayer.onGround));
             }
 

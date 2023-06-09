@@ -64,44 +64,44 @@ public class AutoGG extends Module {
     @EventHandler
     public void onUpdate( EventPreUpdate e) {
         if (mc.thePlayer != null) {
-            if (gg.getValue() && autoplay.getValue()) {
+            if (gg.get() && autoplay.get()) {
                 setCustomName("AutoGG&Play");
-            }else if (gg.getValue() && !autoplay.getValue()){
+            }else if (gg.get() && !autoplay.get()){
                 setCustomName("AutoGG");
-            }else if (autoplay.getValue() && !gg.getValue()){
+            }else if (autoplay.get() && !gg.get()){
                 setCustomName("AutoPlay");
             }else{
                 setCustomName("Auto?");
             }
             if (needSpeak) {
                 if (showed) {
-                    Notifications.getManager().post("AutoGG&Play", "您将在" + autoPlayDelay.getValue() / 1000 + "秒内送往新游戏");
+                    Notifications.getManager().post("AutoGG&Play", "您将在" + autoPlayDelay.get() / 1000 + "秒内送往新游戏");
                     showed = false;
                 }
-                if (!speaked && timer.isDelayComplete(delay.getValue().longValue())) {
+                if (!speaked && timer.isDelayComplete(delay.get().longValue())) {
                     speaked = true;
 
                     win++;
 
                     if (this.isEnabled()) {
-                        if (gg.getValue()) {
-                            mc.thePlayer.sendChatMessage("/ac GG " + (ad.getValue() ? word[new Random().nextInt(word.length)] : ""));
+                        if (gg.get()) {
+                            mc.thePlayer.sendChatMessage("/ac GG " + (ad.get() ? word[new Random().nextInt(word.length)] : ""));
                         }
 
-                        if (screenshot.getValue()) {
+                        if (screenshot.get()) {
                             mc.ingameGUI.getChatGUI().printChatMessage(ScreenShotHelper.saveScreenshot(mc.mcDataDir, mc.displayWidth, mc.displayHeight, mc.getFramebuffer()));
                         }
                     }
                 }
 
                 if (speaked) {
-                    if (timer.isDelayComplete(autoPlayDelay.getValue().longValue() + delay.getValue().longValue())) {
+                    if (timer.isDelayComplete(autoPlayDelay.get().longValue() + delay.get().longValue())) {
                         speaked = false;
                         needSpeak = false;
                         this.display = false;
-                        if (autoplay.getValue() && this.isEnabled()) mc.thePlayer.sendChatMessage(playCommand);
+                        if (autoplay.get() && this.isEnabled()) mc.thePlayer.sendChatMessage(playCommand);
                     } else {
-                        this.display = autoplay.getValue();
+                        this.display = autoplay.get();
                     }
                 }
             }

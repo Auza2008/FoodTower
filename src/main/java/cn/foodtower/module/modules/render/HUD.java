@@ -55,7 +55,7 @@ public class HUD extends Module {
     public static Option hideRender = new Option("HideRender", false);
     public static Numbers<Double> ArrayGap = new Numbers<>("ArraylistGap", 0.0D, -10.0D, 10.0D, 1D);
     public static Mode ArrayMode = new Mode("ArrayColorMode", ArrayModeE.values(), ArrayModeE.Sky);
-    public static Mode ArrayFontMode = new Mode("ArrayFont", ArrayFont.values(), ArrayFont.GoogleSans16);
+    public static Mode ArrayFontMode = new Mode("ArrayFont", ArrayFont.values(), ArrayFont.Baloo16);
     public static Option customlogo = new Option("Logo", true);
     public static Option lhp = new Option("LowHPWarning", true);
     public static Option Arraylists = new Option("ArrayList", true);
@@ -67,7 +67,7 @@ public class HUD extends Module {
     public static Numbers<Double> g = new Numbers<>("Green", 255d, 0.0, 255.0, 1.0);
     public static Numbers<Double> b = new Numbers<>("Blue", 255.0, 0.0, 255.0, 1.0);
     public static Numbers<Double> a = new Numbers<>("Alpha", 255.0, 0.0, 255.0, 1.0);
-    public static Numbers<Double> Arraybackground = new Numbers<>("ArrayAlpha", 60.0, 0.0, 255.0, 1.0);
+    public static Numbers<Double> Arraybackground = new Numbers<>("ArrayAlpha", 120.0, 0.0, 255.0, 1.0);
     public static Mode logomode = new Mode("LogoMode", HUD.logomodeE.values(), logomodeE.FoodTower);
     public static Mode RectMode = new Mode("RectMode", RectModes.values(), RectModes.None);
     public static Option GuiChatBackGround = new Option("GuiChatBackGround", false);
@@ -109,7 +109,7 @@ public class HUD extends Module {
     }
 
     private static int HUDColor() {
-        return new Color(r.getValue().intValue(), g.getValue().intValue(), b.getValue().intValue()).getRGB();
+        return new Color(r.get().intValue(), g.get().intValue(), b.get().intValue()).getRGB();
     }
 
     @EventHandler
@@ -147,40 +147,40 @@ public class HUD extends Module {
         int c2222 = color2222.getRGB();
         int colorXD;
         if (!mc.gameSettings.showDebugInfo) {
-            if (ArrayMode.getValue().equals(ArrayModeE.NewRainbow)) {
+            if (ArrayMode.get().equals(ArrayModeE.NewRainbow)) {
                 count = 0;
             }
         }
-        if (CompassValue.getValue()) {
+        if (CompassValue.get()) {
             compass.draw(sr);
         }
-        if (ArrayMode.getValue().equals(ArrayModeE.Wave)) {
+        if (ArrayMode.get().equals(ArrayModeE.Wave)) {
             colorXD = Palette.fade(Client.getClientColor(false), (addY + 11) / 11, 16).getRGB();
-        } else if (ArrayMode.getValue().equals(ArrayModeE.NewRainbow)) {
+        } else if (ArrayMode.get().equals(ArrayModeE.NewRainbow)) {
             double rainbowDelay = Math.ceil((double) ((System.currentTimeMillis() + (long) ((double) (++count * -50))) / 8L) + -2.5);
             colorXD = Color.getHSBColor((double) ((float) (rainbowDelay / 360.0)) < 0.5 ? -((float) (rainbowDelay / 360.0)) : (float) ((rainbowDelay %= 360.0) / 360.0), 0.5f, 1.0f).getRGB();
-        } else if (ArrayMode.getValue().equals(ArrayModeE.Rainbow)) {
+        } else if (ArrayMode.get().equals(ArrayModeE.Rainbow)) {
             colorXD = c2222;
-        } else if (ArrayMode.getValue().equals(ArrayModeE.Rainbow2)) {
+        } else if (ArrayMode.get().equals(ArrayModeE.Rainbow2)) {
             colorXD = RainbowColor2.getRGB();
-        } else if (ArrayMode.getValue().equals(ArrayModeE.BlueIceSakura)) {
+        } else if (ArrayMode.get().equals(ArrayModeE.BlueIceSakura)) {
             colorXD = new Color(rainbowcolors2.getRed(), 190, 255).getRGB();
-        } else if (ArrayMode.getValue().equals(ArrayModeE.NEON)) {
+        } else if (ArrayMode.get().equals(ArrayModeE.NEON)) {
             colorXD = new Color(rainbowcolors.getRed(), rainbowcolors.getGreen(), 255).getRGB();
-        } else if (ArrayMode.getValue().equals(ArrayModeE.Sky)) {
+        } else if (ArrayMode.get().equals(ArrayModeE.Sky)) {
             colorXD = ColorUtils.skyRainbow(counter[0] * (skyDistanceValue.get().intValue() * 50), skySaturation.get().floatValue(), skyBrightness.get().floatValue()).getRGB();
             counter[0] = counter[0] - 1;
         } else {
             colorXD = Client.getClientColor();
         }
 
-        hue += RainbowSpeed.getValue().floatValue() / 5.0F;
+        hue += RainbowSpeed.get().floatValue() / 5.0F;
         if (hue > 255.0F) {
             hue = 0.0F;
         }
         float h = hue;
         counter[0] = 0;
-        if (lhp.getValue()) {
+        if (lhp.get()) {
             if (mc.thePlayer.getHealth() < 6 && !lowhealth) {
                 Notifications.getManager().post("Warning!", "当前血量过低！", Notifications.Type.WARNING);
                 lowhealth = true;
@@ -193,7 +193,7 @@ public class HUD extends Module {
 
         if (ModuleManager.getModByClass(MusicPlayer.class).isEnabled() && MusicManager.INSTANCE.lyric && MusicManager.INSTANCE.getMediaPlayer().getStatus() == MediaPlayer.Status.PLAYING) {
             FastUniFontRenderer lyricFont = FontLoader.msFont25;
-            int addonYlyr = MusicPlayer.musicPosYlyr.getValue().intValue();
+            int addonYlyr = MusicPlayer.musicPosYlyr.get().intValue();
             //Lyric
             int borderCol = new Color(238, 171, 227).getRGB();
             int col = new Color(0xffE8DEFF).getRGB();
@@ -218,19 +218,19 @@ public class HUD extends Module {
         String speedc;
         String user;
         String xyz;
-        if (!Widget.getValue().equals(widgetE.None) && !Widget.getValue().equals(widgetE.Astolfo)) {
-            int widgetwidth = ((widgetE) Widget.getValue()).width;
-            int widgetheight = ((widgetE) Widget.getValue()).height;
-            int id = ((widgetE) Widget.getValue()).id;
+        if (!Widget.get().equals(widgetE.None) && !Widget.get().equals(widgetE.Astolfo)) {
+            int widgetwidth = ((widgetE) Widget.get()).width;
+            int widgetheight = ((widgetE) Widget.get()).height;
+            int id = ((widgetE) Widget.get()).id;
             widgetwidth *= 0.25;
             widgetheight *= 0.25;
             RenderUtil.drawCustomImage(RenderUtil.width() - 100 - widgetwidth, RenderUtil.height() - widgetheight - (mc.ingameGUI.getChatGUI().getChatOpen() ? 14 : 0), widgetwidth, widgetheight, new ResourceLocation("FoodTower/widget/" + id + ".png"));
-        } else if (Widget.getValue().equals(widgetE.Astolfo)) {
+        } else if (Widget.get().equals(widgetE.Astolfo)) {
             RenderUtil.drawImage(new ResourceLocation("FoodTower/AstolfoTrifasSprite.png"), RenderUtil.width() - 160, RenderUtil.height() - 70, 256, 256);
         }
-        if (customlogo.getValue()) {
+        if (customlogo.get()) {
             HUD.shouldMove = true;
-            switch ((logomodeE) logomode.getValue()) {
+            switch ((logomodeE) logomode.get()) {
                 case Dark_Distance:
                 case Distance:
                     CFontRenderer dfont1 = FontLoaders.calibrilite50;
@@ -289,9 +289,9 @@ public class HUD extends Module {
                     DrawUtil.drawRoundedRect((float) (ScaledResolution.getScaledWidth() / 250 - this.width - 1.5), 1.0F, (float) (FontLoaders.Baloo18.getStringWidth("  v" + version + " | " + Client.userName + " | " + Minecraft.getDebugFPS() + "FPS") + 63.5), 12, 8, new Color(0, 0, 0, 120).getRGB(), 2, colorXD);
 //                    FontLoaders.SF18.drawStringWithShadow(user, RenderUtil.width() - FontLoaders.SF18.getStringWidth(user) - 80, RenderUtil.height() - 9, colorXD);
                     new ScaledResolution(mc);
-                    FontLoaders.SF18.drawStringWithShadow(xyz, ScaledResolution.getScaledWidth() / 250 - this.width, ScaledResolution.getScaledHeight() - 9, -1);
-                    FontLoaders.SF18.drawStringWithShadow(speedc, ScaledResolution.getScaledWidth() / 250 - this.width, new ScaledResolution(mc).getScaledHeight() - 19, -1);
-                    FontLoaders.SF18.drawStringWithShadow(fps, ScaledResolution.getScaledWidth() / 250 - this.width, new ScaledResolution(mc).getScaledHeight() - 29, -1);
+                    FontLoaders.Baloo18.drawStringWithShadow(xyz, ScaledResolution.getScaledWidth() / 250 - this.width, ScaledResolution.getScaledHeight() - 9, -1);
+                    FontLoaders.Baloo18.drawStringWithShadow(speedc, ScaledResolution.getScaledWidth() / 250 - this.width, new ScaledResolution(mc).getScaledHeight() - 19, -1);
+                    FontLoaders.Baloo18.drawStringWithShadow(fps, ScaledResolution.getScaledWidth() / 250 - this.width, new ScaledResolution(mc).getScaledHeight() - 29, -1);
                     String ok = "\247l" + Client.name.substring(1);
 //                    DrawUtil.drawBorderedRect(ScaledResolution.getScaledWidth() / 250 - this.width + 3.5f, 1f, 136f, 12f, 2f, new Color(50, 100, 255), new Color(0, 0, 0, 0));
                     FontLoaders.Baloo18.drawStringWithShadow(name, 3.0F, 3.0, -1);
@@ -305,7 +305,7 @@ public class HUD extends Module {
         if (!mc.gameSettings.showDebugInfo) {
             // ArrayList
             arryfont = true;
-            switch ((ArrayFont) ArrayFontMode.getValue()) {
+            switch ((ArrayFont) ArrayFontMode.get()) {
                 case SF18:
                     fontarry = FontLoaders.SF18;
                     break;
@@ -337,10 +337,10 @@ public class HUD extends Module {
                 fontarry = FontLoaders.GoogleSans16;
             }
             int[] counter = {0};
-            if (Arraylists.getValue()) {
+            if (Arraylists.get()) {
                 ArrayList<Module> sorted = new ArrayList<>();
                 for (Module m : ModuleManager.getModules()) {
-                    if ((m.getType().equals(ModuleType.Render) && !m.getName().equalsIgnoreCase("PacketMotior") && hideRender.getValue()) || m.wasRemoved() || (!m.isEnabled() && !m.getRender()))
+                    if ((m.getType().equals(ModuleType.Render) && !m.getName().equalsIgnoreCase("PacketMotior") && hideRender.get()) || m.wasRemoved() || (!m.isEnabled() && !m.getRender()))
                         continue;
                     sorted.add(m);
                 }
@@ -353,36 +353,36 @@ public class HUD extends Module {
                 double lastX = 0;
                 float width;
                 boolean first = true;
-                Color color = new Color(r.getValue().intValue(), g.getValue().intValue(), b.getValue().intValue(), a.getValue().intValue());
+                Color color = new Color(r.get().intValue(), g.get().intValue(), b.get().intValue(), a.get().intValue());
                 for (Module m : sorted) {
                     Color rainbowcolor = Color.getHSBColor(h / 255.0f, 0.4f, 0.8f);
                     Color rainbowcolor2 = Color.getHSBColor(h / 255.0f, 0.6f, 1f);
-                    color = new Color(r.getValue().intValue(), g.getValue().intValue(), b.getValue().intValue(), a.getValue().intValue());
+                    color = new Color(r.get().intValue(), g.get().intValue(), b.get().intValue(), a.get().intValue());
                     if (h > 255.0F) {
                         h = 0.0F;
                     }
-                    if (ArrayMode.getValue().equals(ArrayModeE.Wave)) {
+                    if (ArrayMode.get().equals(ArrayModeE.Wave)) {
                         color = Palette.fade(Client.getClientColor(false), (int) ((nextY - m.posYRend) / 11), 11);
                     }
-                    if (ArrayMode.getValue().equals(ArrayModeE.NewRainbow)) {
+                    if (ArrayMode.get().equals(ArrayModeE.NewRainbow)) {
                         double rainbowDelay = Math.ceil((double) ((System.currentTimeMillis() + (long) ((double) (++count * -50))) / 8L) + -2.5);
                         color = Color.getHSBColor((double) ((float) (rainbowDelay / 360.0)) < 0.5 ? -((float) (rainbowDelay / 360.0)) : (float) ((rainbowDelay %= 360.0) / 360.0), 0.5f, 1.0f);
                     }
-                    if (ArrayMode.getValue().equals(ArrayModeE.Sky)) {
+                    if (ArrayMode.get().equals(ArrayModeE.Sky)) {
                         color = ColorUtils.skyRainbow(counter[0] * (skyDistanceValue.get().intValue() * 50), skySaturation.get().floatValue(), skyBrightness.get().floatValue());
                         this.counter[0] = this.counter[0] - 1;
                     }
-                    if (ArrayMode.getValue().equals(ArrayModeE.Rainbow)) {
+                    if (ArrayMode.get().equals(ArrayModeE.Rainbow)) {
                         color = Color.getHSBColor(h / 255.0f, 0.5f, 0.9f);
                     }
-                    if (ArrayMode.getValue().equals(ArrayModeE.Rainbow2)) {
+                    if (ArrayMode.get().equals(ArrayModeE.Rainbow2)) {
                         color = RenderUtil.rainbow(counter[0] * -50, true);
                         RainbowColor2 = color;
                     }
-                    if (ArrayMode.getValue().equals(ArrayModeE.BlueIceSakura)) {
+                    if (ArrayMode.get().equals(ArrayModeE.BlueIceSakura)) {
                         color = new Color(rainbowcolor2.getRed(), 180, 255);
                     }
-                    if (ArrayMode.getValue().equals(ArrayModeE.NEON)) {
+                    if (ArrayMode.get().equals(ArrayModeE.NEON)) {
                         color = new Color(rainbowcolor.getRed(), rainbowcolor.getGreen(), 255);
                     }
                     m.lastY = m.posY;
@@ -390,21 +390,21 @@ public class HUD extends Module {
                     m.onRenderArray();
                     name = m.getSuffix().isEmpty() ? Client.getModuleName(m) : (String.format("%s %s", Client.getModuleName(m), m.getSuffix()));
                     double x = RenderUtil.width() - m.getX();
-                    if (!RectMode.getValue().equals(RectModes.Right)) {
+                    if (!RectMode.get().equals(RectModes.Right)) {
                         if (arryfont) {
-                            RenderUtil.drawRect(x - 4, nextY + m.posYRend, x + fontarry.getStringWidth(name), nextY + m.posYRend + 11 + ArrayGap.getValue(), new Color(0, 0, 0, Arraybackground.getValue().intValue()).getRGB());
+                            RenderUtil.drawRect(x - 4, nextY + m.posYRend, x + fontarry.getStringWidth(name), nextY + m.posYRend + 11 + ArrayGap.get(), new Color(0, 0, 0, Arraybackground.get().intValue()).getRGB());
                         } else {
-                            RenderUtil.drawRect(x - 4, nextY + m.posYRend, x + mc.fontRendererObj.getStringWidth(name), nextY + m.posYRend + 11 + ArrayGap.getValue(), new Color(0, 0, 0, Arraybackground.getValue().intValue()).getRGB());
+                            RenderUtil.drawRect(x - 4, nextY + m.posYRend, x + mc.fontRendererObj.getStringWidth(name), nextY + m.posYRend + 11 + ArrayGap.get(), new Color(0, 0, 0, Arraybackground.get().intValue()).getRGB());
                         }
                     } else {
                         if (arryfont) {
-                            RenderUtil.drawRect(x - 4, nextY + m.posYRend, x + fontarry.getStringWidth(name) + 1, nextY + m.posYRend + 11 + ArrayGap.getValue(), new Color(0, 0, 0, Arraybackground.getValue().intValue()).getRGB());
+                            RenderUtil.drawRect(x - 4, nextY + m.posYRend, x + fontarry.getStringWidth(name) + 1, nextY + m.posYRend + 11 + ArrayGap.get(), new Color(0, 0, 0, Arraybackground.get().intValue()).getRGB());
                         } else {
-                            RenderUtil.drawRect(x - 4, nextY + m.posYRend, x + mc.fontRendererObj.getStringWidth(name) + 1, nextY + m.posYRend + 11 + ArrayGap.getValue(), new Color(0, 0, 0, Arraybackground.getValue().intValue()).getRGB());
+                            RenderUtil.drawRect(x - 4, nextY + m.posYRend, x + mc.fontRendererObj.getStringWidth(name) + 1, nextY + m.posYRend + 11 + ArrayGap.get(), new Color(0, 0, 0, Arraybackground.get().intValue()).getRGB());
                         }
                     }
 
-                    if (RectMode.getValue().equals(RectModes.Full)) {
+                    if (RectMode.get().equals(RectModes.Full)) {
                         double i = (lastX - 4 - 1) - (lastX - 3 - 1 - (x - 4 - 1));
                         boolean b = (lastX - 4 - 1) > i;
                         if (arryfont) {
@@ -416,29 +416,29 @@ public class HUD extends Module {
                                 RenderUtil.drawRect(x - 5, 0, x + mc.fontRendererObj.getStringWidth(name), 1, color.getRGB());
                             }
                         }
-                        RenderUtil.drawRect(x - 5, nextY + m.posYRend, x - 4, nextY + m.posYRend + 11 + ArrayGap.getValue(), color.getRGB());
+                        RenderUtil.drawRect(x - 5, nextY + m.posYRend, x - 4, nextY + m.posYRend + 11 + ArrayGap.get(), color.getRGB());
                         if (!first) {
                             RenderUtil.drawRect(lastX - 4 - 1 + (b ? 1 : 0), nextY + m.posYRend - 1 + (b ? 0 : 1), i + 1, nextY + m.posYRend + (b ? 0 : 1), color.getRGB());
                         }
-                    } else if (RectMode.getValue().equals(RectModes.Left)) {
-                        RenderUtil.drawRect(x - 5, nextY + m.posYRend, x - 4, nextY + m.posYRend + 11 + ArrayGap.getValue(), color.getRGB());
-                    } else if (RectMode.getValue().equals(RectModes.Right)) {
-                        RenderUtil.drawRect(x + fontarry.getStringWidth(name) + 1, nextY + m.posYRend, x + fontarry.getStringWidth(name) + 2, nextY + m.posYRend + 11 + ArrayGap.getValue(), color.getRGB());
+                    } else if (RectMode.get().equals(RectModes.Left)) {
+                        RenderUtil.drawRect(x - 5, nextY + m.posYRend, x - 4, nextY + m.posYRend + 11 + ArrayGap.get(), color.getRGB());
+                    } else if (RectMode.get().equals(RectModes.Right)) {
+                        RenderUtil.drawRect(x + fontarry.getStringWidth(name) + 1, nextY + m.posYRend, x + fontarry.getStringWidth(name) + 2, nextY + m.posYRend + 11 + ArrayGap.get(), color.getRGB());
                     }
                     if (!arryfont) {
                         width = mc.fontRendererObj.getStringWidth(name);
-                        if (ArrayShadow.getValue())
-                            mc.fontRendererObj.drawStringWithShadow(name, (float) (x - 1), (float) (nextY + m.posYRend + (ArrayGap.getValue() / 2) + 1), color.getRGB());
+                        if (ArrayShadow.get())
+                            mc.fontRendererObj.drawStringWithShadow(name, (float) (x - 1), (float) (nextY + m.posYRend + (ArrayGap.get() / 2) + 1), color.getRGB());
                         else
-                            mc.fontRendererObj.drawString(name, (int) (x - 1), (int) (nextY + m.posYRend + (ArrayGap.getValue()) + 1), color.getRGB());
+                            mc.fontRendererObj.drawString(name, (int) (x - 1), (int) (nextY + m.posYRend + (ArrayGap.get()) + 1), color.getRGB());
                     } else {
                         width = fontarry.getStringWidth(name);
-                        if (ArrayShadow.getValue())
-                            fontarry.drawStringWithShadow(name, x - 1, nextY + m.posYRend + (ArrayGap.getValue() / 2) + 3, color.getRGB());
+                        if (ArrayShadow.get())
+                            fontarry.drawStringWithShadow(name, x - 1, nextY + m.posYRend + (ArrayGap.get() / 2) + 3, color.getRGB());
                         else
-                            fontarry.drawString(name, (float) (x - 1), (float) (nextY + m.posYRend + (ArrayGap.getValue() / 2) + 3), color.getRGB());
+                            fontarry.drawString(name, (float) (x - 1), (float) (nextY + m.posYRend + (ArrayGap.get() / 2) + 3), color.getRGB());
                     }
-                    if (RectMode.getValue().equals(RectModes.Right)) {
+                    if (RectMode.get().equals(RectModes.Right)) {
                         width += 2;
                     }
                     lastX = x;
@@ -454,7 +454,7 @@ public class HUD extends Module {
                         if ((m.getX() <= 0)) {
                             m.setRender(false);
                         }
-                        nextY += 11 + ArrayGap.getValue();
+                        nextY += 11 + ArrayGap.get();
                     } else {
                         if ((m.getX() != width) && (m.getRender() && m.isEnabled())) {
                             m.setX(AnimationUtils.animate(width, m.getX(), (14.4f / (float) Minecraft.getDebugFPS())));
@@ -465,14 +465,14 @@ public class HUD extends Module {
                         if ((m.getX() <= -5)) {
                             m.setRender(false);
                         }
-                        nextY += 11 + ArrayGap.getValue();
+                        nextY += 11 + ArrayGap.get();
                     }
                     addY = nextY;
                     counter[0]++;
                     this.counter[0] = 0;
                     if (sorted.size() == counter[0]) {
-                        if (RectMode.getValue().equals(RectModes.Full) || RectMode.getValue().equals(RectModes.Bottom)) {
-                            RenderUtil.drawRect(lastX - (RectMode.getValue().equals(RectModes.Full) ? 4 : 3) - 1, nextY + m.posYRend, RenderUtil.width(), nextY + m.posYRend + 1, color.getRGB());
+                        if (RectMode.get().equals(RectModes.Full) || RectMode.get().equals(RectModes.Bottom)) {
+                            RenderUtil.drawRect(lastX - (RectMode.get().equals(RectModes.Full) ? 4 : 3) - 1, nextY + m.posYRend, RenderUtil.width(), nextY + m.posYRend + 1, color.getRGB());
                         }
                     }
                 }
@@ -501,16 +501,16 @@ public class HUD extends Module {
                 int ychat;
                 //String vertext = (Object)((Object)EnumChatFormatting.WHITE) + Client.RELTYPE + (Object)((Object)EnumChatFormatting.GRAY) + "-" + Client.RELclientVersion;
                 ychat = mc.ingameGUI.getChatGUI().getChatOpen() ? 24 : 10;
-                if (this.info.getValue()) {
+                if (this.info.get()) {
                     //font2.drawStringWithShadow(vertext, new ScaledResolution(this.mc).getScaledWidth() - font2.getStringWidth(vertext) - 2, new ScaledResolution(this.mc).getScaledHeight() - font.getHeight() + y - 12 - ychat,new Color(255,255,255).getRGB());
-                    if (!(logomode.getValue().equals(logomodeE.Novoline)) && !HUD.logomode.getValue().equals(logomodeE.FoodTower)) {
+                    if (!(logomode.get().equals(logomodeE.Novoline)) && !HUD.logomode.get().equals(logomodeE.FoodTower)) {
                         font.drawCenteredStringWithShadow(text, ScaledResolution.getScaledWidth() / 2f, font.getStringHeight(text) + 5, new Color(12, 12, 17).getRGB());
                         font.drawStringWithShadow(EnumChatFormatting.GRAY + "FPS: " + EnumChatFormatting.WHITE + Minecraft.debugFPS + EnumChatFormatting.GRAY + " Ping: " + EnumChatFormatting.WHITE + pings + " " + text2, 4.0, ScaledResolution.getScaledHeight() - ychat, Colors.WHITE.c);
                     }
                     this.drawPotionStatus(sr);
                 }
             }
-            if (ArrayMode.getValue().equals(ArrayModeE.NewRainbow) && (count += 3) > 100) {
+            if (ArrayMode.get().equals(ArrayModeE.NewRainbow) && (count += 3) > 100) {
                 count = 0;
             }
         }

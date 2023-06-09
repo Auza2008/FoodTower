@@ -87,7 +87,7 @@ public class BowAimbot
             float trajectoryTheta90 = (float) (Math.atan2(zDistance, xDistance) * 180.0 / 3.141592653589793) - 90.0f;
             float bowTrajectory = (float) ((double) ((float) (-Math.toDegrees(this.getLaunchAngle((EntityLivingBase) attackList.get(currentTarget), v, g)))) - 3.8);
             if (trajectoryTheta90 <= 360.0f && bowTrajectory <= 360.0f) {
-                if (this.lockView.getValue().booleanValue()) {
+                if (this.lockView.get().booleanValue()) {
                     mc.thePlayer.rotationYaw = trajectoryTheta90;
                     mc.thePlayer.rotationPitch = bowTrajectory;
                 } else {

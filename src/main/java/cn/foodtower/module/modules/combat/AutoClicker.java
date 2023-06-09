@@ -4,7 +4,6 @@ import cn.foodtower.api.EventHandler;
 import cn.foodtower.api.events.World.EventPreUpdate;
 import cn.foodtower.api.value.Numbers;
 import cn.foodtower.api.value.Option;
-import cn.foodtower.manager.ModuleManager;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.util.entity.PlayerUtil;
@@ -42,8 +41,8 @@ public class AutoClicker extends Module {
     }
 
     private void delay() {
-        float minCps = cpsmin.getValue().floatValue();
-        float maxCps = cpsmax.getValue().floatValue();
+        float minCps = cpsmin.get().floatValue();
+        float maxCps = cpsmax.get().floatValue();
         float minDelay = 10.0f / minCps;
         float maxDelay = 10.0f / maxCps;
         this.delay = (double) maxDelay + this.r.nextDouble() * (double) (minDelay - maxDelay);
@@ -53,16 +52,16 @@ public class AutoClicker extends Module {
     @EventHandler
     private void onUpdate(EventPreUpdate event) {
         BlockPos bp = mc.thePlayer.rayTrace(6.0, 0.0f).getBlockPos();
-        boolean isblock = isblock = mc.theWorld.getBlockState(bp).getBlock() != Blocks.air && mc.objectMouseOver.typeOfHit != MovingObjectType.ENTITY;
-        if (!BreakBlock.getValue()) isblock = false;
+        boolean isblock = mc.theWorld.getBlockState(bp).getBlock() != Blocks.air && mc.objectMouseOver.typeOfHit != MovingObjectType.ENTITY;
+        if (!BreakBlock.get()) isblock = false;
         if (this.time2.delay(this.delay) && !this.time2.delay(this.delay + this.delay / 2)) Clicked = true;
         if (this.time2.delay(this.delay + this.delay - 1.0)) {
             Clicked = false;
             time2.reset();
         }
 
-        if (!ModuleManager.getModuleByClass(KillAura.class).isEnabled() && Mouse.isButtonDown(0) && this.time.delay(this.delay) && mc.currentScreen == null && !isblock) {
-            PlayerUtil.blockHit(mc.objectMouseOver.entityHit, this.ab.getValue());
+        if (/*!ModuleManager.getModuleByClass(KillAura.class).isEnabled() && */Mouse.isButtonDown(0) && this.time.delay(this.delay) && mc.currentScreen == null && !isblock) {
+            PlayerUtil.blockHit(mc.objectMouseOver.entityHit, this.ab.get());
             mc.leftClickCounter = 0;
             mc.clickMouse();
             this.delay();
@@ -75,8 +74,8 @@ public class AutoClicker extends Module {
         if (!Keyboard.isKeyDown(42)) {
             return;
         }
-        if (mc.currentScreen instanceof GuiContainer && this.InvClicker.getValue()) {
-            float invClickDelay = 1000.0f / cpsmax.getValue().floatValue() + (float) this.r.nextInt(50);
+        if (mc.currentScreen instanceof GuiContainer && this.InvClicker.get()) {
+            float invClickDelay = 1000.0f / cpsmax.get().floatValue() + (float) this.r.nextInt(50);
             if (Mouse.isButtonDown(0) && this.time3.delay(invClickDelay)) {
                 try {
                     mc.currentScreen.InventoryClicks();

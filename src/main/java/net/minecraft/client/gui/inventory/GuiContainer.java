@@ -112,7 +112,7 @@ public abstract class GuiContainer extends GuiScreen
         int j = this.guiTop;
         this.drawDefaultBackground();
 
-        if (ClientSetting.backPackAnimation.getValue()) {
+        if (ClientSetting.backPackAnimation.get()) {
             animpos = AnimationUtil.moveUD(animpos, 1f, 0.1f, 0.1f);
             GlStateManager.rotate(animpos, 0, 0, 0);
             GlStateManager.translate(0, animpos, 0);

@@ -33,11 +33,11 @@ public class AutoArmor extends Module {
     @EventHandler
 
     public void onEvent(EventTick event) {
-        this.setSuffix(MODE.getValue());
+        this.setSuffix(MODE.get());
     	if(ModuleManager.getModuleByClass(InvCleaner.class).isEnabled())
     		return;
-    	long delay = DELAY.getValue().longValue()*50;
-        if(MODE.getValue() == EMode.OpenInv && !(mc.currentScreen instanceof GuiInventory)){
+    	long delay = DELAY.get().longValue()*50;
+        if(MODE.get() == EMode.OpenInv && !(mc.currentScreen instanceof GuiInventory)){
         	return;
         }
         if(mc.currentScreen == null || mc.currentScreen instanceof GuiInventory || mc.currentScreen instanceof GuiChat){
@@ -54,7 +54,7 @@ public class AutoArmor extends Module {
     			if(isBestArmor(is, type)){
     				continue;
     			}else{
-    				if( this.MODE.getValue() == EMode.FakeInv){
+    				if( this.MODE.get() == EMode.FakeInv){
         				C16PacketClientStatus p = new C16PacketClientStatus(EnumState.OPEN_INVENTORY_ACHIEVEMENT);
         				mc.thePlayer.sendQueue.addToSendQueue(p);
     				}
@@ -67,7 +67,7 @@ public class AutoArmor extends Module {
     				if(isBestArmor(is, type) && getProtection(is) > 0){
     					shiftClick(i);
     					timer.reset();
-    					if(this.DELAY.getValue().longValue() > 0)
+    					if(this.DELAY.get().longValue() > 0)
     						return;
     				}
     			}

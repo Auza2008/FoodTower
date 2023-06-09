@@ -49,7 +49,7 @@ public class BedNuker extends Module {
 
     @EventHandler
     public void onEvent( EventPreUpdate em) {
-        if (markSelf.getValue()) {
+        if (markSelf.get()) {
             if (selfBed != null) {
                 double posX = mc.thePlayer.posX;
                 double posZ = mc.thePlayer.posZ;
@@ -110,7 +110,7 @@ public class BedNuker extends Module {
     }
     @EventHandler
     public void onPacket( EventChat e) {
-        if (markSelf.getValue()) {
+        if (markSelf.get()) {
             if (e.getMessage().startsWith("起床战争") && e.getMessage().endsWith("' 刚刚开始!")) {
                 selfBed = null;
             }

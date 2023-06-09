@@ -28,20 +28,20 @@ public class ChatManager extends Module {
             if(msg.startsWith("/")) return;
             if(msg.startsWith(".")) return;
             e.setCancelled(true);
-            if (tail.getValue() || tailweb.getValue()){
+            if (tail.get() || tailweb.get()){
                 msg = msg + " | ";
             }
-            if (tail.getValue()){
+            if (tail.get()){
                 msg = msg+"\u1d05\u026a\u0073\u1d1b\u1d00\u0274\u1d04\u1d07 ";
             }
-            if (tailweb.getValue()){
+            if (tailweb.get()){
                 msg = msg+"\u029c\u1d1b\u1d1b\u1d18\u0073\u003a\u002f\u002f\u1d21\u1d21\u1d21\u002e\u1d04\u1d00\u0073\u1d0f\u1d05\u1d0f\u002e\u0078\u028f\u1d22\u002f\u1d05\u026a\u0073\u1d1b\u1d00\u0274\u1d04\u1d07 ";
             }
-            if (prefix.getValue()){
+            if (prefix.get()){
                 msg = "[FoodTower] "+msg;
             }
-            if (randomstring.getValue()){
-                msg = msg + RandomUtil.randomString(randomlength.getValue().intValue());
+            if (randomstring.get()){
+                msg = msg + RandomUtil.randomString(randomlength.get().intValue());
             }
             mc.getNetHandler().addToSendQueueSilent(new C01PacketChatMessage(msg));
         }

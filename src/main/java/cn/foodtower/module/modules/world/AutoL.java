@@ -36,7 +36,7 @@ public class AutoL extends Module {
     public static void sayL() {
         Random r = new Random();
 
-        switch ((LMode) mode.getValue()) {
+        switch ((LMode) mode.get()) {
             case Hypixel: {
                 sendL(" " + Hypixel[r.nextInt(Hypixel.length)]);
                 break;
@@ -80,16 +80,16 @@ public class AutoL extends Module {
     }
 
     public static void sendL(String string) {
-        mc.thePlayer.sendChatMessage(getHead() + KillAura.curTarget.getName() + (sendL.getValue() ? " L " : " ") + string + getTail());
+        mc.thePlayer.sendChatMessage(getHead() + KillAura.curTarget.getName() + (sendL.get() ? " L " : " ") + string + getTail());
     }
 
     //TODO 等待网站建设
     private static String getTail() {
-        return (ad.getValue() ? " | get FoodTower -> FoodTower dot icu " : "") + (randomString.getValue() ? RandomUtil.randomString(5 + new Random().nextInt(5)) : "");
+        return (ad.get() ? " | get FoodTower -> FoodTower dot icu " : "") + (randomString.get() ? RandomUtil.randomString(5 + new Random().nextInt(5)) : "");
     }
 
     private static String getHead() {
-        return head.getValue() ? "[" + Client.name + "] " : "";
+        return head.get() ? "[" + Client.name + "] " : "";
     }
 
     public static boolean isHypixelKilled(String message) {
@@ -98,7 +98,7 @@ public class AutoL extends Module {
 
     @EventHandler
     public void onRender2D(EventRender2D e) {
-        this.setSuffix(mode.getValue());
+        this.setSuffix(mode.get());
     }
 
     @EventHandler

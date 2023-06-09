@@ -28,7 +28,7 @@ public class Breadcrumbs extends Module {
 
     @EventHandler
     public void onRender3D(EventRender3D event) {
-        final Color color = colorRainbow.getValue() ? HUD.RainbowColor : new Color(colorRedValue.getValue().intValue(), colorGreenValue.getValue().intValue(), colorBlueValue.getValue().intValue());
+        final Color color = colorRainbow.get() ? HUD.RainbowColor : new Color(colorRedValue.get().intValue(), colorGreenValue.get().intValue(), colorBlueValue.get().intValue());
 
         synchronized (positions) {
             glPushMatrix();

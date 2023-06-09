@@ -45,7 +45,7 @@ public class Blink extends Module {
         if(mc.thePlayer == null)
             return;
 
-        if (!pulseValue.getValue()) {
+        if (!pulseValue.get()) {
             fakePlayer = new EntityOtherPlayerMP( mc.theWorld, mc.thePlayer.getGameProfile( ) );
             fakePlayer.clonePlayer( mc.thePlayer, true );
             fakePlayer.copyLocationAndAnglesFrom( mc.thePlayer );
@@ -98,7 +98,7 @@ public class Blink extends Module {
             positions.add(new double[] {mc.thePlayer.posX, mc.thePlayer.getEntityBoundingBox().minY, mc.thePlayer.posZ});
         }
 
-        if(pulseValue.getValue()&& pulseTimer.hasTimePassed(pulseDelayValue.getValue().longValue())) {
+        if(pulseValue.get()&& pulseTimer.hasTimePassed(pulseDelayValue.get().longValue())) {
             blink();
             pulseTimer.reset();
         }
@@ -107,7 +107,7 @@ public class Blink extends Module {
     @EventHandler
     public void onRender3D(EventRender3D event) {
         final Breadcrumbs breadcrumbs = (Breadcrumbs) ModuleManager.getModuleByClass(Breadcrumbs.class);
-        final Color color = breadcrumbs.colorRainbow.getValue() ? HUD.RainbowColor : new Color(breadcrumbs.colorRedValue.getValue().intValue(), breadcrumbs.colorGreenValue.getValue().intValue(), breadcrumbs.colorBlueValue.getValue().intValue());
+        final Color color = breadcrumbs.colorRainbow.get() ? HUD.RainbowColor : new Color(breadcrumbs.colorRedValue.get().intValue(), breadcrumbs.colorGreenValue.get().intValue(), breadcrumbs.colorBlueValue.get().intValue());
 
         synchronized(positions) {
             glPushMatrix();

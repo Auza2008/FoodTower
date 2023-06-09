@@ -26,26 +26,26 @@ public class NoFall extends Module {
 
 	@Override
 	public void onEnable(){
-		((NoFallMode)mode.getValue()).get().onEnable();
+		((NoFallMode)mode.get()).get().onEnable();
 	}
 
 	@EventHandler
 	private void onUpdate(EventPreUpdate e) {
-		super.setSuffix(mode.getValue());
+		super.setSuffix(mode.get());
 		if (mc.thePlayer.capabilities.isFlying || mc.thePlayer.capabilities.disableDamage
 				|| mc.thePlayer.motionY >= 0.0d)
 			return;
-		if ( Criticals.mode.getValue().equals(Criticals.CritMode.NoGround) && ModuleManager.getModuleByClass(Criticals.class).isEnabled()) {
+		if ( Criticals.mode.get().equals(Criticals.CritMode.NoGround) && ModuleManager.getModuleByClass(Criticals.class).isEnabled()) {
 			return;
 		}
 		if(ModuleManager.getModByClass( Freecam.class ).isEnabled()){return;}
-		((NoFallMode)mode.getValue()).get().onUpdate(e);
+		((NoFallMode)mode.get()).get().onUpdate(e);
 
 	}
 
 	@EventHandler
 	public void onPacket(EventPacketSend e) {
-		((NoFallMode)mode.getValue()).get().onPacketSend(e);
+		((NoFallMode)mode.get()).get().onPacketSend(e);
 	}
 
 	public enum NoFallMode {

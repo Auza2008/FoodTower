@@ -41,9 +41,9 @@ public class AutoPot
 
     @EventHandler
     private void onUpdate(EventPreUpdate em) {
-        if (!mc.thePlayer.onGround && Ground.getValue()) return;
-        final boolean speed = this.SPEED.getValue();
-        final boolean regen = this.REGEN.getValue();
+        if (!mc.thePlayer.onGround && Ground.get()) return;
+        final boolean speed = this.SPEED.get();
+        final boolean regen = this.REGEN.get();
 
         if (timer.delay(200)) {
             if (potting)
@@ -61,7 +61,7 @@ public class AutoPot
                 continue;
             if (pot == 6 || pot == 10) {
                 if (timer.delay(900) && !mc.thePlayer.isPotionActive(pot)) {
-                    if (mc.thePlayer.getHealth() < this.HEALTH.getValue() * 2) {
+                    if (mc.thePlayer.getHealth() < this.HEALTH.get() * 2) {
                         getBestPot(spoofSlot, pot);
                     }
                 }
@@ -79,7 +79,7 @@ public class AutoPot
         double movedPosX = mc.thePlayer.posX + mc.thePlayer.motionX * 26.0D;
         double movedPosY = mc.thePlayer.boundingBox.minY - 3.6D;
         double movedPosZ = mc.thePlayer.posZ + mc.thePlayer.motionZ * 26.0D;
-        if (this.PREDICT.getValue())
+        if (this.PREDICT.get())
             return RotationUtil.getRotationFromPosition(movedPosX, movedPosZ, movedPosY);
         else
             return new float[]{mc.thePlayer.rotationYaw, 90};

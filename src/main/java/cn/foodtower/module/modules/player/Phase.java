@@ -1,7 +1,7 @@
 package cn.foodtower.module.modules.player;
 
 import cn.foodtower.api.EventHandler;
-import cn.foodtower.api.events.Misc.EventCollideWithBlock;
+import cn.foodtower.api.events.Misc.EventBlockBB;
 import cn.foodtower.api.events.Misc.EventPushBlock;
 import cn.foodtower.api.events.Render.EventRenderBlock;
 import cn.foodtower.api.events.World.EventMotionUpdate;
@@ -48,8 +48,8 @@ public final class Phase
     }
 
     @EventHandler
-    public void onBoundingBox(EventCollideWithBlock event) {
-        switch ((modes)((Object)this.mode.getValue())) {
+    public void onBoundingBox(EventBlockBB event) {
+        switch ((modes)((Object)this.mode.get())) {
             case Hypixel: {
                 if (!PlayerUtil.isInsideBlock()) break;
                 event.setBoundingBox(null);
@@ -70,7 +70,7 @@ public final class Phase
 
     @EventHandler
     public void onMotionUpdate(EventMotionUpdate event) {
-        switch ((modes)((Object)this.mode.getValue())) {
+        switch ((modes)((Object)this.mode.get())) {
             case Hypixel: {
                 if (event.isPre()) break;
                 double multiplier = 0.3;
@@ -99,7 +99,7 @@ public final class Phase
 
     @EventHandler
     public void onMove(EventMove event) {
-        switch ((modes)((Object)this.mode.getValue())) {
+        switch ((modes)((Object)this.mode.get())) {
             case Hypixel: {
                 if (!PlayerUtil.isInsideBlock()) break;
                 if (mc.gameSettings.keyBindJump.isKeyDown()) {

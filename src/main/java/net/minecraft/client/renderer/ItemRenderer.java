@@ -423,7 +423,7 @@ public class ItemRenderer {
                     case 4:
                         byte var5 = 0;
                         Animations Ani = (Animations) ModuleManager.getModuleByClass(Animations.class);
-                        GlStateManager.translate(Animations.x.getValue(), Animations.y.getValue(), Animations.z.getValue());
+                        GlStateManager.translate(Animations.x.get(), Animations.y.get(), Animations.z.get());
                         if (!ModuleManager.getModuleByClass(Animations.class).isEnabled()) {
                             this.transformFirstPersonItem(af / 2.0F, af1);
                             this.doBlockTransformations();
@@ -436,7 +436,7 @@ public class ItemRenderer {
                             float var14;
                             float var9;
                             float var8;
-                            switch ((Animations.renderMode) Animations.mode.getValue()) {
+                            switch ((Animations.renderMode) Animations.mode.get()) {
                                 case None:
                                     this.transformFirstPersonItem(f2, 0.0F);
                                     this.doBlockTransformations();
@@ -513,14 +513,14 @@ public class ItemRenderer {
             } else {
                 byte var5 = 0;
                 Animations Ani = (Animations) ModuleManager.getModuleByClass(Animations.class);
-                if (Animations.EveryThingBlock.getValue() && mc.gameSettings.keyBindUseItem.isKeyDown()) {
-                    GL11.glTranslated(Animations.x.getValue(), Animations.y.getValue(), Animations.z.getValue());
+                if (Animations.EveryThingBlock.get() && mc.gameSettings.keyBindUseItem.isKeyDown()) {
+                    GL11.glTranslated(Animations.x.get(), Animations.y.get(), Animations.z.get());
                     if (!ModuleManager.getModuleByClass(Animations.class).isEnabled()) {
                         this.transformFirstPersonItem(af / 2.0F, af1);
                         this.doBlockTransformations();
                     } else {
 
-                        GlStateManager.translate(Animations.x.getValue(), Animations.y.getValue(), Animations.z.getValue());
+                        GlStateManager.translate(Animations.x.get(), Animations.y.get(), Animations.z.get());
                         if (!ModuleManager.getModuleByClass(Animations.class).isEnabled()) {
                             this.transformFirstPersonItem(af / 2.0F, af1);
                             this.doBlockTransformations();
@@ -532,7 +532,7 @@ public class ItemRenderer {
                             float var14;
                             float var9;
                             float var8;
-                            switch ((Animations.renderMode) Animations.mode.getValue()) {
+                            switch ((Animations.renderMode) Animations.mode.get()) {
                                 case None:
                                     this.transformFirstPersonItem(f2, 0.0F);
                                     this.doBlockTransformations();
@@ -681,7 +681,7 @@ public class ItemRenderer {
         GlStateManager.translate(0.7D, -0.4000000059604645D, -0.800000011920929D);
         GlStateManager.rotate(50.0F, 1.0F, 0.0F, 0.0F);
         GlStateManager.rotate(50.0F, 0.0F, 0.0F, -1.0F);
-        GlStateManager.rotate((float) this.ticks * 0.2F * Animations.SpinSpeed.getValue().floatValue(), 0.0F, 0.0F, 1.0F);
+        GlStateManager.rotate((float) this.ticks * 0.2F * Animations.SpinSpeed.get().floatValue(), 0.0F, 0.0F, 1.0F);
         GlStateManager.rotate(-25.0F, 1.0F, 0.0F, 0.0F);
         GlStateManager.scale(0.4D, 0.4D, 0.4D);
     }
@@ -830,7 +830,7 @@ public class ItemRenderer {
     private void renderFireInFirstPerson(float partialTicks) {
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, Animations.NoFire.getValue() ? 0.2F : 0.9F);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, Animations.NoFire.get() ? 0.2F : 0.9F);
         GlStateManager.depthFunc(519);
         GlStateManager.depthMask(false);
         GlStateManager.enableBlend();
@@ -875,7 +875,7 @@ public class ItemRenderer {
         boolean flag = false;
         Animations Animation = (Animations) ModuleManager.getModuleByClass(Animations.class);
         if (this.itemToRender != null && itemstack != null) {
-            if (Animations.Eliminates.getValue() ? !this.itemToRender.getIsItemStackEqual2(itemstack) : !this.itemToRender.getIsItemStackEqual(itemstack)) {
+            if (Animations.Eliminates.get() ? !this.itemToRender.getIsItemStackEqual2(itemstack) : !this.itemToRender.getIsItemStackEqual(itemstack)) {
                 flag = true;
             }
         } else {

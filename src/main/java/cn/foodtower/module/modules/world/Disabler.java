@@ -37,33 +37,33 @@ public class Disabler extends Module {
 
     @Override
     public void onEnable() {
-        ((Modes) mode.getValue()).get().onEnabled();
+        ((Modes) mode.get()).get().onEnabled();
     }
 
     @Override
     public void onDisable() {
-        ((Modes) mode.getValue()).get().onDisable();
+        ((Modes) mode.get()).get().onDisable();
     }
 
     @EventHandler
     public void onMotionUpdate(EventMotionUpdate e) {
-        ((Modes) mode.getValue()).get().onMotionUpdate(e);
+        ((Modes) mode.get()).get().onMotionUpdate(e);
     }
 
     @EventHandler
     public void onRender2d(EventRender2D e) {
-        ((Modes) mode.getValue()).get().onRender2d(e);
+        ((Modes) mode.get()).get().onRender2d(e);
 
     }
 
 
     @EventHandler
     public void onPre(EventPreUpdate e) {
-        setSuffix(mode.getValue());
+        setSuffix(mode.get());
 
-        ((Modes) mode.getValue()).get().onUpdate(e);
+        ((Modes) mode.get()).get().onUpdate(e);
 
-        if (lowerTimer.getValue()) {
+        if (lowerTimer.get()) {
             if (!lagTimer.hasTimePassed(1000)) {
                 mc.timer.timerSpeed = 0.7f;
             } else {
@@ -71,7 +71,7 @@ public class Disabler extends Module {
             }
         }
 
-        if (mode.getValue().equals(Modes.DCJNetWork)) {
+        if (mode.get().equals(Modes.DCJNetWork)) {
             if (!DCJNetWorkDisabler.enable) {
                 setEnabled(false);
             }
@@ -80,12 +80,12 @@ public class Disabler extends Module {
 
     @EventHandler
     public void onRender3d(EventRender3D e) {
-        ((Modes) mode.getValue()).get().onRender3d(e);
+        ((Modes) mode.get()).get().onRender3d(e);
     }
 
     @EventHandler
     public void onPacket(EventPacket e) {
-        ((Modes) mode.getValue()).get().onPacket(e);
+        ((Modes) mode.get()).get().onPacket(e);
         if (e.packet instanceof S08PacketPlayerPosLook) {
             lagTimer.reset();
         }
@@ -93,22 +93,22 @@ public class Disabler extends Module {
 
     @EventHandler
     public void onPacket(EventPacketSend event) {
-        ((Modes) mode.getValue()).get().onPacket(event);
+        ((Modes) mode.get()).get().onPacket(event);
     }
 
     @EventHandler
     public void onPacketRE(EventPacketReceive e) {
-        ((Modes) mode.getValue()).get().onPacket(e);
+        ((Modes) mode.get()).get().onPacket(e);
     }
 
     @EventHandler
     public void onRespawn(EventWorldChanged e) {
-        ((Modes) mode.getValue()).get().onWorldChange(e);
+        ((Modes) mode.get()).get().onWorldChange(e);
     }
 
     @EventHandler
     public void onTick(EventTick e) {
-        ((Modes) (mode.getValue())).get().onTick(e);
+        ((Modes) (mode.get())).get().onTick(e);
     }
 
     enum Modes {

@@ -28,7 +28,7 @@ public class MotionBlur extends Module {
             if (Module.mc.entityRenderer.theShaderGroup != null) {
                 Module.mc.entityRenderer.theShaderGroup.deleteShaderGroup();
             }
-            switch ((Modes) mode.getValue()) {
+            switch ((Modes) mode.get()) {
                 case Little:
                     Module.mc.entityRenderer.loadShader(new ResourceLocation("MotionBlur/Little.json"));
                     break;
@@ -46,13 +46,13 @@ public class MotionBlur extends Module {
 
     @EventHandler
     public void onUpdate(EventPreUpdate e) {
-        setSuffix(mode.getValue());
+        setSuffix(mode.get());
         if (Module.mc.entityRenderer.theShaderGroup == null || !Module.mc.entityRenderer.theShaderGroup.getShaderGroupName().contains("MotionBlur")) {
             if (OpenGlHelper.shadersSupported && mc.getRenderViewEntity() instanceof EntityPlayer) {
                 if (Module.mc.entityRenderer.theShaderGroup != null) {
                     Module.mc.entityRenderer.theShaderGroup.deleteShaderGroup();
                 }
-                switch (mode.getValue().name()) {
+                switch (mode.get().name()) {
                     case "Little":
                         Module.mc.entityRenderer.loadShader(new ResourceLocation("MotionBlur/Little.json"));
                         break;

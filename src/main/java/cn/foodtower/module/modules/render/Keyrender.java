@@ -34,8 +34,8 @@ public class Keyrender extends Module {
     public void onGui(EventRender2D e) {
         CFontRenderer font = FontLoaders.Jello18;
         Color rainbow = new Color(Color.HSBtoRGB((float) ((double) mc.thePlayer.ticksExisted / 250.0 + Math.sin(rainbowTick / 100.0 * 1.5)) % 1.0f, 0.8f, 0.9f));
-        float xOffset = this.x.getValue().floatValue();
-        float yOffset = this.y.getValue().floatValue();
+        float xOffset = this.x.get().floatValue();
+        float yOffset = this.y.get().floatValue();
         Gui.drawRect((double) xOffset + 26, yOffset, xOffset + 51, yOffset + 25, new Color(0, 0, 0, 150).getRGB());//w
         Gui.drawRect((double) xOffset + 26, (double) yOffset + 26, xOffset + 51, yOffset + 51, new Color(0, 0, 0, 150).getRGB());//s
         Gui.drawRect(xOffset, (double) yOffset + 26, xOffset + 25, yOffset + 51, new Color(0, 0, 0, 150).getRGB());//a

@@ -32,7 +32,7 @@ extends Module {
 	}
     @EventHandler
     public void onTick(EventTick event) {
-    	mc.theWorld.setWorldTime(Time.getValue().longValue());
+    	mc.theWorld.setWorldTime(Time.get().longValue());
     }
 
 

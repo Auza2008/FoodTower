@@ -39,8 +39,8 @@ public class AutoHead extends Module {
 
     @EventHandler
     public void onUpdate(EventPreUpdate event) {
-        if (!timer.hasReached(delay.getValue())) return;
-        if (mc.thePlayer.getHealth() <= health.getValue()) {
+        if (!timer.hasReached(delay.get())) return;
+        if (mc.thePlayer.getHealth() <= health.get()) {
             doEat(false);
             timer.reset();
         }
@@ -55,13 +55,13 @@ public class AutoHead extends Module {
     }
 
     private void doEat(Boolean warn) {
-        if (NoAbsorption.getValue() && !warn) {
+        if (NoAbsorption.get() && !warn) {
             float abAmount = mc.thePlayer.getAbsorptionAmount();
             if (abAmount > 0) {
                 return;
             }
         }
-        if (eatApples.getValue()) {
+        if (eatApples.get()) {
             int gappleInHotbar = findItem(36, 45, Items.golden_apple);
             if (gappleInHotbar != -1) {
                 mc.getNetHandler().addToSendQueue(new C09PacketHeldItemChange(gappleInHotbar - 36));
@@ -74,7 +74,7 @@ public class AutoHead extends Module {
                 Helper.sendMessage("No Gapple were found in hotbar!");
             }
         }
-        if (eatHeads.getValue()) {
+        if (eatHeads.get()) {
             int headInHotbar = findItem(36, 45, Item.getItemById(397));
             if (headInHotbar != -1) {
                 mc.getNetHandler().addToSendQueue(new C09PacketHeldItemChange(headInHotbar - 36));

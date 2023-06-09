@@ -118,7 +118,7 @@ public class ETBTabUI
         this.maxValue = 0;
         for (Value val : this.selectedModule.getValues()) {
             int off;
-            int n = off = val instanceof Option ? 6 : FontLoaders.Arial18.getStringWidth(String.format(" \u00a77%s", val.getValue().toString())) + 6;
+            int n = off = val instanceof Option ? 6 : FontLoaders.Arial18.getStringWidth(String.format(" \u00a77%s", val.get().toString())) + 6;
             if (this.maxValue > FontLoaders.Arial18.getStringWidth(val.getDisplayName().toUpperCase()) + off) continue;
             this.maxValue = FontLoaders.Arial18.getStringWidth(val.getDisplayName().toUpperCase()) + off;
         }
@@ -130,7 +130,7 @@ public class ETBTabUI
         RainbowColor = Color.getHSBColor(HUD.hue / 255.0F, 0.55F, 0.9F);
         Color rainbowcolor2 = Color.getHSBColor(HUD.hue / 255.0F, 1F, 1F);
         Color rainbowcolors = Color.getHSBColor(HUD.hue / 255.0f, 0.4f, 0.8f);
-        switch ((HUD.ArrayModeE) HUD.ArrayMode.getValue()) {
+        switch ((HUD.ArrayModeE) HUD.ArrayMode.get()) {
             case BlueIceSakura:
                 colorss = new Color(rainbowcolor2.getRed(), 190, 255).getRGB();
                 break;
@@ -154,7 +154,7 @@ public class ETBTabUI
                 colorss = Palette.fade(Client.getClientColor(false), 100, 1).getRGB();
                 break;
         }
-        if (!TabGui.modes.getValue().equals(TabGui.tabguimode.Novoline)) {
+        if (!TabGui.modes.get().equals(TabGui.tabguimode.Novoline)) {
             return;
         }
         if (Minecraft.getMinecraft().gameSettings.showDebugInfo) {
@@ -167,7 +167,7 @@ public class ETBTabUI
         CFontRenderer font = FontLoaders.Arial18;
         if (Helper.mc.gameSettings.showDebugInfo || !ModuleManager.getModuleByClass(HUD.class).isEnabled())
             return;
-        int categoryY = this.height + 12 + TabGui.y.getValue().intValue();
+        int categoryY = this.height + 12 + TabGui.y.get().intValue();
         int moduleY = categoryY;
         int valueY = categoryY;
         RenderUtil.drawRect(2.0f, categoryY, this.maxType - 25 - 25, categoryY + 12 * ModuleType.values().length, new Color(0, 0, 0, 130).getRGB());
@@ -224,9 +224,9 @@ public class ETBTabUI
                             AnimValY = AnimationUtils.animate(valueY, AnimValY, 14f / Minecraft.getDebugFPS());
                         }
                         if (val instanceof Option) {
-                            font.drawStringWithShadow(val.getDisplayName(), this.selectedValue == val ? this.maxModule - 27 : this.maxModule - 29, valueY + 3, (Boolean) val.getValue() ? new Color(153, 200, 255).getRGB() : 11184810);
+                            font.drawStringWithShadow(val.getDisplayName(), this.selectedValue == val ? this.maxModule - 27 : this.maxModule - 29, valueY + 3, (Boolean) val.get() ? new Color(153, 200, 255).getRGB() : 11184810);
                         } else {
-                            String toRender = String.format("%s: \u00a77%s", val.getDisplayName(), val.getValue().toString());
+                            String toRender = String.format("%s: \u00a77%s", val.getDisplayName(), val.get().toString());
                             if (this.selectedValue == val) {
                                 font.drawStringWithShadow(toRender, this.maxModule - 27, valueY + 3, -1);
                             } else {
@@ -244,7 +244,7 @@ public class ETBTabUI
 
     @EventHandler
     private void onKey(EventKey e) {
-        if (!TabGui.modes.getValue().equals(TabGui.tabguimode.Novoline)) {
+        if (!TabGui.modes.get().equals(TabGui.tabguimode.Novoline)) {
             return;
         }
         if (!Helper.mc.gameSettings.showDebugInfo) {
@@ -324,10 +324,10 @@ public class ETBTabUI
                         }
                         case 3: {
                             if (this.selectedValue instanceof Option) {
-                                this.selectedValue.setValue(!((Boolean) this.selectedValue.getValue()));
+                                this.selectedValue.setValue(!((Boolean) this.selectedValue.get()));
                             } else if (this.selectedValue instanceof Numbers) {
                                 Numbers value = (Numbers) this.selectedValue;
-                                double inc = (Double) value.getValue();
+                                double inc = (Double) value.get();
                                 inc += value.getIncrement().doubleValue();
                                 if ((inc = MathUtil.toDecimalLength(inc, 1)) > (Double) value.getMaximum()) {
                                     inc = (Double) ((Numbers) this.selectedValue).getMinimum();
@@ -335,7 +335,7 @@ public class ETBTabUI
                                 this.selectedValue.setValue(inc);
                             } else if (this.selectedValue instanceof Mode) {
                                 Mode theme = (Mode) this.selectedValue;
-                                Enum current = theme.getValue();
+                                Enum current = theme.get();
                                 int next = current.ordinal() + 1 >= theme.getModes().length ? 0 : current.ordinal() + 1;
                                 this.selectedValue.setValue(theme.getModes()[next]);
                             }
@@ -371,10 +371,10 @@ public class ETBTabUI
                         }
                         case 3: {
                             if (this.selectedValue instanceof Option) {
-                                this.selectedValue.setValue(!((Boolean) this.selectedValue.getValue()));
+                                this.selectedValue.setValue(!((Boolean) this.selectedValue.get()));
                             } else if (this.selectedValue instanceof Numbers) {
                                 Numbers value = (Numbers) this.selectedValue;
-                                double inc = (Double) value.getValue();
+                                double inc = (Double) value.get();
                                 inc -= value.getIncrement().doubleValue();
                                 if ((inc = MathUtil.toDecimalLength(inc, 1)) < (Double) value.getMinimum()) {
                                     inc = (Double) ((Numbers) this.selectedValue).getMaximum();
@@ -382,14 +382,14 @@ public class ETBTabUI
                                 this.selectedValue.setValue(inc);
                             } else if (this.selectedValue instanceof Mode) {
                                 Mode theme = (Mode) this.selectedValue;
-                                Enum current = theme.getValue();
+                                Enum current = theme.get();
                                 int next = current.ordinal() - 1 < 0 ? theme.getModes().length - 1 : current.ordinal() - 1;
                                 this.selectedValue.setValue(theme.getModes()[next]);
                             }
                             this.maxValue = 0;
                             for (Value val : this.selectedModule.getValues()) {
                                 int off;
-                                int n = off = val instanceof Option ? 6 : Minecraft.getMinecraft().fontRendererObj.getStringWidth(String.format(" \u00a77%s", val.getValue().toString())) + 6;
+                                int n = off = val instanceof Option ? 6 : Minecraft.getMinecraft().fontRendererObj.getStringWidth(String.format(" \u00a77%s", val.get().toString())) + 6;
                                 if (this.maxValue > Minecraft.getMinecraft().fontRendererObj.getStringWidth(val.getDisplayName().toUpperCase()) + off)
                                     continue;
                                 this.maxValue = Minecraft.getMinecraft().fontRendererObj.getStringWidth(val.getDisplayName().toUpperCase()) + off;

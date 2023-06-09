@@ -58,12 +58,12 @@ public class NameTags extends Module
 	public void onRender2D(EventRender2D class112) {
 		GlStateManager.pushMatrix();
 		for (EntityLivingBase entity : entityPositions.keySet()) {
-			switch ((nameTagModes)mode.getValue()) {
+			switch ((nameTagModes)mode.get()) {
 				case Distance:
-					DistanceNameTag.renderNameTag(entity, invis.getValue(), entityPositions, armor.getValue(), alpha.getValue().intValue());
+					DistanceNameTag.renderNameTag(entity, invis.get(), entityPositions, armor.get(), alpha.get().intValue());
 					break;
 				case Short:
-					DistanceShortNameTag.renderNameTag(entity, invis.getValue(), entityPositions, armor.getValue(), alpha.getValue().intValue());
+					DistanceShortNameTag.renderNameTag(entity, invis.get(), entityPositions, armor.get(), alpha.get().intValue());
 					break;
 			}
 		}
@@ -75,7 +75,7 @@ public class NameTags extends Module
 		float pTicks = mc.timer.renderPartialTicks;
 		for (Entity o : mc.theWorld.loadedEntityList) {
 			if ((o != mc.thePlayer) && ((o instanceof EntityPlayer))
-					&& (!o.isInvisible() || !this.invis.getValue())) {
+					&& (!o.isInvisible() || !this.invis.get())) {
 				double x = o.lastTickPosX + (o.posX - o.lastTickPosX) * pTicks - mc.getRenderManager().viewerPosX;
 				double y = o.lastTickPosY + (o.posY - o.lastTickPosY) * pTicks - mc.getRenderManager().viewerPosY;
 				double z = o.lastTickPosZ + (o.posZ - o.lastTickPosZ) * pTicks - mc.getRenderManager().viewerPosZ;

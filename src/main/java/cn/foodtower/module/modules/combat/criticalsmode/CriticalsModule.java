@@ -17,7 +17,7 @@ public abstract class CriticalsModule {
         double curY = mc.thePlayer.posY;
         double curZ = mc.thePlayer.posZ;
         for (double offset : value) {
-            if (!Criticals.C06.getValue()) {
+            if (!Criticals.C06.get()) {
                 Module.sendPacket(new C03PacketPlayer.C04PacketPlayerPosition(curX, curY + offset, curZ, onGround));
             } else {
                 Module.sendPacket(new C03PacketPlayer.C06PacketPlayerPosLook(curX, curY + offset, curZ, mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch, onGround));

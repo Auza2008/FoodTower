@@ -23,17 +23,17 @@ public class EnchantEffect extends Module {
 
     @EventHandler
     public void Render2d(EventRender2D e) {
-        hue += HUD.RainbowSpeed.getValue().floatValue() / 5.0F;
+        hue += HUD.RainbowSpeed.get().floatValue() / 5.0F;
         if (hue > 255.0F) {
             hue = 0.0F;
         }
     }
 
     public static Color getEnchantColor() {
-        if (Rainbow.getValue()) {
+        if (Rainbow.get()) {
             return Color.getHSBColor(hue / 255f, 0.75f, 0.9f);
         } else {
-            return new Color(r.getValue().intValue(), g.getValue().intValue(), b.getValue().intValue());
+            return new Color(r.get().intValue(), g.get().intValue(), b.get().intValue());
         }
     }
 }

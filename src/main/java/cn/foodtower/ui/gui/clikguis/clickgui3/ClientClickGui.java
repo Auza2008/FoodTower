@@ -251,7 +251,7 @@ public class ClientClickGui extends GuiScreen {
                     if (value instanceof Numbers) {
                         float x = startX + 410;
                         double render = 68.0F
-                                * (((Number) value.getValue()).floatValue() - ((Numbers) value).getMinimum().floatValue())
+                                * (((Number) value.get()).floatValue() - ((Numbers) value).getMinimum().floatValue())
                                 / (((Numbers) value).getMaximum().floatValue()
                                 - ((Numbers) value).getMinimum().floatValue());
                         RenderUtil.drawFastRoundedRect(x, (yAnimValue / 100) + mY + 54, (int) ((double) x + 75), (yAnimValue / 100) + mY + 57,
@@ -260,7 +260,7 @@ public class ClientClickGui extends GuiScreen {
                         //Gui.drawFilledCircle((float) ((double) x + render + 2D) + 3, (yAnimValue) / 100+ mY + 53, 1.5, Client.getBlueColor(), 5);
                         font.drawStringWithShadow(value.getName(), startX + 290, (yAnimValue / 100) + mY + 50 + 3,
                                 new Color(175, 175, 175, (int) alpha).getRGB());
-                        font.drawStringWithShadow(value.getValue().toString(), x - 2 - font.getStringWidth(value.getValue().toString()), (yAnimValue / 100) + mY + 50 + 3,
+                        font.drawStringWithShadow(value.get().toString(), x - 2 - font.getStringWidth(value.get().toString()), (yAnimValue / 100) + mY + 50 + 3,
                                 new Color(255, 255, 255, (int) alpha).getRGB());
                         if (!Mouse.isButtonDown(0)) {
                             this.previousmouse = false;
@@ -288,7 +288,7 @@ public class ClientClickGui extends GuiScreen {
                         float x = startX + 412;
                         int xxx = 65;
                         int x2x = 65;
-                        ((Option) value).anim = AnimationUtil.moveUD(((Option) value).anim, (boolean) value.getValue() ? 5f : 0f, 18f / Minecraft.getDebugFPS(), 7f / Minecraft.getDebugFPS());
+                        ((Option) value).anim = AnimationUtil.moveUD(((Option) value).anim, (boolean) value.get() ? 5f : 0f, 18f / Minecraft.getDebugFPS(), 7f / Minecraft.getDebugFPS());
 
                         font.drawStringWithShadow(value.getName(), startX + 290, (yAnimValue / 100) + mY + 50 + 3,
                                 new Color(175, 175, 175, (int) alpha).getRGB());
@@ -306,7 +306,7 @@ public class ClientClickGui extends GuiScreen {
                             }
 
                             if (this.mouse) {
-                                value.setValue(!(boolean) value.getValue());
+                                value.setValue(!(boolean) value.get());
                                 this.mouse = false;
                             }
                         }
@@ -327,7 +327,7 @@ public class ClientClickGui extends GuiScreen {
                         RenderUtil.drawRoundedRect(x + 75 - 13, (yAnimValue / 100) + mY + 45, x + 75, (yAnimValue / 100) + mY + 65, 1, isStringHovered(x + 75 - 13, (yAnimValue / 100) + mY + 45, x + 75, (yAnimValue / 100) + mY + 65, mouseX, mouseY) ? new Color(101, 175, 255, (int) alpha).getRGB() : new Color(0, 141, 255, (int) alpha).getRGB());
                         font.drawCenteredString(">", x + 75 - (11f / 2f), (yAnimValue / 100) + mY + 53, new Color(255, 255, 255, (int) alpha).getRGB());
 
-                        FontLoaders.GoogleSans14.drawCenteredStringWithShadow((((Enum) value.getValue()).ordinal() + 1) + "/" + (((Mode) value).getModes().length),
+                        FontLoaders.GoogleSans14.drawCenteredStringWithShadow((((Enum) value.get()).ordinal() + 1) + "/" + (((Mode) value).getModes().length),
                                 (x + 38), (yAnimValue / 100) + mY + 53 + 9, new Color(255, 255, 255, Math.max(0, (int) alpha - (255 - 130))).getRGB());
 
                         font.drawCenteredStringWithShadow(((Mode) value).getModeAsString(),
@@ -335,7 +335,7 @@ public class ClientClickGui extends GuiScreen {
 
                         if (this.isStringHovered(x, (yAnimValue / 100) + mY + 45, x + 13, (yAnimValue / 100) + mY + 65, mouseX, mouseY)) {
                             if (Mouse.isButtonDown(0) && !this.previousmouse) {
-                                Enum current = (Enum) value.getValue();
+                                Enum current = (Enum) value.get();
                                 int next = current.ordinal() - 1 <= -1 ? ((Mode) value).getModes().length - 1
                                         : current.ordinal() - 1;
                                 value.setValue(((Mode) value).getModes()[next]);
@@ -345,7 +345,7 @@ public class ClientClickGui extends GuiScreen {
                         }
                         if (this.isStringHovered(x + 75 - 13, (yAnimValue / 100) + mY + 45, x + 75, (yAnimValue / 100) + mY + 65, mouseX, mouseY)) {
                             if (Mouse.isButtonDown(0) && !this.previousmouse) {
-                                Enum current = (Enum) value.getValue();
+                                Enum current = (Enum) value.get();
                                 int next = current.ordinal() + 1 >= ((Mode) value).getModes().length ? 0
                                         : current.ordinal() + 1;
                                 value.setValue(((Mode) value).getModes()[next]);

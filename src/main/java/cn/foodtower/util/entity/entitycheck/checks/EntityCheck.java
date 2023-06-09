@@ -8,8 +8,10 @@ import cn.foodtower.manager.FriendManager;
 import cn.foodtower.manager.ModuleManager;
 import cn.foodtower.module.modules.combat.AntiBot;
 import cn.foodtower.module.modules.combat.HypixelAntibot;
+import cn.foodtower.module.modules.player.Blink;
 import cn.foodtower.util.entity.entitycheck.ICheck;
 import cn.foodtower.util.math.RotationUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.EntityDragon;
@@ -39,7 +41,10 @@ public final class EntityCheck implements ICheck {
         if (entity instanceof EntityPlayerSP) {
             return false;
         }
-        if (!this.wall.getValue() && !RotationUtils.canEntityBeSeen(entity)) {
+        if (ModuleManager.getModuleByClass(Blink.class).isEnabled() && entity.getName().equals(Minecraft.getMinecraft().thePlayer.getName())) {
+            return false;
+        }
+        if (!this.wall.get() && !RotationUtils.canEntityBeSeen(entity)) {
             return false;
         }
         if (ModuleManager.getModuleByClass(AntiBot.class).isEnabled() && AntiBot.isServerBot(entity)) {
@@ -48,13 +53,13 @@ public final class EntityCheck implements ICheck {
         if (ModuleManager.getModuleByClass(HypixelAntibot.class).isEnabled() && HypixelAntibot.isServerBot(entity)) {
             return false;
         }
-        if (!this.invisibles.getValue() && entity.isInvisible()) {
+        if (!this.invisibles.get() && entity.isInvisible()) {
             return false;
         }
-        if (this.animals.getValue() && entity instanceof EntityAnimal) {
+        if (this.animals.get() && entity instanceof EntityAnimal) {
             return true;
         }
-        if (this.players.getValue() && entity instanceof EntityPlayer) {
+        if (this.players.get() && entity instanceof EntityPlayer) {
             return !FriendManager.isFriend(entity.getName());
         }
         return (entity instanceof EntityMob || entity instanceof EntitySlime || entity instanceof EntityDragon || entity instanceof EntityGolem);

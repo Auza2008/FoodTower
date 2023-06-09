@@ -77,19 +77,19 @@ public class ChestStealer extends Module {
                 if (containsItems) {
                     for (index = 0; index < guiChest.lowerChestInventory.getSizeInventory(); ++index) {
                         stack = guiChest.lowerChestInventory.getStackInSlot(index);
-                        if (stack == null || !this.timer.delay(this.delay.getValue().intValue()) || this.isBad(stack))
+                        if (stack == null || !this.timer.delay(this.delay.get().intValue()) || this.isBad(stack))
                             continue;
                         mc.playerController.windowClick(guiChest.inventorySlots.windowId, index, 0, 1, mc.thePlayer);
-                        if (this.hypixel.getValue().booleanValue()) {
+                        if (this.hypixel.get().booleanValue()) {
                             mc.playerController.windowClick(guiChest.inventorySlots.windowId, index, 1, 1, mc.thePlayer);
                         }
                         this.timer.reset();
                     }
-                } else if (this.close.getValue().booleanValue()) {
+                } else if (this.close.get().booleanValue()) {
                     mc.thePlayer.closeScreen();
                     this.isStealing = false;
                 }
-            } else if (this.close.getValue().booleanValue()) {
+            } else if (this.close.get().booleanValue()) {
                 mc.thePlayer.closeScreen();
                 this.isStealing = false;
             }
@@ -111,7 +111,7 @@ public class ChestStealer extends Module {
     }
 
     private boolean isBad(ItemStack item) {
-        if (!this.ignore.getValue()) {
+        if (!this.ignore.get()) {
             return false;
         }
         ItemStack is = null;

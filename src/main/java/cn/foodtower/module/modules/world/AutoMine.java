@@ -41,7 +41,7 @@ public class AutoMine extends Module {
 
     @EventHandler
     public void onUpdate( EventPreUpdate event) {
-        setSuffix("Script" + " " + height.getValue());
+        setSuffix("Script" + " " + height.get());
         BlockPos toFace = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY + mc.thePlayer.getEyeHeight(),
                 mc.thePlayer.posZ).offset(facing);
         boolean foundItem = false;
@@ -142,7 +142,7 @@ public class AutoMine extends Module {
                         mineBlock(toFace);
                     }
                 } else {
-                    if (mc.thePlayer.posY > height.getValue()) {
+                    if (mc.thePlayer.posY > height.get()) {
                         if (stateUnder.getBlock().getMaterial() != Material.air) {
                             mineBlockUnderPlayer();
                         } else if (mc.thePlayer.onGround) {

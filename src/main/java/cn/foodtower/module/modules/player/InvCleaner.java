@@ -58,12 +58,12 @@ public class InvCleaner extends Module {
 	public void onEvent(EventPreUpdate event) {
 		if (mc.thePlayer.openContainer instanceof ContainerChest && mc.currentScreen instanceof GuiContainer) return;
 		InvCleaner i3 = (InvCleaner) ModuleManager.getModuleByClass(InvCleaner.class);
-		long delay = this.Delay.getValue().longValue() * 50;
-		this.setSuffix(this.Mode.getValue());
-		long Adelay = AutoArmor.DELAY.getValue().longValue() * 50;
+		long delay = this.Delay.get().longValue() * 50;
+		this.setSuffix(this.Mode.get());
+		long Adelay = AutoArmor.DELAY.get().longValue() * 50;
 
 		if (timer.hasReached(Adelay) && i3.isEnabled()) {
-			if((Mode.getValue()==EMode.OpenInv&&mc.currentScreen instanceof GuiInventory)||(Mode.getValue()==EMode.Basic&&(mc.currentScreen==null || mc.currentScreen instanceof GuiInventory ||mc.currentScreen instanceof GuiChat))){
+			if((Mode.get()==EMode.OpenInv&&mc.currentScreen instanceof GuiInventory)||(Mode.get()==EMode.Basic&&(mc.currentScreen==null || mc.currentScreen instanceof GuiInventory ||mc.currentScreen instanceof GuiChat))){
 				getBestArmor();
 			}
 		}
@@ -78,7 +78,7 @@ public class InvCleaner extends Module {
 					return;
 				}
 			}
-		if (this.Mode.getValue() == EMode.OpenInv && !(mc.currentScreen instanceof GuiInventory)) {
+		if (this.Mode.get() == EMode.OpenInv && !(mc.currentScreen instanceof GuiInventory)) {
 			return;
 		}
 
@@ -94,7 +94,7 @@ public class InvCleaner extends Module {
 					}
 				}
 			}
-			if (sort.getValue()) {
+			if (sort.get()) {
 				if (timer.hasReached(delay) && pickaxeSlot >= 36) {
 					getBestPickaxe(pickaxeSlot);
 				}
@@ -106,7 +106,7 @@ public class InvCleaner extends Module {
 				}
 			}
 
-			if (timer.hasReached(delay) && this.InvCleaner.getValue())
+			if (timer.hasReached(delay) && this.InvCleaner.get())
 				for (int i = 9; i < 45; i++) {
 					if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
 						ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
@@ -119,7 +119,7 @@ public class InvCleaner extends Module {
 					}
 				}
 		}
-		if (toogle.getValue()) setEnabled(false);
+		if (toogle.get()) setEnabled(false);
 
 	}
 
@@ -140,11 +140,11 @@ public class InvCleaner extends Module {
 		for (int i = 9; i < 45; i++) {
 			if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
 				ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
-				if (getDamage(is) > damage && (is.getItem() instanceof ItemSword || !this.Sword.getValue()))
+				if (getDamage(is) > damage && (is.getItem() instanceof ItemSword || !this.Sword.get()))
 					return false;
 			}
 		}
-		return stack.getItem() instanceof ItemSword || !this.Sword.getValue();
+		return stack.getItem() instanceof ItemSword || !this.Sword.get();
 
 	}
 
@@ -152,7 +152,7 @@ public class InvCleaner extends Module {
 		for (int i = 9; i < 45; i++) {
 			if (mc.thePlayer.inventoryContainer.getSlot(i).getHasStack()) {
 				ItemStack is = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
-				if (isBestWeapon(is) && getDamage(is) > 0 && (is.getItem() instanceof ItemSword || !this.Sword.getValue())) {
+				if (isBestWeapon(is) && getDamage(is) > 0 && (is.getItem() instanceof ItemSword || !this.Sword.get())) {
 					swap(i, slot - 36);
 					timer.reset();
 					break;
@@ -178,7 +178,7 @@ public class InvCleaner extends Module {
 	}
 
 	public boolean shouldDrop(ItemStack stack, int slot) {
-		if (stack.getItem() instanceof ItemSword && JSword.getValue()) {
+		if (stack.getItem() instanceof ItemSword && JSword.get()) {
 			return false;
 		}
 		if (stack.getDisplayName().contains("鐐瑰嚮")) {
@@ -190,7 +190,7 @@ public class InvCleaner extends Module {
 		if (stack.getDisplayName().toLowerCase().contains("(right click)")) {
 			return false;
 		}
-		if (UHC.getValue()) {
+		if (UHC.get()) {
 			if (stack.getItem() instanceof ItemBucket) {
 				return false;
 			}
@@ -419,8 +419,8 @@ public class InvCleaner extends Module {
 				}
 			}
 		}
-		if (this.BlockCap.getValue().intValue() != 0 && stack.getItem() instanceof ItemBlock &&
-				(getBlockCount() > this.BlockCap.getValue().intValue() ||
+		if (this.BlockCap.get().intValue() != 0 && stack.getItem() instanceof ItemBlock &&
+				(getBlockCount() > this.BlockCap.get().intValue() ||
 						InventoryUtils.BLOCK_BLACKLIST.contains(((ItemBlock) stack.getItem()).getBlock()))) {
 			return true;
 		}
@@ -429,13 +429,13 @@ public class InvCleaner extends Module {
 				return true;
 			}
 		}
-		if (stack.getItem() instanceof ItemFood && this.Food.getValue() && !(stack.getItem() instanceof ItemAppleGold)) {
+		if (stack.getItem() instanceof ItemFood && this.Food.get() && !(stack.getItem() instanceof ItemAppleGold)) {
 			return true;
 		}
 		if (stack.getItem() instanceof ItemHoe || stack.getItem() instanceof ItemTool || stack.getItem() instanceof ItemSword || stack.getItem() instanceof ItemArmor) {
 			return true;
 		}
-		if ((stack.getItem() instanceof ItemBow || stack.getItem().getUnlocalizedName().contains("arrow")) && (Boolean) this.Archery.getValue()) {
+		if ((stack.getItem() instanceof ItemBow || stack.getItem().getUnlocalizedName().contains("arrow")) && (Boolean) this.Archery.get()) {
 			return true;
 		}
 
@@ -496,12 +496,12 @@ public class InvCleaner extends Module {
 						if (!mc.thePlayer.inventoryContainer.getSlot(pickaxeSlot).getHasStack()) {
 							swap(i, pickaxeSlot - 36);
 							timer.reset();
-							if (this.Delay.getValue().longValue() > 0)
+							if (this.Delay.get().longValue() > 0)
 								return;
 						} else if (!isBestPickaxe(mc.thePlayer.inventoryContainer.getSlot(pickaxeSlot).getStack())) {
 							swap(i, pickaxeSlot - 36);
 							timer.reset();
-							if (this.Delay.getValue().longValue() > 0)
+							if (this.Delay.get().longValue() > 0)
 								return;
 						}
 
@@ -520,12 +520,12 @@ public class InvCleaner extends Module {
 						if (!mc.thePlayer.inventoryContainer.getSlot(shovelSlot).getHasStack()) {
 							swap(i, shovelSlot - 36);
 							timer.reset();
-							if (this.Delay.getValue().longValue() > 0)
+							if (this.Delay.get().longValue() > 0)
 								return;
 						} else if (!isBestShovel(mc.thePlayer.inventoryContainer.getSlot(shovelSlot).getStack())) {
 							swap(i, shovelSlot - 36);
 							timer.reset();
-							if (this.Delay.getValue().longValue() > 0)
+							if (this.Delay.get().longValue() > 0)
 								return;
 						}
 
@@ -545,12 +545,12 @@ public class InvCleaner extends Module {
 						if (!mc.thePlayer.inventoryContainer.getSlot(axeSlot).getHasStack()) {
 							swap(i, axeSlot - 36);
 							timer.reset();
-							if (this.Delay.getValue().longValue() > 0)
+							if (this.Delay.get().longValue() > 0)
 								return;
 						} else if (!isBestAxe(mc.thePlayer.inventoryContainer.getSlot(axeSlot).getStack())) {
 							swap(i, axeSlot - 36);
 							timer.reset();
-							if (this.Delay.getValue().longValue() > 0)
+							if (this.Delay.get().longValue() > 0)
 								return;
 						}
 
@@ -687,7 +687,7 @@ public class InvCleaner extends Module {
 					if (AutoArmor.isBestArmor(is, type) && AutoArmor.getProtection(is) > 0) {
 						shiftClick(i);
 						timer.reset();
-						if (this.Delay.getValue().longValue() > 0)
+						if (this.Delay.get().longValue() > 0)
 							return;
 					}
 				}

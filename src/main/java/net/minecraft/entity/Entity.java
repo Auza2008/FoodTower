@@ -2091,7 +2091,7 @@ public abstract class Entity implements ICommandSender
     public float getCollisionBorderSize()
     {
     	HitBox h = (HitBox)Client.instance.getModuleManager().getModuleByClass(HitBox.class);
-    	if(h.isEnabled())return 0.1F + h.Size.getValue().floatValue();
+    	if(h.isEnabled())return 0.1F + h.Size.get().floatValue();
         return 0.1F;
     }
 

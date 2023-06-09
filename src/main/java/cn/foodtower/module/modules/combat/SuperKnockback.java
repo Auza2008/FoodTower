@@ -33,7 +33,7 @@ public class SuperKnockback
                     (!MovementUtils.isMoving() && onlyMoveValue.get()) || (!mc.thePlayer.onGround && onlyGroundValue.get())) {
                 return;
             }
-            switch ((Modes) mode.getValue()) {
+            switch ((Modes) mode.get()) {
                 case WTap:
                     if (mc.thePlayer.isSprinting()) {
                         mc.thePlayer.setSprinting(false);

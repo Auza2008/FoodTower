@@ -42,23 +42,23 @@ public class Chams extends Module {
     }
 	@EventHandler
 	private void preRenderPlayer(EventPreRenderPlayer e) {
-		if(colored.getValue())return;
+		if(colored.get())return;
 		GL11.glEnable((int) 32823);
 		GL11.glPolygonOffset((float) 1.0f, (float) -1100000.0f);
 	}
 
 	@EventHandler
 	private void postRenderPlayer(EventPostRenderPlayer e) {
-		if(colored.getValue())return;
+		if(colored.get())return;
 		GL11.glDisable((int) 32823);
 		GL11.glPolygonOffset((float) 1.0f, (float) 1100000.0f);
 	}
     public boolean isValid(EntityLivingBase entity) {
-        return isValidType(entity) && entity.isEntityAlive() && (!entity.isInvisible() || invisibles.getValue());
+        return isValidType(entity) && entity.isEntityAlive() && (!entity.isInvisible() || invisibles.get());
     }
 
     private boolean isValidType(EntityLivingBase entity) {
-        return (players.getValue() && entity instanceof EntityPlayer) || (mobs.getValue() && (entity instanceof EntityMob || entity instanceof EntitySlime) || (passives.getValue() && (entity instanceof EntityVillager || entity instanceof EntityGolem)) || (animals.getValue() && entity instanceof EntityAnimal));
+        return (players.get() && entity instanceof EntityPlayer) || (mobs.get() && (entity instanceof EntityMob || entity instanceof EntitySlime) || (passives.get() && (entity instanceof EntityVillager || entity instanceof EntityGolem)) || (animals.get() && entity instanceof EntityAnimal));
     }
 
 

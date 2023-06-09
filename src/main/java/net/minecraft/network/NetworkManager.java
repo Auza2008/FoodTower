@@ -503,7 +503,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet>
                     this.getNetHandler().onDisconnect(new ChatComponentText("Disconnected"));
                 }
             } else {
-                if (!ClientSetting.keepWorld.getValue()) {
+                if (!ClientSetting.keepWorld.get()) {
                     logger.warn("handleDisconnection() called twice");
                 }
             }

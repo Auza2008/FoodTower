@@ -36,7 +36,7 @@ public class InvMove extends Module {
     private void onUpdate(EventMotionUpdate event) {
         Speed speedModule = (Speed) ModuleManager.getModuleByClass(Speed.class);
         if (mc.currentScreen == null) return;
-        if (!(mc.currentScreen instanceof GuiChat) && !(mc.currentScreen instanceof GuiIngameMenu) && (!noDetectableValue.getValue() || !(mc.currentScreen instanceof GuiContainer))) {
+        if (!(mc.currentScreen instanceof GuiChat) && !(mc.currentScreen instanceof GuiIngameMenu) && (!noDetectableValue.get() || !(mc.currentScreen instanceof GuiContainer))) {
             mc.gameSettings.keyBindForward.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindForward);
             mc.gameSettings.keyBindBack.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindBack);
             mc.gameSettings.keyBindRight.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindRight);
@@ -44,7 +44,7 @@ public class InvMove extends Module {
             if (!speedModule.isEnabled())
                 mc.gameSettings.keyBindJump.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindJump);
             mc.gameSettings.keyBindSprint.pressed = GameSettings.isKeyDown(mc.gameSettings.keyBindSprint);
-            if (sprintModeValue.getValue().equals(sprint.Stop)) {
+            if (sprintModeValue.get().equals(sprint.Stop)) {
                 mc.thePlayer.setSprinting(false);
             }
         }
@@ -68,13 +68,13 @@ public class InvMove extends Module {
     @EventHandler
     private void onPacket(EventPacket event) {
         Packet packet = event.packet;
-        switch (modeValue.getValue().toString().toLowerCase()) {
+        switch (modeValue.get().toString().toLowerCase()) {
             case "silent":
                 if (packet instanceof C16PacketClientStatus && ((C16PacketClientStatus) packet).getStatus() == C16PacketClientStatus.EnumState.OPEN_INVENTORY_ACHIEVEMENT)
                     event.setCancelled(true);
                 break;
             case "blink":
-                if (mc.currentScreen != null && !(mc.currentScreen instanceof GuiChat) && !(mc.currentScreen instanceof GuiIngameMenu) && (!noDetectableValue.getValue() || !(mc.currentScreen instanceof GuiContainer)) && packet instanceof C03PacketPlayer) {
+                if (mc.currentScreen != null && !(mc.currentScreen instanceof GuiChat) && !(mc.currentScreen instanceof GuiIngameMenu) && (!noDetectableValue.get() || !(mc.currentScreen instanceof GuiContainer)) && packet instanceof C03PacketPlayer) {
                     event.setCancelled(true);
                     playerPackets.add(packet);
                 }

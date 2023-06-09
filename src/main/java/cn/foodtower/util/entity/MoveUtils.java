@@ -26,7 +26,7 @@ public class MoveUtils {
         double baseSpeed = 0.2873D;
         if (Minecraft.getMinecraft().thePlayer.isPotionActive(Potion.moveSpeed)) {
             int amplifier = Minecraft.getMinecraft().thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier();
-            //  if(((Options) settings.get(MODE).getValue()).getSelected().equalsIgnoreCase("Hypixel")){
+            //  if(((Options) settings.get(MODE).get()).getSelected().equalsIgnoreCase("Hypixel")){
             // 	baseSpeed *= (1.0D + 0.225D * (amplifier + 1));
             // }else
             baseSpeed *= (1.0D + 0.2D * (amplifier + 1));

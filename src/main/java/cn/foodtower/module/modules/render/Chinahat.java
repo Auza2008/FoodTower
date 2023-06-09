@@ -35,7 +35,7 @@ public class Chinahat extends Module {
 
     @EventHandler
     public void onRender3D(EventRender3D evt) {
-        if(mc.gameSettings.thirdPersonView == 0 && !renderInFirstPerson.getValue()) {
+        if(mc.gameSettings.thirdPersonView == 0 && !renderInFirstPerson.get()) {
             return;
         }
 
@@ -48,9 +48,9 @@ public class Chinahat extends Module {
         double x = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double)evt.getPartialTicks() - mc.getRenderManager().renderPosX;
         double y = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double)evt.getPartialTicks() - mc.getRenderManager().renderPosY;
         double z = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double)evt.getPartialTicks() - mc.getRenderManager().renderPosZ;
-        final Color color = colorRainbow.getValue() ? HUD.RainbowColor : new Color(colorRedValue.getValue().intValue(), colorGreenValue.getValue().intValue(), colorBlueValue.getValue().intValue());
-        int side = (int) this.side.getValue().intValue();
-        int stack = (int) this.stack.getValue().intValue();
+        final Color color = colorRainbow.get() ? HUD.RainbowColor : new Color(colorRedValue.get().intValue(), colorGreenValue.get().intValue(), colorBlueValue.get().intValue());
+        int side = (int) this.side.get().intValue();
+        int stack = (int) this.stack.get().intValue();
         GL11.glPushMatrix();
         GL11.glTranslated(x, y + (mc.thePlayer.isSneaking() ? 2.0 : 2.2), z);
 

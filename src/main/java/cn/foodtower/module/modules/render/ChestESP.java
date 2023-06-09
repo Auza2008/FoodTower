@@ -39,7 +39,7 @@ public class ChestESP extends Module {
         super("ChestESP", new String[]{"StorageESP"}, ModuleType.Render);
         addValues(modeValue, r, g, b, chestValue, enderChestValue, furnaceValue, dispenserValue, hopperValue);
         setValueDisplayable(new Value[]{chestValue, enderChestValue, furnaceValue, dispenserValue, hopperValue}, modeValue, new Enum[]{Modes.Box, Modes.TowD, Modes.OtherBox, Modes.WireFrame});
-        setValueDisplayable(new Value[]{r, g, b}, chestValue, chestValue.getValue());
+        setValueDisplayable(new Value[]{r, g, b}, chestValue, chestValue.get());
     }
 
     @EventHandler
@@ -51,28 +51,28 @@ public class ChestESP extends Module {
             for (final TileEntity tileEntity : mc.theWorld.loadedTileEntityList) {
                 Color color = null;
 
-                if (chestValue.getValue() && tileEntity instanceof TileEntityChest)
-                    color = new Color(r.getValue().intValue(), g.getValue().intValue(), b.getValue().intValue());
+                if (chestValue.get() && tileEntity instanceof TileEntityChest)
+                    color = new Color(r.get().intValue(), g.get().intValue(), b.get().intValue());
 
-                if (enderChestValue.getValue() && tileEntity instanceof TileEntityEnderChest) color = Color.MAGENTA;
+                if (enderChestValue.get() && tileEntity instanceof TileEntityEnderChest) color = Color.MAGENTA;
 
-                if (furnaceValue.getValue() && tileEntity instanceof TileEntityFurnace) color = Color.BLACK;
+                if (furnaceValue.get() && tileEntity instanceof TileEntityFurnace) color = Color.BLACK;
 
-                if (dispenserValue.getValue() && tileEntity instanceof TileEntityDispenser) color = Color.BLACK;
+                if (dispenserValue.get() && tileEntity instanceof TileEntityDispenser) color = Color.BLACK;
 
-                if (hopperValue.getValue() && tileEntity instanceof TileEntityHopper) color = Color.GRAY;
+                if (hopperValue.get() && tileEntity instanceof TileEntityHopper) color = Color.GRAY;
 
                 if (color == null) continue;
 
                 if (!(tileEntity instanceof TileEntityChest || tileEntity instanceof TileEntityEnderChest)) {
-                    LiquidRender.drawBlockBox(tileEntity.getPos(), color, !modeValue.getValue().equals(Modes.OtherBox));
+                    LiquidRender.drawBlockBox(tileEntity.getPos(), color, !modeValue.get().equals(Modes.OtherBox));
                     continue;
                 }
 
-                switch ((Modes) modeValue.getValue()) {
+                switch ((Modes) modeValue.get()) {
                     case OtherBox:
                     case Box:
-                        LiquidRender.drawBlockBox(tileEntity.getPos(), color, !modeValue.getValue().equals(Modes.OtherBox));
+                        LiquidRender.drawBlockBox(tileEntity.getPos(), color, !modeValue.get().equals(Modes.OtherBox));
                         break;
                     case TowD:
                         LiquidRender.draw2D(tileEntity.getPos(), color.getRGB(), Color.BLACK.getRGB());
@@ -99,10 +99,10 @@ public class ChestESP extends Module {
 
             for (final Entity entity : mc.theWorld.loadedEntityList)
                 if (entity instanceof EntityMinecartChest) {
-                    switch ((Modes) modeValue.getValue()) {
+                    switch ((Modes) modeValue.get()) {
                         case OtherBox:
                         case Box:
-                            LiquidRender.drawEntityBox(entity, new Color(0, 66, 255, 80), !modeValue.getValue().equals(Modes.OtherBox));
+                            LiquidRender.drawEntityBox(entity, new Color(0, 66, 255, 80), !modeValue.get().equals(Modes.OtherBox));
                             break;
                         case TowD:
                             LiquidRender.draw2D(entity.getPosition(), new Color(0, 66, 255).getRGB(), Color.BLACK.getRGB());

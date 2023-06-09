@@ -134,7 +134,7 @@ public class DisablerHypixelDisabler implements DisablerModule {
     @Override
     public void onRender3d(EventRender3D event) {
 //        final Breadcrumbs breadcrumbs = (Breadcrumbs) ModuleManager.getModuleByClass(Breadcrumbs.class);
-//        final Color color = breadcrumbs.colorRainbow.getValue() ? HUD.RainbowColor : new Color(breadcrumbs.colorRedValue.getValue().intValue(), breadcrumbs.colorGreenValue.getValue().intValue(), breadcrumbs.colorBlueValue.getValue().intValue());
+//        final Color color = breadcrumbs.colorRainbow.get() ? HUD.RainbowColor : new Color(breadcrumbs.colorRedValue.get().intValue(), breadcrumbs.colorGreenValue.get().intValue(), breadcrumbs.colorBlueValue.get().intValue());
 //
 //        synchronized(positions) {
 //            glPushMatrix();
@@ -177,7 +177,7 @@ public class DisablerHypixelDisabler implements DisablerModule {
             packets.clear();
         }
 
-        if (Disabler.TimerB.getValue()) {
+        if (Disabler.TimerB.get()) {
             if (timerCancelDelay.hasTimePassed(10000)) {
                 timerShouldCancel = true;
                 timerCancelTimer.reset();
@@ -202,7 +202,7 @@ public class DisablerHypixelDisabler implements DisablerModule {
 //            positions.add(new double[] {mc.thePlayer.posX, mc.thePlayer.getEntityBoundingBox().minY, mc.thePlayer.posZ});
 //        }
 //
-//        if(Disabler.Test_blinkvalue.getValue()&& pulseTimer.hasTimePassed(420L)) {
+//        if(Disabler.Test_blinkvalue.get()&& pulseTimer.hasTimePassed(420L)) {
 //            blink();
 //            pulseTimer.reset();
 //        }
@@ -394,13 +394,13 @@ public class DisablerHypixelDisabler implements DisablerModule {
                 }
 
             }
-            if (packet instanceof C03PacketPlayer && !(packet instanceof C03PacketPlayer.C05PacketPlayerLook || packet instanceof C03PacketPlayer.C06PacketPlayerPosLook || packet instanceof C03PacketPlayer.C04PacketPlayerPosition) && Disabler.noC03s.getValue()) {
+            if (packet instanceof C03PacketPlayer && !(packet instanceof C03PacketPlayer.C05PacketPlayerLook || packet instanceof C03PacketPlayer.C06PacketPlayerPosLook || packet instanceof C03PacketPlayer.C04PacketPlayerPosition) && Disabler.noC03s.get()) {
                 event.setCancelled(true);
                 canBlink = false;
             }
 
             if (isOnHypixel()) {
-                if (Disabler.blinkvalue.getValue()) {
+                if (Disabler.blinkvalue.get()) {
                     if (packet instanceof C02PacketUseEntity || packet instanceof C03PacketPlayer || packet instanceof C07PacketPlayerDigging || packet instanceof C08PacketPlayerBlockPlacement || packet instanceof C0APacketAnimation || packet instanceof C0BPacketEntityAction) {
 
                         while (!packets.isEmpty()) {
@@ -423,7 +423,7 @@ public class DisablerHypixelDisabler implements DisablerModule {
                     event.setCancelled(true);
 
                     synchronized (packetsMap) {
-                        packetsMap.put(packet, System.currentTimeMillis() + Disabler.pingspoofdelay.getValue().longValue());
+                        packetsMap.put(packet, System.currentTimeMillis() + Disabler.pingspoofdelay.get().longValue());
                     }
                 }
             }

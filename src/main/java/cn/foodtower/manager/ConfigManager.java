@@ -26,7 +26,7 @@ public class ConfigManager {
         StringBuilder values = new StringBuilder();
         for ( Module m : ModuleManager.getModules()) {
             for (Value v : m.getValues()) {
-                values.append(String.format("%s:%s:%s%s", m.getName(), v.getName(), v.getValue(), System.lineSeparator()));
+                values.append(String.format("%s:%s:%s%s", m.getName(), v.getName(), v.get(), System.lineSeparator()));
             }
         }
         FileManager.save(dir,"Values.txt", values.toString(), false);

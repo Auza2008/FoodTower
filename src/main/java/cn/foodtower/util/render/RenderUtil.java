@@ -150,8 +150,8 @@ public class RenderUtil {
 
         float amplifier = 100 / maxHP, percent = health * amplifier, space = (rectLength - 50) / 100; //
         ScaledResolution sr = new ScaledResolution(mc);
-        int i2 = (int) ((double) (ScaledResolution.getScaledWidth() / 2) + TargetHUD.hudx.getValue());
-        int i1 = (int) ((double) ScaledResolution.getScaledHeight() - TargetHUD.hudY.getValue());
+        int i2 = (int) ((double) (ScaledResolution.getScaledWidth() / 2) + TargetHUD.hudx.get());
+        int i1 = (int) ((double) ScaledResolution.getScaledHeight() - TargetHUD.hudY.get());
 
         if (percent < lastP) {
             diffP = lastP - percent;
@@ -173,7 +173,7 @@ public class RenderUtil {
         GL11.glScaled(4.4, 4.4, 4.4);
         Gui.drawScaledCustomSizeModalRect((float) ((i2 + 1.5) / 4.4), (float) ((i1 + 0.2) / 4.4), 8.0f, (float) l6, 8, i6, 8, 8, 64.0f, 64.0f);
         GL11.glPopMatrix();
-        int hudColor = new Color(HUD.r.getValue().intValue(), HUD.g.getValue().intValue(), HUD.b.getValue().intValue()).getRGB();
+        int hudColor = new Color(HUD.r.get().intValue(), HUD.g.get().intValue(), HUD.b.get().intValue()).getRGB();
         Gui.drawRect(i2 + 40, i1 + 16.5, i2 + 40 + 100 * space, i1 + 27.3, new Color(0, 0, 0, 50).getRGB());
         Gui.drawRect(i2 + 40, i1 + 16.5, i2 + 40 + percent * space, i1 + 27.3, hudColor);
         Gui.drawRect(i2 + 40 + percent * space, i1 + 16.5, i2 + 40 + percent * space + diffP * space, i1 + 27.3, new Color(hudColor).darker().getRGB());

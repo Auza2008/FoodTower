@@ -134,16 +134,16 @@ public class AimAssist extends Module {
     @EventHandler
     public void onUpdate(EventPreUpdate event) {
 
-        if (ClickAim.getValue() && !mc.gameSettings.keyBindAttack.isKeyDown()) {
+        if (ClickAim.get() && !mc.gameSettings.keyBindAttack.isKeyDown()) {
             return;
         }
-        if (mc.thePlayer.getHeldItem() == null && held.getValue()) {
+        if (mc.thePlayer.getHeldItem() == null && held.get()) {
             return;
         }
         Entity entity = null;
         double maxDistance = 360.0;
-        double maxAngle = anglemax.getValue();
-        double minAngle = anglemin.getValue();
+        double maxAngle = anglemax.get();
+        double minAngle = anglemin.get();
         for (Object e : mc.theWorld.getLoadedEntityList()) {
             double yawdistance;
             float yaw;
@@ -159,14 +159,14 @@ public class AimAssist extends Module {
             double yawdistance = getDistanceBetweenAngles(yaw, mc.thePlayer.rotationYaw);
             double pitchdistance = getDistanceBetweenAngles(pitch, mc.thePlayer.rotationPitch);
             if (pitchdistance <= maxAngle && yawdistance >= minAngle && yawdistance <= maxAngle) {
-                double horizontalSpeed = Horizontal.getValue() * 3.0 + (Horizontal.getValue() > 0.0 ? this.rand.nextDouble() : 0.0);
-                double verticalSpeed = Vertical.getValue() * 3.0 + (Vertical.getValue() > 0.0 ? this.rand.nextDouble() : 0.0);
-                if (Strafe.getValue() && mc.thePlayer.moveStrafing != 0.0f) {
+                double horizontalSpeed = Horizontal.get() * 3.0 + (Horizontal.get() > 0.0 ? this.rand.nextDouble() : 0.0);
+                double verticalSpeed = Vertical.get() * 3.0 + (Vertical.get() > 0.0 ? this.rand.nextDouble() : 0.0);
+                if (Strafe.get() && mc.thePlayer.moveStrafing != 0.0f) {
                     horizontalSpeed *= 1.25;
                 }
                 if (getEntity(24.0) != null && getEntity(24.0).equals(entity)) {
-                    horizontalSpeed *= Speed.getValue();
-                    verticalSpeed *= Speed.getValue();
+                    horizontalSpeed *= Speed.get();
+                    verticalSpeed *= Speed.get();
                 }
                 this.faceTarget(entity, 0.0f, (float) verticalSpeed);
                 this.faceTarget(entity, (float) horizontalSpeed, 0.0f);
@@ -207,6 +207,6 @@ public class AimAssist extends Module {
         } else {
             flag1 = true;
         }
-        return e instanceof EntityLivingBase && (!(e instanceof EntityArmorStand) && (!(e instanceof EntityAnimal) && (!(e instanceof EntityMob) && (e != mc.thePlayer && (!(e instanceof EntityVillager) && (!((double) mc.thePlayer.getDistanceToEntity(e) > (Range.getValue())) && (!e.getName().contains("#") && ((!team.getValue() || !e.getDisplayName().getFormattedText().startsWith("\u00a7" + mc.thePlayer.getDisplayName().getFormattedText().charAt(1))) && flag1))))))));
+        return e instanceof EntityLivingBase && (!(e instanceof EntityArmorStand) && (!(e instanceof EntityAnimal) && (!(e instanceof EntityMob) && (e != mc.thePlayer && (!(e instanceof EntityVillager) && (!((double) mc.thePlayer.getDistanceToEntity(e) > (Range.get())) && (!e.getName().contains("#") && ((!team.get() || !e.getDisplayName().getFormattedText().startsWith("\u00a7" + mc.thePlayer.getDisplayName().getFormattedText().charAt(1))) && flag1))))))));
     }
 }

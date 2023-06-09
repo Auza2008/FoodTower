@@ -22,7 +22,7 @@ public class VanillaFly implements FlyModule {
 
     @Override
     public void onMove(EventMove e) {
-        double vanillaSpeed = Fly.speed.getValue();
+        double vanillaSpeed = Fly.speed.get();
         mc.thePlayer.capabilities.isFlying = false;
         mc.thePlayer.motionY = 0;
         mc.thePlayer.motionX = 0;
@@ -67,7 +67,7 @@ public class VanillaFly implements FlyModule {
     }
 
     private void handleVanillaKickBypass() {
-        if (!Fly.vanillaFlyAntiKick.getValue() || !groundTimer.hasTimePassed(1000)) return;
+        if (!Fly.vanillaFlyAntiKick.get() || !groundTimer.hasTimePassed(1000)) return;
 
         final double ground = calculateGround();
 

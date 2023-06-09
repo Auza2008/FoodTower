@@ -98,7 +98,7 @@ public abstract class AbstractClientPlayer extends EntityPlayer
         {
             return null;
         }
-        else if (this.getUniqueID().equals(Minecraft.getMinecraft().thePlayer.getUniqueID()) && HUD.clientCape.getValue()) {
+        else if (this.getUniqueID().equals(Minecraft.getMinecraft().thePlayer.getUniqueID()) && HUD.clientCape.get()) {
 	           ResourceLocation loc = new ResourceLocation("FoodTower/CAPE/cape.png");
 	           return loc;
 	        } else {

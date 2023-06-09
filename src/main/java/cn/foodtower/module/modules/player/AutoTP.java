@@ -55,9 +55,9 @@ public final class AutoTP
         }
         this.stage = 0;
         this.tp = false;
-        if (this.mode.getValue().equals(Modes.Vanilla)){
+        if (this.mode.get().equals(Modes.Vanilla)){
             this.tp = true;
-        } else if (this.mode.getValue() == Modes.Hypixel) {
+        } else if (this.mode.get() == Modes.Hypixel) {
             mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true));
             mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.41999998688697815, mc.thePlayer.posZ, true));
             mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.7531999805212015, mc.thePlayer.posZ, true));
@@ -88,14 +88,14 @@ public final class AutoTP
 
     @EventHandler
     public void onSendPacket( EventPacketSend event) {
-        if (this.stage == 1 && !this.timer.elapsed(6000L) || this.mode.getValue() == Modes.Hypixel && !this.tp && event.getPacket() instanceof C03PacketPlayer) {
+        if (this.stage == 1 && !this.timer.elapsed(6000L) || this.mode.get() == Modes.Hypixel && !this.tp && event.getPacket() instanceof C03PacketPlayer) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onReceivePacket( EventPacketReceive event) {
-        if (this.mode.getValue() == Modes.Hypixel && event.getPacket() instanceof S08PacketPlayerPosLook && !this.tp) {
+        if (this.mode.get() == Modes.Hypixel && event.getPacket() instanceof S08PacketPlayerPosLook && !this.tp) {
             this.tp = true;
         }
     }
@@ -110,7 +110,7 @@ public final class AutoTP
         if (this.tp) {
             this.setEnabled(false);
             new Thread(() -> {
-                if (mode.getValue().equals(Modes.Hypixel)) {
+                if (mode.get().equals(Modes.Hypixel)) {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException interruptedException) {
@@ -145,7 +145,7 @@ public final class AutoTP
 
     @EventHandler
     public void onMove( EventMove event) {
-        if (this.stage == 1 & !this.timer.elapsed(6000L) || this.mode.getValue() == Modes.Hypixel) {
+        if (this.stage == 1 & !this.timer.elapsed(6000L) || this.mode.get() == Modes.Hypixel) {
             MovementUtils.setSpeed(event, 0.0);
             mc.thePlayer.motionY = 0.0;
             event.y = 0.0;

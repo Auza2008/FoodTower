@@ -30,13 +30,13 @@ public class ValueButton {
         this.y = y;
         this.name = "";
         if (this.value instanceof Option) {
-            this.change = ((Option) this.value).getValue();
+            this.change = ((Option) this.value).get();
         } else if (this.value instanceof Mode) {
-            this.name = String.valueOf(((Mode) this.value).getValue());
+            this.name = String.valueOf(((Mode) this.value).get());
         } else if (value instanceof Numbers) {
             final Numbers v = (Numbers) value;
             this.name = this.name
-                    + (v.isInteger() ? ((Number) v.getValue()).intValue() : ((Number) v.getValue()).doubleValue());
+                    + (v.isInteger() ? ((Number) v.get()).intValue() : ((Number) v.get()).doubleValue());
         }
         this.opacity = 0.0;
     }
@@ -56,12 +56,12 @@ public class ValueButton {
                 this.opacity = 0.0;
             }
             if (this.value instanceof Option) {
-                this.change = ((Option) this.value).getValue();
+                this.change = ((Option) this.value).get();
             } else if (this.value instanceof Mode) {
-                this.name = String.valueOf(((Mode) this.value).getValue());
+                this.name = String.valueOf(((Mode) this.value).get());
             } else if (this.value instanceof Numbers) {
                 final Numbers v = (Numbers) this.value;
-                this.name = String.valueOf(v.isInteger() ? ((Number) v.getValue()).intValue() : ((Number) v.getValue()).doubleValue());
+                this.name = String.valueOf(v.isInteger() ? ((Number) v.get()).intValue() : ((Number) v.get()).doubleValue());
                 if (mouseX > this.x - 7 && mouseX < this.x + 85 && mouseY > this.y - 6
                         && mouseY < this.y + mfont.FONT_HEIGHT + 5 && Mouse.isButtonDown(0)) {
                     final double min = v.getMinimum().doubleValue();
@@ -84,7 +84,7 @@ public class ValueButton {
                     new Color(108, 108, 108).getRGB());
             if (this.value instanceof Numbers) {
                 final Numbers v = (Numbers) this.value;
-                final double render = 68.0f * (((Number) v.getValue()).floatValue() - v.getMinimum().floatValue())
+                final double render = 68.0f * (((Number) v.get()).floatValue() - v.getMinimum().floatValue())
                         / (v.getMaximum().floatValue() - v.getMinimum().floatValue());
                 RenderUtil.drawRect(this.x, this.y + mfont.FONT_HEIGHT + 3,
                         (float) (this.x + render + 1), this.y + mfont.FONT_HEIGHT + 4,
@@ -104,12 +104,12 @@ public class ValueButton {
                 && mouseY < this.y + Client.FontLoaders.Chinese18.FONT_HEIGHT + 5) {
             if (this.value instanceof Option) {
                 final Option v = (Option) this.value;
-                v.setValue(!(boolean) v.getValue());
+                v.setValue(!(boolean) v.get());
                 return;
             }
             if (this.value instanceof Mode) {
                 final Mode m = (Mode) this.value;
-                final Enum current = m.getValue();
+                final Enum current = m.get();
                 final int next = (current.ordinal() + 1 >= m.getModes().length) ? 0 : (current.ordinal() + 1);
                 this.value.setValue(m.getModes()[next]);
             }

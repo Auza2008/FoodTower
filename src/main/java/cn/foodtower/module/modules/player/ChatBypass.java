@@ -47,7 +47,7 @@ public class ChatBypass extends Module {
             if (shout) {
                 packetChatMessage.setMessage(packetChatMessage.getMessage().replaceFirst("/shout", ""));
             }
-            switch ((ChatBypassMode)mode.getValue()){
+            switch ((ChatBypassMode)mode.get()){
                 case Hypixel:
                     packetChatMessage.setMessage(insertPeriodically(packetChatMessage.getMessage(), "\u26CD\u26D7\u26CC\u26D7\u26D8\u26C9\u26E1\u26CD\u26D7\u26C9\u26CD\u26D8\u26DC\u26CD\u26E0\u26D8\u26DF\u26CF\u26E1\u26CF\u26D7\u26CF\u26CD\u26C9\u26CB\u05FC", 1));
                     break;

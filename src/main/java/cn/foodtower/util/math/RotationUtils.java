@@ -1,8 +1,8 @@
 package cn.foodtower.util.math;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntitySnowball;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.AxisAlignedBB;
@@ -135,19 +135,18 @@ public class RotationUtils {
         return new float[]{RotationUtils.getYawChangeToEntity(e2) + mc.thePlayer.rotationYaw, RotationUtils.getPitchChangeToEntity(e2) + mc.thePlayer.rotationPitch};
     }
 
-    public static float[] getRotations(double posX, double posY, double posZ) {
-        EntityPlayerSP player = mc.thePlayer;
-        double x = posX - player.posX;
-        double y = posY - (player.posY + (double) player.getEyeHeight());
-        double z = posZ - player.posZ;
-        double dist = MathHelper.sqrt_double(x * x + z * z);
-        float yaw = (float) (Math.atan2(z, x) * 180.0 / 3.141592653589793) - 90.0f;
-        float pitch = (float) (-(Math.atan2(y, dist) * 180.0 / 3.141592653589793));
-        return new float[]{yaw, pitch};
+    public static float[] getRotationsEntity(final EntityLivingBase ent) {
+        final double x = ent.posX;
+        final double z = ent.posZ;
+        final double y = ent.posY + ent.getEyeHeight() / 2.0f;
+        return getRotationFromPosition(x, z, y);
     }
 
-    public static float[] getRotationsEntity(Entity entity) {
-        return getRotations(entity.posX, entity.posY + (double) entity.getEyeHeight() - 0.4, entity.posZ);
+    public static float[] getPredictedRotations(EntityLivingBase ent) {
+        double x = ent.posX + (ent.posX - ent.lastTickPosX);
+        double z = ent.posZ + (ent.posZ - ent.lastTickPosZ);
+        double y = ent.posY + ent.getEyeHeight() / 2.0F;
+        return getRotationFromPosition(x, z, y);
     }
 
     public static float getYawChangeToEntity(Entity entity) {
@@ -178,13 +177,13 @@ public class RotationUtils {
         return -MathHelper.wrapAngleTo180_float(mc.thePlayer.rotationPitch - (float) pitchToEntity);
     }
 
-    public static float[] getRotationFromPosition(double x2, double z2, double y2) {
-        double xDiff = x2 - mc.thePlayer.posX;
-        double zDiff = z2 - mc.thePlayer.posZ;
-        double yDiff = y2 - mc.thePlayer.posY - 0.8;
-        double dist = MathHelper.sqrt_double(xDiff * xDiff + zDiff * zDiff);
-        float yaw = (float) (Math.atan2(zDiff, xDiff) * 180.0 / 3.141592653589793) + 90.0f;
-        float pitch = (float) ((-Math.atan2(yDiff, dist)) * 180.0 / 3.141592653589793) + 90.0f;
+    public static float[] getRotationFromPosition(final double x, final double z, final double y) {
+        final double xDiff = x - Minecraft.getMinecraft().thePlayer.posX;
+        final double zDiff = z - Minecraft.getMinecraft().thePlayer.posZ;
+        final double yDiff = y - Minecraft.getMinecraft().thePlayer.posY - 1.2;
+        final double dist = MathHelper.sqrt_double(xDiff * xDiff + zDiff * zDiff);
+        final float yaw = (float) (Math.atan2(zDiff, xDiff) * 180.0 / 3.141592653589793) - 90.0f;
+        final float pitch = (float) (-(Math.atan2(yDiff, dist) * 180.0 / 3.141592653589793));
         return new float[]{yaw, pitch};
     }
 
@@ -303,6 +302,6 @@ public class RotationUtils {
     }
 
     public static boolean isVisibleFOV(final Entity e, final float fov) {
-        return ((Math.abs(getRotationsEntity(e)[0] - mc.thePlayer.rotationYaw) % 360.0f > 180.0f) ? (360.0f - Math.abs(getRotationsEntity(e)[0] - mc.thePlayer.rotationYaw) % 360.0f) : (Math.abs(getRotationsEntity(e)[0] - mc.thePlayer.rotationYaw) % 360.0f)) <= fov;
+        return ((Math.abs(getRotationsEntity((EntityLivingBase) e)[0] - mc.thePlayer.rotationYaw) % 360.0f > 180.0f) ? (360.0f - Math.abs(getRotationsEntity((EntityLivingBase) e)[0] - mc.thePlayer.rotationYaw) % 360.0f) : (Math.abs(getRotationsEntity((EntityLivingBase) e)[0] - mc.thePlayer.rotationYaw) % 360.0f)) <= fov;
     }
 }

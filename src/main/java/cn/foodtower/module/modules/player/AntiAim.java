@@ -86,39 +86,39 @@ public class AntiAim
             this.fake = !this.fake;
 
 
-            if (this.AAYAW.getValue() == YAW.Jitter) {
+            if (this.AAYAW.get() == YAW.Jitter) {
                 var4 = 0;
             }
 
-            if (this.AAYAW.getValue() == YAW.SpinFast) {
+            if (this.AAYAW.get() == YAW.SpinFast) {
                 var4 = 7;
             }
 
-            if (this.AAYAW.getValue() == YAW.SpinSlow) {
+            if (this.AAYAW.get() == YAW.SpinSlow) {
                 var4 = 8;
             }
 
-            if (this.AAYAW.getValue() == YAW.Freestanding) {
+            if (this.AAYAW.get() == YAW.Freestanding) {
                 var4 = 6;
             }
 
-            if (this.AAYAW.getValue() == YAW.Reverse) {
+            if (this.AAYAW.get() == YAW.Reverse) {
                 var4 = 2;
             }
 
-            if (this.AAYAW.getValue() == YAW.FakeJitter) {
+            if (this.AAYAW.get() == YAW.FakeJitter) {
                 var4 = 4;
             }
 
-            if (this.AAYAW.getValue() == YAW.Lisp) {
+            if (this.AAYAW.get() == YAW.Lisp) {
                 var4 = 1;
             }
 
-            if (this.AAYAW.getValue() == YAW.Sideways) {
+            if (this.AAYAW.get() == YAW.Sideways) {
                 var4 = 3;
             }
 
-            if (this.AAYAW.getValue() == YAW.FakeHead) {
+            if (this.AAYAW.get() == YAW.FakeHead) {
                 var4 = 5;
             }
 
@@ -203,31 +203,31 @@ public class AntiAim
             }
 
 
-            if (this.AAPITCH.getValue() == PITCH.Normal) {
+            if (this.AAPITCH.get() == PITCH.Normal) {
                 var4 = 2;
             }
 
-            if (this.AAPITCH.getValue() == PITCH.Reverse) {
+            if (this.AAPITCH.get() == PITCH.Reverse) {
                 var4 = 3;
             }
 
-            if (this.AAPITCH.getValue() == PITCH.Stutter) {
+            if (this.AAPITCH.get() == PITCH.Stutter) {
                 var4 = 4;
             }
 
-            if (this.AAPITCH.getValue() == PITCH.Up) {
+            if (this.AAPITCH.get() == PITCH.Up) {
                 var4 = 5;
             }
 
-            if (this.AAPITCH.getValue() == PITCH.Meme) {
+            if (this.AAPITCH.get() == PITCH.Meme) {
                 var4 = 1;
             }
 
-            if (this.AAPITCH.getValue() == PITCH.Zero) {
+            if (this.AAPITCH.get() == PITCH.Zero) {
                 var4 = 6;
             }
 
-            if (this.AAPITCH.getValue() == PITCH.HalfDown) {
+            if (this.AAPITCH.get() == PITCH.HalfDown) {
                 var4 = 0;
             }
 

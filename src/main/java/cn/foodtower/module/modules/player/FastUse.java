@@ -38,16 +38,16 @@ public class FastUse extends Module {
 
     @EventHandler
     public void onEvent(EventPreUpdate event) {
-        setSuffix(MODE.getValue());
-        if (MODE.getValue() == Modes.Timer) {
-            if (mc.thePlayer.getItemInUseDuration() >= (TICKS.getValue().intValue()) && canUseItem(mc.thePlayer.getItemInUse().getItem())) {
+        setSuffix(MODE.get());
+        if (MODE.get() == Modes.Timer) {
+            if (mc.thePlayer.getItemInUseDuration() >= (TICKS.get().intValue()) && canUseItem(mc.thePlayer.getItemInUse().getItem())) {
                 mc.timer.timerSpeed = 1.3555f;
             } else if (mc.timer.timerSpeed == 1.3555f) {
                 mc.timer.timerSpeed = 1;
             }
         }
-        if (MODE.getValue() == Modes.Packet) {
-            if (mc.thePlayer.getItemInUseDuration() == (TICKS.getValue().intValue()) && canUseItem(mc.thePlayer.getItemInUse().getItem())) {
+        if (MODE.get() == Modes.Packet) {
+            if (mc.thePlayer.getItemInUseDuration() == (TICKS.get().intValue()) && canUseItem(mc.thePlayer.getItemInUse().getItem())) {
                 for (int i = 0; i < 30; i++) {
                     mc.thePlayer.sendQueue.addToSendQueue(new C03PacketPlayer(true));
                 }
@@ -55,7 +55,7 @@ public class FastUse extends Module {
                 mc.thePlayer.stopUsingItem();
             }
         }
-        if (MODE.getValue().equals(Modes.Instant)) {
+        if (MODE.get().equals(Modes.Instant)) {
             if (mc.thePlayer.isUsingItem()) {
                 Item usingItem = mc.thePlayer.getItemInUse().getItem();
                 if (usingItem instanceof ItemFood || usingItem instanceof ItemBucketMilk || usingItem instanceof ItemPotion) {

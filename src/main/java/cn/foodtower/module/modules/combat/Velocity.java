@@ -59,7 +59,7 @@ public class Velocity extends Module {
 
     @EventHandler
     public void onEvent(EventPreUpdate event) {
-        switch ((modes) mode.getValue()) {
+        switch ((modes) mode.get()) {
             case Tick:
                 if (velocitytick > velocitytickvalue.get()) {
                     if (mc.thePlayer.motionY > 0) mc.thePlayer.motionY = 0.0;
@@ -73,12 +73,12 @@ public class Velocity extends Module {
                 }
                 break;
             case Legit:
-                if (legitDisableInAirValue.getValue() && !MoveUtils.isOnGround(0.5)) return;
+                if (legitDisableInAirValue.get() && !MoveUtils.isOnGround(0.5)) return;
                 if (mc.thePlayer.maxHurtResistantTime != mc.thePlayer.hurtResistantTime || mc.thePlayer.maxHurtResistantTime == 0)
                     return;
                 if (MathUtil.randomNumber(100, 1) < legitChanceValue.get()) {
-                    mc.thePlayer.motionX *= horizontal.getValue();
-                    mc.thePlayer.motionZ *= horizontal.getValue();
+                    mc.thePlayer.motionX *= horizontal.get();
+                    mc.thePlayer.motionZ *= horizontal.get();
                     mc.thePlayer.motionY *= vertical.get();
                 }
                 break;
@@ -92,8 +92,8 @@ public class Velocity extends Module {
                 break;
             case AAC:
                 if (velocityInput && velocityTimer.hasTimePassed(80L)) {
-                    mc.thePlayer.motionX *= horizontal.getValue();
-                    mc.thePlayer.motionZ *= horizontal.getValue();
+                    mc.thePlayer.motionX *= horizontal.get();
+                    mc.thePlayer.motionZ *= horizontal.get();
                     velocityInput = false;
                 }
                 break;
@@ -162,11 +162,11 @@ public class Velocity extends Module {
             velocityTimer.reset();
         }
 
-        switch ((modes) mode.getValue()) {
+        switch ((modes) mode.get()) {
             case Tick:
                 if (event.getPacket() instanceof S12PacketEntityVelocity && ((S12PacketEntityVelocity) event.getPacket()).getEntityID() == mc.thePlayer.getEntityId()) {
-                    float ve = this.vertical.getValue().floatValue();
-                    float ho = this.horizontal.getValue().floatValue();
+                    float ve = this.vertical.get().floatValue();
+                    float ho = this.horizontal.get().floatValue();
                     if (ve == 0.0 && ho == 0.0) {
                         event.setCancelled(true);
                     }
@@ -188,16 +188,16 @@ public class Velocity extends Module {
                 if (event.getPacket() instanceof S12PacketEntityVelocity) {
                     S12PacketEntityVelocity packet = (S12PacketEntityVelocity) event.getPacket();
                     if (packet.getEntityID() == mc.thePlayer.getEntityId()) {
-                        packet.motionX = (int) (packet.motionX * this.horizontal.getValue());
-                        packet.motionZ = (int) (packet.motionZ * this.horizontal.getValue());
-                        packet.motionY = (int) (packet.motionY * this.vertical.getValue());
+                        packet.motionX = (int) (packet.motionX * this.horizontal.get());
+                        packet.motionZ = (int) (packet.motionZ * this.horizontal.get());
+                        packet.motionY = (int) (packet.motionY * this.vertical.get());
                     }
                 }
                 if (event.getPacket() instanceof S27PacketExplosion) {
                     S27PacketExplosion packet = (S27PacketExplosion) event.getPacket();
-                    packet.field_149152_f = (float) (packet.field_149152_f * this.horizontal.getValue());
-                    packet.field_149153_g = (float) (packet.field_149153_g * this.horizontal.getValue());
-                    packet.field_149159_h = (float) (packet.field_149159_h * this.vertical.getValue());
+                    packet.field_149152_f = (float) (packet.field_149152_f * this.horizontal.get());
+                    packet.field_149153_g = (float) (packet.field_149153_g * this.horizontal.get());
+                    packet.field_149159_h = (float) (packet.field_149159_h * this.vertical.get());
                 }
                 break;
             case Cancel:
@@ -244,17 +244,17 @@ public class Velocity extends Module {
 
     @EventHandler
     public void onRender2d(EventRender2D e) {
-        if (mode.getValue() == modes.Simple || mode.getValue() == modes.Tick) {
-            this.setSuffix((horizontal.getValue() * 100) + "% " + (vertical.getValue() * 100) + "%");
+        if (mode.get() == modes.Simple || mode.get() == modes.Tick) {
+            this.setSuffix((horizontal.get() * 100) + "% " + (vertical.get() * 100) + "%");
         } else {
-            this.setSuffix(mode.getValue());
+            this.setSuffix(mode.get());
         }
 
     }
 
     @EventHandler
     public void onEnable() {
-        if (mode.getValue() == modes.Hypixel) {
+        if (mode.get() == modes.Hypixel) {
             Notifications.getManager().post("Velocity", "You'd better try Hypixel Mode On Ground!");
         }
     }

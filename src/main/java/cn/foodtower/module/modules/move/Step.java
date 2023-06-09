@@ -22,7 +22,7 @@ public class Step extends Module {
 
     @EventHandler
     public void onRender2d(EventRender2D e) {
-        setSuffix(Modes.getValue());
+        setSuffix(Modes.get());
     }
 
     @EventHandler

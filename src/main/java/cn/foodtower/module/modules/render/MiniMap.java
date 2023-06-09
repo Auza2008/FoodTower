@@ -44,12 +44,12 @@ public class MiniMap
 
     @EventHandler
     public void onGui(EventRender2D e) {
-        if (this.mode.getValue() == RadarMode.Normal) {
-            int size = this.size.getValue().intValue();
+        if (this.mode.get() == RadarMode.Normal) {
+            int size = this.size.get().intValue();
             ScaledResolution sr = new ScaledResolution(mc);
-            int size1 = this.size.getValue().intValue();
-            float xOffset = this.x.getValue().floatValue();
-            float yOffset = this.y.getValue().floatValue();
+            int size1 = this.size.get().intValue();
+            float xOffset = this.x.get().floatValue();
+            float yOffset = this.y.get().floatValue();
             float playerOffsetX = (float) mc.thePlayer.posX;
             float playerOffSetZ = (float) mc.thePlayer.posZ;
             int var141 = ScaledResolution.getScaledWidth();
@@ -80,8 +80,8 @@ public class MiniMap
                 if (!(o instanceof EntityPlayer) || !(ent = (EntityPlayer) o).isEntityAlive() || ent == mc.thePlayer || ent.isInvisible() || ent.isInvisibleToPlayer(mc.thePlayer))
                     continue;
                 float pTicks = mc.timer.renderPartialTicks;
-                float posX = (float) ((ent.posX + (ent.posX - ent.lastTickPosX) * (double) pTicks - (double) playerOffsetX) * this.scale.getValue());
-                float posZ = (float) ((ent.posZ + (ent.posZ - ent.lastTickPosZ) * (double) pTicks - (double) playerOffSetZ) * this.scale.getValue());
+                float posX = (float) ((ent.posX + (ent.posX - ent.lastTickPosX) * (double) pTicks - (double) playerOffsetX) * this.scale.get());
+                float posZ = (float) ((ent.posZ + (ent.posZ - ent.lastTickPosZ) * (double) pTicks - (double) playerOffSetZ) * this.scale.get());
                 int color = mc.thePlayer.canEntityBeSeen(ent) ? new Color(255, 110, 110).getRGB() : new Color(160, 160, 160).getRGB();
                 float cos = MathHelper.cos(mc.thePlayer.rotationYaw * 0.017453292519943295f);
                 float sin = MathHelper.sin(mc.thePlayer.rotationYaw * 0.017453292519943295d);
@@ -102,12 +102,12 @@ public class MiniMap
                 RenderUtil.circle((xOffset + (size / 2f) + rotX), (yOffset + (size / 2f) + rotY), 1.5f, color);
             }
         }
-        if (this.mode.getValue() == RadarMode.Round) {
+        if (this.mode.get() == RadarMode.Round) {
             Timer timer = new Timer();
             ScaledResolution sr = new ScaledResolution(mc);
-            int size = this.size.getValue().intValue();
-            float xOffset = this.x.getValue().floatValue();
-            float yOffset = this.y.getValue().floatValue();
+            int size = this.size.get().intValue();
+            float xOffset = this.x.get().floatValue();
+            float yOffset = this.y.get().floatValue();
             float playerOffsetX = (float) mc.thePlayer.posX;
             float playerOffSetZ = (float) mc.thePlayer.posZ;
             Gui.drawFilledCircle(xOffset + (size / 2f), yOffset + size / 2f, size / 2f - 4, Colors2.getColor(50, 100), 0);
@@ -160,10 +160,10 @@ public class MiniMap
 
                         float pTicks = mc.timer.renderPartialTicks;
                         float posX = (float) (((ent.posX + (ent.posX - ent.lastTickPosX) * pTicks) -
-                                playerOffsetX) * ((Number) scale.getValue()).doubleValue());
+                                playerOffsetX) * ((Number) scale.get()).doubleValue());
 
                         float posZ = (float) (((ent.posZ + (ent.posZ - ent.lastTickPosZ) * pTicks) -
-                                playerOffSetZ) * ((Number) scale.getValue()).doubleValue());
+                                playerOffSetZ) * ((Number) scale.get()).doubleValue());
                         int color;
                         if (FriendManager.isFriend(ent.getName())) {
                             color = Colors2.getColor(0, 195, 255);

@@ -19,7 +19,7 @@ implements ICheck {
 
     @Override
     public boolean validate(Entity entity) {
-        return !(entity instanceof EntityPlayer) || !Teams.isOnSameTeam((EntityPlayer)entity) || this.teams.getValue() == false;
+        return !(entity instanceof EntityPlayer) || !Teams.isOnSameTeam((EntityPlayer)entity) || this.teams.get() == false;
     }
 }
 

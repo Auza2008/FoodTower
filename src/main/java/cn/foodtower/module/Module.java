@@ -100,7 +100,7 @@ public class Module {
             this.onEnable();
             setRender(true);
             if (ModuleManager.loaded && !ModuleManager.enabledNeededMod && mc.theWorld != null && !Objects.equals(this.getName(), "ClickGui")) {
-                if (ClientSetting.soundFx.getValue()) {
+                if (ClientSetting.soundFx.get()) {
                     new SoundFxPlayer().playSound(SoundFxPlayer.SoundType.Enable, -11);
                 } else {
                     mc.thePlayer.playSound("random.click", 0.1F, this.enabled ? 0.6F : 0.5F);
@@ -110,7 +110,7 @@ public class Module {
             EventBus.getInstance().register(this);
         } else {
             if (ModuleManager.loaded && !ModuleManager.enabledNeededMod && mc.theWorld != null && !Objects.equals(this.getName(), "ClickGui")) {
-                if (ClientSetting.soundFx.getValue()) {
+                if (ClientSetting.soundFx.get()) {
                     new SoundFxPlayer().playSound(SoundFxPlayer.SoundType.Disable, -11);
                 } else {
                     mc.thePlayer.playSound("random.click", 0.1F, this.enabled ? 0.6F : 0.5F);
@@ -140,7 +140,7 @@ public class Module {
         if (suffix.isEmpty()) {
             this.suffix = suffix;
         } else {
-            this.suffix = String.format("%s", EnumChatFormatting.GRAY + suffix);
+            this.suffix = String.format("%s", EnumChatFormatting.WHITE + suffix);
         }
 
     }
@@ -302,8 +302,8 @@ class ModuleCommand extends Command {
             }
 
             if (option != null) {
-                option.setValue(!(Boolean) option.getValue());
-                Helper.sendMessage(String.format("%s 的数值已被设置为 %s", option.getName(), option.getValue()));
+                option.setValue(!(Boolean) option.get());
+                Helper.sendMessage(String.format("%s 的数值已被设置为 %s", option.getName(), option.get()));
             } else {
 
                 for (Value<?> item : this.m.values) {
@@ -317,7 +317,7 @@ class ModuleCommand extends Command {
                     try {
                         double v1 = Double.parseDouble(args[1]);
                         numbers.setValue(v1 > (Double) numbers.getMaximum() ? numbers.getMaximum() : v1);
-                        Helper.sendMessage(String.format("> %s 的数值已被设置为 %s", numbers.getName(), numbers.getValue()));
+                        Helper.sendMessage(String.format("> %s 的数值已被设置为 %s", numbers.getName(), numbers.get()));
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         Helper.sendMessage("> " + args[1] + " 不是一个数字");
@@ -353,13 +353,13 @@ class ModuleCommand extends Command {
             }
 
             if (option != null) {
-                option.setValue(!(Boolean) option.getValue());
+                option.setValue(!(Boolean) option.get());
                 String fuck2 = option.getName().substring(1);
                 String xd2 = option.getName().substring(0, 1).toUpperCase();
-                if (option.getValue()) {
-                    Helper.sendMessage(String.format("> %s 的参数已被设置为了 \u00a7a%s", xd2 + fuck2, option.getValue()));
+                if (option.get()) {
+                    Helper.sendMessage(String.format("> %s 的参数已被设置为了 \u00a7a%s", xd2 + fuck2, option.get()));
                 } else {
-                    Helper.sendMessage(String.format("> %s 的参数已被设置为了 \u00a7c%s", xd2 + fuck2, option.getValue()));
+                    Helper.sendMessage(String.format("> %s 的参数已被设置为了 \u00a7c%s", xd2 + fuck2, option.get()));
                 }
             } else {
                 this.syntaxError("错误语法! 用法:.<模块名> <参数名> <参数(如果需要)>");
