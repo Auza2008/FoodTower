@@ -40,6 +40,7 @@ public class AntiFall extends Module {
 
 	@EventHandler
 	private void onUpdate( EventMove e) {
+		setSuffix(mode.get());
 		NetworkManager networkManager = mc.thePlayer.sendQueue.getNetworkManager();
 		if ((saveMe && timer.delay(150)) || mc.thePlayer.isCollidedVertically) {
 			saveMe = false;

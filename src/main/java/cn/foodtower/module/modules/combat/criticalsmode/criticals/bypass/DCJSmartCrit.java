@@ -21,9 +21,7 @@ public class DCJSmartCrit extends CriticalsModule {
 
     @Override
     public void onAttack(EventAttack e) {
-        Criticals criticals = new Criticals();
-        if (KillAura.curTarget == null) return;
-        if (criticals.canCrit(KillAura.curTarget)) {
+        if (KillAura.curTarget != null) {
             if (KillAura.curTarget.getHealth() < Criticals.smartChangeValue.get()) {
                 mc.thePlayer.jump();
             } else {

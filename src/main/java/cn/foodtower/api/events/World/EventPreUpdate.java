@@ -3,8 +3,8 @@ package cn.foodtower.api.events.World;
 import cn.foodtower.api.Event;
 
 public class EventPreUpdate extends Event {
-    public float yaw;
-    public float pitch;
+    public static float yaw;
+    public static float pitch;
     public double y;
     public double x;
     public double z;
@@ -21,16 +21,16 @@ public class EventPreUpdate extends Event {
         this.isPre = true;
     }
 
-    public float getYaw() {
-        return this.yaw;
+    public static float getYaw() {
+        return yaw;
     }
 
     public void setYaw(float yaw) {
         this.yaw = yaw;
     }
 
-    public float getPitch() {
-        return this.pitch;
+    public static float getPitch() {
+        return pitch;
     }
 
     public void setPitch(float pitch) {

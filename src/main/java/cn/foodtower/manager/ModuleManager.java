@@ -30,8 +30,6 @@ import java.util.List;
 public class ModuleManager implements Manager {
     public static List<Module> modules = new ArrayList<>();
     public static boolean enabledNeededMod = true;
-    public static boolean Trues = true;
-    public static boolean nicetry = true;
     public static boolean loaded = false;
 
     public static List<Module> getModules() {
@@ -89,6 +87,9 @@ public class ModuleManager implements Manager {
         modules.add(new Criticals());
         modules.add(new TPAura());
         modules.add(new PlayerDebug());
+        modules.add(new DuelInfo());
+        modules.add(new SmartDCJ());
+        modules.add(new LessDamage());
         modules.add(new Reach());
         modules.add(new Regen());
         modules.add(new SuperKnockback());

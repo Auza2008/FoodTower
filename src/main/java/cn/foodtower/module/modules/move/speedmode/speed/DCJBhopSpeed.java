@@ -4,7 +4,7 @@ import cn.foodtower.api.events.World.*;
 import cn.foodtower.module.modules.move.speedmode.SpeedModule;
 import cn.foodtower.util.entity.MoveUtils;
 
-public class VanillaBhopSpeed extends SpeedModule {
+public class DCJBhopSpeed extends SpeedModule {
     @Override
     public void onStep(EventStep e) {
 
@@ -12,15 +12,20 @@ public class VanillaBhopSpeed extends SpeedModule {
 
     @Override
     public void onPre(EventPreUpdate e) {
-        if (mc.thePlayer.onGround && MoveUtils.isMoving()) {
-            mc.thePlayer.motionY = 0.42;
-        }
-        MoveUtils.strafe(0.0371337);
     }
 
     @Override
     public void onMove(EventMove e) {
-
+        if (mc.thePlayer.onGround && MoveUtils.isMoving()) {
+            e.setY(mc.thePlayer.motionY = 0.42);
+        }
+        if (MoveUtils.isMoving() && mc.thePlayer.hurtTime == 0) {
+            setMotion(e, 0.8);
+        } else if (MoveUtils.isMoving()) {
+            setMotion(e, 0.4);
+        } else {
+            setMotion(e, 0);
+        }
     }
 
     @Override
@@ -30,12 +35,10 @@ public class VanillaBhopSpeed extends SpeedModule {
 
     @Override
     public void onEnabled() {
-
     }
 
     @Override
     public void onDisabled() {
-
     }
 
     @Override

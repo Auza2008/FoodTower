@@ -18,8 +18,8 @@ import cn.foodtower.ui.gui.GuiBaned;
 import cn.foodtower.ui.gui.GuiGoodBye;
 import cn.foodtower.ui.login.AltManager;
 import cn.foodtower.util.ClientSetting;
-import cn.foodtower.util.misc.WebUtils;
 import cn.foodtower.util.misc.Helper;
+import cn.foodtower.util.misc.WebUtils;
 import cn.foodtower.util.misc.liquidbounce.RotationUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.main.Main;
@@ -34,7 +34,7 @@ import java.util.Random;
 public class Client {
 
     public final static String name = "FoodTower";
-    public final static String version = "4.4";
+    public final static String version = "4.7[More Bypass]";
     public static float Yaw;
     public static float Pitch;
     public static boolean Baned = false;
@@ -61,11 +61,14 @@ public class Client {
     private static FriendManager friendmanager;
 
     static {
+        String words = null;
         try {
-            word = WebUtils.get("https://v1.hitokoto.cn/?c=j&encode=text");
+            words = WebUtils.get("https://v1.hitokoto.cn/?c=d&encode=text");
         } catch (IOException e) {
-            word = "Hello 2023";
+            JOptionPane.showMessageDialog(null, "诶呀，网络断开了", "Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
         }
+        word = words;
     }
 
     static {

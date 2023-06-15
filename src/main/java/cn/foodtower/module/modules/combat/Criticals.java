@@ -32,18 +32,20 @@ public class Criticals extends Module {
     public static Option Always = new Option("Always", "Always", false);
     public static Option C06 = new Option("C06", "C06", false);
     public static Numbers<Double> motionYvalue = new Numbers<>("MotionY", 0.42, 0.01, 1.0, 0.01);
+    public static Numbers<Double> smartChangeValue = new Numbers<>("SmartHealth", 1.5, 0.5, 5.0, 0.1);
     private final Option speedCheck = new Option("SpeedCheck", true);
     private final Option fake = new Option("FakeCritical", true);
-    public static Numbers<Double> smartChangeValue = new Numbers<>("SmartHealth", 1.5, 0.5, 5.0, 0.1);
     private final MSTimer timer = new MSTimer();
     private final Numbers<Double> HurtTime = new Numbers<>("HurtTime", "HurtTime", 20.0D, 1.0D, 20.0D, 1.0D);
+    private final Numbers<Double> fakeSize = new Numbers<>("FakeSize", 1d, 1d, 5d, 1d);
 
     public Criticals() {
         super("Criticals", new String[]{"Criticals", "crit"}, ModuleType.Combat);
-        this.addValues(mode, motionYvalue, smartChangeValue, HurtTime, Delay, fake, Always, C06, speedCheck);
+        this.addValues(mode, motionYvalue, smartChangeValue, HurtTime, Delay, fake, fakeSize, Always, C06, speedCheck);
         setValueDisplayable(new Value<?>[]{motionYvalue}, mode, new Enum[]{CritMode.Motion, CritMode.DCJHop, CritMode.DCJSmart});
         setValueDisplayable(smartChangeValue, mode, new Enum[]{CritMode.DCJSmart});
         setValueDisplayable(C06, mode, new Enum[]{CritMode.Packet, CritMode.AAC440Packet, CritMode.NCP, CritMode.OldNCPacket});
+        setValueDisplayable(fakeSize, fake, fake.get());
     }
 
     public boolean canCrit(EntityLivingBase e) {
@@ -81,7 +83,9 @@ public class Criticals extends Module {
         if (canCrit((EntityLivingBase) e.getEntity())) {
             if (Delay.get().equals(0.0) || this.timer.hasTimePassed(Delay.get().longValue())) {
                 if (fake.get()) {
-                    mc.thePlayer.onCriticalHit(e.getEntity());
+                    for (int i = 0; i < fakeSize.get(); ++i) {
+                        mc.thePlayer.onCriticalHit(e.getEntity());
+                    }
                 }
                 ((CritMode) (mode.get())).getModule().onAttack(e);
                 timer.reset();

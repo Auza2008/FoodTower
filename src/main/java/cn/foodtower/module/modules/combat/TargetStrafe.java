@@ -77,6 +77,11 @@ public class TargetStrafe extends Module {
 
     @EventHandler
     public final void onUpdate(EventMotionUpdate event) {
+        if (behind.get()) {
+            setSuffix("Behind");
+        } else {
+            setSuffix("Advanced");
+        }
         if (event.isPre()) {
             if (mc.thePlayer.isCollidedHorizontally) {
                 this.switchDirection();

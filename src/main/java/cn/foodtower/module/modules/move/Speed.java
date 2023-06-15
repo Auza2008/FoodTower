@@ -149,14 +149,12 @@ public class Speed extends Module {
 
     @EventHandler
     private void onPreUpdate(EventPreUpdate e) {
-
-
         ((SpeedMode) mode.get()).getModule().onPre(e);
         this.setSuffix(mode.get());
     }
 
     public enum SpeedMode {
-        Hypixel(new HypixelSpeed()), AutoJump(new AutoJumpSpeed()), VanillaBhop(new VanillaBhopSpeed()), HypixelLowHop(new HypixelLowHopSpeed()), Hive(new HiveSpeed()), AAC440(new AAC440Speed()), Bhop(new BhopSpeed()), GudHop(new GudHopSpeed()), OnGround(new OnGroundSpeed()), AACTimer(new AACTimer()), VulcanHop(new VulcanHopSpeed()), VulcanFastHop(new VulcanFastHopSpeed()), VulcanLowHop(new VulcanLowHopSpeed()), DCJHop(new DCJHopSpeed());
+        Hypixel(new HypixelSpeed()), AutoJump(new AutoJumpSpeed()), DCJBhop(new DCJBhopSpeed()), HypixelLowHop(new HypixelLowHopSpeed()), Hive(new HiveSpeed()), AAC440(new AAC440Speed()), Bhop(new BhopSpeed()), GudHop(new GudHopSpeed()), OnGround(new OnGroundSpeed()), AACTimer(new AACTimer()), VulcanHop(new VulcanHopSpeed()), VulcanFastHop(new VulcanFastHopSpeed()), VulcanLowHop(new VulcanLowHopSpeed()), DCJHop(new DCJHopSpeed());
 
 
         final SpeedModule module;

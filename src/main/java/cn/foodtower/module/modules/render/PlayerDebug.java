@@ -8,7 +8,6 @@ import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.ui.font.FontLoaders;
 import cn.foodtower.util.render.DrawUtil;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 
 import java.awt.*;
@@ -21,13 +20,6 @@ public class PlayerDebug extends Module {
     public PlayerDebug() {
         super("PlayerDebug", null, ModuleType.Render);
         addValues(x, y);
-    }
-
-    private double getSpeed(Entity e) {
-        final double motionX = e.motionX;
-        final double n = motionX * e.motionX;
-        final double motionZ = e.motionZ;
-        return Math.sqrt(n + motionZ * e.motionZ);
     }
 
     private double getFallTicks() {
@@ -51,8 +43,8 @@ public class PlayerDebug extends Module {
     @EventHandler
     private void on2D(EventRender2D e) {
         DrawUtil.roundedRect(x.get(), y.get(), 165, 160, 8, new Color(0, 0, 0, 120));
-        float x = 5;
-        float y = 25;
+        float x = this.x.get().floatValue();
+        float y = this.y.get().floatValue();
         if (mc.thePlayer != null) {
             EntityLivingBase player = mc.thePlayer;
             FontLoaders.GoogleSans16.drawStringWithShadow("ID: " + player.getEntityId(), x + 4, y + 2, -1);
@@ -63,8 +55,7 @@ public class PlayerDebug extends Module {
             FontLoaders.GoogleSans16.drawStringWithShadow("Health: " + String.format("%.1f", player.getHealth()), x + 4, y + 42, -1);
             FontLoaders.GoogleSans16.drawStringWithShadow("MaxHealth: " + String.format("%.1f", player.getMaxHealth()), x + 4, y + 50, -1);
             FontLoaders.GoogleSans16.drawStringWithShadow("IsOnGround: " + player.onGround, x + 4, y + 58, -1);
-            FontLoaders.GoogleSans16.drawStringWithShadow("Speed: " + String.format("%.1f", getSpeed(player)), x + 4, y + 66, -1);
-            FontLoaders.GoogleSans16.drawStringWithShadow("FallTicks: " + i, x + 4, y + 74, -1);
+            FontLoaders.GoogleSans16.drawStringWithShadow("FallTicks: " + i, x + 4, y + 66, -1);
         }
     }
 }

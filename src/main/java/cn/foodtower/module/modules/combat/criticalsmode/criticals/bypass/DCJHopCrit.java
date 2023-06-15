@@ -4,8 +4,6 @@ import cn.foodtower.api.events.World.EventAttack;
 import cn.foodtower.api.events.World.EventMotionUpdate;
 import cn.foodtower.api.events.World.EventMove;
 import cn.foodtower.api.events.World.EventPacketSend;
-import cn.foodtower.module.modules.combat.Criticals;
-import cn.foodtower.module.modules.combat.KillAura;
 import cn.foodtower.module.modules.combat.criticalsmode.CriticalsModule;
 
 public class DCJHopCrit extends CriticalsModule {
@@ -21,11 +19,9 @@ public class DCJHopCrit extends CriticalsModule {
 
     @Override
     public void onAttack(EventAttack e) {
-        Criticals criticals = new Criticals();
-        if (KillAura.curTarget == null) return;
-        if (criticals.canCrit(KillAura.curTarget)) {
-            mc.thePlayer.motionY = Criticals.motionYvalue.get();
-        }
+        mc.thePlayer.motionY = 0.3425;
+        mc.thePlayer.fallDistance=0.3425f;
+        mc.thePlayer.onGround=false;
     }
 
     @Override
@@ -39,6 +35,5 @@ public class DCJHopCrit extends CriticalsModule {
 
     @Override
     public void onUpdate(EventMotionUpdate e) {
-
     }
 }

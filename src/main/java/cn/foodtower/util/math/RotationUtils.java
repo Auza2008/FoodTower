@@ -24,6 +24,10 @@ public class RotationUtils {
         return new float[]{MathHelper.wrapAngleTo180_float(yaw), MathHelper.wrapAngleTo180_float(pitch)};
     }
 
+    public static boolean isFaced(EntityLivingBase targetEntity, double blockReachDistance) {
+        return RayCastUtil.raycastEntity(blockReachDistance, entity -> entity == targetEntity) != null;
+    }
+
     public static cn.foodtower.util.misc.scaffold.VecRotation searchCenter(AxisAlignedBB bb, boolean predict) {
         cn.foodtower.util.misc.scaffold.VecRotation vecRotation = null;
         for (double xSearch = 0.15; xSearch < 0.85; xSearch += 0.1) {
