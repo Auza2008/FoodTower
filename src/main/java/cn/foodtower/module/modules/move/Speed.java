@@ -5,6 +5,7 @@ import cn.foodtower.api.events.World.*;
 import cn.foodtower.api.value.Mode;
 import cn.foodtower.api.value.Numbers;
 import cn.foodtower.api.value.Option;
+import cn.foodtower.api.value.Value;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.module.modules.move.speedmode.SpeedModule;
@@ -37,6 +38,7 @@ public class Speed extends Module {
         super("Speed", new String[]{"zoom"}, ModuleType.Movement);
         addValues(mode, lagcheck, sprint, aireagle, groundspoof, jumpnobob, fastfall, fastfallticks, fastfallmotion, timer, dmspeed);
         setValueDisplayable(dmspeed, mode, SpeedMode.AutoJump);
+        setValueDisplayable(new Value[]{fastfallticks, fastfallmotion}, fastfall, fastfall.get());
     }
 
     public void onEnable() {
@@ -44,7 +46,6 @@ public class Speed extends Module {
     }
 
     public void onDisable() {
-
         mc.timer.timerSpeed = 1.0F;
         ((SpeedMode) mode.get()).getModule().onDisabled();
 
@@ -154,7 +155,7 @@ public class Speed extends Module {
     }
 
     public enum SpeedMode {
-        Hypixel(new HypixelSpeed()), AutoJump(new AutoJumpSpeed()), DCJBhop(new DCJBhopSpeed()), HypixelLowHop(new HypixelLowHopSpeed()), Hive(new HiveSpeed()), AAC440(new AAC440Speed()), Bhop(new BhopSpeed()), GudHop(new GudHopSpeed()), OnGround(new OnGroundSpeed()), AACTimer(new AACTimer()), VulcanHop(new VulcanHopSpeed()), VulcanFastHop(new VulcanFastHopSpeed()), VulcanLowHop(new VulcanLowHopSpeed()), DCJHop(new DCJHopSpeed());
+        Hypixel(new HypixelSpeed()), AutoJump(new AutoJumpSpeed()), DCJBhop(new DCJBhopSpeed()), Hive(new HiveSpeed()), AAC440(new AAC440Speed()), Bhop(new BhopSpeed()), GudHop(new GudHopSpeed()), OnGround(new OnGroundSpeed()), AACTimer(new AACTimer()), VulcanHop(new VulcanHopSpeed()), VulcanFastHop(new VulcanFastHopSpeed()), VulcanLowHop(new VulcanLowHopSpeed()), DCJHop(new DCJHopSpeed());
 
 
         final SpeedModule module;

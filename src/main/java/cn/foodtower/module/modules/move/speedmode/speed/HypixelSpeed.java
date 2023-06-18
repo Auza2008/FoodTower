@@ -3,10 +3,11 @@ package cn.foodtower.module.modules.move.speedmode.speed;
 import cn.foodtower.api.events.World.*;
 import cn.foodtower.module.modules.move.speedmode.SpeedModule;
 import cn.foodtower.util.entity.MoveUtils;
-import cn.foodtower.util.entity.PlayerUtil;
-import net.optifine.util.MathUtils;
+import net.minecraft.potion.Potion;
 
 public class HypixelSpeed extends SpeedModule {
+    private int groundTick;
+
     @Override
     public void onStep(EventStep e) {
 
@@ -14,20 +15,21 @@ public class HypixelSpeed extends SpeedModule {
 
     @Override
     public void onPre(EventPreUpdate e) {
-        if (PlayerUtil.isInLiquid()) {
-            return;
-        }
-        if (mc.thePlayer.onGround && MoveUtils.isMoving()) {
-            mc.thePlayer.jump();
-        }
-        float speed = 1.48f;
-        if (mc.thePlayer.moveStrafing != 0f || mc.thePlayer.moveForward < 0) {
-            speed -= 0.20f;
-        } else {
-            speed -= MathUtils.getIncremental(0.00411, 0.0465123);
-        }
-        if (mc.thePlayer.onGround) {
-            MoveUtils.strafe(MoveUtils.getBaseMoveSpeed() * speed);
+        if (MoveUtils.isMoving()) {
+            mc.timer.timerSpeed = 1.07f;
+            if (mc.thePlayer.onGround) {
+                if (groundTick >= 0) {
+                    mc.timer.timerSpeed = 1.2f;
+                    MoveUtils.strafe(0.42f);
+                    mc.thePlayer.motionY = MoveUtils.getJumpBoostModifier(0.41999998688698);
+                    if (mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
+                        MoveUtils.strafe(0.57f);
+                    }
+                }
+                groundTick++;
+            } else {
+                groundTick = 0;
+            }
         }
     }
 
