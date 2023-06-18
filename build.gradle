@@ -62,6 +62,7 @@ dependencies {
     implementation fileTree(dir: 'libs', includes: ['*.jar'])
 
     configurations.implementation.extendsFrom(configurations.addLib)
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 jar {
