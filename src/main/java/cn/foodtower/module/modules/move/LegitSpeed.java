@@ -16,10 +16,8 @@ public class LegitSpeed extends Module {
     private void onJump(EventJump jump) {
         if (mc.thePlayer != null || MoveUtils.isMoving()) {
             if (mc.thePlayer.isPotionActive(Potion.moveSpeed) && mc.thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier() != 2) {
-                mc.thePlayer.motionX *= (0.7 * (mc.thePlayer.getActivePotionEffect(
-                        Potion.moveSpeed).getAmplifier() + 1));
-                mc.thePlayer.motionZ *= (0.7 * (mc.thePlayer.getActivePotionEffect(
-                        Potion.moveSpeed).getAmplifier() + 1));
+                mc.thePlayer.motionX *= (0.7 * (mc.thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier() + 1));
+                mc.thePlayer.motionZ *= (0.7 * (mc.thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier() + 1));
             }
         }
     }
