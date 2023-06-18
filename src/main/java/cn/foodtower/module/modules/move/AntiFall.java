@@ -11,13 +11,16 @@ import cn.foodtower.manager.ModuleManager;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.module.modules.world.Scaffold;
+import cn.foodtower.util.entity.MoveUtils;
+import cn.foodtower.util.misc.Helper;
 import cn.foodtower.util.time.Timer;
 import cn.foodtower.util.world.PacketUtils;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.AxisAlignedBB;
-import org.apache.commons.lang3.RandomUtils;
+
+import java.util.ArrayList;
 
 public class AntiFall extends Module {
     public static Numbers<Double> distance = new Numbers<>("Distance", 5.0, 0.0, 10.0, 1.0);
@@ -27,6 +30,8 @@ public class AntiFall extends Module {
     private final Mode mode = new Mode("Mode", "Mode", AntiMode.values(), AntiMode.Hypixel);
     boolean needBlink;
     private boolean saveMe;
+    private double[] lastGroundPos = new double[3];
+    private static ArrayList<C03PacketPlayer> packets = new ArrayList<>();
 
     public AntiFall() {
         super("AntiFall", new String[]{"AntiVoid"}, ModuleType.Movement);
@@ -57,9 +62,6 @@ public class AntiFall extends Module {
                             mc.thePlayer.motionY += 0.1;
                             mc.thePlayer.fallDistance = 0F;
                             break;
-                        case Hypixel:
-                            mc.getNetHandler().getNetworkManager().sendPacket(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + distance.get().intValue() + 3 + RandomUtils.nextDouble(0.07, 0.09), mc.thePlayer.posZ, true));
-                            break;
                     }
                     if (scaffoldvalue.get()) {
                         ModuleManager.getModByClass(Scaffold.class).setEnabled(true);
@@ -72,6 +74,39 @@ public class AntiFall extends Module {
 
     @EventHandler
     public void onPacketSend(EventPacketSend e) {
+        if (mode.get().equals(AntiMode.Hypixel)) {
+            if (e.getPacket() instanceof C03PacketPlayer) {
+                C03PacketPlayer packet = ((C03PacketPlayer) e.getPacket());
+                if (isInVoid()) {
+                    e.setCancelled(true);
+                    packets.add(packet);
+                    if (mc.thePlayer.fallDistance >= distance.get()) {
+                        mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(lastGroundPos[0], lastGroundPos[1] - 1, lastGroundPos[2], true));
+                    }
+                } else {
+                    lastGroundPos[0] = mc.thePlayer.posX;
+                    lastGroundPos[1] = mc.thePlayer.posY;
+                    lastGroundPos[2] = mc.thePlayer.posZ;
+
+                    if (!packets.isEmpty()) {
+                        Helper.sendMessage("Release Packets - " + packets.size());
+                        for (Packet p : packets)
+                            PacketUtils.sendPacketNoEvent(p);
+                        packets.clear();
+                    }
+                    timer.reset();
+                }
+            }
+        }
+    }
+
+    public static boolean isInVoid() {
+        for (int i = 0; i <= 128; i++) {
+            if (MoveUtils.isOnGround(i)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @EventHandler
