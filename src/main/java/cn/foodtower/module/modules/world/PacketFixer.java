@@ -40,6 +40,7 @@ public class PacketFixer extends Module {
 
     public PacketFixer() {
         super("PacketFixer", new String[]{"ViaFix"}, ModuleType.World);
+        addValues(fixBlinkAndFreecam, fixPacketPlayer, fixItemSwap, fixInvalidPlace, fixGround, fixIdleFly);
     }
 
     @Override
