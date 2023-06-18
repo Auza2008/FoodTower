@@ -73,6 +73,7 @@ public class ModuleManager implements Manager {
 
     @Override
     public void init() {
+        modules.add(new ComboOneHit());
         modules.add(new PacketFixer());
         modules.add(new HypixelAntibot());
         modules.add(new TargetStrafe());

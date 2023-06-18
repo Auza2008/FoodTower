@@ -21,7 +21,7 @@ public class ComboOneHit extends Module {
     @EventHandler
     private void onAttack(EventAttack e) {
         if (e.getEntity() == null) return;
-        for (int i = 0; i < packets.get(),++i){
+        for (int i = 0; i < packets.get(); ++i) {
             sendPacket(new C02PacketUseEntity(e.getEntity(), C02PacketUseEntity.Action.ATTACK));
             switch ((SwingE) swing.get()) {
                 case Client:
