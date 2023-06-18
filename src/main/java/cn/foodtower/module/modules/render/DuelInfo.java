@@ -23,7 +23,7 @@ public class DuelInfo extends Module {
 
     @EventHandler
     private void on2D(EventRender2D e) {
-        DrawUtil.roundedRect(x.get(), y.get(), 165, 160, 8, new Color(0, 0, 0, HUD.a.get().intValue()));
+        DrawUtil.roundedRect(x.get().floatValue(), y.get().floatValue(), 165, 160, 8, new Color(0, 0, 0, 160));
         RenderUtil.drawLine(x.get().floatValue() + 5, y.get().floatValue() + 20, x.get().floatValue() + 160, y.get().floatValue() + 20, 4);
         FontLoaders.SF20.drawStringWithShadow("DuelInfo", x.get().floatValue() + 61.5, y.get().floatValue() + 6, -1);
         FontLoaders.SF18.drawStringWithShadow("Yourself", x.get().floatValue() + 25.5, y.get().floatValue() + 145, -1);

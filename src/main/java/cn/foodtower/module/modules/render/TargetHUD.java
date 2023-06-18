@@ -359,7 +359,7 @@ public class TargetHUD extends Module {
         if (target == null || !(target instanceof EntityPlayer)) return;
         float w = x;
         float h = y;
-        DrawUtil.roundedRect(w, h, 160, 48, 8, new Color(0, 0, 0, HUD.a.get().intValue()));
+        DrawUtil.roundedRect(w, h, 160, 48, 8, new Color(0, 0, 0, 160));
 //        DrawUtil.rect(w + 45, h + 40, 110, 2, new Color(255,0,0,143));
         if (target.getHealth() > 0) {
             DrawUtil.rect(w + 45, h + 40, (target.getHealth() / 20) * 110, 2, new Color(ColorUtils.getHealthColor(target.getHealth(), target.getMaxHealth()).getRGB()));

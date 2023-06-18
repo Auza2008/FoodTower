@@ -286,7 +286,7 @@ public class HUD extends Module {
                     fps = "FPS:" + " " + EnumChatFormatting.GRAY + Minecraft.getDebugFPS();
                     speedc = "Speed:" + " " + EnumChatFormatting.GRAY + speed;
                     xyz = "XYZ:" + " " + EnumChatFormatting.GRAY + MathHelper.floor_double(mc.thePlayer.posX) + " " + MathHelper.floor_double(mc.thePlayer.posY) + " " + MathHelper.floor_double(mc.thePlayer.posZ);
-                    DrawUtil.drawRoundedRect((float) (ScaledResolution.getScaledWidth() / 250 - this.width - 1.5), 1.0F, (float) (FontLoaders.Baloo18.getStringWidth("  v" + version + " | " + Client.userName + " | " + Minecraft.getDebugFPS() + "FPS") + 63.5), 12, 8, new Color(0, 0, 0, 120).getRGB(), 2, colorXD);
+                    DrawUtil.drawRoundedRect((float) (ScaledResolution.getScaledWidth() / 250 - this.width - 1.5), 1.0F, (float) (FontLoaders.Baloo18.getStringWidth("  v" + version + " | " + Client.userName + " | " + Minecraft.getDebugFPS() + "FPS") + 63.5), 12, 8, new Color(0, 0, 0, 160).getRGB(), 2, colorXD);
 //                    FontLoaders.SF18.drawStringWithShadow(user, RenderUtil.width() - FontLoaders.SF18.getStringWidth(user) - 80, RenderUtil.height() - 9, colorXD);
                     new ScaledResolution(mc);
                     FontLoaders.Baloo18.drawStringWithShadow(xyz, ScaledResolution.getScaledWidth() / 250 - this.width, ScaledResolution.getScaledHeight() - 9, -1);

@@ -403,8 +403,6 @@ public class ItemRenderer {
         this.rotateWithPlayerRotations(abstractclientplayer, partialTicks);
         GlStateManager.enableRescaleNormal();
         GlStateManager.pushMatrix();
-        Animations hud = (Animations) ModuleManager.getModuleByClass(Animations.class);
-        KillAura killAura = (KillAura) ModuleManager.getModuleByClass(KillAura.class);
         if (this.itemToRender != null) {
             if (this.itemToRender.getItem() == Items.filled_map) {
                 this.renderItemMap(abstractclientplayer, f22, f2, f1);
@@ -433,9 +431,7 @@ public class ItemRenderer {
                             EntityPlayerSP var3 = mc.thePlayer;
                             float var4 = var3.getSwingProgress(partialTicks);
                             float var15;
-                            float var14;
                             float var9;
-                            float var8;
                             switch ((Animations.renderMode) Animations.mode.get()) {
                                 case None:
                                     this.transformFirstPersonItem(f2, 0.0F);

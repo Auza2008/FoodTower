@@ -25,6 +25,6 @@ public class Animations extends Module {
     }
 
     public enum renderMode {
-        Sigma, Old, Leaked, None, ETB, Random, Spin, Nivia, Swong, Push, Avatar
+        Sigma, Old, Leaked, None, ETB, Random, Spin, Nivia, Swong, Push, Avatar, Move
     }
 }
