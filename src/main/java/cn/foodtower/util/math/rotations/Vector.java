@@ -2,38 +2,38 @@ package cn.foodtower.util.math.rotations;
 
 public class Vector<T extends Number> {
 
-	private T x, y, z;
+    private T x, y, z;
 
-	public Vector(T x, T y, T z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	}
+    public Vector(T x, T y, T z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
 
-	public Vector setX(T x) {
-		this.x = x;
-		return this;
-	}
+    public T getX() {
+        return x;
+    }
 
-	public Vector setY(T y) {
-		this.y = y;
-		return this;
-	}
+    public Vector setX(T x) {
+        this.x = x;
+        return this;
+    }
 
-	public Vector setZ(T z) {
-		this.z = z;
-		return this;
-	}
+    public T getY() {
+        return y;
+    }
 
-	public T getX() {
-		return x;
-	}
+    public Vector setY(T y) {
+        this.y = y;
+        return this;
+    }
 
-	public T getY() {
-		return y;
-	}
+    public T getZ() {
+        return z;
+    }
 
-	public T getZ() {
-		return z;
-	}
+    public Vector setZ(T z) {
+        this.z = z;
+        return this;
+    }
 }

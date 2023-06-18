@@ -5,15 +5,15 @@ import cn.foodtower.api.Event;
 public class EventPreUpdate extends Event {
     public static float yaw;
     public static float pitch;
+    private final boolean isPre;
     public double y;
     public double x;
     public double z;
-    private final boolean isPre;
     private boolean ground;
 
     public EventPreUpdate(float yaw, float pitch, double x, double y, double z, boolean ground) {
-        this.yaw = yaw;
-        this.pitch = pitch;
+        EventPreUpdate.yaw = yaw;
+        EventPreUpdate.pitch = pitch;
         this.y = y;
         this.x = x;
         this.z = z;
@@ -26,7 +26,7 @@ public class EventPreUpdate extends Event {
     }
 
     public void setYaw(float yaw) {
-        this.yaw = yaw;
+        EventPreUpdate.yaw = yaw;
     }
 
     public static float getPitch() {
@@ -34,7 +34,7 @@ public class EventPreUpdate extends Event {
     }
 
     public void setPitch(float pitch) {
-        this.pitch = pitch;
+        EventPreUpdate.pitch = pitch;
     }
 
     public double getY() {

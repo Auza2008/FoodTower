@@ -1,7 +1,6 @@
 package cn.foodtower.util.rotations;
 
 
-
 import java.util.Random;
 
 /**
@@ -18,13 +17,13 @@ public class AngleUtility {
     private static Random random;
 
     public AngleUtility(float minYawSmoothing, float maxYawSmoothing, float minPitchSmoothing, float maxPitchSmoothing) {
-        this.minYawSmoothing = minYawSmoothing;
-        this.maxYawSmoothing = maxYawSmoothing;
-        this.minPitchSmoothing = minPitchSmoothing;
-        this.maxPitchSmoothing = maxPitchSmoothing;
-        this.random = new Random();
-        this.delta = new Vector3<>(0F, 0F, 0F);
-        this.smoothedAngle = new Angle(0F, 0F);
+        AngleUtility.minYawSmoothing = minYawSmoothing;
+        AngleUtility.maxYawSmoothing = maxYawSmoothing;
+        AngleUtility.minPitchSmoothing = minPitchSmoothing;
+        AngleUtility.maxPitchSmoothing = maxPitchSmoothing;
+        random = new Random();
+        delta = new Vector3<>(0F, 0F, 0F);
+        smoothedAngle = new Angle(0F, 0F);
     }
 
     public static float randomFloat(float min, float max) {

@@ -16,9 +16,9 @@ public final class EventMotionUpdate extends Event {
     private float lastPitch;
     private boolean onGround;
     private Type type;
-    private EventPreUpdate event;
+    private final EventPreUpdate event;
 
-    public EventMotionUpdate(EventPreUpdate eventPreUpdate,double posX, double posY, double posZ, float yaw, float pitch, boolean onGround, Type type) {
+    public EventMotionUpdate(EventPreUpdate eventPreUpdate, double posX, double posY, double posZ, float yaw, float pitch, boolean onGround, Type type) {
         this.posX = posX;
         this.posY = posY;
         this.posZ = posZ;

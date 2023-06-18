@@ -15,13 +15,13 @@ import java.awt.*;
 
 public class UIFlatButton extends GuiButton {
     private final FastUniFontRenderer font;
+    private final TimeHelper time = new TimeHelper();
+    private final int color;
     public String displayString;
     public int id;
     public boolean enabled;
     public boolean visible;
     protected boolean hovered;
-    private final TimeHelper time = new TimeHelper();
-    private final int color;
     private float opacity;
 
     public UIFlatButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText, int color) {

@@ -29,8 +29,8 @@ public class AutoGG extends Module {
     public Option ad = new Option("AD", true);
     public Option screenshot = new Option("ScreenShot", false);
     public Option autoplay = new Option("Auto Play", true);
-    public Numbers<Double> autoPlayDelay = new Numbers<>( "Play Delay", 3000.0, 500.0, 10000.0, 100.0);
-    public Numbers<Double> delay = new Numbers<>( "Speak Delay", 100.0, 100.0, 3000.0, 100.0);
+    public Numbers<Double> autoPlayDelay = new Numbers<>("Play Delay", 3000.0, 500.0, 10000.0, 100.0);
+    public Numbers<Double> delay = new Numbers<>("Speak Delay", 100.0, 100.0, 3000.0, 100.0);
 
     public boolean needSpeak = false;
     public boolean speaked = false;
@@ -41,16 +41,15 @@ public class AutoGG extends Module {
     public String lastTitle = "";
 
     public int win = 0;
-
-    public AutoGG() {
-        super("AutoGG&Play", new String[]{"AutoPlay", "AutoGG"}, ModuleType.World);
-        addValues(gg,ad,screenshot,autoplay,autoPlayDelay,delay);
-    }
-
     public String content = "";
     public float animationY = 0;
     public boolean display = false;
     public boolean showed = false;
+
+    public AutoGG() {
+        super("AutoGG&Play", new String[]{"AutoPlay", "AutoGG"}, ModuleType.World);
+        addValues(gg, ad, screenshot, autoplay, autoPlayDelay, delay);
+    }
 
     @Override
     public void onEnable() {
@@ -59,18 +58,19 @@ public class AutoGG extends Module {
     }
 
     @Override
-    public void onDisable() {}
+    public void onDisable() {
+    }
 
     @EventHandler
-    public void onUpdate( EventPreUpdate e) {
+    public void onUpdate(EventPreUpdate e) {
         if (mc.thePlayer != null) {
             if (gg.get() && autoplay.get()) {
                 setCustomName("AutoGG&Play");
-            }else if (gg.get() && !autoplay.get()){
+            } else if (gg.get() && !autoplay.get()) {
                 setCustomName("AutoGG");
-            }else if (autoplay.get() && !gg.get()){
+            } else if (autoplay.get() && !gg.get()) {
                 setCustomName("AutoPlay");
-            }else{
+            } else {
                 setCustomName("Auto?");
             }
             if (needSpeak) {
@@ -109,7 +109,7 @@ public class AutoGG extends Module {
     }
 
     @EventHandler
-    public void onPacketR( EventPacketReceive e) {
+    public void onPacketR(EventPacketReceive e) {
         if (e.getPacket() instanceof S45PacketTitle) {
             S45PacketTitle packet = (S45PacketTitle) e.getPacket();
             if (packet.getMessage() == null) return;
@@ -125,7 +125,7 @@ public class AutoGG extends Module {
     }
 
     @EventHandler
-    public void onPacket( EventPacketSend e) {
+    public void onPacket(EventPacketSend e) {
         if (playCommand.startsWith("/play ")) {
             String display = playCommand.replace("/play ", "").replace("_", " ");
             boolean nextUp = true;

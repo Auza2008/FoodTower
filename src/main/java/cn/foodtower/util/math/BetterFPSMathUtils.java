@@ -5,7 +5,7 @@ import me.guichaguri.betterfps.BetterFpsHelper;
 import me.guichaguri.betterfps.math.*;
 
 public class BetterFPSMathUtils {
-    public static float sin(float rad){
+    public static float sin(float rad) {
         float result;
         switch (BetterFpsHelper.helpers.get(BetterFpsConfig.getConfig().algorithm)) {
             case "rivens": {
@@ -36,19 +36,20 @@ public class BetterFPSMathUtils {
                 result = RandomMath.sin(rad);
                 break;
             }
-            case "distance":{
+            case "distance": {
                 result = DistanceMath.sin(rad);
                 break;
             }
             case "vanilla":
-            default:{
+            default: {
                 result = VanillaMath.sin(rad);
                 break;
             }
         }
         return result;
     }
-    public static float cos(float rad){
+
+    public static float cos(float rad) {
         float result;
         switch (BetterFpsHelper.helpers.get(BetterFpsConfig.getConfig().algorithm)) {
             case "rivens": {
@@ -79,12 +80,12 @@ public class BetterFPSMathUtils {
                 result = RandomMath.cos(rad);
                 break;
             }
-            case "distance":{
+            case "distance": {
                 result = DistanceMath.cos(rad);
                 break;
             }
             case "vanilla":
-            default:{
+            default: {
                 result = VanillaMath.cos(rad);
                 break;
             }

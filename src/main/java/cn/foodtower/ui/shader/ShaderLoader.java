@@ -14,19 +14,19 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 public class ShaderLoader {
+    private final String vertexShaderFileName;
+    private final String fragmenShaderFileName;
+    private final int frameBufferTextureId;
     private int vertexShaderId;
     private int fragmentShaderId;
     private int programmId;
     private int fboTextureID;
     private int fboID;
     private int renderBufferID;
-    private final String vertexShaderFileName;
-    private final String fragmenShaderFileName;
     private int resolutionUniformId;
     private int timeUniformID;
     private int mouseUniformId;
     private int texelUniformId;
-    private final int frameBufferTextureId;
     private int diffuseSamperUniformID;
     private float time = 0.0F;
     private long lastFrame = System.currentTimeMillis();

@@ -9,7 +9,10 @@ public interface NofallModule {
     Minecraft mc = Minecraft.getMinecraft();
 
     void onEnable();
+
     void onUpdate(EventPreUpdate e);
+
     void onPacketSend(EventPacketSend e);
+
     void onUpdateMotion(EventMotionUpdate e);
 }

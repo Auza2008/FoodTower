@@ -11,10 +11,10 @@ import cn.foodtower.manager.ModuleManager;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.ui.font.FontLoaders;
-import cn.foodtower.util.misc.SuperLib;
 import cn.foodtower.util.anim.AnimationUtil;
 import cn.foodtower.util.anim.AnimationUtils;
 import cn.foodtower.util.anim.Palette;
+import cn.foodtower.util.misc.SuperLib;
 import cn.foodtower.util.render.ColorUtils;
 import cn.foodtower.util.render.RenderUtil;
 import cn.foodtower.util.render.gl.GLUtils;
@@ -331,7 +331,7 @@ public class ClientClickGui extends GuiScreen {
                                 (x + 38), (yAnimValue / 100) + mY + 53 + 9, new Color(255, 255, 255, Math.max(0, (int) alpha - (255 - 130))).getRGB());
 
                         font.drawCenteredStringWithShadow(((Mode) value).getModeAsString(),
-								x + 38, (yAnimValue / 100) + mY + 53, new Color(255, 255, 255).getRGB());
+                                x + 38, (yAnimValue / 100) + mY + 53, new Color(255, 255, 255).getRGB());
 
                         if (this.isStringHovered(x, (yAnimValue / 100) + mY + 45, x + 13, (yAnimValue / 100) + mY + 65, mouseX, mouseY)) {
                             if (Mouse.isButtonDown(0) && !this.previousmouse) {
@@ -363,7 +363,7 @@ public class ClientClickGui extends GuiScreen {
         float yyy = startY + 240;
         RenderUtil.drawRoundedRect(x + 5, yyy + 45, x + 75, yyy + 65, 1, isHovered(x + 2, yyy + 45, x + 78, yyy + 65, mouseX, mouseY) ? new Color(80, 80, 80, (int) alpha).getRGB() : new Color(56, 56, 56, (int) alpha).getRGB());
         font.drawStringWithShadow(Keyboard.getKeyName(currentModule.getKey()),
-				x + 40 - font.getStringWidth(Keyboard.getKeyName(currentModule.getKey())) / 2,
+                x + 40 - font.getStringWidth(Keyboard.getKeyName(currentModule.getKey())) / 2,
                 yyy + 53 + 1, new Color(255, 255, 255, (int) alpha).getRGB());
         font.drawStringWithShadow("Bind", startX + 290, yyy + 52 + 1, new Color(170, 170, 170, (int) alpha).getRGB());
         //Gui.drawRect(x + 5, yyy + 45, x + 75, yyy + 65, isHovered(x + 2, yyy + 45, x + 78, yyy + 65, mouseX, mouseY) ? new Color (80,80,80, alpha).getRGB() :new Color(56, 56, 56, alpha).getRGB());
@@ -481,28 +481,28 @@ public class ClientClickGui extends GuiScreen {
     }
 
     public boolean isStringHovered(float f, float y, float g, float y2, int mouseX, int mouseY) {
-		return mouseX >= f && mouseX <= g && mouseY >= y && mouseY <= y2;
-	}
+        return mouseX >= f && mouseX <= g && mouseY >= y && mouseY <= y2;
+    }
 
     public boolean isSettingsButtonHovered(float x, float y, float x2, float y2, int mouseX, int mouseY) {
-		return mouseX >= x && mouseX <= x2 && mouseY >= y && mouseY <= y2;
-	}
+        return mouseX >= x && mouseX <= x2 && mouseY >= y && mouseY <= y2;
+    }
 
     public boolean isButtonHovered(float f, float y, float g, float y2, int mouseX, int mouseY) {
-		return mouseX >= f && mouseX <= g && mouseY >= y && mouseY <= y2;
-	}
+        return mouseX >= f && mouseX <= g && mouseY >= y && mouseY <= y2;
+    }
 
     public boolean isCheckBoxHovered(float f, float y, float g, float y2, int mouseX, int mouseY) {
-		return mouseX >= f && mouseX <= g && mouseY >= y && mouseY <= y2;
-	}
+        return mouseX >= f && mouseX <= g && mouseY >= y && mouseY <= y2;
+    }
 
     public boolean isCategoryHovered(float x, float y, float x2, float y2, int mouseX, int mouseY) {
-		return mouseX >= x && mouseX <= x2 && mouseY >= y && mouseY <= y2;
-	}
+        return mouseX >= x && mouseX <= x2 && mouseY >= y && mouseY <= y2;
+    }
 
     public boolean isHovered(float x, float y, float x2, float y2, int mouseX, int mouseY) {
-		return mouseX >= x && mouseX <= x2 && mouseY >= y && mouseY <= y2;
-	}
+        return mouseX >= x && mouseX <= x2 && mouseY >= y && mouseY <= y2;
+    }
 
     @Override
     public void onGuiClosed() {

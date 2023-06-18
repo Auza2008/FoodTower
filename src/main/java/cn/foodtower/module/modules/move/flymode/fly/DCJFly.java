@@ -7,7 +7,7 @@ import cn.foodtower.util.time.TickTimer;
 import net.minecraft.network.play.client.C03PacketPlayer;
 
 public class DCJFly implements FlyModule {
-    private TickTimer timer = new TickTimer();
+    private final TickTimer timer = new TickTimer();
 
     @Override
     public void onEnabled() {

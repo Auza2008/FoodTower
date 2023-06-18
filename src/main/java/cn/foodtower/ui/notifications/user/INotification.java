@@ -1,33 +1,33 @@
 package cn.foodtower.ui.notifications.user;
 
 public interface INotification {
-   String getHeader();
+    String getHeader();
 
-   String getSubtext();
+    String getSubtext();
 
-   long getStart();
+    long getStart();
 
-   long getDisplayTime();
+    long getDisplayTime();
 
-   Notifications.Type getType();
+    Notifications.Type getType();
 
-   float getX();
+    float getX();
 
-   float getTarX();
+    void setX(int var1);
 
-   float getTarY();
+    float getTarX();
 
-   void setX(int var1);
+    void setTarX(int var1);
 
-   void setTarX(int var1);
+    float getTarY();
 
-   void setY(int var1);
+    long checkTime();
 
-   long checkTime();
+    float getY();
 
-   float getY();
+    void setY(int var1);
 
-   long getLast();
+    long getLast();
 
-   void setLast(long var1);
+    void setLast(long var1);
 }

@@ -1,4 +1,3 @@
-
 package cn.foodtower.util.misc;
 
 import net.minecraft.client.Minecraft;

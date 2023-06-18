@@ -3,10 +3,10 @@
  */
 package cn.foodtower.util.entity.entitycheck;
 
+import net.minecraft.entity.Entity;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import net.minecraft.entity.Entity;
 
 public final class EntityValidator {
     private final Set<ICheck> checks = new HashSet<>();

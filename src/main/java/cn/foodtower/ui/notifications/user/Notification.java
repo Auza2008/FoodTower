@@ -7,99 +7,99 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 
 public class Notification implements INotification {
-   private String header;
-   private String subtext;
-   private long start;
-   private long displayTime;
-   public long id;
-   private Notifications.Type type;
-   private float x;
-   private float tarX;
-   private float y;
-   public Translate translate;
-   private long last;
-   boolean isplayed;
+    public long id;
+    public Translate translate;
+    boolean isplayed;
+    private final String header;
+    private final String subtext;
+    private final long start;
+    private final long displayTime;
+    private final Notifications.Type type;
+    private float x;
+    private float tarX;
+    private float y;
+    private long last;
 
 
-   public long getLast() {
-      return this.last;
-   }
+    protected Notification(String header, String subtext, long displayTime, Notifications.Type type) {
+        this.header = header;
+        this.subtext = subtext;
+        this.start = System.currentTimeMillis();
+        this.displayTime = displayTime;
+        this.type = type;
+        this.last = System.currentTimeMillis();
+        ScaledResolution XD = new ScaledResolution(Minecraft.getMinecraft());
+        this.y = (float) (ScaledResolution.getScaledHeight() + 30);
+        this.x = (float) ScaledResolution.getScaledWidth();
+        float subHeaderWidth = Client.FontLoaders.Chinese16.getStringWidth(subtext);
+        float headerWidth = Client.FontLoaders.Chinese20.getStringWidth(getHeader() + (getType().equals(Notifications.Type.MUSIC) ? "( \u2022ω\u2022)\u266A~" : ""));
+        this.tarX = (float) (ScaledResolution.getScaledWidth() - 90) - (Math.max(headerWidth, subHeaderWidth));
+        this.translate = new Translate(this.x, this.y);
+        if (MusicManager.INSTANCE.getCurrentTrack() != null) {
+            id = MusicManager.INSTANCE.getCurrentTrack().id;
+        } else {
+            id = 0;
+        }
+        isplayed = false;
+    }
 
-   public void setLast(long last) {
-      this.last = last;
-   }
+    public long getLast() {
+        return this.last;
+    }
 
-   protected Notification(String header, String subtext, long displayTime, Notifications.Type type) {
-      this.header = header;
-      this.subtext = subtext;
-      this.start = System.currentTimeMillis();
-      this.displayTime = displayTime;
-      this.type = type;
-      this.last = System.currentTimeMillis();
-      ScaledResolution XD = new ScaledResolution(Minecraft.getMinecraft());
-      this.y = (float)(XD.getScaledHeight() + 30);
-      this.x = (float)XD.getScaledWidth();
-      float subHeaderWidth = Client.FontLoaders.Chinese16.getStringWidth(subtext);
-      float headerWidth = Client.FontLoaders.Chinese20.getStringWidth(getHeader() + (getType().equals(Notifications.Type.MUSIC)? "( \u2022ω\u2022)\u266A~":""));
-      this.tarX = (float)(XD.getScaledWidth() - 90) - (Math.max(headerWidth, subHeaderWidth));
-      this.translate = new Translate(this.x, this.y);
-      if ( MusicManager.INSTANCE.getCurrentTrack() != null) {
-         id = MusicManager.INSTANCE.getCurrentTrack().id;
-      }else {
-         id = 0;
-      }
-      isplayed = false;
-   }
+    public void setLast(long last) {
+        this.last = last;
+    }
 
-   public long checkTime() {
-      return System.currentTimeMillis() - this.getDisplayTime();
-   }
+    public long checkTime() {
+        return System.currentTimeMillis() - this.getDisplayTime();
+    }
 
-   public String getHeader() {
-      return this.header;
-   }
+    public String getHeader() {
+        return this.header;
+    }
 
-   public String getSubtext() {
-      return this.subtext;
-   }
+    public String getSubtext() {
+        return this.subtext;
+    }
 
-   public long getStart() {
-      return this.start;
-   }
+    public long getStart() {
+        return this.start;
+    }
 
-   public long getDisplayTime() {
-      return this.displayTime;
-   }
+    public long getDisplayTime() {
+        return this.displayTime;
+    }
 
-   public Notifications.Type getType() {
-      return this.type;
-   }
+    public Notifications.Type getType() {
+        return this.type;
+    }
 
-   public float getX() {
-      return this.x;
-   }
+    public float getX() {
+        return this.x;
+    }
 
-   public void setX(int x) {
-      this.x = (float)x;
-   }
+    public void setX(int x) {
+        this.x = (float) x;
+    }
 
-   public float getTarX() {
-      return this.tarX;
-   }
+    public float getTarX() {
+        return this.tarX;
+    }
 
-   public float getTarY() {
-      return 0.0F;
-   }
+    public void setTarX(int x) {
+        this.tarX = (float) x;
+    }
 
-   public void setTarX(int x) {
-      this.tarX = (float)x;
-   }
+    public float getTarY() {
+        return 0.0F;
+    }
 
-   public void setY(int y) {
-      this.y = (float)y;
-   }
+    public float getY() {
+        return this.y;
+    }
 
-   public float getY() {
-      return this.y;
-   }
+    public void setY(int y) {
+        this.y = (float) y;
+    }
 }

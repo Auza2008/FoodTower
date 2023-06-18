@@ -71,7 +71,7 @@ public class AntiAim
 
     @EventHandler
     public void onEvent(EventPreUpdate event) {
-        EventPreUpdate em = (EventPreUpdate) event;
+        EventPreUpdate em = event;
         Scaffold Scaffold = (Scaffold) ModuleManager.getModuleByClass(Scaffold.class);
         if (KillAura.curTarget == null && !Scaffold.isEnabled()) {
             if (this.lastAngles == null) {
@@ -286,11 +286,11 @@ public class AntiAim
     }
 
 
-    static enum YAW {
-        Reverse, Jitter, Lisp, SpinSlow, SpinFast, Sideways, FakeJitter, FakeHead, Freestanding;
+    enum YAW {
+        Reverse, Jitter, Lisp, SpinSlow, SpinFast, Sideways, FakeJitter, FakeHead, Freestanding
     }
 
-    static enum PITCH {
+    enum PITCH {
         Normal, HalfDown, Zero, Up, Stutter, Reverse, Meme
     }
 }

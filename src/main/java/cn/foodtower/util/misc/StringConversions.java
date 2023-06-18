@@ -26,7 +26,7 @@ public class StringConversions {
     }
 
     public static boolean isBoolean(String text) {
-        return text != null && (text.toLowerCase().equalsIgnoreCase("true") || text.toLowerCase().equalsIgnoreCase("false"));
+        return text != null && (text.equalsIgnoreCase("true") || text.equalsIgnoreCase("false"));
     }
 
 

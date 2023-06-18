@@ -4,15 +4,16 @@ import java.util.Random;
 
 public class RandomUtil {
     public static String randomString(final int length) {
-        return ">"+(random(length, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"))+"<";
+        return ">" + (random(length, "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")) + "<";
     }
+
     public static String random(final int length, final String chars) {
         return random(length, chars.toCharArray());
     }
 
     public static String random(final int length, final char[] chars) {
         final StringBuilder stringBuilder = new StringBuilder();
-        for(int i = 0; i < length; i++)
+        for (int i = 0; i < length; i++)
             stringBuilder.append(chars[new Random().nextInt(chars.length)]);
         return stringBuilder.toString();
     }

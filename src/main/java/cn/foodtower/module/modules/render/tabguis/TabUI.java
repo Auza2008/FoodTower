@@ -435,5 +435,5 @@ public class TabUI implements Manager {
 
     public enum Section {
         TYPES, MODULES, VALUES
-	}
+    }
 }

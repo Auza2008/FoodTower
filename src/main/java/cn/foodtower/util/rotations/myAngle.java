@@ -18,12 +18,12 @@ public class myAngle {
         return yaw;
     }
 
-    public float getPitch() {
-        return pitch;
-    }
-
     public void setYaw(float yaw) {
         this.yaw = yaw;
+    }
+
+    public float getPitch() {
+        return pitch;
     }
 
     public void setPitch(float pitch) {

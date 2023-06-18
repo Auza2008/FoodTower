@@ -3,27 +3,12 @@
  */
 package cn.foodtower.util.misc;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockCactus;
-import net.minecraft.block.BlockChest;
-import net.minecraft.block.BlockEnderChest;
-import net.minecraft.block.BlockFence;
-import net.minecraft.block.BlockGlass;
-import net.minecraft.block.BlockPane;
-import net.minecraft.block.BlockPistonBase;
-import net.minecraft.block.BlockPistonExtension;
-import net.minecraft.block.BlockPistonMoving;
-import net.minecraft.block.BlockSkull;
-import net.minecraft.block.BlockSlab;
-import net.minecraft.block.BlockStainedGlass;
-import net.minecraft.block.BlockStairs;
-import net.minecraft.block.BlockTrapDoor;
-import net.minecraft.block.BlockWall;
+import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockPos;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 
 public final class AStarCustomPathFinders {
     private static final Minecraft MC = Minecraft.getMinecraft();
@@ -73,7 +58,8 @@ public final class AStarCustomPathFinders {
         initPath.add(startCustomVec3);
         CustomVec3[] flatCardinalDirections = AStarCustomPathFinders.flatCardinalDirections;
         this.hubsToWork.add(new Hub(startCustomVec3, null, initPath, startCustomVec3.squareDistanceTo(this.endCustomVec3), 0.0, 0.0));
-        block0: for (int i = 0; i < loops; ++i) {
+        block0:
+        for (int i = 0; i < loops; ++i) {
             ArrayList<Hub> hubsToWork = this.hubsToWork;
             int hubsToWorkSize = hubsToWork.size();
             hubsToWork.sort(new CompareHub());
@@ -92,7 +78,8 @@ public final class AStarCustomPathFinders {
                     if (AStarCustomPathFinders.checkPositionValidity(loc) && this.addHub(hub, loc, 0.0)) break block0;
                 }
                 CustomVec3 loc1 = hLoc.addVector(0.0, 1.0, 0.0).floor();
-                if (AStarCustomPathFinders.checkPositionValidity(loc1) && this.addHub(hub, loc1, 0.0) || AStarCustomPathFinders.checkPositionValidity(loc2 = hLoc.addVector(0.0, -1.0, 0.0).floor()) && this.addHub(hub, loc2, 0.0)) break block0;
+                if (AStarCustomPathFinders.checkPositionValidity(loc1) && this.addHub(hub, loc1, 0.0) || AStarCustomPathFinders.checkPositionValidity(loc2 = hLoc.addVector(0.0, -1.0, 0.0).floor()) && this.addHub(hub, loc2, 0.0))
+                    break block0;
             }
         }
         this.hubs.sort(new CompareHub());
@@ -103,7 +90,7 @@ public final class AStarCustomPathFinders {
         ArrayList<Hub> hubs = this.hubs;
         int hubsSize = hubs.size();
         for (int i = 0; i < hubsSize; ++i) {
-            Hub hub = (Hub)hubs.get(i);
+            Hub hub = hubs.get(i);
             CustomVec3 hubLoc = hub.getLoc();
             if (hubLoc.getX() != loc.getX() || hubLoc.getY() != loc.getY() || hubLoc.getZ() != loc.getZ()) continue;
             return hub;
@@ -111,7 +98,7 @@ public final class AStarCustomPathFinders {
         ArrayList<Hub> hubsToWork = this.hubsToWork;
         int hubsToWorkSize = hubsToWork.size();
         for (int i = 0; i < hubsToWorkSize; ++i) {
-            Hub hub = (Hub)hubsToWork.get(i);
+            Hub hub = hubsToWork.get(i);
             CustomVec3 hubLoc = hub.getLoc();
             if (hubLoc.getX() != loc.getX() || hubLoc.getY() != loc.getY() || hubLoc.getZ() != loc.getZ()) continue;
             return hub;
@@ -152,7 +139,7 @@ public final class AStarCustomPathFinders {
             implements Comparator<Hub> {
         @Override
         public int compare(Hub o1, Hub o2) {
-            return (int)(o1.getSquareDistanceToFromTarget() + o1.getTotalCost() - (o2.getSquareDistanceToFromTarget() + o2.getTotalCost()));
+            return (int) (o1.getSquareDistanceToFromTarget() + o1.getTotalCost() - (o2.getSquareDistanceToFromTarget() + o2.getTotalCost()));
         }
     }
 

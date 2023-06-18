@@ -6,10 +6,8 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 public class Mafs {
-    public static float AnimotaiSpeed;
-
-
     private static final Random rng = new Random();
+    public static float AnimotaiSpeed;
 
     public static boolean isInteger(String s) {
         try {

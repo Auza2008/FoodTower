@@ -36,6 +36,7 @@ public class ETBTabUI
     public static Color RainbowColor = Color.getHSBColor(HUD.hue / 255.0F, 0.55F, 0.9F);
     private static int colorss;
     private static /* synthetic */ int[] QwQ;
+    private final int height = 22;
     double AnimY = 0;
     double AnimmodY = 0;
     double AnimValY = 0;
@@ -47,7 +48,6 @@ public class ETBTabUI
     private int currentType = 0;
     private int currentModule = 0;
     private int currentValue = 0;
-    private final int height = 22;
     private int maxType;
     private int maxModule;
     private int maxValue;

@@ -1,4 +1,3 @@
-
 package cn.foodtower.module.modules.player;
 
 import cn.foodtower.api.EventHandler;

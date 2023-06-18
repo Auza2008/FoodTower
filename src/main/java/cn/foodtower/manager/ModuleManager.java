@@ -73,6 +73,7 @@ public class ModuleManager implements Manager {
 
     @Override
     public void init() {
+        modules.add(new PacketFixer());
         modules.add(new HypixelAntibot());
         modules.add(new TargetStrafe());
         modules.add(new AimAssist());
@@ -86,7 +87,6 @@ public class ModuleManager implements Manager {
         modules.add(new AutoPot());
         modules.add(new Criticals());
         modules.add(new TPAura());
-        modules.add(new PlayerDebug());
         modules.add(new DuelInfo());
         modules.add(new SmartDCJ());
         modules.add(new LessDamage());
@@ -94,7 +94,6 @@ public class ModuleManager implements Manager {
         modules.add(new Regen());
         modules.add(new SuperKnockback());
         modules.add(new Animations());
-        modules.add(new TargetDebug());
         modules.add(new Breadcrumbs());
         modules.add(new HUD());
         modules.add(new Chinahat());

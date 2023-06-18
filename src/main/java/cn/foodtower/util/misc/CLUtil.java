@@ -15,10 +15,9 @@ public class CLUtil {
             sock.getOutputStream().write((serverId + "\u0000").getBytes());
             sock.getOutputStream().flush();
             String res = String.valueOf(sock.getInputStream().read());
-            System.out.println( "["+ Client.name +" AutoCL] CL -> " + res);
+            System.out.println("[" + Client.name + " AutoCL] CL -> " + res);
             sock.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println("AutoCl:连接失败");
         }

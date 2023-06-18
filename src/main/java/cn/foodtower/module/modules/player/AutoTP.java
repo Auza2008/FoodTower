@@ -1,18 +1,17 @@
 package cn.foodtower.module.modules.player;
 
+import cn.foodtower.api.EventHandler;
 import cn.foodtower.api.events.World.*;
+import cn.foodtower.api.value.Mode;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.ui.ClientNotification;
 import cn.foodtower.util.entity.MovementUtils;
+import cn.foodtower.util.math.Vec3;
 import cn.foodtower.util.misc.AStarCustomPathFinder;
 import cn.foodtower.util.misc.CustomVec3;
 import cn.foodtower.util.misc.Helper;
 import cn.foodtower.util.time.StopWatchs;
-import cn.foodtower.util.math.Vec3;
-import cn.foodtower.api.EventHandler;
-
-import cn.foodtower.api.value.Mode;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -29,19 +28,19 @@ import java.util.ArrayList;
 
 public final class AutoTP
         extends Module {
+    public static Entity targets;
+    public static ArrayList<Vec3> path = new ArrayList<>();
     private static double xpos = 0;
     private static double ypos = 120;
     private static double zpos = 0;
-    private final Mode mode = new Mode("Mode",Modes.values(), Modes.Hypixel);
+    private final Mode mode = new Mode("Mode", Modes.values(), Modes.Hypixel);
     private final StopWatchs timer = new StopWatchs();
+    boolean tp;
     private CustomVec3 target;
     private int stage;
-    boolean tp;
-    public static Entity targets;
-    public static ArrayList<Vec3> path = new ArrayList<>();
 
     public AutoTP() {
-        super("AutoTP",new String[]{"Auto00"}, ModuleType.Player);
+        super("AutoTP", new String[]{"Auto00"}, ModuleType.Player);
         this.addValues(this.mode);
     }
 
@@ -55,7 +54,7 @@ public final class AutoTP
         }
         this.stage = 0;
         this.tp = false;
-        if (this.mode.get().equals(Modes.Vanilla)){
+        if (this.mode.get().equals(Modes.Vanilla)) {
             this.tp = true;
         } else if (this.mode.get() == Modes.Hypixel) {
             mc.getNetHandler().getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true));
@@ -77,8 +76,9 @@ public final class AutoTP
         player.motionX = 0.0;
         player.motionZ = 0.0;
     }
+
     @EventHandler
-    public void onUpdates( EventPreUpdate e){
+    public void onUpdates(EventPreUpdate e) {
         if (!tp) {
             Vec3 topFrom = new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
             Vec3 to = new Vec3(xpos, ypos, zpos);
@@ -87,26 +87,27 @@ public final class AutoTP
     }
 
     @EventHandler
-    public void onSendPacket( EventPacketSend event) {
+    public void onSendPacket(EventPacketSend event) {
         if (this.stage == 1 && !this.timer.elapsed(6000L) || this.mode.get() == Modes.Hypixel && !this.tp && event.getPacket() instanceof C03PacketPlayer) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
-    public void onReceivePacket( EventPacketReceive event) {
+    public void onReceivePacket(EventPacketReceive event) {
         if (this.mode.get() == Modes.Hypixel && event.getPacket() instanceof S08PacketPlayerPosLook && !this.tp) {
             this.tp = true;
         }
     }
+
     @EventHandler
-    public void onMotionUpdate( EventMotionUpdate event) {
+    public void onMotionUpdate(EventMotionUpdate event) {
         if (targets != null) {
             xpos = targets.posX;
             ypos = targets.posY;
             zpos = targets.posZ;
         }
-        this.setSuffix(xpos+" "+ypos+" "+zpos);
+        this.setSuffix(xpos + " " + ypos + " " + zpos);
         if (this.tp) {
             this.setEnabled(false);
             new Thread(() -> {
@@ -127,7 +128,7 @@ public final class AutoTP
                 playerCapabilities.setPlayerWalkSpeed(1.0E8F - 1F);
                 mc.getNetHandler().addToSendQueue(new C13PacketPlayerAbilities(playerCapabilities));
                 Vec3 topFrom = new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
-                Vec3 to = new Vec3(xpos,ypos,zpos);
+                Vec3 to = new Vec3(xpos, ypos, zpos);
                 path = computePath(topFrom, to);
                 for (Vec3 pathElm : path) {
                     mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(pathElm.getX(), pathElm.getY(), pathElm.getZ(), true));
@@ -144,13 +145,14 @@ public final class AutoTP
     }
 
     @EventHandler
-    public void onMove( EventMove event) {
+    public void onMove(EventMove event) {
         if (this.stage == 1 & !this.timer.elapsed(6000L) || this.mode.get() == Modes.Hypixel) {
             MovementUtils.setSpeed(event, 0.0);
             mc.thePlayer.motionY = 0.0;
             event.y = 0.0;
         }
     }
+
     private ArrayList<Vec3> computePath(Vec3 topFrom, Vec3 to) {
         double dashDistance = 5;
         if (!canPassThrow(new BlockPos(topFrom.mc()))) {
@@ -210,16 +212,18 @@ public final class AutoTP
         return block.getMaterial() == Material.air || block.getMaterial() == Material.plants || block.getMaterial() == Material.vine || block == Blocks.ladder || block == Blocks.water || block == Blocks.flowing_water || block == Blocks.wall_sign || block == Blocks.standing_sign;
     }
 
-    public void tp(double x ,double y,double z){
+    public void tp(double x, double y, double z) {
         xpos = x;
         ypos = y;
         zpos = z;
         this.setEnabled(true);
     }
-    public void tp(Entity e){
+
+    public void tp(Entity e) {
         targets = e;
         this.setEnabled(true);
     }
+
     private enum Modes {
         Hypixel,
         Vanilla

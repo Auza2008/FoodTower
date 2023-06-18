@@ -29,13 +29,21 @@ public class AutoHead extends Module {
         addValues(health, delay, eatApples, eatHeads, NoAbsorption);
     }
 
+    public static int findItem(final int startSlot, final int endSlot, final Item item) {
+        for (int i = startSlot; i < endSlot; i++) {
+            final ItemStack stack = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
+
+            if (stack != null && stack.getItem() == item) return i;
+        }
+        return -1;
+    }
+
     public void onEnable() {
         timer.reset();
     }
 
     public void onDisable() {
     }
-
 
     @EventHandler
     public void onUpdate(EventPreUpdate event) {
@@ -87,14 +95,5 @@ public class AutoHead extends Module {
                 Helper.sendMessage("No Head were found in hotbar!");
             }
         }
-    }
-
-    public static int findItem(final int startSlot, final int endSlot, final Item item) {
-        for (int i = startSlot; i < endSlot; i++) {
-            final ItemStack stack = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
-
-            if (stack != null && stack.getItem() == item) return i;
-        }
-        return -1;
     }
 }

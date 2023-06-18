@@ -109,17 +109,6 @@ public class StringCache {
      * nested elements is index by the digit value 0-9.
      */
     private final Glyph[][] digitGlyphs = new Glyph[4][];
-
-    /**
-     * True if digitGlyphs[] has been assigned and cacheString() can begin replacing all digits with '0' in the string.
-     */
-    private boolean digitGlyphsReady = false;
-
-    /**
-     * If true, then enble GL_BLEND in renderString() so anti-aliasing font glyphs show up properly.
-     */
-    private boolean antiAliasEnabled = false;
-
     /**
      * Reference to the main Minecraft thread that created this GlyphCache object. Starting with Minecraft 1.3.1, it is possible
      * for GlyphCache.cacheGlyphs() to be invoked from the TcpReaderThread while processing a chat packet and computing the width
@@ -128,6 +117,14 @@ public class StringCache {
      * Thread.currentThread(), the StringCache code can avoid calling cacheGlyphs() when it's not safe to do so.
      */
     private final Thread mainThread;
+    /**
+     * True if digitGlyphs[] has been assigned and cacheString() can begin replacing all digits with '0' in the string.
+     */
+    private boolean digitGlyphsReady = false;
+    /**
+     * If true, then enble GL_BLEND in renderString() so anti-aliasing font glyphs show up properly.
+     */
+    private boolean antiAliasEnabled = false;
 
     /**
      * A single StringCache object is allocated by Minecraft's FontRenderer which forwards all string drawing and requests for

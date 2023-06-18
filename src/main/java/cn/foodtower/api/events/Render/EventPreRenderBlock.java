@@ -1,33 +1,32 @@
 package cn.foodtower.api.events.Render;
 
 
-
 import cn.foodtower.api.Event;
 import net.minecraft.block.Block;
 import net.minecraft.util.BlockPos;
 
 public class EventPreRenderBlock extends Event {
-   private Block block = null;
-   private BlockPos pos = null;
+    private Block block = null;
+    private BlockPos pos = null;
 
-   public EventPreRenderBlock(Block block, BlockPos pos) {
-      this.setBlock(block);
-      this.setPos(pos);
-   }
+    public EventPreRenderBlock(Block block, BlockPos pos) {
+        this.setBlock(block);
+        this.setPos(pos);
+    }
 
-   public Block getBlock() {
-      return this.block;
-   }
+    public Block getBlock() {
+        return this.block;
+    }
 
-   public void setBlock(Block block) {
-      this.block = block;
-   }
+    public void setBlock(Block block) {
+        this.block = block;
+    }
 
-   public BlockPos getPos() {
-      return this.pos;
-   }
+    public BlockPos getPos() {
+        return this.pos;
+    }
 
-   public void setPos(BlockPos pos) {
-      this.pos = pos;
-   }
+    public void setPos(BlockPos pos) {
+        this.pos = pos;
+    }
 }

@@ -5,12 +5,9 @@ public class SmoothAnimationTimer {
     public float target;
 
     public float speed = 0.3f;
+    private float value = 0;
 
     public SmoothAnimationTimer(float target) {
-        this.target = target;
-    }
-
-    public void setTarget(float target) {
         this.target = target;
     }
 
@@ -19,18 +16,20 @@ public class SmoothAnimationTimer {
         this.speed = speed;
     }
 
-    public void setValue(float value) {
-        this.value = value;
+    public void setTarget(float target) {
+        this.target = target;
     }
 
     public float getValue() {
         return value;
     }
 
-    private float value = 0;
+    public void setValue(float value) {
+        this.value = value;
+    }
 
     public boolean update(boolean increment) {
-        this.value = AnimationUtil.getAnimationState(value, increment ? target : 0, (float) (Math.max(10, (Math.abs(this.value - (increment ? target : 0))) * 40) * speed));
+        this.value = AnimationUtil.getAnimationState(value, increment ? target : 0, Math.max(10, (Math.abs(this.value - (increment ? target : 0))) * 40) * speed);
         return value == target;
     }
 }

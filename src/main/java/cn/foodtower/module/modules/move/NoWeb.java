@@ -12,22 +12,21 @@ import cn.foodtower.util.entity.MovementUtils;
 public class NoWeb extends Module {
     private final Mode mode = new Mode("Mode", Modes.values(), Modes.None);
     private final Numbers<Double> horizonSpeed = new Numbers<>("HorizonSpeed", 0.1d, 0.01d, 0.8d, 0.01d);
+    boolean usedTimer = false;
 
     public NoWeb() {
         super("NoWeb", new String[]{"noweb"}, ModuleType.Movement);
     }
 
-    boolean usedTimer = false;
-
     @EventHandler
-    public void onJump( EventJump e){
+    public void onJump(EventJump e) {
         if (mode.get().equals(Modes.AAC4)) {
             e.setCancelled(true);
         }
     }
 
     @EventHandler
-    public void onUpdate( EventMotionUpdate e) {
+    public void onUpdate(EventMotionUpdate e) {
         if (usedTimer) {
             mc.timer.timerSpeed = 1F;
             usedTimer = false;
@@ -137,6 +136,7 @@ public class NoWeb extends Module {
                 break;
         }
     }
+
     public enum Modes {
         None, OldAAC, LAAC, Rewinside, Horizon, Spartan, AAC4, AAC5, Matrix, Test
     }

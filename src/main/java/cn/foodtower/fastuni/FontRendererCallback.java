@@ -6,17 +6,14 @@ import com.ibm.icu.text.Bidi;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ResourceLocation;
 
-public class FontRendererCallback
-{
+public class FontRendererCallback {
     public static boolean betterFontsEnabled = true;
 
-    public static void constructor(IBFFontRenderer font, ResourceLocation location)
-    {
+    public static void constructor(IBFFontRenderer font, ResourceLocation location) {
         // Disable for splash font renderer
         if (((FontRenderer) font).getClass() != FontRenderer.class) return;
 
-        if (location.getResourcePath().equalsIgnoreCase("textures/font/ascii.png") && font.getStringCache() == null)
-        {
+        if (location.getResourcePath().equalsIgnoreCase("textures/font/ascii.png") && font.getStringCache() == null) {
             font.setDropShadowEnabled(true);
 
             int[] colorCode = ((FontRenderer) font).colorCode;
@@ -25,20 +22,16 @@ public class FontRendererCallback
         }
     }
 
-    public static String bidiReorder(IBFFontRenderer font, String text)
-    {
-        if (betterFontsEnabled && font.getStringCache() != null)
-        {
+    public static String bidiReorder(IBFFontRenderer font, String text) {
+        if (betterFontsEnabled && font.getStringCache() != null) {
             return text;
         }
 
-        try
-        {
+        try {
             Bidi bidi = new Bidi((new ArabicShaping(8)).shape(text), 127);
             bidi.setReorderingMode(0);
             return bidi.writeReordered(2);
-        } catch (ArabicShapingException var3)
-        {
+        } catch (ArabicShapingException var3) {
             return text;
         }
     }

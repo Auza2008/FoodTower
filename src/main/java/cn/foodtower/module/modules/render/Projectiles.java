@@ -10,6 +10,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -23,15 +24,70 @@ import org.lwjgl.opengl.GL11;
 
 public class Projectiles extends Module {
 
+    private MovingObjectPosition blockCollision;
+
     public Projectiles() {
         super("Projectiles", new String[]{"Projectiles"}, ModuleType.Render);
     }
 
-    private MovingObjectPosition blockCollision;
+    public static void func_181561_a(AxisAlignedBB p_181561_0_) {
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        worldrenderer.begin(3, DefaultVertexFormats.POSITION);
+        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.minY, p_181561_0_.minZ).endVertex();
+        worldrenderer.pos(p_181561_0_.maxX, p_181561_0_.minY, p_181561_0_.minZ).endVertex();
+        worldrenderer.pos(p_181561_0_.maxX, p_181561_0_.minY, p_181561_0_.maxZ).endVertex();
+        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.minY, p_181561_0_.maxZ).endVertex();
+        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.minY, p_181561_0_.minZ).endVertex();
+        tessellator.draw();
+        worldrenderer.begin(3, DefaultVertexFormats.POSITION);
+        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.maxY, p_181561_0_.minZ).endVertex();
+        worldrenderer.pos(p_181561_0_.maxX, p_181561_0_.maxY, p_181561_0_.minZ).endVertex();
+        worldrenderer.pos(p_181561_0_.maxX, p_181561_0_.maxY, p_181561_0_.maxZ).endVertex();
+        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.maxY, p_181561_0_.maxZ).endVertex();
+        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.maxY, p_181561_0_.minZ).endVertex();
+        tessellator.draw();
+        worldrenderer.begin(1, DefaultVertexFormats.POSITION);
+        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.minY, p_181561_0_.minZ).endVertex();
+        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.maxY, p_181561_0_.minZ).endVertex();
+        worldrenderer.pos(p_181561_0_.maxX, p_181561_0_.minY, p_181561_0_.minZ).endVertex();
+        worldrenderer.pos(p_181561_0_.maxX, p_181561_0_.maxY, p_181561_0_.minZ).endVertex();
+        worldrenderer.pos(p_181561_0_.maxX, p_181561_0_.minY, p_181561_0_.maxZ).endVertex();
+        worldrenderer.pos(p_181561_0_.maxX, p_181561_0_.maxY, p_181561_0_.maxZ).endVertex();
+        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.minY, p_181561_0_.maxZ).endVertex();
+        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.maxY, p_181561_0_.maxZ).endVertex();
+        tessellator.draw();
+    }
+
+    public static void enableRender3D(boolean disableDepth) {
+        if (disableDepth) {
+            GL11.glDepthMask(false);
+            GL11.glDisable(2929);
+        }
+        GL11.glDisable(3008);
+        GL11.glEnable(3042);
+        GL11.glDisable(3553);
+        GL11.glBlendFunc(770, 771);
+        GL11.glEnable(2848);
+        GL11.glHint(3154, 4354);
+        GL11.glLineWidth(1.0f);
+    }
+
+    public static void disableRender3D(boolean enableDepth) {
+        if (enableDepth) {
+            GL11.glDepthMask(true);
+            GL11.glEnable(2929);
+        }
+        GL11.glEnable(3553);
+        GL11.glDisable(3042);
+        GL11.glEnable(3008);
+        GL11.glDisable(2848);
+        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    }
 
     @EventHandler
     public void onRender3D(EventRender3D eventRender3D) {
-        if(mc.thePlayer.inventory.getCurrentItem() != null) {
+        if (mc.thePlayer.inventory.getCurrentItem() != null) {
             EntityPlayerSP player = mc.thePlayer;
             ItemStack stack = player.inventory.getCurrentItem();
             if (isThrowable(mc.thePlayer.getHeldItem().getItem())) {
@@ -45,7 +101,7 @@ public class Projectiles extends Module {
 
                 double trajectoryX = -Math.sin(yaw) * Math.cos(pitch) * itemBow;
                 double trajectoryY = -Math.sin(pitch) * itemBow;
-                double trajectoryZ =  Math.cos(yaw) * Math.cos(pitch) * itemBow;
+                double trajectoryZ = Math.cos(yaw) * Math.cos(pitch) * itemBow;
                 double trajectory = Math.sqrt(trajectoryX * trajectoryX + trajectoryY * trajectoryY + trajectoryZ * trajectoryZ);
 
                 trajectoryX /= trajectory;
@@ -55,8 +111,7 @@ public class Projectiles extends Module {
                 if (stack.getItem() instanceof ItemBow) {
                     float bowPower = (72000 - player.getItemInUseCount()) / 20.0F;
                     bowPower = (bowPower * bowPower + bowPower * 2.0F) / 3.0F;
-                    if (bowPower > 1.0F)
-                    {
+                    if (bowPower > 1.0F) {
                         bowPower = 1.0F;
                     }
                     bowPower *= 3.0F;
@@ -82,7 +137,7 @@ public class Projectiles extends Module {
                 GL11.glBegin(GL11.GL_LINE_STRIP);
 
                 for (int i = 0; i < 2000; i++) {
-                    GL11.glVertex3d(posX - mc.getRenderManager().renderPosX, posY - mc.getRenderManager().renderPosY, posZ - mc.getRenderManager().renderPosZ);
+                    GL11.glVertex3d(posX - RenderManager.renderPosX, posY - RenderManager.renderPosY, posZ - RenderManager.renderPosZ);
 
                     posX += trajectoryX * 0.1D;
                     posY += trajectoryY * 0.1D;
@@ -120,9 +175,9 @@ public class Projectiles extends Module {
                     }
                 }
                 GL11.glEnd();
-                double renderX = posX - mc.getRenderManager().renderPosX;
-                double renderY = posY - mc.getRenderManager().renderPosY;
-                double renderZ = posZ - mc.getRenderManager().renderPosZ;
+                double renderX = posX - RenderManager.renderPosX;
+                double renderY = posY - RenderManager.renderPosY;
+                double renderZ = posZ - RenderManager.renderPosZ;
                 GL11.glPushMatrix();
                 GL11.glTranslated(renderX - 0.5D, renderY - 0.5D, renderZ - 0.5D);
                 AxisAlignedBB aim;
@@ -155,35 +210,6 @@ public class Projectiles extends Module {
                 GL11.glPopMatrix();
             }
         }
-    }
-
-    public static void func_181561_a(AxisAlignedBB p_181561_0_) {
-        Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-        worldrenderer.begin(3, DefaultVertexFormats.POSITION);
-        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.minY, p_181561_0_.minZ).endVertex();
-        worldrenderer.pos(p_181561_0_.maxX, p_181561_0_.minY, p_181561_0_.minZ).endVertex();
-        worldrenderer.pos(p_181561_0_.maxX, p_181561_0_.minY, p_181561_0_.maxZ).endVertex();
-        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.minY, p_181561_0_.maxZ).endVertex();
-        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.minY, p_181561_0_.minZ).endVertex();
-        tessellator.draw();
-        worldrenderer.begin(3, DefaultVertexFormats.POSITION);
-        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.maxY, p_181561_0_.minZ).endVertex();
-        worldrenderer.pos(p_181561_0_.maxX, p_181561_0_.maxY, p_181561_0_.minZ).endVertex();
-        worldrenderer.pos(p_181561_0_.maxX, p_181561_0_.maxY, p_181561_0_.maxZ).endVertex();
-        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.maxY, p_181561_0_.maxZ).endVertex();
-        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.maxY, p_181561_0_.minZ).endVertex();
-        tessellator.draw();
-        worldrenderer.begin(1, DefaultVertexFormats.POSITION);
-        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.minY, p_181561_0_.minZ).endVertex();
-        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.maxY, p_181561_0_.minZ).endVertex();
-        worldrenderer.pos(p_181561_0_.maxX, p_181561_0_.minY, p_181561_0_.minZ).endVertex();
-        worldrenderer.pos(p_181561_0_.maxX, p_181561_0_.maxY, p_181561_0_.minZ).endVertex();
-        worldrenderer.pos(p_181561_0_.maxX, p_181561_0_.minY, p_181561_0_.maxZ).endVertex();
-        worldrenderer.pos(p_181561_0_.maxX, p_181561_0_.maxY, p_181561_0_.maxZ).endVertex();
-        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.minY, p_181561_0_.maxZ).endVertex();
-        worldrenderer.pos(p_181561_0_.minX, p_181561_0_.maxY, p_181561_0_.maxZ).endVertex();
-        tessellator.draw();
     }
 
     @EventHandler
@@ -230,7 +256,7 @@ public class Projectiles extends Module {
             GL11.glDepthMask(true);
             GL11.glDisable(3042);
             GL11.glPopMatrix();
-            
+
             double posX = arrow.posX;
             double posY = arrow.posY;
             double posZ = arrow.posZ;
@@ -262,7 +288,7 @@ public class Projectiles extends Module {
                 }
                 motionY -= 0.05000000074505806;
 
-                GL11.glVertex3d(posX - mc.getRenderManager().renderPosX, posY - mc.getRenderManager().renderPosY, posZ - mc.getRenderManager().renderPosZ);
+                GL11.glVertex3d(posX - RenderManager.renderPosX, posY - RenderManager.renderPosY, posZ - RenderManager.renderPosZ);
                 ++limit2;
             }
             GL11.glEnd();
@@ -297,32 +323,6 @@ public class Projectiles extends Module {
         GL11.glVertex3d(bb2.minX, bb2.maxY, bb2.maxZ);
         GL11.glVertex3d(bb2.minX, bb2.maxY, bb2.minZ);
         GL11.glEnd();
-    }
-
-    public static void enableRender3D(boolean disableDepth) {
-        if (disableDepth) {
-            GL11.glDepthMask(false);
-            GL11.glDisable(2929);
-        }
-        GL11.glDisable(3008);
-        GL11.glEnable(3042);
-        GL11.glDisable(3553);
-        GL11.glBlendFunc(770, 771);
-        GL11.glEnable(2848);
-        GL11.glHint(3154, 4354);
-        GL11.glLineWidth(1.0f);
-    }
-
-    public static void disableRender3D(boolean enableDepth) {
-        if (enableDepth) {
-            GL11.glDepthMask(true);
-            GL11.glEnable(2929);
-        }
-        GL11.glEnable(3553);
-        GL11.glDisable(3042);
-        GL11.glEnable(3008);
-        GL11.glDisable(2848);
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     private double getGravity(Item item) {

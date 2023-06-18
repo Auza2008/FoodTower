@@ -24,11 +24,11 @@ public class SpeedMine extends Module {
     public static Numbers<Double> speed = new Numbers<>("Speed", "Speed", 0.7, 0.0, 1.0, 0.1);
     public static Numbers<Double> Pot = new Numbers<>("Potion", "Potion", 1.0, 0.0, 4.0, 1.0);
     public static Mode mode = new Mode("Mode", "mode", SpeedMineMode.values(), SpeedMineMode.Packet);
-    private boolean bzs = false;
-    private float bzx = 0.0f;
+    public static Option SendPacket = new Option("SendPacket", "SendPacket", false);
     public BlockPos blockPos;
     public EnumFacing facing;
-    public static Option SendPacket = new Option("SendPacket", "SendPacket", false);
+    private boolean bzs = false;
+    private float bzx = 0.0f;
 
     public SpeedMine() {
         super("SpeedMine", new String[]{"SpeedMine", "antifall"}, ModuleType.World);
@@ -86,13 +86,12 @@ public class SpeedMine extends Module {
                 mc.playerController.curBlockDamageMP += 0.1f;
             }
         }
-        if (this.mode.get() == SpeedMineMode.ReMix) {
+        if (mode.get() == SpeedMineMode.ReMix) {
             if (mc.playerController.extendedReach()) {
                 mc.playerController.blockHitDelay = 0;
-            }
-            else if (this.bzs) {
+            } else if (this.bzs) {
                 final Block block = mc.theWorld.getBlockState(this.blockPos).getBlock();
-                this.bzx += (float)(block.getPlayerRelativeBlockHardness(mc.thePlayer, mc.theWorld, this.blockPos) * 1.4);
+                this.bzx += (float) (block.getPlayerRelativeBlockHardness(mc.thePlayer, mc.theWorld, this.blockPos) * 1.4);
                 if (this.bzx >= 1.0f) {
                     mc.theWorld.setBlockState(this.blockPos, Blocks.air.getDefaultState(), 11);
                     mc.thePlayer.sendQueue.getNetworkManager().sendPacket(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK, this.blockPos, this.facing));
@@ -122,15 +121,14 @@ public class SpeedMine extends Module {
                 }
             }
         }
-        if (mode.get()== SpeedMineMode.ReMix && event.getPacket() instanceof C07PacketPlayerDigging && !mc.playerController.extendedReach() && mc.playerController != null) {
-            final C07PacketPlayerDigging c07PacketPlayerDigging = (C07PacketPlayerDigging)event.getPacket();
+        if (mode.get() == SpeedMineMode.ReMix && event.getPacket() instanceof C07PacketPlayerDigging && !mc.playerController.extendedReach() && mc.playerController != null) {
+            final C07PacketPlayerDigging c07PacketPlayerDigging = (C07PacketPlayerDigging) event.getPacket();
             if (c07PacketPlayerDigging.getStatus() == C07PacketPlayerDigging.Action.START_DESTROY_BLOCK) {
                 this.bzs = true;
                 this.blockPos = c07PacketPlayerDigging.getPosition();
                 this.facing = c07PacketPlayerDigging.getFacing();
                 this.bzx = 0.0f;
-            }
-            else if (c07PacketPlayerDigging.getStatus() == C07PacketPlayerDigging.Action.ABORT_DESTROY_BLOCK || c07PacketPlayerDigging.getStatus() == C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK) {
+            } else if (c07PacketPlayerDigging.getStatus() == C07PacketPlayerDigging.Action.ABORT_DESTROY_BLOCK || c07PacketPlayerDigging.getStatus() == C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK) {
                 this.bzs = false;
                 this.blockPos = null;
                 this.facing = null;
@@ -157,14 +155,14 @@ public class SpeedMine extends Module {
                 }
             }
         }
-        if (this.mode.get() == SpeedMineMode.ReMix) {
+        if (mode.get() == SpeedMineMode.ReMix) {
             if (mc.playerController.extendedReach()) {
                 mc.playerController.blockHitDelay = 0;
             } else if (this.bzs) {
-                Block block = this.mc.theWorld.getBlockState(this.blockPos).getBlock();
-                this.bzx += (float) ((double) block.getPlayerRelativeBlockHardness(mc.thePlayer, this.mc.theWorld, this.blockPos) * 1.4);
+                Block block = mc.theWorld.getBlockState(this.blockPos).getBlock();
+                this.bzx += (float) ((double) block.getPlayerRelativeBlockHardness(mc.thePlayer, mc.theWorld, this.blockPos) * 1.4);
                 if (this.bzx >= 1.0f) {
-                    this.mc.theWorld.setBlockState(this.blockPos, Blocks.air.getDefaultState(), 11);
+                    mc.theWorld.setBlockState(this.blockPos, Blocks.air.getDefaultState(), 11);
                     mc.thePlayer.sendQueue.getNetworkManager().sendPacket(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK, this.blockPos, this.facing));
                     this.bzx = 0.0f;
                     this.bzs = false;
@@ -180,6 +178,6 @@ public class SpeedMine extends Module {
     }
 
     enum SpeedMineMode {
-        Packet, NewPacket, NewPacket2, MiniPacket,ReMix
+        Packet, NewPacket, NewPacket2, MiniPacket, ReMix
     }
 }

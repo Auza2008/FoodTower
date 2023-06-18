@@ -15,12 +15,12 @@ public class EventRotation extends Event {
         return this.yaw;
     }
 
-    public float getPitch() {
-        return this.pitch;
-    }
-
     public void setYaw(float yaw) {
         this.yaw = yaw;
+    }
+
+    public float getPitch() {
+        return this.pitch;
     }
 
     public void setPitch(float pitch) {

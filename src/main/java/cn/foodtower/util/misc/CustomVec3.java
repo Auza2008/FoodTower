@@ -6,9 +6,9 @@ package cn.foodtower.util.misc;
 import net.minecraft.util.Vec3;
 
 public final class CustomVec3 {
-    private double x;
-    private double y;
-    private double z;
+    private final double x;
+    private final double y;
+    private final double z;
 
     public CustomVec3(double x, double y, double z) {
         this.x = x;

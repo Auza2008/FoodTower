@@ -7,13 +7,13 @@ import cn.foodtower.api.Event;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class EventInventory extends Event {
-	private final EntityPlayer player;
+    private final EntityPlayer player;
 
-	public EventInventory(EntityPlayer player) {
-		this.player = player;
-	}
+    public EventInventory(EntityPlayer player) {
+        this.player = player;
+    }
 
-	public EntityPlayer getPlayer() {
-		return this.player;
-	}
+    public EntityPlayer getPlayer() {
+        return this.player;
+    }
 }

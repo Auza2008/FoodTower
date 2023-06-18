@@ -10,8 +10,8 @@ public class VecRotation {
         this.vec = vec;
         this.rotation = rotation;
     }
-    public Rotation getRotation()
-    {
+
+    public Rotation getRotation() {
         return this.rotation;
     }
 }

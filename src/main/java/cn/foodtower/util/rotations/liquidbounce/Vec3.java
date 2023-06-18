@@ -3,7 +3,9 @@ package cn.foodtower.util.rotations.liquidbounce;
 import net.minecraft.util.BlockPos;
 
 public class Vec3 {
-    private double x, y, z;
+    private final double x;
+    private final double y;
+    private final double z;
 
     public Vec3(double x, double y, double z) {
         this.x = x;

@@ -1,7 +1,5 @@
 package cn.foodtower.module.modules.render;
 
-import java.awt.Color;
-
 import cn.foodtower.api.EventHandler;
 import cn.foodtower.api.events.World.EventPacketSend;
 import cn.foodtower.api.events.World.EventPostUpdate;
@@ -11,9 +9,11 @@ import cn.foodtower.util.misc.Helper;
 import cn.foodtower.util.time.TimerUtil;
 import net.minecraft.network.play.client.C03PacketPlayer;
 
+import java.awt.*;
+
 public class PacketMotior extends Module {
     private int packetcount;
-    private TimerUtil time = new TimerUtil();
+    private final TimerUtil time = new TimerUtil();
 
     public PacketMotior() {
         super("PacketMotior", new String[]{"rotate"}, ModuleType.Render);

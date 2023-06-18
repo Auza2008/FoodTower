@@ -25,6 +25,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.math.BigInteger;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
@@ -43,26 +44,26 @@ public enum CloudMusicAPI {
             + "575cce10b424d813cfe4875d3e82047b97ddef52741d546b8e289dc6935b" + "3ece0462db0a22b8e7";
 
     // Headers
-    final private String headers[][] = {
-            { "Accept", "*/*" },
-            { "Accept-Language", "zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4" },
-            { "Connection", "keep-alive" },
-            { "Content-Type", "application/x-www-form-urlencoded" },
-            { "Host", "music.163.com" },
-            { "User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.4389.114 Safari/537.36" },
-            { "Referer", "https://music.163.com/"},
-            { "X-Real-IP", "117.181.172.1" }
+    final private String[][] headers = {
+            {"Accept", "*/*"},
+            {"Accept-Language", "zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4"},
+            {"Connection", "keep-alive"},
+            {"Content-Type", "application/x-www-form-urlencoded"},
+            {"Host", "music.163.com"},
+            {"User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.4389.114 Safari/537.36"},
+            {"Referer", "https://music.163.com/"},
+            {"X-Real-IP", "117.181.172.1"}
     };
 
     // Cookie
-    public String cookies[][] = {
-            { "os", "pc" },
-            { "Referer", "https://music.163.com/" },
-            { "__remember_me", "true" }
+    public String[][] cookies = {
+            {"os", "pc"},
+            {"Referer", "https://music.163.com/"},
+            {"__remember_me", "true"}
     };
 
     // Json Parser
-    private JsonParser parser = new JsonParser();
+    private final JsonParser parser = new JsonParser();
 
     /**
      * --使用手机号登录
@@ -99,7 +100,7 @@ public enum CloudMusicAPI {
     /**
      * --查询二维码状态
      *
-     * @return	Object[] {响应码, Cookies或Null}
+     * @return Object[] {响应码, Cookies或Null}
      * @throws Exception
      */
     public Object[] QRState(String key) throws Exception {
@@ -112,13 +113,13 @@ public enum CloudMusicAPI {
         JsonObject result = (JsonObject) parser.parse((String) request[0]);
         int code = result.get("code").getAsInt();
 
-        return new Object[] {code, request[1]};
+        return new Object[]{code, request[1]};
     }
 
     /**
      * --刷新登录状态
      *
-     * @return	Object[] {返回内容, 无用返回}
+     * @return Object[] {返回内容, 无用返回}
      * @throws Exception
      */
     public Object[] refreshState() throws Exception {
@@ -138,7 +139,7 @@ public enum CloudMusicAPI {
         JsonObject obj = (JsonObject) parser.parse(json);
 
         if (obj.get("code").getAsInt() != 200) {
-            return new Object[] { "获取歌单列表时发生错误, 错误码 " + obj.get("code").getAsInt(), null };
+            return new Object[]{"获取歌单列表时发生错误, 错误码 " + obj.get("code").getAsInt(), null};
         }
 
         ArrayList<PlayList> temp = new ArrayList<>();
@@ -149,7 +150,7 @@ public enum CloudMusicAPI {
                     new PlayList(this.toDBC(this.getObjectAsString(shit, "name")), this.getObjectAsString(shit, "id")));
         }
 
-        return new Object[] { "200", temp };
+        return new Object[]{"200", temp};
     }
 
     /**
@@ -217,11 +218,11 @@ public enum CloudMusicAPI {
             Pattern pattern = Pattern.compile(regex);
             Pattern pattern2 = Pattern.compile(regex2);
 
-            for(String s : lyric.split("\n")) {
+            for (String s : lyric.split("\n")) {
                 Matcher matcher = pattern.matcher(s);
                 Matcher matcher2 = pattern2.matcher(s);
 
-                while(matcher.find()) {
+                while (matcher.find()) {
                     String min = matcher.group(1);
                     String sec = matcher.group(2);
                     String mills = matcher.group(3);
@@ -230,7 +231,7 @@ public enum CloudMusicAPI {
                     list.add(new Lyric(text, strToLong(min, sec, mills)));
                 }
 
-                while(matcher2.find()) {
+                while (matcher2.find()) {
                     String min = matcher2.group(1);
                     String sec = matcher2.group(2);
                     String text = s.replaceAll(regex2, "");
@@ -245,19 +246,12 @@ public enum CloudMusicAPI {
         }
     }
 
-    //用于排序
-    public class LyricSort implements Comparator<Lyric> {
-        public int compare(Lyric a, Lyric b) {
-            return Long.compare(a.time, b.time);
-        }
-    }
-
     //字符串转毫秒
     public long strToLong(String min, String sec, String mill) {
         int minInt = Integer.parseInt(min);
         int secInt = Integer.parseInt(sec);
         int millsInt = Integer.parseInt(mill);
-        long times = (minInt * 60 * 1000) + (secInt * 1000) + (millsInt * (mill.length() == 2 ? 10 : 1));
+        long times = ((long) minInt * 60 * 1000) + (secInt * 1000L) + ((long) millsInt * (mill.length() == 2 ? 10 : 1));
         return times;
     }
 
@@ -278,7 +272,7 @@ public enum CloudMusicAPI {
         String json = (String) this.httpRequest("https://music.163.com/weapi/v6/playlist/detail?id=" + playListId, this.encryptRequest(request.toString()), RequestType.POST)[0];
         JsonObject obj = (JsonObject) parser.parse(json);
         if (obj.get("code").getAsInt() != 200) {
-            return new Object[] { "获取歌单详情时发生错误, 错误码 " + obj.get("code").getAsInt(), null };
+            return new Object[]{"获取歌单详情时发生错误, 错误码 " + obj.get("code").getAsInt(), null};
         }
 
         ArrayList<Track> temp = new ArrayList<>();
@@ -292,7 +286,7 @@ public enum CloudMusicAPI {
 
             for (int a = 0; a < shit.get("ar").getAsJsonArray().size(); ++a) {
                 JsonObject _shit = shit.get("ar").getAsJsonArray().get(a).getAsJsonObject();
-                if(_shit.get("name").isJsonNull() || isCloudDiskSong) {
+                if (_shit.get("name").isJsonNull() || isCloudDiskSong) {
                     artist = new StringBuilder(isCloudDiskSong ? "云盘歌曲/" : "未知作曲家/");
                 } else {
                     artist.append(_shit.get("name").getAsString()).append("/");
@@ -306,7 +300,7 @@ public enum CloudMusicAPI {
                     this.getObjectAsString(shit.get("al").getAsJsonObject(), "picUrl")));
         }
 
-        return new Object[] { "200", temp };
+        return new Object[]{"200", temp};
     }
 
     /**
@@ -327,11 +321,11 @@ public enum CloudMusicAPI {
         JsonObject result = (JsonObject) parser.parse(json);
 
         if (result.get("code").getAsInt() != 200) {
-            return new Object[] { "获取下载地址时发生错误, 错误码 " + result.get("code").getAsInt(), null };
+            return new Object[]{"获取下载地址时发生错误, 错误码 " + result.get("code").getAsInt(), null};
         }
 
-        return new Object[] { "200",
-                result.get("data").getAsJsonArray().get(0).getAsJsonObject().get("url").getAsString() };
+        return new Object[]{"200",
+                result.get("data").getAsJsonArray().get(0).getAsJsonObject().get("url").getAsString()};
     }
 
     public Object[] httpRequest(String url, String data, RequestType type) throws Exception {
@@ -388,7 +382,7 @@ public enum CloudMusicAPI {
 
                 CookieStore cs = context.getCookieStore();
 
-                return new Object[] { resp, cs };
+                return new Object[]{resp, cs};
 
             case GET:
                 HttpGet httpGet = new HttpGet(url);
@@ -405,7 +399,7 @@ public enum CloudMusicAPI {
                         return getStringFromInputStream(httpResponse.getEntity().getContent());
                     }
                 }, context);
-                return new Object[] { resp, null };
+                return new Object[]{resp, null};
 
             default:
                 throw new NullPointerException("Invalid request type!");
@@ -461,8 +455,8 @@ public enum CloudMusicAPI {
 
     public String aesEncrypt(String text, String key) {
         try {
-            IvParameterSpec iv = new IvParameterSpec("0102030405060708".getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+            IvParameterSpec iv = new IvParameterSpec("0102030405060708".getBytes(StandardCharsets.UTF_8));
+            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
@@ -481,7 +475,7 @@ public enum CloudMusicAPI {
                 .modPow(new BigInteger(pubKey, 16), new BigInteger(modulus, 16));
         String r = rs.toString(16);
         if (r.length() >= 256) {
-            return r.substring(r.length() - 256, r.length());
+            return r.substring(r.length() - 256);
         } else {
             while (r.length() < 256) {
                 r = 0 + r;
@@ -501,7 +495,7 @@ public enum CloudMusicAPI {
 
     // 全角转半角
     public String toDBC(String input) {
-        char c[] = input.toCharArray();
+        char[] c = input.toCharArray();
         for (int i = 0; i < c.length; i++) {
             if (c[i] == '\u3000') {
                 c[i] = ' ';
@@ -518,7 +512,7 @@ public enum CloudMusicAPI {
         StringBuilder sb = new StringBuilder();
         String line;
         try {
-            br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             while ((line = br.readLine()) != null) {
                 if (sb.length() != 0) {
                     sb.append("\n");
@@ -549,6 +543,13 @@ public enum CloudMusicAPI {
     }
 
     public enum RequestType {
-        GET, POST;
+        GET, POST
+    }
+
+    //用于排序
+    public class LyricSort implements Comparator<Lyric> {
+        public int compare(Lyric a, Lyric b) {
+            return Long.compare(a.time, b.time);
+        }
     }
 }

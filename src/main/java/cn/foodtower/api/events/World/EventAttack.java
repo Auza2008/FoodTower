@@ -5,7 +5,7 @@ import cn.foodtower.api.Event;
 import net.minecraft.entity.Entity;
 
 public class EventAttack extends Event {
-    private Entity entity;
+    private final Entity entity;
 
     public EventAttack(Entity targetEntity) {
         this.entity = targetEntity;

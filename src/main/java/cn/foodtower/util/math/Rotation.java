@@ -10,6 +10,11 @@ public final class Rotation {
     private float yaw;
     private float pitch;
 
+    public Rotation(float yaw, float pitch) {
+        this.yaw = yaw;
+        this.pitch = pitch;
+    }
+
     public void toPlayer(EntityPlayer player) {
         float var2 = this.yaw;
         if (!Float.isNaN(var2)) {
@@ -43,11 +48,6 @@ public final class Rotation {
 
     public void setPitch(float var1) {
         this.pitch = var1;
-    }
-
-    public Rotation(float yaw, float pitch) {
-        this.yaw = yaw;
-        this.pitch = pitch;
     }
 
     public Rotation copy(float yaw, float pitch) {
@@ -100,7 +100,7 @@ public final class Rotation {
                 calcStrafe = -strafe;
                 break;
             }
-            case 5:{
+            case 5: {
                 calcForward -= forward;
                 calcStrafe += forward;
                 calcForward -= strafe;
@@ -143,6 +143,7 @@ public final class Rotation {
             player.motionZ += calcForward * yawCos + calcStrafe * yawSin;
         }
     }
+
     public String toString() {
         return "Rotation(yaw=" + this.yaw + ", pitch=" + this.pitch + ")";
     }

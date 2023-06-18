@@ -23,7 +23,7 @@ public class Breadcrumbs extends Module {
 
     public Breadcrumbs() {
         super("Breadcrumbs", new String[]{"Breadcrumb"}, ModuleType.Render);
-        this.addValues(colorRedValue,colorGreenValue,colorBlueValue,colorRainbow);
+        this.addValues(colorRedValue, colorGreenValue, colorBlueValue, colorRainbow);
     }
 
     @EventHandler

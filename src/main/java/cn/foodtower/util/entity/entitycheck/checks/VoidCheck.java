@@ -17,7 +17,7 @@ public final class VoidCheck
 
     private boolean isBlockUnder(Entity entity) {
         int offset = 0;
-        while ((double)offset < entity.posY + (double)entity.getEyeHeight()) {
+        while ((double) offset < entity.posY + (double) entity.getEyeHeight()) {
             AxisAlignedBB boundingBox = entity.getEntityBoundingBox().offset(0.0, -offset, 0.0);
             if (!Minecraft.getMinecraft().theWorld.getCollidingBoundingBoxes(entity, boundingBox).isEmpty()) {
                 return true;

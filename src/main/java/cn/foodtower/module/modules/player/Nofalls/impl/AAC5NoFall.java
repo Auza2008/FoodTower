@@ -1,9 +1,9 @@
 package cn.foodtower.module.modules.player.Nofalls.impl;
 
-import cn.foodtower.module.modules.player.Nofalls.NofallModule;
 import cn.foodtower.api.events.World.EventMotionUpdate;
 import cn.foodtower.api.events.World.EventPacketSend;
 import cn.foodtower.api.events.World.EventPreUpdate;
+import cn.foodtower.module.modules.player.Nofalls.NofallModule;
 import cn.foodtower.util.world.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.network.play.client.C03PacketPlayer;
@@ -13,7 +13,7 @@ import net.minecraft.util.BlockPos;
 public class AAC5NoFall implements NofallModule {
     double fall;
     private boolean aac5doFlag = false;
-    private boolean aac5Check= false;
+    private boolean aac5Check = false;
     private int aac5Timer = 0;
 
 
@@ -21,7 +21,7 @@ public class AAC5NoFall implements NofallModule {
     public void onEnable() {
         fall = 0;
         aac5doFlag = false;
-        aac5Check= false;
+        aac5Check = false;
         aac5Timer = 0;
     }
 

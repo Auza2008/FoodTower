@@ -5,7 +5,8 @@ import net.minecraft.client.audio.ISound;
 
 public class EventSound extends Event {
     public ISound sound;
-    public EventSound(ISound iSound){
+
+    public EventSound(ISound iSound) {
         sound = iSound;
     }
 }

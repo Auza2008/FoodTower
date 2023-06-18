@@ -15,6 +15,7 @@ public class XrayBlock {
         x = blockPos.getX();
         type = name;
     }
+
     public XrayBlock(BlockPos blockPos) {
         z = blockPos.getZ();
         y = blockPos.getY();

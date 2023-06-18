@@ -3,8 +3,8 @@ package cn.foodtower.util.render;
 import cn.foodtower.libraries.tessellate.Tessellation;
 import cn.foodtower.module.modules.render.HUD;
 import cn.foodtower.module.modules.render.TargetHUD;
-import cn.foodtower.util.math.Vec3;
 import cn.foodtower.util.math.Vec2f;
+import cn.foodtower.util.math.Vec3;
 import cn.foodtower.util.math.Vec3f;
 import cn.foodtower.util.misc.Helper;
 import cn.foodtower.util.render.gl.GLClientState;
@@ -67,6 +67,10 @@ public class RenderUtil {
         DISABLE_CLIENT_STATE = GL11::glEnableClientState;
     }
 
+    public RenderUtil() {
+        super();
+    }
+
     public static void drawCircle(Entity entity, float partialTicks, float pos) {
         GL11.glPushMatrix();
         GL11.glEnable(GL11.GL_BLEND);
@@ -122,10 +126,6 @@ public class RenderUtil {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
-    }
-
-    public RenderUtil() {
-        super();
     }
 
     public static void color(int color) {

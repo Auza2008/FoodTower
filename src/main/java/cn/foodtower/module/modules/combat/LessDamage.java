@@ -1,7 +1,7 @@
 package cn.foodtower.module.modules.combat;
 
 import cn.foodtower.api.EventHandler;
-import cn.foodtower.api.events.World.EventUpdate;
+import cn.foodtower.api.events.World.EventPreUpdate;
 import cn.foodtower.api.value.Numbers;
 import cn.foodtower.manager.ModuleManager;
 import cn.foodtower.module.Module;
@@ -68,7 +68,7 @@ public class LessDamage extends Module {
 
 
     @EventHandler
-    private void onUpdate(EventUpdate e) {
+    private void onUpdate(EventPreUpdate e) {
         setSuffix(range.get());
         if (!ModuleManager.getModuleByClass(KillAura.class).isEnabled()) {
 //            sendPacket(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));

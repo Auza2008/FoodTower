@@ -35,19 +35,19 @@ public class ParticleEngine {
         GlStateManager.disableAlpha();
         GlStateManager.color(1, 1, 1, 1);
         ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
-        float xOffset = sr.getScaledWidth() / 2f - mouseX;
-        float yOffset = sr.getScaledHeight() / 2f - mouseY;
-        for (particles.size(); particles.size() < (int) (sr.getScaledWidth() / 19.2f); particles.add(new Particle(sr, new Random().nextFloat() * 2 + 2, new Random().nextFloat() * 5 + 5)))
+        float xOffset = ScaledResolution.getScaledWidth() / 2f - mouseX;
+        float yOffset = ScaledResolution.getScaledHeight() / 2f - mouseY;
+        for (particles.size(); particles.size() < (int) (ScaledResolution.getScaledWidth() / 19.2f); particles.add(new Particle(sr, new Random().nextFloat() * 2 + 2, new Random().nextFloat() * 5 + 5)))
             ;
         List<Particle> toremove = Lists.newArrayList();
         for (Particle p : particles) {
-            p.opacity = AnimationUtil.moveUD(p.opacity, 32,10f / Minecraft.getDebugFPS(),3f / Minecraft.getDebugFPS());
+            p.opacity = AnimationUtil.moveUD(p.opacity, 32, 10f / Minecraft.getDebugFPS(), 3f / Minecraft.getDebugFPS());
             Color c = new Color(cc.getRed(), cc.getGreen(), cc.getBlue(), (int) p.opacity);
             GLUtils.startSmooth();
-            RenderingUtil.drawBorderedCircle(p.x + MathHelper.sin(p.ticks / 2) * 50 + -xOffset / 5, sr.getScaledHeight() - ((p.ticks * p.speed) * p.ticks / 10 + yOffset / 5), p.radius * (p.opacity / 32), c.getRGB(), c.getRGB());
+            RenderingUtil.drawBorderedCircle(p.x + MathHelper.sin(p.ticks / 2) * 50 + -xOffset / 5, ScaledResolution.getScaledHeight() - ((p.ticks * p.speed) * p.ticks / 10 + yOffset / 5), p.radius * (p.opacity / 32), c.getRGB(), c.getRGB());
             GLUtils.endSmooth();
             p.ticks += (0.9f / (float) Minecraft.getDebugFPS());// +(0.005*1.777*(GLUtils.getMouseX()-lastMouseX) + 0.005*(GLUtils.getMouseY()-lastMouseY));
-            if (((p.ticks * p.speed) * p.ticks / 10 + yOffset / 5) > sr.getScaledHeight() || ((p.ticks * p.speed) * p.ticks / 10 + yOffset / 5) < 0 || (p.x + MathHelper.sin(p.ticks / 2) * 50 + -xOffset / 5) > sr.getScaledWidth() || (p.x + MathHelper.sin(p.ticks / 2) * 50 + -xOffset / 5) < 0) {
+            if (((p.ticks * p.speed) * p.ticks / 10 + yOffset / 5) > ScaledResolution.getScaledHeight() || ((p.ticks * p.speed) * p.ticks / 10 + yOffset / 5) < 0 || (p.x + MathHelper.sin(p.ticks / 2) * 50 + -xOffset / 5) > ScaledResolution.getScaledWidth() || (p.x + MathHelper.sin(p.ticks / 2) * 50 + -xOffset / 5) < 0) {
                 toremove.add(p);
             }
         }

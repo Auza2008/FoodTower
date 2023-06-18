@@ -5,21 +5,21 @@ import cn.foodtower.util.misc.scaffold.blocks.PlaceInfo;
 
 public final class PlaceRotation {
 
-	private final PlaceInfo placeInfo;
+    private final PlaceInfo placeInfo;
 
-	private final Rotation rotation;
+    private final Rotation rotation;
 
-	public PlaceInfo getPlaceInfo() {
-		return this.placeInfo;
-	}
+    public PlaceRotation(PlaceInfo placeInfo, Rotation rotation) {
+        this.placeInfo = placeInfo;
+        this.rotation = rotation;
+    }
 
-	public Rotation getRotation() {
-		return this.rotation;
-	}
+    public PlaceInfo getPlaceInfo() {
+        return this.placeInfo;
+    }
 
-	public PlaceRotation(PlaceInfo placeInfo, Rotation rotation) {
-		this.placeInfo = placeInfo;
-		this.rotation = rotation;
-	}
-	
+    public Rotation getRotation() {
+        return this.rotation;
+    }
+
 }

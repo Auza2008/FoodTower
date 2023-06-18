@@ -24,12 +24,13 @@ public class CustomTextField {
     public int ticks = 0;
     public int selectedChar;
     public float offset;
-//	public ModuleSlot parent;
+    //	public ModuleSlot parent;
     public float newTextWidth;
     public float oldTextWidth;
     public float charWidth;
     public String oldString;
     public StringBuilder stringBuilder;
+
     public CustomTextField(String text) {
         this.textString = text;
         this.selectedChar = this.textString.length();

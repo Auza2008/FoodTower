@@ -11,13 +11,18 @@ import java.util.Objects;
 import java.util.Random;
 
 public class SoundFxPlayer {
+    public static void playRandomKeySound() {
+        SoundType[] soundTypes = {SoundType.Key1, SoundType.Key2, SoundType.Key3, SoundType.Key4};
+        new SoundFxPlayer().playSound(soundTypes[new Random().nextInt(soundTypes.length)], -10);
+    }
+
     public void playSound(SoundType st, float volume) {
         new Thread(() -> {
             AudioInputStream as;
             try {
                 as = AudioSystem.getAudioInputStream(new BufferedInputStream(Objects.requireNonNull(Minecraft.getMinecraft().getResourceManager()
                         .getResource(new ResourceLocation("FoodTower/sound/" + st.getName()))
-                .getInputStream())));
+                        .getInputStream())));
                 Clip clip = AudioSystem.getClip();
                 clip.open(as);
                 clip.start();
@@ -29,11 +34,6 @@ public class SoundFxPlayer {
                 e.printStackTrace();
             }
         }).start();
-    }
-
-    public static void playRandomKeySound(){
-        SoundType[] soundTypes = {SoundType.Key1,SoundType.Key2,SoundType.Key3,SoundType.Key4};
-        new SoundFxPlayer().playSound(soundTypes[new Random().nextInt(soundTypes.length)],-10);
     }
 
     public enum SoundType {

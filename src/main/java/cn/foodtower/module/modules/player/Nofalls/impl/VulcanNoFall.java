@@ -1,15 +1,16 @@
 package cn.foodtower.module.modules.player.Nofalls.impl;
 
-import cn.foodtower.module.modules.player.Nofalls.NofallModule;
 import cn.foodtower.api.events.World.EventMotionUpdate;
 import cn.foodtower.api.events.World.EventPacketSend;
 import cn.foodtower.api.events.World.EventPreUpdate;
+import cn.foodtower.module.modules.player.Nofalls.NofallModule;
 import cn.foodtower.util.entity.MovementUtils;
 import net.minecraft.network.play.client.C03PacketPlayer;
 
 public class VulcanNoFall implements NofallModule {
     private boolean nextSpoof = false;
     private boolean doSpoof = false;
+
     @Override
     public void onEnable() {
 
@@ -35,12 +36,12 @@ public class VulcanNoFall implements NofallModule {
 
     @Override
     public void onUpdateMotion(EventMotionUpdate e) {
-        if(nextSpoof) {
+        if (nextSpoof) {
             mc.thePlayer.motionY = -0.1;
             MovementUtils.strafe(0.343f);
             nextSpoof = false;
         }
-        if(mc.thePlayer.fallDistance > 3.65) {
+        if (mc.thePlayer.fallDistance > 3.65) {
             mc.thePlayer.fallDistance = 0.0f;
             doSpoof = true;
             nextSpoof = true;

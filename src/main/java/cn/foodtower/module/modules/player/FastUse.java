@@ -16,13 +16,15 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 
 public class FastUse extends Module {
-    private TimerUtil timer = new TimerUtil();
-    public static Mode MODE = new Mode("Mode",Modes.values(),Modes.Packet);
+    public static Mode MODE = new Mode("Mode", Modes.values(), Modes.Packet);
     public static Numbers<Double> TICKS = new Numbers<>("Ticks", "Ticks", 12d, 1d, 20d, 1d);
+    private final TimerUtil timer = new TimerUtil();
+
     public FastUse() {
-        super("FastUse",new String[]{"FastEat"}, ModuleType.Player);
-        this.addValues(MODE,TICKS);
+        super("FastUse", new String[]{"FastEat"}, ModuleType.Player);
+        this.addValues(MODE, TICKS);
     }
+
     @Override
     public void onEnable() {
         super.onEnable();
@@ -78,7 +80,7 @@ public class FastUse extends Module {
         return result;
     }
 
-    enum Modes{
+    enum Modes {
         Timer,
         Packet,
         Instant

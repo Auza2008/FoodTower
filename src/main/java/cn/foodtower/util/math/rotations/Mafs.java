@@ -6,10 +6,8 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 public class Mafs {
-	public static float AnimotaiSpeed;
-
-	
     private static final Random rng = new Random();
+    public static float AnimotaiSpeed;
 
     public static boolean isInteger(String s) {
         try {
@@ -52,9 +50,8 @@ public class Mafs {
 
         return rand.nextFloat() * (max - min) + min;
     }
-    
-    
-   
+
+
     public static int randInt(int min, int max) {
 
         SecureRandom rand = new SecureRandom();
@@ -74,9 +71,7 @@ public class Mafs {
         float distance = phi > 180 ? 360 - phi : phi;
         return distance;
     }
-    
-    
-   
+
 
     public static double getMiddle(double d, double e) {
         return (d + e) / 2;

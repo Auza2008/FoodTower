@@ -1,6 +1,10 @@
 package cn.foodtower.util.misc;
-import java.io.*;
-import java.net.*;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class WebUtils {
@@ -24,7 +28,7 @@ public class WebUtils {
     }
 
     public static String readContent(final String stringURL) throws IOException {
-        final HttpURLConnection httpConnection = stringURL.toLowerCase().startsWith("https://") ? (HttpURLConnection) new URL(stringURL).openConnection() : ((HttpURLConnection)new URL(stringURL).openConnection());
+        final HttpURLConnection httpConnection = (HttpURLConnection) new URL(stringURL).openConnection();
         httpConnection.setConnectTimeout(10000);
         httpConnection.setReadTimeout(10000);
         httpConnection.setRequestMethod("GET");

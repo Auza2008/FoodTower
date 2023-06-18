@@ -21,6 +21,7 @@ import cn.foodtower.util.entity.entitycheck.checks.DistanceCheck;
 import cn.foodtower.util.entity.entitycheck.checks.EntityCheck;
 import cn.foodtower.util.entity.entitycheck.checks.TeamsCheck;
 import cn.foodtower.util.math.MathUtil;
+import cn.foodtower.util.math.RayCastUtil;
 import cn.foodtower.util.math.RotationUtils;
 import cn.foodtower.util.math.SmoothRotationObject;
 import cn.foodtower.util.render.RenderUtil;
@@ -46,6 +47,7 @@ import java.util.List;
 public class KillAura extends Module {
     public static boolean isBlocking;
     public static EntityLivingBase curTarget;
+    private final Option raycast = new Option("Raycast", false);
     private final Option autoBlock = new Option("Auto Block", true);
     private final Option noHitCheck = new Option("NoHitCheck", false);
     private final Option coolDown = new Option("Auto CoolDown", false);
@@ -100,7 +102,7 @@ public class KillAura extends Module {
         this.blockValidator.add(new ConstantDistanceCheck(8.0f));
         this.blockValidator.add(entityCheck);
         this.blockValidator.add(teamsCheck);
-        addValues(mode, sortingMode, aps, minAps, range, autoBlock, autoBlockMode, attackTiming, abTiming, rotMode, rotSpeed, noHitCheck, silent, this.switchDelay, wall, this.teams, this.players, this.prioritizePlayers, this.animals, this.monsters, this.invisibles, esp, predictBlock, swing, fov, coolDown, dbtap, this.forceUpdate, this.disableOnDeath);
+        addValues(mode, sortingMode, switchDelay, aps, minAps, range, wall, autoBlock, autoBlockMode, attackTiming, abTiming, rotMode, rotSpeed, noHitCheck, silent, this.teams, this.players, this.prioritizePlayers, this.animals, this.monsters, this.invisibles, esp, swing, predictBlock, raycast, coolDown, dbtap, fov, this.forceUpdate, this.disableOnDeath);
         setValueDisplayable(sortingMode, mode, Mode.Single);
         setValueDisplayable(switchDelay, mode, Mode.Switch);
         setValueDisplayable(new Value[]{autoBlockMode, abTiming}, autoBlock, autoBlock.get());
@@ -173,11 +175,11 @@ public class KillAura extends Module {
     @EventHandler
     private void runAttack(EventMotionUpdate e) {
         setSuffix(mode.get());
-        if (((abTiming.get().equals(ABTiming.Pre) && e.isPre()) || (abTiming.get().equals(ABTiming.Post) && !e.isPre()) || abTiming.get().equals(ABTiming.Motion) || abTiming.get().equals(ABTiming.All)) && predictBlock.get())
+        if (((abTiming.get().equals(ABTiming.Pre) && e.isPre()) || (abTiming.get().equals(ABTiming.Post) && !e.isPre()) || abTiming.get().equals(ABTiming.All)) && predictBlock.get())
             block();
-        if ((attackTiming.get().equals(AttackTiming.Pre) && e.isPre()) || (attackTiming.get().equals(AttackTiming.Post) && !e.isPre()) || attackTiming.get().equals(AttackTiming.Motion) || attackTiming.get().equals(AttackTiming.All))
+        if ((attackTiming.get().equals(AttackTiming.Pre) && e.isPre()) || (attackTiming.get().equals(AttackTiming.Post) && !e.isPre()) || attackTiming.get().equals(AttackTiming.All))
             attack();
-        if ((abTiming.get().equals(ABTiming.Pre) && e.isPre()) || (abTiming.get().equals(ABTiming.Post) && !e.isPre()) || abTiming.get().equals(ABTiming.Motion) || abTiming.get().equals(ABTiming.All))
+        if ((abTiming.get().equals(ABTiming.Pre) && e.isPre()) || (abTiming.get().equals(ABTiming.Post) && !e.isPre()) || abTiming.get().equals(ABTiming.All))
             block();
     }
 
@@ -280,9 +282,11 @@ public class KillAura extends Module {
         curTarget = this.getTarget();
         if (curTarget != null && this.canAttack()) {
             if (((!coolDown.get() && this.attackStopwatch.hasTimePassed(getAps())) || (coolDown.get() && hitTicks > delayValue))) {
-                this.attack(curTarget);
-                this.attackStopwatch.reset();
-                hitTicks = 0;
+                if (noHitCheck.get() || getHitable()) {
+                    this.attack(curTarget);
+                    this.attackStopwatch.reset();
+                    hitTicks = 0;
+                }
             }
             if ((double) curTarget.hurtTime >= this.switchDelay.get()) {
                 this.changeTarget = true;
@@ -290,10 +294,10 @@ public class KillAura extends Module {
         }
     }
 
-    private long getAps() {
-        if (aps.get().equals(minAps.get())) {
-            return 1000 / aps.get().intValue();
-        }
+    private int getAps() {
+//        if (aps.get().equals(minAps.get())) {
+//            return 1000 / aps.get().intValue();
+//        }
         return 1000 / MathUtil.randomNumber(aps.get().intValue(), minAps.get().intValue());
     }
 
@@ -313,6 +317,10 @@ public class KillAura extends Module {
             this.targetIndex = 0;
         }
         return this.targets.get(this.targetIndex);
+    }
+
+    private boolean getHitable() {
+        return RotationUtils.isFaced(curTarget, range.get()) && !raycast.get() || RayCastUtil.raycastEntity(range.get(), entity -> entity == curTarget) != null;
     }
 
     private boolean isEntityNearby() {
@@ -389,7 +397,7 @@ public class KillAura extends Module {
     }
 
     private boolean canAttack() {
-        return !ModuleManager.getModuleByClass(Scaffold.class).isEnabled() && noHitCheck.get() || RotationUtils.isFaced(curTarget, range.get());
+        return !ModuleManager.getModuleByClass(Scaffold.class).isEnabled();
     }
 
     private void updateTargets() {
@@ -436,11 +444,11 @@ public class KillAura extends Module {
     }
 
     private enum AttackTiming {
-        Pre, Post, Motion, Update, All
+        Pre, Post, Update, All
     }
 
     private enum ABTiming {
-        Pre, Post, Motion, Update, All
+        Pre, Post, Update, All
     }
 
     private enum Rotations {

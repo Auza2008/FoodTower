@@ -4,8 +4,8 @@ package cn.foodtower.util.time;
  * LiquidBounce Hacked Client
  * A minecraft forge injection client using Mixin
  *
- * @game Minecraft
  * @author CCBlueX
+ * @game Minecraft
  */
 public final class TickTimer {
 

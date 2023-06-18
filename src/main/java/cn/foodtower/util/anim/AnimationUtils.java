@@ -28,23 +28,23 @@ public final class AnimationUtils {
         }
 
         double dif = Math.max(target, current) - Math.min(target, current);
-        if (dif < 0.1){
+        if (dif < 0.1) {
             return target;
         }
         double factor = dif * speed;
         if (factor < 0.1) {
             factor = 0.1;
         }
-        if (larger){
-            if (current + factor>target){
+        if (larger) {
+            if (current + factor > target) {
                 current = target;
-            }else {
+            } else {
                 current += factor;
             }
-        }else {
-            if (current - factor<target) {
+        } else {
+            if (current - factor < target) {
                 current = target;
-            }else {
+            } else {
                 current -= factor;
             }
         }

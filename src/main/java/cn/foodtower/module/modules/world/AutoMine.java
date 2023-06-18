@@ -21,11 +21,11 @@ import net.minecraft.util.Vec3;
 
 public class AutoMine extends Module {
 
-    private EnumFacing facing = EnumFacing.EAST;
     private final boolean skipCheck = false;
     private final WaitTimer skipCheckTimer = new WaitTimer();
     double max = (mc.theWorld == null ? 256 : mc.theWorld.getHeight());
     private final Numbers<Double> height = new Numbers<>("Block Height", 15d, 1d, max, 1d);
+    private EnumFacing facing = EnumFacing.EAST;
 
     public AutoMine() {
         super("AutoMine", new String[]{"automine"}, ModuleType.World);
@@ -40,7 +40,7 @@ public class AutoMine extends Module {
     }
 
     @EventHandler
-    public void onUpdate( EventPreUpdate event) {
+    public void onUpdate(EventPreUpdate event) {
         setSuffix("Script" + " " + height.get());
         BlockPos toFace = new BlockPos(mc.thePlayer.posX, mc.thePlayer.posY + mc.thePlayer.getEyeHeight(),
                 mc.thePlayer.posZ).offset(facing);

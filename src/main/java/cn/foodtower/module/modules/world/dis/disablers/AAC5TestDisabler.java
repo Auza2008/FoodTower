@@ -1,12 +1,11 @@
 package cn.foodtower.module.modules.world.dis.disablers;
 
 
+import cn.foodtower.api.events.Render.EventRender2D;
 import cn.foodtower.api.events.Render.EventRender3D;
 import cn.foodtower.api.events.World.*;
 import cn.foodtower.module.modules.world.dis.DisablerModule;
-import cn.foodtower.api.events.Render.EventRender2D;
 import io.netty.buffer.Unpooled;
-
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C03PacketPlayer;
@@ -25,18 +24,18 @@ public class AAC5TestDisabler implements DisablerModule {
     }
 
     @Override
-    public void onPacket( EventPacketSend event) {
+    public void onPacket(EventPacketSend event) {
     }
 
     @Override
-    public void onPacket( EventPacketReceive event) {
+    public void onPacket(EventPacketReceive event) {
 
     }
 
     @Override
-    public void onPacket( EventPacket event) {
+    public void onPacket(EventPacket event) {
         Packet<?> packet = event.getPacket();
-        if (packet instanceof C03PacketPlayer && mc.thePlayer.ticksExisted % 15 == 0){
+        if (packet instanceof C03PacketPlayer && mc.thePlayer.ticksExisted % 15 == 0) {
             try {
                 ByteArrayOutputStream b = new ByteArrayOutputStream();
                 DataOutputStream _out = new DataOutputStream(b);
@@ -44,13 +43,13 @@ public class AAC5TestDisabler implements DisablerModule {
                 PacketBuffer buf = new PacketBuffer(Unpooled.buffer());
                 buf.writeBytes(b.toByteArray());
                 mc.getNetHandler().addToSendQueue(new C17PacketCustomPayload("aac5:resetFlags", buf));
-            } catch (IOException ignored){
+            } catch (IOException ignored) {
             }
         }
     }
 
     @Override
-    public void onUpdate( EventPreUpdate event) {
+    public void onUpdate(EventPreUpdate event) {
     }
 
     @Override
@@ -59,7 +58,7 @@ public class AAC5TestDisabler implements DisablerModule {
     }
 
     @Override
-    public void onWorldChange( EventWorldChanged event) {
+    public void onWorldChange(EventWorldChanged event) {
 
     }
 
@@ -78,7 +77,7 @@ public class AAC5TestDisabler implements DisablerModule {
 
     }
 
-    public void onRender3d( EventRender3D event ){
+    public void onRender3d(EventRender3D event) {
 
     }
 }

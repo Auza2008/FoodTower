@@ -3,13 +3,13 @@
  */
 package cn.foodtower.module.modules.render;
 
-import java.awt.Color;
-
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 
+import java.awt.*;
+
 public class NameProtect
-extends Module {
+        extends Module {
 
     public NameProtect() {
         super("NameProtect", new String[]{"NameProtect"}, ModuleType.Render);
@@ -17,6 +17,6 @@ extends Module {
     }
 
 
-    }
+}
 
 

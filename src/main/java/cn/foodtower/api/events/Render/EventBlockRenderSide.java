@@ -13,55 +13,55 @@ import net.minecraft.world.IBlockAccess;
  */
 public class EventBlockRenderSide extends Event {
 
-	private IBlockState state;
-	private IBlockAccess world;
-	public BlockPos pos;
-	private EnumFacing side;
-	private boolean toRender;
-	public double maxX;
-	public double maxY;
-	public double maxZ;
-	public double minX;
-	public double minY;
-	public double minZ;
+    public BlockPos pos;
+    public double maxX;
+    public double maxY;
+    public double maxZ;
+    public double minX;
+    public double minY;
+    public double minZ;
+    private IBlockState state;
+    private IBlockAccess world;
+    private EnumFacing side;
+    private boolean toRender;
 
-	public EventBlockRenderSide(IBlockAccess world, BlockPos pos, EnumFacing side, double maxX, double minX,
-			double maxY, double minY, double maxZ, double minZ) {
-		if (Minecraft.getMinecraft().theWorld != null) {
-			this.state = Minecraft.getMinecraft().theWorld.getBlockState(pos);
-			this.world = world;
-			this.pos = pos;
-			this.side = side;
-			this.maxX = maxX;
-			this.maxY = maxY;
-			this.maxZ = maxZ;
-			this.minX = minX;
-			this.minY = minY;
-			this.minZ = minZ;
-		}
-	}
+    public EventBlockRenderSide(IBlockAccess world, BlockPos pos, EnumFacing side, double maxX, double minX,
+                                double maxY, double minY, double maxZ, double minZ) {
+        if (Minecraft.getMinecraft().theWorld != null) {
+            this.state = Minecraft.getMinecraft().theWorld.getBlockState(pos);
+            this.world = world;
+            this.pos = pos;
+            this.side = side;
+            this.maxX = maxX;
+            this.maxY = maxY;
+            this.maxZ = maxZ;
+            this.minX = minX;
+            this.minY = minY;
+            this.minZ = minZ;
+        }
+    }
 
-	public IBlockState getState() {
-		return state;
-	}
+    public IBlockState getState() {
+        return state;
+    }
 
-	public IBlockAccess getWorld() {
-		return world;
-	}
+    public IBlockAccess getWorld() {
+        return world;
+    }
 
-	public BlockPos getPos() {
-		return pos;
-	}
+    public BlockPos getPos() {
+        return pos;
+    }
 
-	public EnumFacing getSide() {
-		return side;
-	}
+    public EnumFacing getSide() {
+        return side;
+    }
 
-	public boolean isToRender() {
-		return toRender;
-	}
+    public boolean isToRender() {
+        return toRender;
+    }
 
-	public void setToRender(boolean toRender) {
-		this.toRender = toRender;
-	}
+    public void setToRender(boolean toRender) {
+        this.toRender = toRender;
+    }
 }

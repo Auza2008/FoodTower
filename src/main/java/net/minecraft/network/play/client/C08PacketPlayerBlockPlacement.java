@@ -1,28 +1,26 @@
 package net.minecraft.network.play.client;
 
-import java.io.IOException;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.INetHandlerPlayServer;
 import net.minecraft.util.BlockPos;
 
-public class C08PacketPlayerBlockPlacement implements Packet<INetHandlerPlayServer>
-{
+import java.io.IOException;
+
+public class C08PacketPlayerBlockPlacement implements Packet<INetHandlerPlayServer> {
     private static final BlockPos field_179726_a = new BlockPos(-1, -1, -1);
     private BlockPos position;
     private int placedBlockDirection;
     private ItemStack stack;
-    private float facingX;
-    private float facingY;
-    private float facingZ;
+    public float facingX;
+    public float facingY;
+    public float facingZ;
 
-    public C08PacketPlayerBlockPlacement()
-    {
+    public C08PacketPlayerBlockPlacement() {
     }
 
-    public C08PacketPlayerBlockPlacement(ItemStack stackIn)
-    {
+    public C08PacketPlayerBlockPlacement(ItemStack stackIn) {
         this(field_179726_a, 255, stackIn, 0.0F, 0.0F, 0.0F);
     }
 

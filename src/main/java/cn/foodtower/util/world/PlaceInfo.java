@@ -21,28 +21,13 @@ public final class PlaceInfo {
         this.vec3 = vec3;
     }
 
-    public BlockPos getBlockPos() {
-        return this.blockPos;
-    }
-
-    public EnumFacing getEnumFacing() {
-        return this.enumFacing;
-    }
-
-    public Vec3 getVec3() {
-        return this.vec3;
-    }
-
-    public void setVec3(Vec3 vec3) {
-        this.vec3 = vec3;
-    }
-
     public PlaceInfo(BlockPos blockPos, EnumFacing enumFacing, Vec3 vec3, int n) {
         this(blockPos, enumFacing, vec3);
         if ((n & 4) != 0) {
-            vec3 = new Vec3((double)blockPos.getX() + 0.5, (double)blockPos.getY() + 0.5, (double)blockPos.getZ() + 0.5);
+            vec3 = new Vec3((double) blockPos.getX() + 0.5, (double) blockPos.getY() + 0.5, (double) blockPos.getZ() + 0.5);
         }
     }
+
     public static PlaceInfo get(BlockPos blockPos) {
         if (BlockUtils.canBeClicked(blockPos.add(0, -1, 0))) {
             return new PlaceInfo(blockPos.add(0, -1, 0), EnumFacing.UP, null, 4);
@@ -53,10 +38,9 @@ public final class PlaceInfo {
         } else if (BlockUtils.canBeClicked(blockPos.add(0, 0, -1))) {
             return new PlaceInfo(blockPos.add(0, 0, -1), EnumFacing.SOUTH, null, 4);
         } else {
-            return BlockUtils.canBeClicked(blockPos.add(1, 0, 0)) ? new PlaceInfo(blockPos.add(1, 0, 0),EnumFacing.WEST, null, 4) : null;
+            return BlockUtils.canBeClicked(blockPos.add(1, 0, 0)) ? new PlaceInfo(blockPos.add(1, 0, 0), EnumFacing.WEST, null, 4) : null;
         }
     }
-
 
     public static Block getBlock(BlockPos blockPos) {
         IBlockState var1;
@@ -78,6 +62,22 @@ public final class PlaceInfo {
             return var1.getWorldBorder().contains(blockPos);
         }
         return false;
+    }
+
+    public BlockPos getBlockPos() {
+        return this.blockPos;
+    }
+
+    public EnumFacing getEnumFacing() {
+        return this.enumFacing;
+    }
+
+    public Vec3 getVec3() {
+        return this.vec3;
+    }
+
+    public void setVec3(Vec3 vec3) {
+        this.vec3 = vec3;
     }
 }
 

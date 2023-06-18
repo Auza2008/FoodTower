@@ -4,7 +4,7 @@ public final class WaitTimer {
     public long time;
 
     public WaitTimer() {
-        this.time = (System.nanoTime() / 1000000l);
+        this.time = (System.nanoTime() / 1000000L);
     }
 
     public boolean hasTimeElapsed(long time, boolean reset) {
@@ -18,10 +18,10 @@ public final class WaitTimer {
     }
 
     public long getTime() {
-        return System.nanoTime() / 1000000l - this.time;
+        return System.nanoTime() / 1000000L - this.time;
     }
 
     public void reset() {
-        this.time = (System.nanoTime() / 1000000l);
+        this.time = (System.nanoTime() / 1000000L);
     }
 }

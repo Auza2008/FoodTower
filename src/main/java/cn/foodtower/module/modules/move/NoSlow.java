@@ -24,30 +24,22 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class NoSlow extends Module {
     private final MSTimer timer = new MSTimer();
-    private final Numbers<Double> blockForwardMultiplier = new Numbers<>("BlockForwardMultiplier", 1.0d, 0.2d, 1.0d, 0.01d);
-    private final Numbers<Double> blockStrafeMultiplier = new Numbers<>("BlockStrafeMultiplier", 1.0d, 0.2d, 1.0d, 0.01d);
-    private final Numbers<Double> consumeForwardMultiplier = new Numbers<>("ConsumeForwardMultiplier", 1.0d, 0.2d, 1.0d, 0.01d);
-    private final Numbers<Double> consumeStrafeMultiplier = new Numbers<>("ConsumeStrafeMultiplier", 1.0d, 0.2d, 1.0d, 0.01d);
-    private final Numbers<Double> bowForwardMultiplier = new Numbers<>("BowForwardMultiplier", 1.0d, 0.2d, 1.0d, 0.01d);
-    private final Numbers<Double> bowStrafeMultiplier = new Numbers<>("BowStrafeMultiplier", 1.0d, 0.2d, 1.0d, 0.01d);
     private final Option customOnGround = new Option("CustomOnGround", false);
     private final Numbers<Double> customDelayValue = new Numbers<>("CustomDelay", 60d, 10d, 200d, 1d);
     private final Mode modeValue = new Mode("PacketMode", NoSlowMode.values(), NoSlowMode.Vanilla);
     // Soulsand
     private final Option soulsandValue = new Option("Soulsand", true);
     private final Option consume = new Option("Consume", true);
-
-    private final Option sendPacketValue = new Option("SendPacket", true);
     private final MSTimer msTimer = new MSTimer();
     private final CopyOnWriteArrayList<Packet<?>> packetBuf = new CopyOnWriteArrayList<>();
     private boolean nextTemp = false;
     private boolean lastBlockingStat = false;
     private boolean waitC03 = false;
+    private boolean released = true;
 
     public NoSlow() {
         super("NoSlow", new String[]{"NoSlowDown"}, ModuleType.Movement);
-        this.addValues(blockForwardMultiplier, blockStrafeMultiplier, consumeForwardMultiplier, consumeStrafeMultiplier, bowForwardMultiplier, bowStrafeMultiplier, customOnGround, customDelayValue, modeValue, consume, soulsandValue, sendPacketValue);
-        setValueDisplayable(sendPacketValue, modeValue, NoSlowMode.Hypixel);
+        this.addValues(modeValue, consume, soulsandValue, customOnGround, customDelayValue);
     }
 
     private boolean isBlocking() {
@@ -129,58 +121,66 @@ public class NoSlow extends Module {
     @EventHandler
     public void onEventMotion(EventMotion event) {
         if (!MovementUtils.isMoving()) {
+            released = false;//hypixel
             return;
         }
-
-        if (modeValue.get() == NoSlowMode.AAC5) {
-            if (event.getTypes().equals(EventMotion.Type.POST) && (isUsingFood() || isBlocking())) {
-                mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.inventory.getCurrentItem(), 0f, 0f, 0f));
+        if (!isBlocking() && !isUsingFood()) {
+            released = false;//hypixel
+            return;
+        }
+        switch ((NoSlowMode) modeValue.get()) {
+            case LiquidBounce:
+                sendPacket(event, true, true, false, 0, false, false);
+                break;
+            case AAC: {
+                if (mc.thePlayer.ticksExisted % 3 == 0) {
+                    sendPacket(event, true, false, false, 0, false, false);
+                } else if (mc.thePlayer.ticksExisted % 3 == 1) {
+                    sendPacket(event, false, true, false, 0, false, false);
+                }
+                break;
             }
-        } else {
-            if (!isBlocking() && !isUsingFood()) {
-                return;
+            case AAC5:
+                if (!event.isPre()) {
+                    mc.thePlayer.sendQueue.getNetworkManager().sendPacketNoEvent(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.inventory.getCurrentItem(), 0f, 0f, 0f));
+                }
+                break;
+            case Custom: {
+                sendPacket(event, true, true, true, customDelayValue.get().longValue(), customOnGround.get(), false);
+                break;
             }
-            switch ((NoSlowMode) modeValue.get()) {
-                case LiquidBounce:
-                    sendPacket(event, true, true, false, 0, false, false);
-                    break;
-                case AAC: {
-                    if (mc.thePlayer.ticksExisted % 3 == 0) {
-                        sendPacket(event, true, false, false, 0, false, false);
-                    } else if (mc.thePlayer.ticksExisted % 3 == 1) {
-                        sendPacket(event, false, true, false, 0, false, false);
-                    }
-                    break;
-                }
-                case Custom: {
-                    sendPacket(event, true, true, true, customDelayValue.get().longValue(), customOnGround.get(), false);
-                    break;
-                }
-                case NCP: {
-                    sendPacket(event, true, true, false, 0, false, false);
-                    break;
-                }
-                case Hypixel: {
-                    if (!this.sendPacketValue.get()) {
-                        break;
-                    }
-                    if (mc.thePlayer.ticksExisted % 2 == 0) {
-                        sendPacket(event, true, false, false, 50, false, true);
-                    } else {
-                        sendPacket(event, false, true, false, 0, true, true);
-                    }
-                    break;
-                }
-                case NewNCP: {
-                    if (mc.thePlayer.ticksExisted % 2 == 0) {
-                        sendPacket(event, true, false, false, 50, false, true);
-                    } else {
-                        sendPacket(event, false, true, false, 0, true, true);
-                    }
-                    break;
-
-                }
+            case NCP: {
+                sendPacket(event, true, true, false, 0, false, false);
+                break;
             }
+            case NewNCP: {
+                if (mc.thePlayer.ticksExisted % 2 == 0) {
+                    sendPacket(event, true, false, false, 50, false, true);
+                } else {
+                    sendPacket(event, false, true, false, 0, true, true);
+                }
+                break;
+            }
+            case Hypixel:
+                int st = 8;
+                for (int i = 0; i < 8; ++i) {
+                    if (mc.thePlayer.inventory.getStackInSlot(i) == null) {
+                        st = i;
+                    }
+                }
+                if (mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItem() instanceof ItemSword) {
+                    if (!released) {
+                        sendPacket(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+                        released = true;
+                    }
+                    return;
+                } else {
+                    released = false;
+                }
+                sendPacket(new C09PacketHeldItemChange(st));
+                sendPacket(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.ABORT_DESTROY_BLOCK, BlockPos.ORIGIN, EnumFacing.UP));
+                sendPacket(new C09PacketHeldItemChange(mc.thePlayer.inventory.currentItem));
+                break;
         }
     }
 
@@ -194,8 +194,8 @@ public class NoSlow extends Module {
     @EventHandler
     public void onSlowDown(EventNoSlow event) {
         Item heldItem = mc.thePlayer.getHeldItem().getItem();
-        event.setMoveForward(getMultiplier(heldItem, true));
-        event.setMoveStrafe(getMultiplier(heldItem, false));
+        event.setMoveForward(getMultiplier(heldItem));
+        event.setMoveStrafe(getMultiplier(heldItem));
     }
 
     private void sendPacket(EventMotion event, boolean sendC07, boolean sendC08, boolean delay, long delayValue, boolean onGround, boolean watchDog) {
@@ -224,16 +224,29 @@ public class NoSlow extends Module {
         }
     }
 
-    private float getMultiplier(Item item, boolean isForward) {
-        if (item instanceof ItemFood || item instanceof ItemPotion || item instanceof ItemBucketMilk) {
-            return (isForward) ? this.consumeForwardMultiplier.get().floatValue() : this.consumeStrafeMultiplier.get().floatValue();
-        } else if (item instanceof ItemSword) {
-            return (isForward) ? this.blockForwardMultiplier.get().floatValue() : this.blockStrafeMultiplier.get().floatValue();
+//    private float getMultiplier(Item item, boolean isForward) {
+//        if (consume.get() && item instanceof ItemFood || item instanceof ItemPotion || item instanceof ItemBucketMilk) {
+//            return (isForward) ? this.consumeForwardMultiplier.get().floatValue() : this.consumeStrafeMultiplier.get().floatValue();
+//        } else if (item instanceof ItemSword) {
+//            return (isForward) ? this.blockForwardMultiplier.get().floatValue() : this.blockStrafeMultiplier.get().floatValue();
+//
+//        } else if (item instanceof ItemBow) {
+//            return (isForward) ? this.bowForwardMultiplier.get().floatValue() : this.bowStrafeMultiplier.get().floatValue();
+//        } else {
+//            return 0.2F;
+//        }
+//    }
 
+    //原先的设置太多太脑瘫，换成简洁的(反正1.0绕不过你其他的也差不多绕不过)
+    private float getMultiplier(Item item) {
+        if (consume.get() && item instanceof ItemFood || item instanceof ItemPotion || item instanceof ItemBucketMilk) {
+            return 1f;
+        } else if (item instanceof ItemSword) {
+            return 1f;
         } else if (item instanceof ItemBow) {
-            return (isForward) ? this.bowForwardMultiplier.get().floatValue() : this.bowStrafeMultiplier.get().floatValue();
+            return 1f;
         } else {
-            return 0.2F;
+            return 0.2f;
         }
     }
 

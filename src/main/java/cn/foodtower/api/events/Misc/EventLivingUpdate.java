@@ -1,7 +1,6 @@
 package cn.foodtower.api.events.Misc;
 
 
-
 import cn.foodtower.api.Event;
 import net.minecraft.entity.Entity;
 

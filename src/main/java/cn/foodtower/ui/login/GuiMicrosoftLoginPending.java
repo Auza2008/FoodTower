@@ -10,9 +10,9 @@ import net.minecraft.client.gui.GuiScreen;
 public class GuiMicrosoftLoginPending extends GuiScreen {
     private String stage = "Initializing...";
     private OAuthServer server;
-    private GuiScreen prevGui;
+    private final GuiScreen prevGui;
 
-    public GuiMicrosoftLoginPending(GuiScreen prevGui){
+    public GuiMicrosoftLoginPending(GuiScreen prevGui) {
         this.prevGui = prevGui;
     }
 
@@ -25,7 +25,7 @@ public class GuiMicrosoftLoginPending extends GuiScreen {
     }
 
     @Override
-    public void drawScreen(int mouseX,int mouseY,float partialTicks) {
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
 
         FontLoader.msFont16.drawCenteredStringWithShadow(stage, width / 2f, height / 2f - 50, 0xffffff);

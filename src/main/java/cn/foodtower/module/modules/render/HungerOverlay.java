@@ -19,46 +19,13 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 public class HungerOverlay extends Module {
+    private static final ResourceLocation modIcons = new ResourceLocation("AppleCore/icons.png");
     float flashAlpha = 0f;
     byte alphaDir = 1;
 
     public HungerOverlay() {
         super("HungerOverlay", new String[]{"applecore", "appleskin"}, ModuleType.Render);
     }
-
-    @EventHandler
-    public void onRender2d(EventRender2D e) {
-        if (mc.thePlayer.capabilities.isCreativeMode) {
-            return;
-        }
-        Minecraft mc = Minecraft.getMinecraft();
-        EntityPlayer player = mc.thePlayer;
-        ItemStack heldItem = player.getHeldItem();
-        FoodStats stats = player.getFoodStats();
-
-        ScaledResolution scale = new ScaledResolution(mc);
-
-        int left = scale.getScaledWidth() / 2 + 91;
-        int top = (mc.ingameGUI.getChatGUI().getChatOpen() ? scale.getScaledHeight() - 36
-                : scale.getScaledHeight() - 22) - 17;
-        // saturation overlay
-        drawSaturationOverlay(0, stats.getSaturationLevel(), mc, left, top, 0.9f);
-
-        if (heldItem == null || !(heldItem.getItem() instanceof ItemFood)) {
-            flashAlpha = 0;
-            alphaDir = 1;
-            return;
-        }
-
-        // restored hunger/saturation overlay while holding food
-        FoodValues foodValues = FoodValues.get(heldItem, player);
-        drawHungerOverlay(foodValues.hunger, stats.getFoodLevel(), mc, left, top, flashAlpha);
-        int newFoodValue = stats.getFoodLevel() + foodValues.hunger;
-        float newSaturationValue = stats.getSaturationLevel() + foodValues.getSaturationIncrement();
-        drawSaturationOverlay(newSaturationValue > newFoodValue ? newFoodValue - stats.getSaturationLevel() : foodValues.getSaturationIncrement(), stats.getSaturationLevel(), mc, left, top, flashAlpha);
-    }
-
-    private static final ResourceLocation modIcons = new ResourceLocation("AppleCore/icons.png");
 
     public static void drawSaturationOverlay(float saturationGained, float saturationLevel, Minecraft mc, int left, int top, float alpha) {
         if (saturationLevel + saturationGained < 0)
@@ -75,13 +42,13 @@ public class HungerOverlay extends Module {
             float effectiveSaturationOfBar = (saturationLevel + saturationGained) / 2 - i;
 
             if (effectiveSaturationOfBar >= 1)
-                mc.ingameGUI.drawTexturedModalRect(x, top, 27, 0, 9, 9);
+                Gui.drawTexturedModalRect(x, top, 27, 0, 9, 9);
             else if (effectiveSaturationOfBar > .5)
-                mc.ingameGUI.drawTexturedModalRect(x, top, 18, 0, 9, 9);
+                Gui.drawTexturedModalRect(x, top, 18, 0, 9, 9);
             else if (effectiveSaturationOfBar > .25)
-                mc.ingameGUI.drawTexturedModalRect(x, top, 9, 0, 9, 9);
+                Gui.drawTexturedModalRect(x, top, 9, 0, 9, 9);
             else if (effectiveSaturationOfBar > 0)
-                mc.ingameGUI.drawTexturedModalRect(x, top, 0, 0, 9, 9);
+                Gui.drawTexturedModalRect(x, top, 0, 0, 9, 9);
         }
         disableAlpha(alpha);
 
@@ -106,12 +73,12 @@ public class HungerOverlay extends Module {
                 icon += 36;
             }
 
-            mc.ingameGUI.drawTexturedModalRect(x, top, 16 + background * 9, 27, 9, 9);
+            Gui.drawTexturedModalRect(x, top, 16 + background * 9, 27, 9, 9);
 
             if (idx < foodLevel + hungerRestored)
-                mc.ingameGUI.drawTexturedModalRect(x, top, icon + 36, 27, 9, 9);
+                Gui.drawTexturedModalRect(x, top, icon + 36, 27, 9, 9);
             else if (idx == foodLevel + hungerRestored)
-                mc.ingameGUI.drawTexturedModalRect(x, top, icon + 45, 27, 9, 9);
+                Gui.drawTexturedModalRect(x, top, icon + 45, 27, 9, 9);
         }
         disableAlpha(alpha);
     }
@@ -134,6 +101,53 @@ public class HungerOverlay extends Module {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
+    public static void drawExhaustionOverlay(float exhaustion, Minecraft mc, int left, int top, float alpha) {
+        mc.getTextureManager().bindTexture(modIcons);
+        float maxExhaustion = 4f;
+        float ratio = exhaustion / maxExhaustion;
+        int width = (int) (ratio * 81);
+        int height = 9;
+
+        enableAlpha(.75f);
+        Gui.drawTexturedModalRect(left - width, top, 81 - width, 18, width, height);
+        disableAlpha(.75f);
+
+        // rebind default icons
+        mc.getTextureManager().bindTexture(Gui.icons);
+    }
+
+    @EventHandler
+    public void onRender2d(EventRender2D e) {
+        if (mc.thePlayer.capabilities.isCreativeMode) {
+            return;
+        }
+        Minecraft mc = Minecraft.getMinecraft();
+        EntityPlayer player = mc.thePlayer;
+        ItemStack heldItem = player.getHeldItem();
+        FoodStats stats = player.getFoodStats();
+
+        ScaledResolution scale = new ScaledResolution(mc);
+
+        int left = ScaledResolution.getScaledWidth() / 2 + 91;
+        int top = (mc.ingameGUI.getChatGUI().getChatOpen() ? ScaledResolution.getScaledHeight() - 36
+                : ScaledResolution.getScaledHeight() - 22) - 17;
+        // saturation overlay
+        drawSaturationOverlay(0, stats.getSaturationLevel(), mc, left, top, 0.9f);
+
+        if (heldItem == null || !(heldItem.getItem() instanceof ItemFood)) {
+            flashAlpha = 0;
+            alphaDir = 1;
+            return;
+        }
+
+        // restored hunger/saturation overlay while holding food
+        FoodValues foodValues = FoodValues.get(heldItem, player);
+        drawHungerOverlay(foodValues.hunger, stats.getFoodLevel(), mc, left, top, flashAlpha);
+        int newFoodValue = stats.getFoodLevel() + foodValues.hunger;
+        float newSaturationValue = stats.getSaturationLevel() + foodValues.getSaturationIncrement();
+        drawSaturationOverlay(newSaturationValue > newFoodValue ? newFoodValue - stats.getSaturationLevel() : foodValues.getSaturationIncrement(), stats.getSaturationLevel(), mc, left, top, flashAlpha);
+    }
+
     @EventHandler
     public void onTick(EventTick e) {
         flashAlpha += alphaDir * 0.125f;
@@ -144,20 +158,5 @@ public class HungerOverlay extends Module {
             flashAlpha = 0.1f;
             alphaDir = 1;
         }
-    }
-
-    public static void drawExhaustionOverlay(float exhaustion, Minecraft mc, int left, int top, float alpha) {
-        mc.getTextureManager().bindTexture(modIcons);
-        float maxExhaustion = 4f;
-        float ratio = exhaustion / maxExhaustion;
-        int width = (int) (ratio * 81);
-        int height = 9;
-
-        enableAlpha(.75f);
-        mc.ingameGUI.drawTexturedModalRect(left - width, top, 81 - width, 18, width, height);
-        disableAlpha(.75f);
-
-        // rebind default icons
-        mc.getTextureManager().bindTexture(Gui.icons);
     }
 }

@@ -1,9 +1,12 @@
 package cn.foodtower.util.math.rotations;
 
 public class AngleUtilitys {
-    private float minYawSmoothing, maxYawSmoothing, minPitchSmoothing, maxPitchSmoothing;
-    private Vector3<Float> delta;
-    private Angle smoothedAngle;
+    private final float minYawSmoothing;
+    private final float maxYawSmoothing;
+    private final float minPitchSmoothing;
+    private final float maxPitchSmoothing;
+    private final Vector3<Float> delta;
+    private final Angle smoothedAngle;
     private float height = Mafs.getRandomInRange(1.1F, 1.8F);
 
     public AngleUtilitys(float minYawSmoothing, float maxYawSmoothing, float minPitchSmoothing, float maxPitchSmoothing) {
@@ -19,8 +22,8 @@ public class AngleUtilitys {
     public Angle calculateAngle(Vector3<Double> destination, Vector3<Double> source) {
         Angle angles = new Angle(0F, 0F);
         delta.setX(destination.getX().floatValue() - source.getX().floatValue())
-        .setY((destination.getY().floatValue() + height) - (source.getY().floatValue() + height))
-        .setZ(destination.getZ().floatValue() - source.getZ().floatValue());
+                .setY((destination.getY().floatValue() + height) - (source.getY().floatValue() + height))
+                .setZ(destination.getZ().floatValue() - source.getZ().floatValue());
         double hypotenuse = Math.hypot(delta.getX().doubleValue(), delta.getZ().doubleValue());
         float yawAtan = ((float) Math.atan2(delta.getZ().floatValue(), delta.getX().floatValue()));
         float pitchAtan = ((float) Math.atan2(delta.getY().floatValue(), hypotenuse));
@@ -35,13 +38,13 @@ public class AngleUtilitys {
     }
 
     public Angle smoothAngle(Angle destination, Angle source) {
-    	return smoothedAngle
-                   .setYaw(source.getYaw() - destination.getYaw())
-                   .setPitch((source.getPitch() - destination.getPitch()))
-                   .constrantAngle()
-                   .setYaw(source.getYaw() - smoothedAngle.getYaw() )
-                   .constrantAngle()
-                   .setPitch(source.getPitch() - smoothedAngle.getPitch())
-                   .constrantAngle();
-       }
+        return smoothedAngle
+                .setYaw(source.getYaw() - destination.getYaw())
+                .setPitch((source.getPitch() - destination.getPitch()))
+                .constrantAngle()
+                .setYaw(source.getYaw() - smoothedAngle.getYaw())
+                .constrantAngle()
+                .setPitch(source.getPitch() - smoothedAngle.getPitch())
+                .constrantAngle();
+    }
 }

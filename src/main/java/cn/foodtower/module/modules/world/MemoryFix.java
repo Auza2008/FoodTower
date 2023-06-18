@@ -22,7 +22,7 @@ public class MemoryFix extends Module {
     @EventHandler
     public void onTick(EventTick e) {
         double mflimit = 10.0;
-        if(mftimer.hasReached(120000) && mflimit <= ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) * 100f / Runtime.getRuntime().maxMemory())) {
+        if (mftimer.hasReached(120000) && mflimit <= ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) * 100f / Runtime.getRuntime().maxMemory())) {
             Runtime.getRuntime().gc();
             mftimer.reset();
         }

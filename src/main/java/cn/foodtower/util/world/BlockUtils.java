@@ -34,39 +34,37 @@ public class BlockUtils {
     static double zPre;
     static Minecraft mc = Minecraft.getMinecraft();
     static List<Block> blacklistedBlocks = Arrays.asList(
-    Blocks.air, Blocks.water, Blocks.flowing_water, Blocks.lava, Blocks.flowing_lava,
-    Blocks.enchanting_table, Blocks.carpet, Blocks.glass_pane, Blocks.stained_glass_pane, Blocks.iron_bars,
-    Blocks.snow_layer, Blocks.ice, Blocks.packed_ice, Blocks.coal_ore, Blocks.diamond_ore, Blocks.emerald_ore,
-    Blocks.chest, Blocks.torch, Blocks.anvil, Blocks.trapped_chest, Blocks.noteblock, Blocks.jukebox, Blocks.tnt,
-    Blocks.gold_ore, Blocks.iron_ore, Blocks.lapis_ore, Blocks.lit_redstone_ore, Blocks.quartz_ore, Blocks.redstone_ore,
-    Blocks.wooden_pressure_plate, Blocks.stone_pressure_plate, Blocks.light_weighted_pressure_plate, Blocks.heavy_weighted_pressure_plate,
-    Blocks.stone_button, Blocks.wooden_button, Blocks.lever);
+            Blocks.air, Blocks.water, Blocks.flowing_water, Blocks.lava, Blocks.flowing_lava,
+            Blocks.enchanting_table, Blocks.carpet, Blocks.glass_pane, Blocks.stained_glass_pane, Blocks.iron_bars,
+            Blocks.snow_layer, Blocks.ice, Blocks.packed_ice, Blocks.coal_ore, Blocks.diamond_ore, Blocks.emerald_ore,
+            Blocks.chest, Blocks.torch, Blocks.anvil, Blocks.trapped_chest, Blocks.noteblock, Blocks.jukebox, Blocks.tnt,
+            Blocks.gold_ore, Blocks.iron_ore, Blocks.lapis_ore, Blocks.lit_redstone_ore, Blocks.quartz_ore, Blocks.redstone_ore,
+            Blocks.wooden_pressure_plate, Blocks.stone_pressure_plate, Blocks.light_weighted_pressure_plate, Blocks.heavy_weighted_pressure_plate,
+            Blocks.stone_button, Blocks.wooden_button, Blocks.lever);
 
-    public static List<Block> getBlacklistedBlocks(){
+    public static List<Block> getBlacklistedBlocks() {
         return blacklistedBlocks;
     }
+
     public static float[] getFacingRotations(int x2, int y2, int z2, EnumFacing facing) {
         EntitySnowball entitySnowball4;
         EntitySnowball entitySnowball5;
         EntitySnowball entitySnowball6;
         EntitySnowball temp = new EntitySnowball(mc.theWorld);
-        temp.posX = (double)x2 + 0.5;
-        temp.posY = (double)y2 + 0.5;
-        temp.posZ = (double)z2 + 0.5;
+        temp.posX = (double) x2 + 0.5;
+        temp.posY = (double) y2 + 0.5;
+        temp.posZ = (double) z2 + 0.5;
         EntitySnowball entitySnowball = entitySnowball4 = temp;
-        entitySnowball4.posX += (double)facing.getDirectionVec().getX() * 0.25;
+        entitySnowball4.posX += (double) facing.getDirectionVec().getX() * 0.25;
         EntitySnowball entitySnowball2 = entitySnowball5 = temp;
-        entitySnowball5.posY += (double)facing.getDirectionVec().getY() * 0.25;
+        entitySnowball5.posY += (double) facing.getDirectionVec().getY() * 0.25;
         EntitySnowball entitySnowball3 = entitySnowball6 = temp;
-        entitySnowball6.posZ += (double)facing.getDirectionVec().getZ() * 0.25;
+        entitySnowball6.posZ += (double) facing.getDirectionVec().getZ() * 0.25;
         return null;
     }
 
     public static boolean isOnLiquid() {
-        boolean onLiquid = false;
-        if (BlockUtils.getBlockAtPosC(mc.thePlayer, 0.30000001192092896, 0.10000000149011612, 0.30000001192092896).getMaterial().isLiquid() && BlockUtils.getBlockAtPosC(mc.thePlayer, -0.30000001192092896, 0.10000000149011612, -0.30000001192092896).getMaterial().isLiquid()) {
-            onLiquid = true;
-        }
+        boolean onLiquid = BlockUtils.getBlockAtPosC(mc.thePlayer, 0.30000001192092896, 0.10000000149011612, 0.30000001192092896).getMaterial().isLiquid() && BlockUtils.getBlockAtPosC(mc.thePlayer, -0.30000001192092896, 0.10000000149011612, -0.30000001192092896).getMaterial().isLiquid();
         return onLiquid;
     }
 
@@ -75,7 +73,7 @@ public class BlockUtils {
             return false;
         }
         boolean onLadder = false;
-        int y2 = (int)mc.thePlayer.getEntityBoundingBox().offset((double)0.0, (double)1.0, (double)0.0).minY;
+        int y2 = (int) mc.thePlayer.getEntityBoundingBox().offset(0.0, 1.0, 0.0).minY;
         int x2 = MathHelper.floor_double(mc.thePlayer.getEntityBoundingBox().minX);
         while (x2 < MathHelper.floor_double(mc.thePlayer.getEntityBoundingBox().maxX) + 1) {
             int z2 = MathHelper.floor_double(mc.thePlayer.getEntityBoundingBox().minZ);
@@ -91,10 +89,7 @@ public class BlockUtils {
             }
             ++x2;
         }
-        if (!onLadder && !mc.thePlayer.isOnLadder()) {
-            return false;
-        }
-        return true;
+        return onLadder || mc.thePlayer.isOnLadder();
     }
 
     public static boolean isOnIce() {
@@ -102,7 +97,7 @@ public class BlockUtils {
             return false;
         }
         boolean onIce = false;
-        int y2 = (int)mc.thePlayer.getEntityBoundingBox().offset((double)0.0, (double)-0.01, (double)0.0).minY;
+        int y2 = (int) mc.thePlayer.getEntityBoundingBox().offset(0.0, -0.01, 0.0).minY;
         int x2 = MathHelper.floor_double(mc.thePlayer.getEntityBoundingBox().minX);
         while (x2 < MathHelper.floor_double(mc.thePlayer.getEntityBoundingBox().maxX) + 1) {
             int z2 = MathHelper.floor_double(mc.thePlayer.getEntityBoundingBox().minZ);
@@ -125,38 +120,12 @@ public class BlockUtils {
         return getMaterial(blockPosition).isReplaceable();
     }
 
-    public static Material getMaterial(BlockPos blockPosition){
+    public static Material getMaterial(BlockPos blockPosition) {
         return getBlock(blockPosition).getMaterial();
     }
 
-    public boolean isInsideBlock() {
-        int x2 = MathHelper.floor_double(mc.thePlayer.boundingBox.minX);
-        while (x2 < MathHelper.floor_double(mc.thePlayer.boundingBox.maxX) + 1) {
-            int y2 = MathHelper.floor_double(mc.thePlayer.boundingBox.minY);
-            while (y2 < MathHelper.floor_double(mc.thePlayer.boundingBox.maxY) + 1) {
-                int z2 = MathHelper.floor_double(mc.thePlayer.boundingBox.minZ);
-                while (z2 < MathHelper.floor_double(mc.thePlayer.boundingBox.maxZ) + 1) {
-                    AxisAlignedBB boundingBox;
-                    Block block = mc.theWorld.getBlockState(new BlockPos(x2, y2, z2)).getBlock();
-                    if (block != null && !(block instanceof BlockAir) && (boundingBox = block.getCollisionBoundingBox(mc.theWorld, new BlockPos(x2, y2, z2), mc.theWorld.getBlockState(new BlockPos(x2, y2, z2)))) != null && mc.thePlayer.boundingBox.intersectsWith(boundingBox)) {
-                        return true;
-                    }
-                    ++z2;
-                }
-                ++y2;
-            }
-            ++x2;
-        }
-        return false;
-    }
-
-
-
     public static boolean isBlockUnderPlayer(Material material, float height) {
-        if (BlockUtils.getBlockAtPosC(mc.thePlayer, 0.3100000023841858, height, 0.3100000023841858).getMaterial() == material && BlockUtils.getBlockAtPosC(mc.thePlayer, -0.3100000023841858, height, -0.3100000023841858).getMaterial() == material && BlockUtils.getBlockAtPosC(mc.thePlayer, -0.3100000023841858, height, 0.3100000023841858).getMaterial() == material && BlockUtils.getBlockAtPosC(mc.thePlayer, 0.3100000023841858, height, -0.3100000023841858).getMaterial() == material) {
-            return true;
-        }
-        return false;
+        return BlockUtils.getBlockAtPosC(mc.thePlayer, 0.3100000023841858, height, 0.3100000023841858).getMaterial() == material && BlockUtils.getBlockAtPosC(mc.thePlayer, -0.3100000023841858, height, -0.3100000023841858).getMaterial() == material && BlockUtils.getBlockAtPosC(mc.thePlayer, -0.3100000023841858, height, 0.3100000023841858).getMaterial() == material && BlockUtils.getBlockAtPosC(mc.thePlayer, 0.3100000023841858, height, -0.3100000023841858).getMaterial() == material;
     }
 
     public static Block getBlockAtPosC(EntityPlayer inPlayer, double x2, double y2, double z2) {
@@ -168,7 +137,7 @@ public class BlockUtils {
     }
 
     public static Block getBlockAbovePlayer(EntityPlayer inPlayer, double height) {
-        return BlockUtils.getBlock(new BlockPos(inPlayer.posX, inPlayer.posY + (double)inPlayer.height + height, inPlayer.posZ));
+        return BlockUtils.getBlock(new BlockPos(inPlayer.posX, inPlayer.posY + (double) inPlayer.height + height, inPlayer.posZ));
     }
 
     public static Block getBlock(int x2, int y2, int z2) {
@@ -186,7 +155,7 @@ public class BlockUtils {
     }
 
     public static Block getBlock(double x2, double y2, double z2) {
-        return mc.theWorld.getBlockState(new BlockPos((int)x2, (int)y2, (int)z2)).getBlock();
+        return mc.theWorld.getBlockState(new BlockPos((int) x2, (int) y2, (int) z2)).getBlock();
     }
 
     public static boolean infiniteReach(double range, double maxXZTP, double maxYTP, ArrayList<Vec3> positionsBack, ArrayList<Vec3> positions, EntityLivingBase en2) {
@@ -207,16 +176,16 @@ public class BlockUtils {
         double step = maxXZTP / range;
         int steps = 0;
         int i2 = 0;
-        while ((double)i2 < range) {
-            if (maxXZTP * (double)(++steps) > range) break;
+        while ((double) i2 < range) {
+            if (maxXZTP * (double) (++steps) > range) break;
             ++i2;
         }
         MovingObjectPosition rayTrace = null;
         MovingObjectPosition rayTrace2 = null;
         Object rayTraceCarpet = null;
-        if (BlockUtils.rayTraceWide(new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ), new Vec3(en2.posX, en2.posY, en2.posZ), false, false, true) || (rayTrace2 = BlockUtils.rayTracePos(new Vec3(mc.thePlayer.posX, mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ), new Vec3(en2.posX, en2.posY + (double)mc.thePlayer.getEyeHeight(), en2.posZ), false, false, true)) != null) {
+        if (BlockUtils.rayTraceWide(new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ), new Vec3(en2.posX, en2.posY, en2.posZ), false, false, true) || (rayTrace2 = BlockUtils.rayTracePos(new Vec3(mc.thePlayer.posX, mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ), new Vec3(en2.posX, en2.posY + (double) mc.thePlayer.getEyeHeight(), en2.posZ), false, false, true)) != null) {
             rayTrace = BlockUtils.rayTracePos(new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ), new Vec3(en2.posX, mc.thePlayer.posY, en2.posZ), false, false, true);
-            if (rayTrace != null || (rayTrace2 = BlockUtils.rayTracePos(new Vec3(mc.thePlayer.posX, mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ), new Vec3(en2.posX, mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight(), en2.posZ), false, false, true)) != null) {
+            if (rayTrace != null || (rayTrace2 = BlockUtils.rayTracePos(new Vec3(mc.thePlayer.posX, mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ), new Vec3(en2.posX, mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight(), en2.posZ), false, false, true)) != null) {
                 MovingObjectPosition trace = null;
                 if (rayTrace == null) {
                     trace = rayTrace2;
@@ -237,7 +206,7 @@ public class BlockUtils {
                     Block lastBlock = null;
                     Boolean found = false;
                     int j2 = 0;
-                    while ((double)j2 < maxYTP) {
+                    while ((double) j2 < maxYTP) {
                         MovingObjectPosition tr2 = BlockUtils.rayTracePos(new Vec3(mc.thePlayer.posX, target.getY() + j2, mc.thePlayer.posZ), new Vec3(en2.posX, target.getY() + j2, en2.posZ), false, false, true);
                         if (tr2 != null && tr2.getBlockPos() != null) {
                             BlockPos blockPos = tr2.getBlockPos();
@@ -249,7 +218,7 @@ public class BlockUtils {
                                 if (fence) {
                                     y += 1.0;
                                     yPreEn += 1.0;
-                                    if ((double)(j2 + 1) > maxYTP) {
+                                    if ((double) (j2 + 1) > maxYTP) {
                                         found = false;
                                         break;
                                     }
@@ -300,7 +269,7 @@ public class BlockUtils {
                 difX2 = mc.thePlayer.posX - xPreEn;
                 difY = mc.thePlayer.posY - yPreEn;
                 difZ2 = mc.thePlayer.posZ - zPreEn;
-                divider2 = step * (double)k2;
+                divider2 = step * (double) k2;
                 x = mc.thePlayer.posX - difX2 * divider2;
                 y = mc.thePlayer.posY - difY * (up2 ? 1.0 : divider2);
                 z = mc.thePlayer.posZ - difZ2 * divider2;
@@ -309,7 +278,7 @@ public class BlockUtils {
                 difX2 = mc.thePlayer.posX - xPreEn;
                 difY = mc.thePlayer.posY - yPreEn;
                 difZ2 = mc.thePlayer.posZ - zPreEn;
-                divider2 = step * (double)k2;
+                divider2 = step * (double) k2;
                 x = mc.thePlayer.posX - difX2 * divider2;
                 y = mc.thePlayer.posY - difY * (up2 ? 1.0 : divider2);
                 z = mc.thePlayer.posZ - difZ2 * divider2;
@@ -342,9 +311,9 @@ public class BlockUtils {
         }
         k2 = positions.size() - 2;
         while (k2 > -1) {
-            x = positions.get((int)k2).xCoord;
-            y = positions.get((int)k2).yCoord;
-            z = positions.get((int)k2).zCoord;
+            x = positions.get(k2).xCoord;
+            y = positions.get(k2).yCoord;
+            z = positions.get(k2).zCoord;
             BlockUtils.sendPacket(false, positionsBack, positions);
             --k2;
         }
@@ -382,7 +351,7 @@ public class BlockUtils {
         mc.thePlayer.swingItem();
         float sharpLevel = EnchantmentHelper.getModifierForCreature(mc.thePlayer.getHeldItem(), entity.getCreatureAttribute());
         boolean vanillaCrit = mc.thePlayer.fallDistance > 0.0f && !mc.thePlayer.onGround && !mc.thePlayer.isOnLadder() && !mc.thePlayer.isInWater() && !mc.thePlayer.isPotionActive(Potion.blindness) && mc.thePlayer.ridingEntity == null;
-        mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity((Entity)entity, C02PacketUseEntity.Action.ATTACK));
+        mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK));
         if (sharpLevel > 0.0f) {
             mc.thePlayer.onEnchantmentCritical(entity);
         }
@@ -391,7 +360,7 @@ public class BlockUtils {
     public static void attackinfGuardian(EntityLivingBase entity) {
         float sharpLevel = EnchantmentHelper.getModifierForCreature(mc.thePlayer.getHeldItem(), entity.getCreatureAttribute());
         boolean vanillaCrit = mc.thePlayer.fallDistance > 0.0f && !mc.thePlayer.onGround && !mc.thePlayer.isOnLadder() && !mc.thePlayer.isInWater() && !mc.thePlayer.isPotionActive(Potion.blindness) && mc.thePlayer.ridingEntity == null;
-        mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity((Entity)entity, C02PacketUseEntity.Action.ATTACK));
+        mc.thePlayer.sendQueue.addToSendQueue(new C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK));
         if (sharpLevel > 0.0f) {
             mc.thePlayer.onEnchantmentCritical(entity);
         }
@@ -402,12 +371,12 @@ public class BlockUtils {
         double diffX = n2 - mc.thePlayer.posX;
         double n22 = vec.yCoord + 0.5;
         double posY = mc.thePlayer.posY;
-        double diffY = n22 - (posY + (double)mc.thePlayer.getEyeHeight());
+        double diffY = n22 - (posY + (double) mc.thePlayer.getEyeHeight());
         double n3 = vec.zCoord + 0.5;
         double diffZ = n3 - mc.thePlayer.posZ;
         double dist = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
-        float yaw = (float)(Math.atan2(diffZ, diffX) * 180.0 / 3.141592653589793) - 90.0f;
-        float pitch = (float)(- Math.atan2(diffY, dist) * 180.0 / 3.141592653589793);
+        float yaw = (float) (Math.atan2(diffZ, diffX) * 180.0 / 3.141592653589793) - 90.0f;
+        float pitch = (float) (-Math.atan2(diffY, dist) * 180.0 / 3.141592653589793);
         float[] array = new float[2];
         boolean n4 = false;
         float rotationYaw = mc.thePlayer.rotationYaw;
@@ -425,8 +394,8 @@ public class BlockUtils {
         double diffY = dest.yCoord - src.yCoord;
         double diffZ = dest.zCoord - src.zCoord;
         double dist = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
-        float yaw = (float)(Math.atan2(diffZ, diffX) * 180.0 / 3.141592653589793) - 90.0f;
-        float pitch = (float)(- Math.atan2(diffY, dist) * 180.0 / 3.141592653589793);
+        float yaw = (float) (Math.atan2(diffZ, diffX) * 180.0 / 3.141592653589793) - 90.0f;
+        float pitch = (float) (-Math.atan2(diffY, dist) * 180.0 / 3.141592653589793);
         return new float[]{MathHelper.wrapAngleTo180_float(yaw), MathHelper.wrapAngleTo180_float(pitch)};
     }
 
@@ -497,9 +466,6 @@ public class BlockUtils {
         if (trace5 != null) {
             return trace5;
         }
-        if (trace4 == null) {
-            return null;
-        }
         return trace4;
     }
 
@@ -526,19 +492,13 @@ public class BlockUtils {
         MovingObjectPosition trace4 = null;
         MovingObjectPosition trace5 = null;
         if (returnLastUncollidableBlock) {
-            if (!(trace1 != null && BlockUtils.getBlock(trace1.getBlockPos()).getMaterial() != Material.air || trace2 != null && BlockUtils.getBlock(trace2.getBlockPos()).getMaterial() != Material.air || trace3 != null && BlockUtils.getBlock(trace3.getBlockPos()).getMaterial() != Material.air || trace4 != null && BlockUtils.getBlock(trace4.getBlockPos()).getMaterial() != Material.air || trace5 != null && BlockUtils.getBlock(trace5.getBlockPos()).getMaterial() != Material.air)) {
-                return false;
-            }
-            return true;
+            return trace1 != null && BlockUtils.getBlock(trace1.getBlockPos()).getMaterial() != Material.air || trace2 != null && BlockUtils.getBlock(trace2.getBlockPos()).getMaterial() != Material.air || trace3 != null && BlockUtils.getBlock(trace3.getBlockPos()).getMaterial() != Material.air || trace4 != null && BlockUtils.getBlock(trace4.getBlockPos()).getMaterial() != Material.air || trace5 != null && BlockUtils.getBlock(trace5.getBlockPos()).getMaterial() != Material.air;
         }
-        if (trace1 == null && trace2 == null && trace3 == null && trace5 == null && trace4 == null) {
-            return false;
-        }
-        return true;
+        return trace1 != null || trace2 != null || trace3 != null || trace5 != null || trace4 != null;
     }
 
     public static boolean placeBlockScaffold(BlockPos pos) {
-        Vec3 eyesPos = new Vec3(mc.thePlayer.posX, mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
+        Vec3 eyesPos = new Vec3(mc.thePlayer.posX, mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
         EnumFacing[] arrenumFacing = EnumFacing.values();
         int n2 = arrenumFacing.length;
         int n3 = 0;
@@ -580,10 +540,10 @@ public class BlockUtils {
             return true;
         } else {
             boolean var1 = false;
-            int var2 = (int)mc.thePlayer.getEntityBoundingBox().minY;
+            int var2 = (int) mc.thePlayer.getEntityBoundingBox().minY;
 
-            for(int var3 = MathHelper.floor_double(mc.thePlayer.getEntityBoundingBox().minX); var3 < MathHelper.floor_double(mc.thePlayer.getEntityBoundingBox().maxX) + 1; ++var3) {
-                for(int var4 = MathHelper.floor_double(mc.thePlayer.getEntityBoundingBox().minZ); var4 < MathHelper.floor_double(mc.thePlayer.getEntityBoundingBox().maxZ) + 1; ++var4) {
+            for (int var3 = MathHelper.floor_double(mc.thePlayer.getEntityBoundingBox().minX); var3 < MathHelper.floor_double(mc.thePlayer.getEntityBoundingBox().maxX) + 1; ++var3) {
+                for (int var4 = MathHelper.floor_double(mc.thePlayer.getEntityBoundingBox().minZ); var4 < MathHelper.floor_double(mc.thePlayer.getEntityBoundingBox().maxZ) + 1; ++var4) {
                     Block var5 = mc.theWorld.getBlockState(new BlockPos(var3, var2, var4)).getBlock();
                     if (var5 != null && var5.getMaterial() != Material.air) {
                         if (!(var5 instanceof BlockLiquid)) {
@@ -616,6 +576,27 @@ public class BlockUtils {
         if (bestItemIndex != -1) {
             mc.thePlayer.inventory.currentItem = bestItemIndex;
         }
+    }
+
+    public boolean isInsideBlock() {
+        int x2 = MathHelper.floor_double(mc.thePlayer.boundingBox.minX);
+        while (x2 < MathHelper.floor_double(mc.thePlayer.boundingBox.maxX) + 1) {
+            int y2 = MathHelper.floor_double(mc.thePlayer.boundingBox.minY);
+            while (y2 < MathHelper.floor_double(mc.thePlayer.boundingBox.maxY) + 1) {
+                int z2 = MathHelper.floor_double(mc.thePlayer.boundingBox.minZ);
+                while (z2 < MathHelper.floor_double(mc.thePlayer.boundingBox.maxZ) + 1) {
+                    AxisAlignedBB boundingBox;
+                    Block block = mc.theWorld.getBlockState(new BlockPos(x2, y2, z2)).getBlock();
+                    if (block != null && !(block instanceof BlockAir) && (boundingBox = block.getCollisionBoundingBox(mc.theWorld, new BlockPos(x2, y2, z2), mc.theWorld.getBlockState(new BlockPos(x2, y2, z2)))) != null && mc.thePlayer.boundingBox.intersectsWith(boundingBox)) {
+                        return true;
+                    }
+                    ++z2;
+                }
+                ++y2;
+            }
+            ++x2;
+        }
+        return false;
     }
 }
 

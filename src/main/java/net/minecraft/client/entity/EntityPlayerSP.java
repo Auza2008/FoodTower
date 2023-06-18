@@ -798,7 +798,6 @@ public class EntityPlayerSP extends AbstractClientPlayer {
         boolean flag1 = this.movementInput.sneak;
         float f = 0.8F;
         boolean flag2 = this.movementInput.moveForward >= f;
-        KillAura killAura = (KillAura) ModuleManager.getModuleByClass(KillAura.class);
         this.movementInput.updatePlayerMoveState();
         if (getHeldItem() != null && (this.isUsingItem() || (getHeldItem().getItem() instanceof ItemSword && (KillAura.isBlocking) && !this.isRiding()))) {
             EventNoSlow eventSlowDown = new EventNoSlow(0.2F, 0.2F);

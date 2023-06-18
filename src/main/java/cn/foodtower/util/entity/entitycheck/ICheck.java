@@ -7,6 +7,6 @@ import net.minecraft.entity.Entity;
 
 @FunctionalInterface
 public interface ICheck {
-    public boolean validate(Entity var1);
+    boolean validate(Entity var1);
 }
 

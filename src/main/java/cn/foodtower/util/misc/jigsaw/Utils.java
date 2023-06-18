@@ -1,8 +1,5 @@
 package cn.foodtower.util.misc.jigsaw;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.material.Material;
@@ -23,15 +20,13 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class Utils {
 
-    private static Minecraft mc = Minecraft.getMinecraft();
-    private static Random rand = new Random();
-
     public static boolean spectator;
-
     public static ArrayList<Entity> blackList = new ArrayList<>();
-
     static double x;
     static double y;
     static double z;
@@ -41,6 +36,9 @@ public class Utils {
     static double xPre;
     static double yPre;
     static double zPre;
+    private static final Minecraft mc = Minecraft.getMinecraft();
+    private static final Random rand = new Random();
+    private static Vec3 lastLoc = null;
 
     private static void sendPacket(Packet packet) {
         mc.getNetHandler().addToSendQueue(packet);
@@ -146,9 +144,6 @@ public class Utils {
             if (trace3 == null) {
                 if (trace1 == null) {
                     if (trace5 == null) {
-                        if (trace4 == null) {
-                            return null;
-                        }
                         return trace4;
                     }
                     return trace5;
@@ -247,8 +242,8 @@ public class Utils {
     }
 
     public static boolean isBlacklisted(Entity en) {
-        for(Entity i : blackList) {
-            if(i.isEntityEqual(en)) {
+        for (Entity i : blackList) {
+            if (i.isEntityEqual(en)) {
                 return true;
             }
         }
@@ -266,16 +261,6 @@ public class Utils {
             }
         }
         return entities;
-    }
-
-    /**
-     * Returns the foodtower to the entity. Args: entity
-     */
-    public float getDistanceToEntityFromEntity(Entity entityIn, Entity entityIn2) {
-        float f = (float) (entityIn.posX - entityIn2.posX);
-        float f1 = (float) (entityIn.posY - entityIn2.posY);
-        float f2 = (float) (entityIn.posZ - entityIn2.posZ);
-        return MathHelper.sqrt_float(f * f + f1 * f1 + f2 * f2);
     }
 
 //	public static boolean checkEntity(boolean friends, boolean invisible, boolean players) {
@@ -385,10 +370,7 @@ public class Utils {
     }
 
     public static boolean isNotItem(Object o) {
-        if (!(o instanceof EntityLivingBase)) {
-            return false;
-        }
-        return true;
+        return o instanceof EntityLivingBase;
     }
 
     public static void faceEntity(Entity en) {
@@ -423,7 +405,6 @@ public class Utils {
     }
 
     /**
-     *
      * @param vec
      * @return index 0 = yaw | index 1 = pitch
      */
@@ -435,16 +416,14 @@ public class Utils {
         double dist = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
         float yaw = (float) (Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F;
         float pitch = (float) -(Math.atan2(diffY, dist) * 180.0D / Math.PI);
-        return new float[] {
+        return new float[]{
                 Minecraft.getMinecraft().thePlayer.rotationYaw
                         + MathHelper.wrapAngleTo180_float(yaw - Minecraft.getMinecraft().thePlayer.rotationYaw),
                 Minecraft.getMinecraft().thePlayer.rotationPitch
-                        + MathHelper.wrapAngleTo180_float(pitch - Minecraft.getMinecraft().thePlayer.rotationPitch) };
+                        + MathHelper.wrapAngleTo180_float(pitch - Minecraft.getMinecraft().thePlayer.rotationPitch)};
     }
 
     /**
-     *
-     *
      * @return index 0 = yaw | index 1 = pitch
      */
     public static float[] getFacePosRemote(Vec3 src, Vec3 dest) {
@@ -454,31 +433,29 @@ public class Utils {
         double dist = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
         float yaw = (float) (Math.atan2(diffZ, diffX) * 180.0D / Math.PI) - 90.0F;
         float pitch = (float) -(Math.atan2(diffY, dist) * 180.0D / Math.PI);
-        return new float[] {MathHelper.wrapAngleTo180_float(yaw),
-                MathHelper.wrapAngleTo180_float(pitch) };
+        return new float[]{MathHelper.wrapAngleTo180_float(yaw),
+                MathHelper.wrapAngleTo180_float(pitch)};
     }
 
     /**
-     *
      * @param
      * @return index 0 = yaw | index 1 = pitch
      */
     public static float[] getFacePosEntity(Entity en) {
         if (en == null) {
-            return new float[] { Minecraft.getMinecraft().thePlayer.rotationYawHead,
-                    Minecraft.getMinecraft().thePlayer.rotationPitch };
+            return new float[]{Minecraft.getMinecraft().thePlayer.rotationYawHead,
+                    Minecraft.getMinecraft().thePlayer.rotationPitch};
         }
         return getFacePos(new Vec3(en.posX - 0.5, en.posY + (en.getEyeHeight() - en.height / 1.5), en.posZ - 0.5));
     }
 
     /**
-     *
      * @param
      * @return index 0 = yaw | index 1 = pitch
      */
     public static float[] getFacePosEntityRemote(EntityLivingBase facing, Entity en) {
         if (en == null) {
-            return new float[] { facing.rotationYawHead, facing.rotationPitch };
+            return new float[]{facing.rotationYawHead, facing.rotationPitch};
         }
         return getFacePosRemote(new Vec3(facing.posX, facing.posY + en.getEyeHeight(), facing.posZ),
                 new Vec3(en.posX, en.posY + en.getEyeHeight(), en.posZ));
@@ -697,15 +674,13 @@ public class Utils {
         return mc.theWorld.getBlockState(pos).getBlock();
     }
 
-    private static Vec3 lastLoc = null;
-
     public static Vec3 getLastGroundLocation() {
         return lastLoc;
 
     }
 
     public static void updateLastGroundLocation() {
-        if(mc.thePlayer.onGround) {
+        if (mc.thePlayer.onGround) {
             lastLoc = new Vec3(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ);
         }
     }
@@ -727,7 +702,7 @@ public class Utils {
 
         Iterable<BlockPos> collisionBlocks = BlockPos.getAllInBox(pos1, pos2);
         ArrayList<BlockPos> returnList = new ArrayList<>();
-        for(BlockPos pos : collisionBlocks) {
+        for (BlockPos pos : collisionBlocks) {
             returnList.add(pos);
         }
         return returnList;
@@ -740,7 +715,7 @@ public class Utils {
 
         Iterable<BlockPos> collisionBlocks = BlockPos.getAllInBox(pos1, pos2);
         ArrayList<BlockPos> returnList = new ArrayList<>();
-        for(BlockPos pos : collisionBlocks) {
+        for (BlockPos pos : collisionBlocks) {
             returnList.add(pos);
         }
         return returnList;
@@ -750,15 +725,25 @@ public class Utils {
         ArrayList<BlockPos> poses = getBlockPosesEntityIsStandingOn(en);
 
 
-        for(BlockPos pos : poses) {
+        for (BlockPos pos : poses) {
             Block block = Utils.getBlock(pos);
-            if(!(block.getMaterial() instanceof MaterialTransparent) && block.getMaterial() != Material.air
+            if (!(block.getMaterial() instanceof MaterialTransparent) && block.getMaterial() != Material.air
                     && !(block instanceof BlockLiquid)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * Returns the foodtower to the entity. Args: entity
+     */
+    public float getDistanceToEntityFromEntity(Entity entityIn, Entity entityIn2) {
+        float f = (float) (entityIn.posX - entityIn2.posX);
+        float f1 = (float) (entityIn.posY - entityIn2.posY);
+        float f2 = (float) (entityIn.posZ - entityIn2.posZ);
+        return MathHelper.sqrt_float(f * f + f1 * f1 + f2 * f2);
     }
 
 }

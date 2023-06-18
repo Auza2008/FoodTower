@@ -10,15 +10,16 @@ import net.minecraft.item.ItemFishingRod;
 import net.minecraft.item.ItemStack;
 
 public class AutoFish extends Module {
+    public static boolean isCatchTiming;
+    public static boolean needFishing = false;
     MSTimer rodOutTimer = new MSTimer();
+
     public AutoFish() {
         super("AutoFish", new String[]{"autofish"}, ModuleType.Player);
     }
-    public static boolean isCatchTiming;
-    public static boolean needFishing = false;
 
     @Override
-    public void onEnable(){
+    public void onEnable() {
         needFishing = false;
         isCatchTiming = false;
     }
@@ -36,17 +37,18 @@ public class AutoFish extends Module {
                 mc.rightClickMouse();
                 needFishing = true;
             }
-        }else {
-            if (needFishing && rodOutTimer.hasTimePassed(500)){
+        } else {
+            if (needFishing && rodOutTimer.hasTimePassed(500)) {
                 needFishing = false;
                 mc.rightClickMouse();
             }
         }
     }
+
     private int grabRodSlot() {
-        for(int i2 = 0; i2 < 9; ++i2) {
+        for (int i2 = 0; i2 < 9; ++i2) {
             ItemStack itemStack = mc.thePlayer.inventory.mainInventory[i2];
-            if(itemStack != null && itemStack.getItem() instanceof ItemFishingRod) {
+            if (itemStack != null && itemStack.getItem() instanceof ItemFishingRod) {
                 return i2;
             }
         }

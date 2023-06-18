@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 public class Shader {
     private Framebuffer frameBuffer;
     private ShaderLoader clientShader;
-    private String fragmentShader;
+    private final String fragmentShader;
 
     public Shader(String fragmentShader) {
         this.fragmentShader = fragmentShader;
@@ -55,8 +55,8 @@ public class Shader {
         GL11.glTexCoord2d(0.0D, 0.0D);
         double x = 0.0D;
         double y = 0.0D;
-        double width = sr.getScaledWidth();
-        double height = sr.getScaledHeight();
+        double width = ScaledResolution.getScaledWidth();
+        double height = ScaledResolution.getScaledHeight();
         GL11.glVertex2d(x, y + height);
         GL11.glTexCoord2d(1.0D, 0.0D);
         GL11.glVertex2d(x + width, y + height);

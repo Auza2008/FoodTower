@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 
 public final class DistanceCheck
-implements ICheck {
+        implements ICheck {
     private final Numbers distance;
 
     public DistanceCheck(Numbers distance) {
@@ -18,7 +18,7 @@ implements ICheck {
 
     @Override
     public boolean validate(Entity entity) {
-        return (double)Minecraft.getMinecraft().thePlayer.getDistanceToEntity(entity) <= (Double)this.distance.get();
+        return (double) Minecraft.getMinecraft().thePlayer.getDistanceToEntity(entity) <= (Double) this.distance.get();
     }
 }
 

@@ -200,13 +200,13 @@ public class GuiAltManager extends GuiScreen {
     }
 
     private boolean isAltInArea(int y) {
-		return y - this.offset <= this.height - 50;
-	}
+        return y - this.offset <= this.height - 50;
+    }
 
     private boolean isMouseOverAlt(int x, int y, int y1) {
-		return x >= 52 && y >= y1 - 4 && x <= this.width - 52 && y <= y1 + 20 && x >= 0 && y >= 33 && x <= this.width
-				&& y <= this.height - 50;
-	}
+        return x >= 52 && y >= y1 - 4 && x <= this.width - 52 && y <= y1 + 20 && x >= 0 && y >= 33 && x <= this.width
+                && y <= this.height - 50;
+    }
 
     @Override
     protected void mouseClicked(int par1, int par2, int par3) {
@@ -235,8 +235,8 @@ public class GuiAltManager extends GuiScreen {
     public void prepareScissorBox(float x, float y, float x2, float y2) {
         int factor = new ScaledResolution(mc).getScaleFactor();
         GL11.glScissor((int) (x * (float) factor),
-				(int) (((float) new ScaledResolution(mc).getScaledHeight() - y2) * (float) factor),
-				(int) ((x2 - x) * (float) factor), (int) ((y2 - y) * (float) factor));
+                (int) (((float) new ScaledResolution(mc).getScaledHeight() - y2) * (float) factor),
+                (int) ((x2 - x) * (float) factor), (int) ((y2 - y) * (float) factor));
     }
 
     public void renderBackground(int par1, int par2) {

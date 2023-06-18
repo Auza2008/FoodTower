@@ -29,10 +29,10 @@ public class Crosshair extends Module {
         Crosshair.SIZE = new Numbers<>("Size", 7.0, 0.25, 15.0, 0.25);
     }
 
-    float hue;
-    private boolean dragging;
     private final Option DYNAMIC;
     private final Numbers<Double> WIDTH;
+    float hue;
+    private boolean dragging;
 
     public Crosshair() {
         super("Crosshair", new String[]{"Crosshair"}, ModuleType.Render);

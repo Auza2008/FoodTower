@@ -34,14 +34,12 @@ import java.util.Random;
 public class Client {
 
     public final static String name = "FoodTower";
-    public final static String version = "4.7[More Bypass]";
+    public final static String version = "4.8";
     public static float Yaw;
     public static float Pitch;
     public static boolean Baned = false;
     public static String author = "Auza, LittleGod";
-    public static String releaseNumber = "060823";
     public static String releaseType = Main.isbeta ? "Beta" : "Release";
-    public static String releaseVersion = releaseType + version + "_" + releaseNumber;
     public static String ClientVersion = version;
     public static Client instance = new Client();
     public static String title;

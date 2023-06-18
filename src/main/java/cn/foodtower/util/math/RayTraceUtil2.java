@@ -8,6 +8,7 @@ import javax.vecmath.Vector3f;
 import java.util.ArrayList;
 
 public class RayTraceUtil2 {
+    private static final float MAX_STEP = 0.1f;
     protected Minecraft mc = Minecraft.getMinecraft();
     private float startX;
     private float startY;
@@ -15,8 +16,7 @@ public class RayTraceUtil2 {
     private float endX;
     private float endY;
     private float endZ;
-    private static final float MAX_STEP = 0.1f;
-    private ArrayList<Vector3f> positions = new ArrayList();
+    private final ArrayList<Vector3f> positions = new ArrayList();
     private EntityLivingBase entity;
 
     public RayTraceUtil2(EntityLivingBase entity) {
@@ -59,10 +59,7 @@ public class RayTraceUtil2 {
         boolean x = posX >= box.minX - 0.25 && posX <= box.maxX + 0.25;
         boolean y = posY >= box.minY && posY <= box.maxY;
         boolean bl = z = posZ >= box.minZ - 0.25 && posZ <= box.maxZ + 0.25;
-        if (x && z && y) {
-            return true;
-        }
-        return false;
+        return x && z && y;
     }
 
     public ArrayList<Vector3f> getPositions() {

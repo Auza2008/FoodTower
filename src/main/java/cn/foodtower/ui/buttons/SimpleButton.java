@@ -13,10 +13,11 @@ public final class SimpleButton extends GuiButton {
     private double animation = 0.0;
 
     public SimpleButton(int buttonId, int x, int y, String buttonText) {
-        super(buttonId, x - (int)((double) FontLoaders.GoogleSans15.getStringWidth(buttonText) / 2.0), y, FontLoaders.GoogleSans15.getStringWidth(buttonText), 10, buttonText);
+        super(buttonId, x - (int) ((double) FontLoaders.GoogleSans15.getStringWidth(buttonText) / 2.0), y, FontLoaders.GoogleSans15.getStringWidth(buttonText), 10, buttonText);
     }
+
     @Override
-    public void playPressSound(SoundHandler soundHandlerIn){
+    public void playPressSound(SoundHandler soundHandlerIn) {
 
     }
 
@@ -28,8 +29,8 @@ public final class SimpleButton extends GuiButton {
             if (this.color < 255) {
                 this.color += 5;
             }
-            if (this.animation < (double)this.width / 2.0) {
-                this.animation = AnimationUtils.animate((double)this.width / 2.0, this.animation, 8f/Minecraft.getDebugFPS());
+            if (this.animation < (double) this.width / 2.0) {
+                this.animation = AnimationUtils.animate((double) this.width / 2.0, this.animation, 8f / Minecraft.getDebugFPS());
             }
         } else {
             if (this.color > 170) {
@@ -39,7 +40,7 @@ public final class SimpleButton extends GuiButton {
                 this.animation = AnimationUtils.animate(0.0, this.animation, 0.1f);
             }
         }
-        SimpleButton.drawRect((double)this.xPosition + (double)this.width / 2.0 - this.animation, this.yPosition + this.height - 2, (double)this.xPosition + (double)this.width / 2.0 + this.animation, this.yPosition + this.height - 1, new Color(this.color, this.color, this.color).getRGB());
+        SimpleButton.drawRect((double) this.xPosition + (double) this.width / 2.0 - this.animation, this.yPosition + this.height - 2, (double) this.xPosition + (double) this.width / 2.0 + this.animation, this.yPosition + this.height - 1, new Color(this.color, this.color, this.color).getRGB());
         FontLoaders.GoogleSans15.drawCenteredString(this.displayString, this.xPosition + this.width / 2f, this.yPosition + (this.height - 8) / 2f, -1);
     }
 }

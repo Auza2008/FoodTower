@@ -15,19 +15,42 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Random;
 
 public class ChatBypass extends Module {
-    private final Mode mode = new Mode("Mode",ChatBypassMode.values(),ChatBypassMode.Hypixel);
+    private final Mode mode = new Mode("Mode", ChatBypassMode.values(), ChatBypassMode.Hypixel);
+
     public ChatBypass() {
-        super("ChatBypass", new String[] { "ChatBypass", "ChatBypass" }, ModuleType.Player);
+        super("ChatBypass", new String[]{"ChatBypass", "ChatBypass"}, ModuleType.Player);
         addValues(mode);
     }
 
+    public static String insertPeriodically(String text, String insert, int period) {
+        StringBuilder builder = new StringBuilder(
+                text.length() + insert.length() * (text.length() / period) + 1);
+
+        int index = 0;
+        String prefix = "";
+        while (index < text.length()) {
+            // Don't put the insert in the very first iteration.
+            // This is easier than appending it *after* each substring
+            builder.append(prefix);
+
+            Random random = new Random();
+
+            //String bypass = "??????????????????????????";
+            prefix = Character.toString(insert.charAt(random.nextInt(insert.length())));
+
+            builder.append(text, index, Math.min(index + period, text.length()));
+            index += period;
+        }
+        return builder.toString();
+    }
+
     @EventHandler
-    public void onRender2d(EventRender2D e){
+    public void onRender2d(EventRender2D e) {
         this.setSuffix("Packet");
     }
 
     @EventHandler
-    public void onPacketReceive(EventPacketReceive e){
+    public void onPacketReceive(EventPacketReceive e) {
         if (e.getPacket() instanceof S02PacketChat) {
             S02PacketChat packet = (S02PacketChat) e.getPacket();
             if (packet.getChatComponent().getUnformattedText().contains("℡")) {
@@ -47,7 +70,7 @@ public class ChatBypass extends Module {
             if (shout) {
                 packetChatMessage.setMessage(packetChatMessage.getMessage().replaceFirst("/shout", ""));
             }
-            switch ((ChatBypassMode)mode.get()){
+            switch ((ChatBypassMode) mode.get()) {
                 case Hypixel:
                     packetChatMessage.setMessage(insertPeriodically(packetChatMessage.getMessage(), "\u26CD\u26D7\u26CC\u26D7\u26D8\u26C9\u26E1\u26CD\u26D7\u26C9\u26CD\u26D8\u26DC\u26CD\u26E0\u26D8\u26DF\u26CF\u26E1\u26CF\u26D7\u26CF\u26CD\u26C9\u26CB\u05FC", 1));
                     break;
@@ -80,28 +103,8 @@ public class ChatBypass extends Module {
             }
         }
     }
-    public static String insertPeriodically(String text, String insert, int period) {
-        StringBuilder builder = new StringBuilder(
-                text.length() + insert.length() * (text.length() / period) + 1);
 
-        int index = 0;
-        String prefix = "";
-        while (index < text.length()) {
-            // Don't put the insert in the very first iteration.
-            // This is easier than appending it *after* each substring
-            builder.append(prefix);
-
-            Random random = new Random();
-
-            //String bypass = "??????????????????????????";
-            prefix = Character.toString(insert.charAt(random.nextInt(insert.length())));
-
-            builder.append(text, index, Math.min(index + period, text.length()));
-            index += period;
-        }
-        return builder.toString();
-    }
-    enum ChatBypassMode{
+    enum ChatBypassMode {
         Russian, Roblox, Hypixel, Test
     }
 }

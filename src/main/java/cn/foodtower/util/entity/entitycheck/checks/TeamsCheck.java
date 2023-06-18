@@ -10,7 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
 public final class TeamsCheck
-implements ICheck {
+        implements ICheck {
     private final Option teams;
 
     public TeamsCheck(Option teams) {
@@ -19,7 +19,7 @@ implements ICheck {
 
     @Override
     public boolean validate(Entity entity) {
-        return !(entity instanceof EntityPlayer) || !Teams.isOnSameTeam((EntityPlayer)entity) || this.teams.get() == false;
+        return !(entity instanceof EntityPlayer) || !Teams.isOnSameTeam(entity) || !this.teams.get();
     }
 }
 

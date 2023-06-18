@@ -13,7 +13,7 @@ public class TranslateOne {
         long currentMS = System.currentTimeMillis();
         long delta = currentMS - this.lastMS;
         this.lastMS = currentMS;
-        int deltaX = (int)(Math.abs(target - this.anim) * smoothing);
+        int deltaX = (int) (Math.abs(target - this.anim) * smoothing);
         this.anim = AnimationUtil.calculateCompensation(target, this.anim, delta, deltaX);
     }
 

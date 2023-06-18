@@ -1,15 +1,14 @@
 package cn.foodtower.module.modules.player;
 
-import cn.foodtower.module.modules.world.Teams;
 import cn.foodtower.api.EventHandler;
 import cn.foodtower.api.events.World.EventPreUpdate;
 import cn.foodtower.manager.FriendManager;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
+import cn.foodtower.module.modules.world.Teams;
 import cn.foodtower.ui.notifications.user.Notifications;
 import cn.foodtower.util.misc.jigsaw.Utils;
 import cn.foodtower.util.time.WaitTimer;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
@@ -49,7 +48,7 @@ public class ArrowDodge extends Module {
             }
             if (arrow.shootingEntity instanceof EntityPlayer) {
                 EntityPlayer player = (EntityPlayer) arrow.shootingEntity;
-                if ( Teams.isOnSameTeam(player)) {
+                if (Teams.isOnSameTeam(player)) {
                     continue;
                 }
                 if (FriendManager.isFriend(player.getName())) {
@@ -83,7 +82,7 @@ public class ArrowDodge extends Module {
 
     private void doBarrier() {
         timer.reset();
-        Notifications.getManager().post("ArrowDodge","Arrow incoming!!");
+        Notifications.getManager().post("ArrowDodge", "Arrow incoming!!");
         int slot = -1;
         for (int i = 0; i < 9; i++) {
             ItemStack stack = mc.thePlayer.inventory.getStackInSlot(i);
@@ -140,7 +139,7 @@ public class ArrowDodge extends Module {
         }
         mc.thePlayer.motionX = 0;
         mc.thePlayer.motionZ = 0;
-        mc.thePlayer.setPosition(vec.xCoord,vec.yCoord,vec.zCoord);
+        mc.thePlayer.setPosition(vec.xCoord, vec.yCoord, vec.zCoord);
         mc.getNetHandler().addToSendQueueSilent(
                 new C03PacketPlayer.C04PacketPlayerPosition(vec.xCoord, vec.yCoord, vec.zCoord, mc.thePlayer.onGround));
     }

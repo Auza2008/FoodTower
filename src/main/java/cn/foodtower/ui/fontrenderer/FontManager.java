@@ -15,12 +15,12 @@ public class FontManager {
     public FastUniFontRenderer Chinese35 = FontLoader.msFont35;
 
 
-    public FastUniFontRenderer GoogleSans16 = FontLoader.getFont(16, "GoogleSans.ttf",42);
-    public FastUniFontRenderer GoogleSans18 = FontLoader.getFont(18, "GoogleSans.ttf",44);
-    public FastUniFontRenderer GoogleSans35 = FontLoader.getFont(35, "GoogleSans.ttf",46);
-    public FastUniFontRenderer Arial18 = FontLoader.getFont(18, "Arial.ttf",48);
+    public FastUniFontRenderer GoogleSans16 = FontLoader.getFont(16, "GoogleSans.ttf", 42);
+    public FastUniFontRenderer GoogleSans18 = FontLoader.getFont(18, "GoogleSans.ttf", 44);
+    public FastUniFontRenderer GoogleSans35 = FontLoader.getFont(35, "GoogleSans.ttf", 46);
+    public FastUniFontRenderer Arial18 = FontLoader.getFont(18, "Arial.ttf", 48);
 
-    public FastUniFontRenderer KomikaTitleBold50 = FontLoader.getFont(50, "KomikaTitleBold.ttf",50);
+    public FastUniFontRenderer KomikaTitleBold50 = FontLoader.getFont(50, "KomikaTitleBold.ttf", 50);
 
 
     public FontManager() {

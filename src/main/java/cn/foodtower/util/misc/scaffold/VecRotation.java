@@ -4,19 +4,19 @@ import cn.foodtower.util.math.Rotation;
 import net.minecraft.util.Vec3;
 
 public class VecRotation {
-	Vec3 vec;
-	Rotation rotation;
+    Vec3 vec;
+    Rotation rotation;
 
-	public VecRotation(Vec3 vec, Rotation rotation) {
-		this.vec = vec;
-		this.rotation = rotation;
-	}
-	public Rotation getRotation()
-	{
-		return this.rotation;
-	}
+    public VecRotation(Vec3 vec, Rotation rotation) {
+        this.vec = vec;
+        this.rotation = rotation;
+    }
 
-	public Vec3 getVec() {
-		return vec;
-	}
+    public Rotation getRotation() {
+        return this.rotation;
+    }
+
+    public Vec3 getVec() {
+        return vec;
+    }
 }

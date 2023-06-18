@@ -14,12 +14,12 @@ import org.lwjgl.opengl.GL11;
 
 
 public class RenderWings extends ModelBase {
-    Minecraft mc = Minecraft.getMinecraft();
-    Wings ws = new Wings();
     private final ResourceLocation location;
     private final ModelRenderer wing;
     private final ModelRenderer wingTip;
     private final boolean playerUsesFullHeight;
+    Minecraft mc = Minecraft.getMinecraft();
+    Wings ws = new Wings();
 
     public RenderWings() {
         this.location = new ResourceLocation("FoodTower/ICON/wings.png");

@@ -9,7 +9,7 @@ public class EventStep extends Event {
     private double stepHeight;
     private double realHeight;
     private boolean active;
-    private boolean pre;
+    private final boolean pre;
 
     public EventStep(boolean state, double stepHeight, double realHeight) {
         this.pre = state;
@@ -31,12 +31,12 @@ public class EventStep extends Event {
         return this.stepHeight;
     }
 
-    public boolean isActive() {
-        return this.active;
-    }
-
     public void setStepHeight(double stepHeight) {
         this.stepHeight = stepHeight;
+    }
+
+    public boolean isActive() {
+        return this.active;
     }
 
     public void setActive(boolean bypass) {

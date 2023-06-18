@@ -15,17 +15,17 @@ import net.minecraft.network.play.client.C0BPacketEntityAction;
 
 public class Freecam
         extends Module {
+    private final Numbers<Double> speedValue = new Numbers<>("Speed", 0.8d, 0.1d, 2d, 0.1d);
+    private final Option flyValue = new Option("Fly", true);
+    private final Option noClipValue = new Option("NoClip", true);
     private EntityOtherPlayerMP copy;
     private double x;
     private double y;
     private double z;
 
-    private final Numbers<Double> speedValue = new Numbers<>("Speed", 0.8d, 0.1d, 2d,0.1d);
-    private final Option flyValue = new Option("Fly", true);
-    private final Option noClipValue = new Option("NoClip", true);
     public Freecam() {
         super("Freecam", new String[]{"outofbody"}, ModuleType.Render);
-        addValues(speedValue,flyValue,noClipValue);
+        addValues(speedValue, flyValue, noClipValue);
     }
 
     @Override

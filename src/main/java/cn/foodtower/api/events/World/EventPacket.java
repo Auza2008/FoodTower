@@ -4,10 +4,10 @@ import cn.foodtower.api.Event;
 import net.minecraft.network.Packet;
 
 public class EventPacket extends Event {
-    Type type;
     public Packet<?> packet;
+    Type type;
 
-    public EventPacket(Packet<?> packet,Type type){
+    public EventPacket(Packet<?> packet, Type type) {
         this.type = type;
         this.packet = packet;
     }
@@ -16,7 +16,7 @@ public class EventPacket extends Event {
         return packet;
     }
 
-    public boolean isServerSide(){
+    public boolean isServerSide() {
         return type == Type.RECEIVE;
     }
 

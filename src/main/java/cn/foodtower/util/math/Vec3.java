@@ -3,10 +3,12 @@ package cn.foodtower.util.math;
 import net.minecraft.util.Vec3i;
 
 public class Vec3 extends net.minecraft.util.Vec3 {
-    private double x, y, z;
+    private final double x;
+    private final double y;
+    private final double z;
 
     public Vec3(double x, double y, double z) {
-        super(x,y,z);
+        super(x, y, z);
         this.x = x;
         this.y = y;
         this.z = z;

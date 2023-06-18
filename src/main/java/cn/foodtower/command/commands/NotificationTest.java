@@ -2,13 +2,14 @@ package cn.foodtower.command.commands;
 
 
 import cn.foodtower.command.Command;
-import cn.foodtower.util.misc.Helper;
 import cn.foodtower.ui.notifications.user.Notifications;
+import cn.foodtower.util.misc.Helper;
 
 public class NotificationTest extends Command {
     public NotificationTest() {
-        super("NotificationTest",new String[]{"noti"}, "", "测试通知系统");
+        super("NotificationTest", new String[]{"noti"}, "", "测试通知系统");
     }
+
     @Override
     public String execute(String[] args) {
         if (args.length == 0) {
@@ -23,7 +24,7 @@ public class NotificationTest extends Command {
                 not.post("AutoFish", "貌似有东西上钩了( >ω< )", 2500L, Notifications.Type.INFO);
             } else if (args[0].equalsIgnoreCase("f")) {
                 not.post("FFFFFF", "FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF", 2500L, Notifications.Type.INFO);
-            }else {
+            } else {
                 Helper.sendMessage(" ???什么鬼");
             }
 

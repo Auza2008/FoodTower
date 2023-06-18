@@ -21,10 +21,9 @@ public final class EntityUtils {
     static Minecraft mc = Minecraft.getMinecraft();
 
 
-
     public static boolean isFriend(final Entity entity) {
         return entity instanceof EntityPlayer && entity.getName() != null &&
-               FriendManager.isFriend(ColorUtils.stripColor(entity.getName()));
+                FriendManager.isFriend(ColorUtils.stripColor(entity.getName()));
     }
 
     public static boolean isAnimal(final Entity entity) {

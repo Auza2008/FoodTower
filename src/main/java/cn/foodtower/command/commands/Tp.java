@@ -1,10 +1,11 @@
 package cn.foodtower.command.commands;
+
 import cn.foodtower.command.Command;
 import cn.foodtower.manager.ModuleManager;
 import cn.foodtower.module.modules.player.AutoTP;
 import cn.foodtower.ui.ClientNotification;
-import cn.foodtower.util.misc.Helper;
 import cn.foodtower.ui.notifications.user.Notifications;
+import cn.foodtower.util.misc.Helper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -29,16 +30,16 @@ public class Tp
                 x = Integer.parseInt(args[0]);
                 y = Integer.parseInt(args[1]);
                 z = Integer.parseInt(args[2]);
-            }catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 Helper.sendClientMessage("输入值不正常!请输入整数", ClientNotification.Type.warning);
                 cantp = false;
             }
             if (cantp) {
-                Notifications.getManager().post("TP","正在尝试传送...");
-                tp.tp(x,y,z);
+                Notifications.getManager().post("TP", "正在尝试传送...");
+                tp.tp(x, y, z);
             }
-        }else if(args.length == 1){
-            AutoTP tp = (AutoTP)ModuleManager.getModuleByClass(AutoTP.class);
+        } else if (args.length == 1) {
+            AutoTP tp = (AutoTP) ModuleManager.getModuleByClass(AutoTP.class);
             Entity targetEntity = null;
             for (Entity entity : mc.theWorld.loadedEntityList) {
                 if (entity instanceof EntityPlayer && mc.thePlayer != entity) {
@@ -49,15 +50,15 @@ public class Tp
                 }
             }
             if (targetEntity == null) {
-                Notifications.getManager().post("TP","无法定位目标:" + args[0]);
+                Notifications.getManager().post("TP", "无法定位目标:" + args[0]);
                 return null;
             } else {
-                Notifications.getManager().post("TP","已定位目标: " + targetEntity.getName() + "!");
+                Notifications.getManager().post("TP", "已定位目标: " + targetEntity.getName() + "!");
                 Helper.sendClientMessage("正在尝试起飞...", ClientNotification.Type.info);
                 tp.tp(targetEntity);
 
             }
-        }else {
+        } else {
             Helper.sendClientMessage(".tp <x> <y> <z> 或者 .tp <playername>", ClientNotification.Type.warning);
         }
         return null;

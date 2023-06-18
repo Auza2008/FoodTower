@@ -1,21 +1,7 @@
 package cn.foodtower.util.misc;
 
 import cn.foodtower.util.math.Vec3;
-import net.minecraft.block.BlockCactus;
-import net.minecraft.block.BlockChest;
-import net.minecraft.block.BlockEnderChest;
-import net.minecraft.block.BlockFence;
-import net.minecraft.block.BlockGlass;
-import net.minecraft.block.BlockPane;
-import net.minecraft.block.BlockPistonBase;
-import net.minecraft.block.BlockPistonExtension;
-import net.minecraft.block.BlockPistonMoving;
-import net.minecraft.block.BlockSkull;
-import net.minecraft.block.BlockSlab;
-import net.minecraft.block.BlockStainedGlass;
-import net.minecraft.block.BlockStairs;
-import net.minecraft.block.BlockTrapDoor;
-import net.minecraft.block.BlockWall;
+import net.minecraft.block.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.BlockPos;
 
@@ -24,24 +10,58 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class AStarCustomPathFinder {
-    private Vec3 startVec3;
-    private Vec3 endVec3;
-    private ArrayList<Vec3> path = new ArrayList<>();
-    private ArrayList<Hub> hubs = new ArrayList<>();
-    private ArrayList<Hub> hubsToWork = new ArrayList<>();
-    private double minDistanceSquared = 9;
-    private boolean nearest = true;
-
-    private static Vec3[] flatCardinalDirections = {
+    private static final Vec3[] flatCardinalDirections = {
             new Vec3(1, 0, 0),
             new Vec3(-1, 0, 0),
             new Vec3(0, 0, 1),
             new Vec3(0, 0, -1)
     };
+    private final Vec3 startVec3;
+    private final Vec3 endVec3;
+    private ArrayList<Vec3> path = new ArrayList<>();
+    private final ArrayList<Hub> hubs = new ArrayList<>();
+    private final ArrayList<Hub> hubsToWork = new ArrayList<>();
+    private final double minDistanceSquared = 9;
+    private final boolean nearest = true;
 
     public AStarCustomPathFinder(Vec3 startVec3, Vec3 endVec3) {
         this.startVec3 = startVec3.addVector(0, 0, 0).floor();
         this.endVec3 = endVec3.addVector(0, 0, 0).floor();
+    }
+
+    public static boolean checkPositionValidity(Vec3 loc, boolean checkGround) {
+        return checkPositionValidity((int) loc.getX(), (int) loc.getY(), (int) loc.getZ(), checkGround);
+    }
+
+    public static boolean checkPositionValidity(int x, int y, int z, boolean checkGround) {
+        BlockPos block1 = new BlockPos(x, y, z);
+        BlockPos block2 = new BlockPos(x, y + 1, z);
+        BlockPos block3 = new BlockPos(x, y - 1, z);
+        return !isBlockSolid(block1) && !isBlockSolid(block2) && (isBlockSolid(block3) || !checkGround) && isSafeToWalkOn(block3);
+    }
+
+    private static boolean isBlockSolid(BlockPos block) {
+        return Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()).isSolidFullCube() ||
+                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockSlab) ||
+                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockStairs) ||
+                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockCactus) ||
+                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockChest) ||
+                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockEnderChest) ||
+                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockSkull) ||
+                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockPane) ||
+                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockFence) ||
+                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockWall) ||
+                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockGlass) ||
+                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockPistonBase) ||
+                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockPistonExtension) ||
+                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockPistonMoving) ||
+                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockStainedGlass) ||
+                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockTrapDoor);
+    }
+
+    private static boolean isSafeToWalkOn(BlockPos block) {
+        return !(Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockFence) &&
+                !(Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockWall);
     }
 
     public ArrayList<Vec3> getPath() {
@@ -102,41 +122,6 @@ public class AStarCustomPathFinder {
             Collections.sort(hubs, new CompareHub());
             path = hubs.get(0).getPath();
         }
-    }
-
-    public static boolean checkPositionValidity(Vec3 loc, boolean checkGround) {
-        return checkPositionValidity((int) loc.getX(), (int) loc.getY(), (int) loc.getZ(), checkGround);
-    }
-
-    public static boolean checkPositionValidity(int x, int y, int z, boolean checkGround) {
-        BlockPos block1 = new BlockPos(x, y, z);
-        BlockPos block2 = new BlockPos(x, y + 1, z);
-        BlockPos block3 = new BlockPos(x, y - 1, z);
-        return !isBlockSolid(block1) && !isBlockSolid(block2) && (isBlockSolid(block3) || !checkGround) && isSafeToWalkOn(block3);
-    }
-
-    private static boolean isBlockSolid(BlockPos block) {
-        return Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()).isSolidFullCube() ||
-                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockSlab) ||
-                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockStairs)||
-                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockCactus)||
-                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockChest)||
-                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockEnderChest)||
-                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockSkull)||
-                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockPane)||
-                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockFence)||
-                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockWall)||
-                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockGlass)||
-                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockPistonBase)||
-                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockPistonExtension)||
-                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockPistonMoving)||
-                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockStainedGlass)||
-                (Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockTrapDoor);
-    }
-
-    private static boolean isSafeToWalkOn(BlockPos block) {
-        return !(Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockFence) &&
-                !(Minecraft.getMinecraft().theWorld.getBlock(block.getX(), block.getY(), block.getZ()) instanceof BlockWall);
     }
 
     public Hub isHubExisting(Vec3 loc) {
@@ -204,36 +189,36 @@ public class AStarCustomPathFinder {
             return loc;
         }
 
-        public Hub getParent() {
-            return parent;
-        }
-
-        public ArrayList<Vec3> getPath() {
-            return path;
-        }
-
-        public double getSquareDistanceToFromTarget() {
-            return squareDistanceToFromTarget;
-        }
-
-        public double getCost() {
-            return cost;
-        }
-
         public void setLoc(Vec3 loc) {
             this.loc = loc;
+        }
+
+        public Hub getParent() {
+            return parent;
         }
 
         public void setParent(Hub parent) {
             this.parent = parent;
         }
 
+        public ArrayList<Vec3> getPath() {
+            return path;
+        }
+
         public void setPath(ArrayList<Vec3> path) {
             this.path = path;
         }
 
+        public double getSquareDistanceToFromTarget() {
+            return squareDistanceToFromTarget;
+        }
+
         public void setSquareDistanceToFromTarget(double squareDistanceToFromTarget) {
             this.squareDistanceToFromTarget = squareDistanceToFromTarget;
+        }
+
+        public double getCost() {
+            return cost;
         }
 
         public void setCost(double cost) {

@@ -1,4 +1,3 @@
-
 package cn.foodtower.util.world;
 
 
@@ -10,20 +9,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S32PacketConfirmTransaction;
 
-
-
 import java.util.ArrayList;
 
 public class PacketUtil {
 
     public static int inBound, outBound = 0;
     public static int avgInBound, avgOutBound = 0;
-
-    private static ArrayList<Packet<?>> packets = new ArrayList<Packet<?>>();
-
-    private static MSTimer packetTimer = new MSTimer();
-    private static MSTimer wdTimer = new MSTimer();
-
+    static Minecraft mc = Minecraft.getMinecraft();
+    private static final ArrayList<Packet<?>> packets = new ArrayList<Packet<?>>();
+    private static final MSTimer packetTimer = new MSTimer();
+    private static final MSTimer wdTimer = new MSTimer();
     private static int transCount = 0;
     private static int wdVL = 0;
 
@@ -35,26 +30,40 @@ public class PacketUtil {
         return wdVL >= 8;
     }
 
-    @EventHandler
-    public void onPacket( EventPacketReceive event) {
-        handlePacket(event.getPacket());
-    }
-
     private static void handlePacket(Packet<?> packet) {
         if (packet.getClass().getSimpleName().startsWith("C")) outBound++;
         else if (packet.getClass().getSimpleName().startsWith("S")) inBound++;
 
-        if (packet instanceof S32PacketConfirmTransaction)
-        {
+        if (packet instanceof S32PacketConfirmTransaction) {
             if (!isInventoryAction(((S32PacketConfirmTransaction) packet).getActionNumber()))
                 transCount++;
         }
     }
-    static Minecraft mc= Minecraft.getMinecraft();
+
+    public static void sendPacketNoEvent(final Packet<?> packet) {
+        packets.add(packet);
+        mc.getNetHandler().addToSendQueue(packet);
+    }
+
+    public static boolean handleSendPacket(Packet<?> packet) {
+        if (packets.contains(packet)) {
+            packets.remove(packet);
+            handlePacket(packet);
+            return true;
+        }
+        return false;
+    }
+
     @EventHandler
-    public void onTick( EventTick event) {
+    public void onPacket(EventPacketReceive event) {
+        handlePacket(event.getPacket());
+    }
+
+    @EventHandler
+    public void onTick(EventTick event) {
         if (packetTimer.hasTimePassed(1000L)) {
-            avgInBound = inBound; avgOutBound = outBound;
+            avgInBound = inBound;
+            avgOutBound = outBound;
             inBound = outBound = 0;
             packetTimer.reset();
         }
@@ -70,21 +79,6 @@ public class PacketUtil {
             if (wdVL < 0) wdVL = 0;
             wdTimer.reset();
         }
-    }
-
-
-    public static void sendPacketNoEvent(final Packet<?> packet) {
-        packets.add(packet);
-        mc.getNetHandler().addToSendQueue(packet);
-    }
-
-    public static boolean handleSendPacket(Packet<?> packet) {
-        if (packets.contains(packet)) {
-            packets.remove(packet);
-            handlePacket(packet);
-            return true;
-        }
-        return false;
     }
 
     /**

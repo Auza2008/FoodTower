@@ -638,8 +638,7 @@ public class ESP extends Module {
                 Color color = new Color(255, 255, 255);
                 if (entity.hurtTime > 0) {
                     color = new Color(255, 0, 0);
-                }
-                else if (ModuleManager.getModuleByClass(Teams.class).isEnabled() && Teams.isOnSameTeam(entity)) {
+                } else if (ModuleManager.getModuleByClass(Teams.class).isEnabled() && Teams.isOnSameTeam(entity)) {
                     color = new Color(0, 255, 0);
                 } else if (entity.isInvisible()) {
                 }

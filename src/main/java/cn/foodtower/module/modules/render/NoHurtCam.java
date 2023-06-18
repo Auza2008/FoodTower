@@ -3,13 +3,13 @@
  */
 package cn.foodtower.module.modules.render;
 
-import java.awt.Color;
-
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 
+import java.awt.*;
+
 public class NoHurtCam
-extends Module {
+        extends Module {
 
     public NoHurtCam() {
         super("NoHurtCam", new String[]{"NoHurtCam"}, ModuleType.Render);
@@ -17,6 +17,6 @@ extends Module {
     }
 
 
-    }
+}
 
 

@@ -1,7 +1,6 @@
 package cn.foodtower.fastuni;
 
-public interface IBFFontRenderer
-{
+public interface IBFFontRenderer {
     StringCache getStringCache();
 
     void setStringCache(StringCache value);

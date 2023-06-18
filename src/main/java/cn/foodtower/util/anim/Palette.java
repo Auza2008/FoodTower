@@ -3,7 +3,7 @@
  */
 package cn.foodtower.util.anim;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.function.Supplier;
 
 public enum Palette {
@@ -15,7 +15,7 @@ public enum Palette {
 
     private final Supplier<Color> colorSupplier;
 
-    private Palette(Supplier<Color> colorSupplier) {
+    Palette(Supplier<Color> colorSupplier) {
         this.colorSupplier = colorSupplier;
     }
 
@@ -26,7 +26,7 @@ public enum Palette {
     public static Color fade(Color color, int index, int count) {
         float[] hsb = new float[3];
         Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), hsb);
-        float brightness = Math.abs(((float)(System.currentTimeMillis() % 2000L) / 1000.0f + ((float)index / (float)count * 2.0f)) % 2.0f- 1.0f);
+        float brightness = Math.abs(((float) (System.currentTimeMillis() % 2000L) / 1000.0f + ((float) index / (float) count * 2.0f)) % 2.0f - 1.0f);
         brightness = 0.5f + 0.5f * brightness;
         hsb[2] = brightness % 2.0f;
         return new Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]));

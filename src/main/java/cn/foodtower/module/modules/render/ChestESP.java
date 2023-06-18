@@ -40,6 +40,7 @@ public class ChestESP extends Module {
         addValues(modeValue, r, g, b, chestValue, enderChestValue, furnaceValue, dispenserValue, hopperValue);
         setValueDisplayable(new Value[]{chestValue, enderChestValue, furnaceValue, dispenserValue, hopperValue}, modeValue, new Enum[]{Modes.Box, Modes.TowD, Modes.OtherBox, Modes.WireFrame});
         setValueDisplayable(new Value[]{r, g, b}, chestValue, chestValue.get());
+        setValueDisplayable(new Value[]{r, g, b}, modeValue, new Enum[]{Modes.Box, Modes.OtherBox, Modes.TowD, Modes.WireFrame});
     }
 
     @EventHandler

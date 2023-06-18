@@ -1,35 +1,35 @@
 package cn.foodtower.libraries.tessellate;
 
-import java.awt.Color;
+import java.awt.*;
 
 public interface Tessellation {
-	public Tessellation setColor(int var1);
+    static Tessellation createBasic(int size) {
+        return new BasicTess(size);
+    }
 
-	default public Tessellation setColor(Color color) {
-		return this.setColor(new Color(255, 255, 255));
-	}
+    static Tessellation createExpanding(int size, float ratio, float factor) {
+        return new ExpandingTess(size, ratio, factor);
+    }
 
-	public Tessellation setTexture(float var1, float var2);
+    Tessellation setColor(int var1);
 
-	public Tessellation addVertex(float var1, float var2, float var3);
+    default Tessellation setColor(Color color) {
+        return this.setColor(new Color(255, 255, 255));
+    }
 
-	public Tessellation bind();
+    Tessellation setTexture(float var1, float var2);
 
-	public Tessellation pass(int var1);
+    Tessellation addVertex(float var1, float var2, float var3);
 
-	public Tessellation reset();
+    Tessellation bind();
 
-	public Tessellation unbind();
+    Tessellation pass(int var1);
 
-	default public Tessellation draw(int mode) {
-		return this.bind().pass(mode).reset();
-	}
+    Tessellation reset();
 
-	public static Tessellation createBasic(int size) {
-		return new BasicTess(size);
-	}
+    Tessellation unbind();
 
-	public static Tessellation createExpanding(int size, float ratio, float factor) {
-		return new ExpandingTess(size, ratio, factor);
-	}
+    default Tessellation draw(int mode) {
+        return this.bind().pass(mode).reset();
+    }
 }

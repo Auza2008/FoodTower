@@ -5,40 +5,42 @@ import cn.foodtower.api.value.Option;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.ui.gui.clikguis.ClickUi.ClickUi;
-import cn.foodtower.util.sound.SoundFxPlayer;
 import cn.foodtower.ui.gui.clikguis.clickgui3.ClientClickGui;
+import cn.foodtower.util.sound.SoundFxPlayer;
 
 public class ClickGui extends Module {
-	private static final Mode mode = new Mode("Mode", "mode", ClickGui.modes.values(), modes.Distance);
-	public static final Option CustomColor = new Option("CustomColor",false);
-	public ClickGui() {
-		super("ClickGui", new String[] { "clickui" }, ModuleType.Render);
-		this.addValues(mode,CustomColor);
-	}
+    public static final Option CustomColor = new Option("CustomColor", false);
+    private static final Mode mode = new Mode("Mode", "mode", ClickGui.modes.values(), modes.Distance);
 
-	@Override
-	public void onEnable() {
+    public ClickGui() {
+        super("ClickGui", new String[]{"clickui"}, ModuleType.Render);
+        this.addValues(mode, CustomColor);
+    }
 
-        new SoundFxPlayer().playSound(SoundFxPlayer.SoundType.ClickGuiOpen,-4);
-	    switch ((modes)mode.get()){
-            case Nov:{
+    @Override
+    public void onEnable() {
+
+        new SoundFxPlayer().playSound(SoundFxPlayer.SoundType.ClickGuiOpen, -4);
+        switch ((modes) mode.get()) {
+            case Nov: {
                 mc.displayGuiScreen(new ClickUi());
                 break;
             }
-            case Azlips:{
+            case Azlips: {
                 mc.displayGuiScreen(new cn.foodtower.ui.gui.clikguis.clickgui4.ClickGui());
                 break;
             }
-            case Distance:{
+            case Distance: {
                 mc.displayGuiScreen(new ClientClickGui());
                 break;
             }
         }
-		this.setEnabled(false);
-	}
-    enum modes{
-    	Nov,
+        this.setEnabled(false);
+    }
+
+    enum modes {
+        Nov,
         Distance,
-		Azlips
+        Azlips
     }
 }

@@ -1,7 +1,5 @@
 package cn.foodtower.module.modules.world;
 
-import java.awt.Color;
-
 import cn.foodtower.api.EventHandler;
 import cn.foodtower.api.events.World.EventPreUpdate;
 import cn.foodtower.module.Module;
@@ -9,10 +7,14 @@ import cn.foodtower.module.ModuleType;
 import cn.foodtower.util.math.RotationUtil;
 import cn.foodtower.util.world.BlockUtils;
 import net.minecraft.block.Block;
-import net.minecraft.util.*;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Vec3;
+
+import java.awt.*;
 
 public class AntiObsidian
-extends Module {
+        extends Module {
     public AntiObsidian() {
         super("AntiObsidian", new String[]{"AntiObsidian"}, ModuleType.World);
         super.addValues();
@@ -20,7 +22,7 @@ extends Module {
     }
 
     @EventHandler
-    public void OnUpdate( EventPreUpdate e) {
+    public void OnUpdate(EventPreUpdate e) {
         BlockPos obsidianpos = new BlockPos(new Vec3(mc.thePlayer.posX, mc.thePlayer.posY + 1, mc.thePlayer.posZ));
         Block obsidianblock = mc.theWorld.getBlockState(obsidianpos).getBlock();
         if (obsidianblock == Block.getBlockById(49)) {

@@ -28,6 +28,7 @@ public class AutoPot
     private final Option Ground = new Option("GroundCheck", true);
     private final Numbers<Double> HEALTH = new Numbers<>("Health", 6.0, 0.5, 10.0, 0.5);
     Timer timer = new Timer();
+
     public AutoPot() {
         super("AutoPot", new String[]{"AutoPot"}, ModuleType.Combat);
         super.addValues(this.REGEN, this.SPEED, this.PREDICT, this.HEALTH, this.Ground);

@@ -2,8 +2,8 @@ package cn.foodtower.ui.cloudmusic;
 
 import cn.foodtower.api.EventBus;
 import cn.foodtower.api.EventHandler;
-import cn.foodtower.manager.FileManager;
 import cn.foodtower.api.events.World.EventTick;
+import cn.foodtower.manager.FileManager;
 import cn.foodtower.ui.cloudmusic.ui.GuiCloudMusic;
 import cn.foodtower.ui.cloudmusic.ui.TrackSlot;
 import cn.foodtower.ui.cloudmusic.utils.CloudMusicAPI;
@@ -45,6 +45,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class MusicManager {
     public static MusicManager INSTANCE;
+    public static CopyOnWriteArrayList<TrackSlot> slots = new CopyOnWriteArrayList<>();
+    public static boolean showMsg = false;
+    public static SpectrumUtil spectrumUtil;
 
     static {
         INSTANCE = new MusicManager();
@@ -54,8 +57,6 @@ public class MusicManager {
     public float y = 10;
     public float x2 = 0;
     public float y2 = 0;
-
-    public static CopyOnWriteArrayList<TrackSlot> slots = new CopyOnWriteArrayList<>();
     // 当前播放和播放列表
     public Track currentTrack = null;
     public ArrayList<Track> playlist = new ArrayList<>();
@@ -70,8 +71,6 @@ public class MusicManager {
     // 歌词
     public Thread lyricAnalyzeThread = null;
     public boolean lyric = true;
-    public static boolean showMsg = false;
-
     //	public ScrollingText songNameScroll;
 //	public ScrollingText artistsScroll;
     public boolean noUpdate = false;
@@ -84,17 +83,15 @@ public class MusicManager {
     public int tlrcIndex = 0;
     public File circleImage;
     // 音乐封面缓存
-    private HashMap<Long, ResourceLocation> artsLocations = new HashMap<>();
+    private final HashMap<Long, ResourceLocation> artsLocations = new HashMap<>();
     // I'm stuck with JavaFX MediaPlayer :(
     private MediaPlayer mediaPlayer;
     // 缓存文件夹
-    private File musicFolder;
-    private File artPicFolder;
-    private File cookie;
-
+    private final File musicFolder;
+    private final File artPicFolder;
+    private final File cookie;
     // Minecraft 实例
-    private Minecraft mc = Minecraft.getMinecraft();
-    public static SpectrumUtil spectrumUtil;
+    private final Minecraft mc = Minecraft.getMinecraft();
 
 
     public MusicManager() {
@@ -109,7 +106,7 @@ public class MusicManager {
         if (!musicFolder.exists())
             musicFolder.mkdirs(); // 文件夹不存在时创建
 
-        circleImage = new File( FileManager.dir + File.separator + "circleImage");
+        circleImage = new File(FileManager.dir + File.separator + "circleImage");
         if (!circleImage.exists()) {
             circleImage.mkdirs();
         }
@@ -144,9 +141,21 @@ public class MusicManager {
         EventBus.getInstance().register(this);
     }
 
-    private String getPicURL(long id){
-        for (Track track: playlist){
-            if (track.id == id){
+    public static void clean() {
+        for (File temp : MusicManager.INSTANCE.musicFolder.listFiles()) {
+            temp.delete();
+        }
+        for (File temp : MusicManager.INSTANCE.artPicFolder.listFiles()) {
+            temp.delete();
+        }
+        for (File temp : MusicManager.INSTANCE.circleImage.listFiles()) {
+            temp.delete();
+        }
+    }
+
+    private String getPicURL(long id) {
+        for (Track track : playlist) {
+            if (track.id == id) {
                 return track.picUrl;
             }
         }
@@ -170,7 +179,7 @@ public class MusicManager {
             artsLocations.put(id, null);
             ResourceLocation rl = new ResourceLocation("cloudMusicCache/" + id);
             IImageBuffer iib = new IImageBuffer() {
-                ImageBufferDownload ibd = new ImageBufferDownload();
+                final ImageBufferDownload ibd = new ImageBufferDownload();
 
                 public BufferedImage parseUserSkin(BufferedImage image) {
                     return image;
@@ -310,8 +319,7 @@ public class MusicManager {
                     if (!lyrics[1].equals("")) {
                         if (lyrics[1].equals("_NOLYRIC_")) {
                             this.tlrcCur = "纯音乐, 请欣赏";
-                        } else
-                        if (lyrics[1].equals("_UNCOLLECT_")) {
+                        } else if (lyrics[1].equals("_UNCOLLECT_")) {
                             this.tlrcCur = "该歌曲暂无歌词";
                         } else {
                             CloudMusicAPI.INSTANCE.analyzeLyric(this.tlrc, lyrics[1]);
@@ -366,7 +374,6 @@ public class MusicManager {
         }
     }
 
-
     public void getCircle(Track track) {
 
         if (circleLocations.containsKey(track.id)) {
@@ -394,18 +401,6 @@ public class MusicManager {
             Minecraft.getMinecraft().getTextureManager().loadTexture(rl2, textureArt2);
         } catch (Exception ex) {
             ex.printStackTrace();
-        }
-    }
-
-    public static void clean(){
-        for (File temp : MusicManager.INSTANCE.musicFolder.listFiles()){
-            temp.delete();
-        }
-        for (File temp : MusicManager.INSTANCE.artPicFolder.listFiles()){
-            temp.delete();
-        }
-        for (File temp : MusicManager.INSTANCE.circleImage.listFiles()){
-            temp.delete();
         }
     }
 
@@ -501,8 +496,7 @@ public class MusicManager {
 
                         play(playlist.get(i - 2));
                         break;
-                    } else
-                    if (t.id == currentTrack.id) {
+                    } else if (t.id == currentTrack.id) {
                         playPrev = true;
                     }
                 }

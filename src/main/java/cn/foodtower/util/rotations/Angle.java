@@ -11,25 +11,6 @@ public class Angle extends Vector2<Float> {
         super(x, y);
     }
 
-    public Angle setYaw(Float yaw) {
-        this.setX(yaw);
-        return this;
-    }
-
-    public Angle setPitch(Float pitch) {
-        this.setY(pitch);
-        return this;
-    }
-
-    public Float getYaw() {
-        return this.getX().floatValue();
-    }
-
-    public Float getPitch() {
-        return this.getY().floatValue();
-    }
-
-
     public static double a2(double a, double b) {
         return ((a - b) % 360.0D + 540.0D) % 360.0D - 180.0D;
     }
@@ -43,6 +24,24 @@ public class Angle extends Vector2<Float> {
             angle += 360.0F;
         }
         return angle;
+    }
+
+    public Float getYaw() {
+        return this.getX().floatValue();
+    }
+
+    public Angle setYaw(Float yaw) {
+        this.setX(yaw);
+        return this;
+    }
+
+    public Float getPitch() {
+        return this.getY().floatValue();
+    }
+
+    public Angle setPitch(Float pitch) {
+        this.setY(pitch);
+        return this;
     }
 
     public Angle constrantAngle() {

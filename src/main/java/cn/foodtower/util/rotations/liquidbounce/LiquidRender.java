@@ -1,7 +1,6 @@
 package cn.foodtower.util.rotations.liquidbounce;
 
 
-
 import cn.foodtower.ui.font.FontLoaders;
 import cn.foodtower.util.misc.scaffold.blocks.BlockUtils;
 import net.minecraft.block.Block;
@@ -38,18 +37,17 @@ import static org.lwjgl.opengl.GL11.*;
  * @game Minecraft
  */
 public final class LiquidRender {
-    public static Minecraft mc = Minecraft.getMinecraft();
     private static final Map<Integer, Boolean> glCapMap = new HashMap<>();
-
+    public static Minecraft mc = Minecraft.getMinecraft();
     public static int deltaTime;
 
     public static void drawBlockBox(final BlockPos blockPos, final Color color, final boolean outline) {
         final RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
         final Timer timer = Minecraft.getMinecraft().timer;
 
-        final double x = blockPos.getX() - renderManager.renderPosX;
-        final double y = blockPos.getY() - renderManager.renderPosY;
-        final double z = blockPos.getZ() - renderManager.renderPosZ;
+        final double x = blockPos.getX() - RenderManager.renderPosX;
+        final double y = blockPos.getY() - RenderManager.renderPosY;
+        final double z = blockPos.getZ() - RenderManager.renderPosZ;
 
         AxisAlignedBB axisAlignedBB = new AxisAlignedBB(x, y, z, x + 1.0, y + 1.0, z + 1.0);
         final Block block = BlockUtils.getBlock(blockPos);
@@ -96,11 +94,11 @@ public final class LiquidRender {
         glDepthMask(false);
 
         final double x = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * timer.renderPartialTicks
-                - renderManager.renderPosX;
+                - RenderManager.renderPosX;
         final double y = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * timer.renderPartialTicks
-                - renderManager.renderPosY;
+                - RenderManager.renderPosY;
         final double z = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * timer.renderPartialTicks
-                - renderManager.renderPosZ;
+                - RenderManager.renderPosZ;
 
         final AxisAlignedBB entityBox = entity.getEntityBoundingBox();
         final AxisAlignedBB axisAlignedBB = new AxisAlignedBB(
@@ -145,7 +143,7 @@ public final class LiquidRender {
 
     public static void drawPlatform(final double y, final Color color, final double size) {
         final RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
-        final double renderY = y - renderManager.renderPosY;
+        final double renderY = y - RenderManager.renderPosY;
 
         drawAxisAlignedBB(new AxisAlignedBB(size, renderY + 0.02D, size, -size, renderY, -size), color);
     }
@@ -155,11 +153,11 @@ public final class LiquidRender {
         final Timer timer = Minecraft.getMinecraft().timer;
 
         final double x = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * timer.renderPartialTicks
-                - renderManager.renderPosX;
+                - RenderManager.renderPosX;
         final double y = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * timer.renderPartialTicks
-                - renderManager.renderPosY;
+                - RenderManager.renderPosY;
         final double z = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * timer.renderPartialTicks
-                - renderManager.renderPosZ;
+                - RenderManager.renderPosZ;
 
         final AxisAlignedBB axisAlignedBB = entity.getEntityBoundingBox()
                 .offset(-entity.posX, -entity.posY, -entity.posZ)
@@ -412,9 +410,9 @@ public final class LiquidRender {
     public static void draw2D(final BlockPos blockPos, final int color, final int backgroundColor) {
         final RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
 
-        final double posX = (blockPos.getX() + 0.5) - renderManager.renderPosX;
-        final double posY = blockPos.getY() - renderManager.renderPosY;
-        final double posZ = (blockPos.getZ() + 0.5) - renderManager.renderPosZ;
+        final double posX = (blockPos.getX() + 0.5) - RenderManager.renderPosX;
+        final double posY = blockPos.getY() - RenderManager.renderPosY;
+        final double posZ = (blockPos.getZ() + 0.5) - RenderManager.renderPosZ;
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(posX, posY, posZ);
@@ -457,7 +455,7 @@ public final class LiquidRender {
         final RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
 
         glPushMatrix();
-        glTranslated(x - renderManager.renderPosX, y - renderManager.renderPosY, z - renderManager.renderPosZ);
+        glTranslated(x - RenderManager.renderPosX, y - RenderManager.renderPosY, z - RenderManager.renderPosZ);
         glNormal3f(0F, 1F, 0F);
         glRotatef(-Minecraft.getMinecraft().getRenderManager().playerViewY, 0F, 1F, 0F);
         glRotatef(Minecraft.getMinecraft().getRenderManager().playerViewX, 1F, 0F, 0F);
@@ -490,7 +488,7 @@ public final class LiquidRender {
     public static void makeScissorBox(final float x, final float y, final float x2, final float y2) {
         final ScaledResolution scaledResolution = new ScaledResolution(Minecraft.getMinecraft());
         final int factor = scaledResolution.getScaleFactor();
-        glScissor((int) (x * factor), (int) ((scaledResolution.getScaledHeight() - y2) * factor), (int) ((x2 - x) * factor), (int) ((y2 - y) * factor));
+        glScissor((int) (x * factor), (int) ((ScaledResolution.getScaledHeight() - y2) * factor), (int) ((x2 - x) * factor), (int) ((y2 - y) * factor));
     }
 
     /**

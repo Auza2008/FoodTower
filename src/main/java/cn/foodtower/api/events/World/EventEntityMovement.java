@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 
 public class EventEntityMovement extends Event {
     Entity entity;
+
     public EventEntityMovement(Entity entityIn) {
         entity = entityIn;
     }

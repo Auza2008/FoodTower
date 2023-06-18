@@ -1,9 +1,12 @@
 package cn.foodtower.util.rotations;
 
 public class AngleUtilitys {
-    private float minYawSmoothing, maxYawSmoothing, minPitchSmoothing, maxPitchSmoothing;
-    private Vector3<Float> delta;
-    private Angle smoothedAngle;
+    private final float minYawSmoothing;
+    private final float maxYawSmoothing;
+    private final float minPitchSmoothing;
+    private final float maxPitchSmoothing;
+    private final Vector3<Float> delta;
+    private final Angle smoothedAngle;
     private float height = Mafs.getRandomInRange(1.1F, 1.8F);
 
     public AngleUtilitys(float minYawSmoothing, float maxYawSmoothing, float minPitchSmoothing, float maxPitchSmoothing) {

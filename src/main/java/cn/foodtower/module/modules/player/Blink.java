@@ -11,8 +11,8 @@ import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.module.modules.render.Breadcrumbs;
 import cn.foodtower.module.modules.render.HUD;
-import cn.foodtower.util.time.MSTimer;
 import cn.foodtower.util.render.gl.GLUtils;
+import cn.foodtower.util.time.MSTimer;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.*;
@@ -26,35 +26,33 @@ import static org.lwjgl.opengl.GL11.*;
 public class Blink extends Module {
 
     private final LinkedBlockingQueue<Packet> packets = new LinkedBlockingQueue<>();
+    private final LinkedList<double[]> positions = new LinkedList<>();
+    public final Option pulseValue = new Option("Pulse", false);
+    private final Numbers<Double> pulseDelayValue = new Numbers<>("PulseDelay", 1000d, 100d, 5000d, 100d);
+    private final MSTimer pulseTimer = new MSTimer();
     private EntityOtherPlayerMP fakePlayer = null;
     private boolean disableLogger;
-    private final LinkedList<double[]> positions = new LinkedList<>();
-
-    private final Option pulseValue = new Option("Pulse", false);
-    private final Numbers<Double> pulseDelayValue = new Numbers<>("PulseDelay", 1000d, 100d, 5000d, 100d);
-
-    private final MSTimer pulseTimer = new MSTimer();
 
     public Blink() {
         super("Blink", new String[]{"blink"}, ModuleType.Player);
-        this.addValues(pulseValue,pulseDelayValue);
+        this.addValues(pulseValue, pulseDelayValue);
     }
 
     @Override
     public void onEnable() {
-        if(mc.thePlayer == null)
+        if (mc.thePlayer == null)
             return;
 
         if (!pulseValue.get()) {
-            fakePlayer = new EntityOtherPlayerMP( mc.theWorld, mc.thePlayer.getGameProfile( ) );
-            fakePlayer.clonePlayer( mc.thePlayer, true );
-            fakePlayer.copyLocationAndAnglesFrom( mc.thePlayer );
+            fakePlayer = new EntityOtherPlayerMP(mc.theWorld, mc.thePlayer.getGameProfile());
+            fakePlayer.clonePlayer(mc.thePlayer, true);
+            fakePlayer.copyLocationAndAnglesFrom(mc.thePlayer);
             fakePlayer.rotationYawHead = mc.thePlayer.rotationYawHead;
-            mc.theWorld.addEntityToWorld( -1337, fakePlayer );
+            mc.theWorld.addEntityToWorld(-1337, fakePlayer);
         }
-        synchronized(positions) {
-            positions.add(new double[] {mc.thePlayer.posX, mc.thePlayer.getEntityBoundingBox().minY + (mc.thePlayer.getEyeHeight() / 2), mc.thePlayer.posZ});
-            positions.add(new double[] {mc.thePlayer.posX, mc.thePlayer.getEntityBoundingBox().minY, mc.thePlayer.posZ});
+        synchronized (positions) {
+            positions.add(new double[]{mc.thePlayer.posX, mc.thePlayer.getEntityBoundingBox().minY + (mc.thePlayer.getEyeHeight() / 2), mc.thePlayer.posZ});
+            positions.add(new double[]{mc.thePlayer.posX, mc.thePlayer.getEntityBoundingBox().minY, mc.thePlayer.posZ});
         }
 
         pulseTimer.reset();
@@ -62,7 +60,7 @@ public class Blink extends Module {
 
     @Override
     public void onDisable() {
-        if(mc.thePlayer == null)
+        if (mc.thePlayer == null)
             return;
 
         blink();
@@ -94,11 +92,11 @@ public class Blink extends Module {
 
     @EventHandler
     public void onUpdate(EventPreUpdate event) {
-        synchronized(positions) {
-            positions.add(new double[] {mc.thePlayer.posX, mc.thePlayer.getEntityBoundingBox().minY, mc.thePlayer.posZ});
+        synchronized (positions) {
+            positions.add(new double[]{mc.thePlayer.posX, mc.thePlayer.getEntityBoundingBox().minY, mc.thePlayer.posZ});
         }
 
-        if(pulseValue.get()&& pulseTimer.hasTimePassed(pulseDelayValue.get().longValue())) {
+        if (pulseValue.get() && pulseTimer.hasTimePassed(pulseDelayValue.get().longValue())) {
             blink();
             pulseTimer.reset();
         }
@@ -109,7 +107,7 @@ public class Blink extends Module {
         final Breadcrumbs breadcrumbs = (Breadcrumbs) ModuleManager.getModuleByClass(Breadcrumbs.class);
         final Color color = breadcrumbs.colorRainbow.get() ? HUD.RainbowColor : new Color(breadcrumbs.colorRedValue.get().intValue(), breadcrumbs.colorGreenValue.get().intValue(), breadcrumbs.colorBlueValue.get().intValue());
 
-        synchronized(positions) {
+        synchronized (positions) {
             glPushMatrix();
 
             glDisable(GL_TEXTURE_2D);
@@ -124,7 +122,7 @@ public class Blink extends Module {
             final double renderPosY = mc.getRenderManager().viewerPosY;
             final double renderPosZ = mc.getRenderManager().viewerPosZ;
 
-            for(final double[] pos : positions)
+            for (final double[] pos : positions)
                 glVertex3d(pos[0] - renderPosX, pos[1] - renderPosY, pos[2] - renderPosZ);
 
             glColor4d(1, 1, 1, 1);
@@ -138,8 +136,8 @@ public class Blink extends Module {
     }
 
     @EventHandler
-    private void onRender2d(){
-        this.setSuffix("Packet:"+packets.size());
+    private void onRender2d() {
+        this.setSuffix("Packet:" + packets.size());
     }
 
     private void blink() {
@@ -151,12 +149,12 @@ public class Blink extends Module {
             }
 
             disableLogger = false;
-        }catch(final Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
             disableLogger = false;
         }
 
-        synchronized(positions) {
+        synchronized (positions) {
             positions.clear();
         }
     }

@@ -1,9 +1,9 @@
-
 package cn.foodtower.util.time;
 
 public class TimeHelper {
     public long lastMs;
-    public TimeHelper(){
+
+    public TimeHelper() {
         this.lastMs = System.currentTimeMillis();
     }
 
@@ -24,7 +24,7 @@ public class TimeHelper {
     }
 
     public void setLastMs(int i) {
-        this.lastMs = System.currentTimeMillis() + (long)i;
+        this.lastMs = System.currentTimeMillis() + (long) i;
     }
 
     public boolean hasReached(long milliseconds) {
@@ -32,10 +32,10 @@ public class TimeHelper {
     }
 
     public boolean hasReached(float timeLeft) {
-        return (float)(this.getCurrentMS() - this.lastMs) >= timeLeft;
+        return (float) (this.getCurrentMS() - this.lastMs) >= timeLeft;
     }
 
     public boolean delay(double nextDelay) {
-        return (double)(System.currentTimeMillis() - this.lastMs) >= nextDelay;
+        return (double) (System.currentTimeMillis() - this.lastMs) >= nextDelay;
     }
 }

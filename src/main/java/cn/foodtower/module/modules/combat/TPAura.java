@@ -12,9 +12,9 @@ import cn.foodtower.manager.FriendManager;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.module.modules.world.Teams;
-import cn.foodtower.util.misc.SuperLib;
 import cn.foodtower.util.math.Vec3;
 import cn.foodtower.util.misc.AStarCustomPathFinder;
+import cn.foodtower.util.misc.SuperLib;
 import cn.foodtower.util.render.Colors;
 import cn.foodtower.util.render.RenderingUtil;
 import cn.foodtower.util.time.STimer;
@@ -59,12 +59,12 @@ public class TPAura extends Module {
     public static final Numbers<Double> MAXT = new Numbers<>("MaxTarget", 1d, 1d, 50d, 1d);
     public static TimerUtil timer = new TimerUtil();
     public static boolean canReach;
-    public EntityLivingBase TPcurtarget;
     private final double dashDistance = 5;
+    private final STimer cps = new STimer();
+    public EntityLivingBase TPcurtarget;
     private ArrayList<Vec3> path = new ArrayList<>();
     private List<Vec3>[] test = new ArrayList[50];
     private List<EntityLivingBase> targets = new CopyOnWriteArrayList<>();
-    private final STimer cps = new STimer();
     private int ticks;
     private int tpdelay;
 

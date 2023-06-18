@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 
 public final class ConstantDistanceCheck
-implements ICheck {
+        implements ICheck {
     private final float distance;
 
     public ConstantDistanceCheck(float distance) {

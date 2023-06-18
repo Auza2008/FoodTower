@@ -3,13 +3,13 @@
  */
 package cn.foodtower.util.misc;
 
-import java.util.ArrayList;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
+
+import java.util.ArrayList;
 
 public final class PathfindingUtils {
     private static final Minecraft mc = Minecraft.getMinecraft();
@@ -43,12 +43,13 @@ public final class PathfindingUtils {
                     double bigX = Math.max(lastDashLoc.getX(), pathElm.getX());
                     double bigY = Math.max(lastDashLoc.getY(), pathElm.getY());
                     double bigZ = Math.max(lastDashLoc.getZ(), pathElm.getZ());
-                    int x = (int)smallX;
-                    block1: while ((double)x <= bigX) {
-                        int y = (int)smallY;
-                        while ((double)y <= bigY) {
-                            int z = (int)smallZ;
-                            while ((double)z <= bigZ) {
+                    int x = (int) smallX;
+                    block1:
+                    while ((double) x <= bigX) {
+                        int y = (int) smallY;
+                        while ((double) y <= bigY) {
+                            int z = (int) smallZ;
+                            while ((double) z <= bigZ) {
                                 if (!AStarCustomPathFinders.checkPositionValidity(new CustomVec3(x, y, z))) {
                                     canContinue = false;
                                     break block1;

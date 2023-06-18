@@ -10,6 +10,7 @@ import net.minecraft.util.AxisAlignedBB;
 
 public class VanillaFly implements FlyModule {
     private final MSTimer groundTimer = new MSTimer();
+
     @Override
     public void onEnabled() {
 
