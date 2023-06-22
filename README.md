@@ -3,6 +3,8 @@
 ![Github stars](http://img.shields.io/github/stars/Auza2008/FoodTower.svg)
 ![Github stars](http://img.shields.io/github/license/Auza2008/FoodTower)
 
+![Alt](https://repobeats.axiom.co/api/embed/8039b3eb48955539d8d898150c3e904f042351ad.svg "Repobeats analytics image")
+
 ## 配置开发环境
 1.首先你要有一个[Gradle](https://gradle.org/)和[Java8[JDK]](https://www.oracle.com/cn/java/technologies/downloads)
 
