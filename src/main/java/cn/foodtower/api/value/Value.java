@@ -45,7 +45,7 @@ public abstract class Value<V> {
             return false;
         }
         if (targetModesB != null) {
-            return targetModesB.equals(options.get());
+            return targetModesB == options.get();
         }
         return true;
     }

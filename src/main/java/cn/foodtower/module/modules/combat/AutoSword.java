@@ -2,6 +2,7 @@ package cn.foodtower.module.modules.combat;
 
 import cn.foodtower.api.EventHandler;
 import cn.foodtower.api.events.World.EventAttack;
+import cn.foodtower.api.value.Mode;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.util.entity.InventoryUtils;
@@ -20,15 +21,33 @@ import java.util.Optional;
 public class AutoSword extends Module {
     public TimeHelper timer = new TimeHelper();
 
+    private final Mode mode = new Mode("Mpde", ModeE.values(), ModeE.New);
     public AutoSword() {
         super("AutoSword", new String[]{"AutoSword"}, ModuleType.Combat);
+        addValues(mode);
     }
 
     @EventHandler
     public void onAttack(EventAttack e) {
-        int best = getBestSword();
-        if (best != 0) {
-            mc.playerController.windowClick(0, best, 0, 2, mc.thePlayer);
+        if (mode.get().equals(ModeE.Old)) {
+            int best = getBestSword();
+            if (best != 0) {
+                mc.playerController.windowClick(0, best, 0, 2, mc.thePlayer);
+            }
+        } else {
+            float damage = 1.0f;
+            int bestSwordSlot = -1;
+            for (int i = 0; i < 9; ++i) {
+                float damageLevel;
+                ItemStack itemStack = mc.thePlayer.inventory.getStackInSlot(i);
+                if (itemStack == null || !(itemStack.getItem() instanceof ItemSword) || !((damageLevel = (float) this.getSwordDamage(itemStack)) > damage))
+                    continue;
+                damage = damageLevel;
+                bestSwordSlot = i;
+            }
+            if (bestSwordSlot != -1) {
+                mc.thePlayer.inventory.currentItem = bestSwordSlot;
+            }
         }
     }
 
@@ -86,5 +105,9 @@ public class AutoSword extends Module {
         }
 
         return damage + (double) EnchantmentHelper.func_152377_a(itemStack, EnumCreatureAttribute.UNDEFINED);
+    }
+
+    enum ModeE {
+        New, Old
     }
 }

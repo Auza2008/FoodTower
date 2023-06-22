@@ -283,6 +283,11 @@ public class KillAura extends Module {
         if (curTarget != null && this.canAttack()) {
             if (((!coolDown.get() && this.attackStopwatch.hasTimePassed(getAps())) || (coolDown.get() && hitTicks > delayValue))) {
                 if (noHitCheck.get() || getHitable()) {
+                    if (!noHitCheck.get() && raycast.get()) {
+                        if (RayCastUtil.raycastEntity(range.get(), entity -> entity == curTarget) != null) {
+                            curTarget = (EntityLivingBase) RayCastUtil.raycastEntity(range.get(), entity -> entity == curTarget);
+                        }
+                    }
                     this.attack(curTarget);
                     this.attackStopwatch.reset();
                     hitTicks = 0;
@@ -320,7 +325,7 @@ public class KillAura extends Module {
     }
 
     private boolean getHitable() {
-        return RotationUtils.isFaced(curTarget, range.get()) && !raycast.get() || RayCastUtil.raycastEntity(range.get(), entity -> entity == curTarget) != null;
+        return RotationUtils.isFaced(curTarget, range.get()) && !raycast.get();
     }
 
     private boolean isEntityNearby() {
@@ -363,11 +368,13 @@ public class KillAura extends Module {
                 case AAC:
                 case Packet:
                     sendPacket(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+                    isBlocking = false;
                     break;
                 case DCJ:
                     sendPacket(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, new BlockPos(0, 0, 0), EnumFacing.DOWN));
+                    isBlocking = false;
+                    break;
             }
-            isBlocking = false;
         }
     }
 
@@ -375,24 +382,22 @@ public class KillAura extends Module {
         if (this.autoBlock.get() && isHoldingSword() && this.isEntityNearby() && !isBlocking) {
 //            mc.thePlayer.setItemInUse(mc.thePlayer.getHeldItem(), 7199);
             switch ((AutoBlockMode) this.autoBlockMode.get()) {
-                case Vanilla:
-                    mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem());
-                    mc.thePlayer.setItemInUse(mc.thePlayer.getHeldItem(), 71999);
-                    break;
                 case Packet:
                     sendPacket(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.inventory.getCurrentItem(), 0.0f, 0.0f, 0.0f));
+                    isBlocking = true;
                     break;
                 case AAC:
                     if (mc.thePlayer.ticksExisted % 2 == 0) {
                         mc.playerController.interactWithEntitySendPacket(mc.thePlayer, curTarget);
                         sendPacket(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
                     }
+                    isBlocking = true;
                     break;
                 case DCJ:
                     sendPacket(new C08PacketPlayerBlockPlacement(BlockPos.ORIGIN, 255, mc.thePlayer.getHeldItem(), 0.0f, 0.0f, 0.0f));
+                    isBlocking = true;
                     break;
             }
-            isBlocking = true;
         }
     }
 

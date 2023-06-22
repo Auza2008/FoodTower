@@ -3,13 +3,11 @@ package cn.foodtower.module.modules.world;
 import cn.foodtower.api.EventHandler;
 import cn.foodtower.api.events.Render.EventRender2D;
 import cn.foodtower.api.events.Render.EventRender3D;
-import cn.foodtower.api.events.World.EventMotion;
-import cn.foodtower.api.events.World.EventMotionUpdate;
-import cn.foodtower.api.events.World.EventMove;
-import cn.foodtower.api.events.World.EventPacket;
+import cn.foodtower.api.events.World.*;
 import cn.foodtower.api.value.Mode;
 import cn.foodtower.api.value.Numbers;
 import cn.foodtower.api.value.Option;
+import cn.foodtower.api.value.Value;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.ui.font.CFontRenderer;
@@ -40,7 +38,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
-import net.minecraft.potion.Potion;
 import net.minecraft.util.*;
 
 import java.awt.*;
@@ -57,6 +54,7 @@ public class Scaffold extends Module {
 
     // Mode
     public final Mode modeValue = new Mode("Mode", ScaffoldMode.values(), ScaffoldMode.Normal);
+    public final Mode rotMode = new Mode("Rotations", RotMode.values(), RotMode.Normal);
     // Basic stuff
     public final Option sprintValue = new Option("Sprint", true);
     // Delay
@@ -67,13 +65,12 @@ public class Scaffold extends Module {
     private final Option autoBlockValue = new Option("AutoBlock", true);
     private final Option stayAutoBlock = new Option("StayAutoBlock", false);
     //SetMotion
-    private final Option HypixelSlow = new Option("SetMotion",
-
-            true);
+    private final Option SetMotion = new Option("SetMotion", false);
+    private final Option rotationStrafeValue = new Option("RotationStrafe", false);
     private final Numbers<Double> MotionSpeed = new Numbers<>("MotionSpeed", 0.22d, 0d, 1d, 0.01d);
-    private final Option GroundOnly = new Option("OnlyGround", true);
     private final Option swingValue = new Option("Swing", true);
     private final Option searchValue = new Option("Search", true);
+    private final Option GroundOnly = new Option("OnlyGround", true);
     private final Option downValue = new Option("Down", true);
     private final Mode placeModeValue = new Mode("PlaceTiming", PlaceTiming.values(), PlaceTiming.Post);
     // Eagle
@@ -86,6 +83,7 @@ public class Scaffold extends Module {
     private final Option rotationsValue = new Option("Rotations", true);
     private final Numbers<Double> keepLengthValue = new Numbers<>("KeepRotationLength", 0d, 0d, 20d, 1d);
     private final Option keepRotationValue = new Option("KeepRotation", false);
+    private final Numbers<Double> staticPitchValue = new Numbers<>("StaticPitch", 86d, 80d, 90d, 1d);
     // Zitter
     private final Option zitterValue = new Option("Zitter", false);
     private final Mode zitterModeValue = new Mode("ZitterMode", ZitterMode.values(), ZitterMode.Teleport);
@@ -127,7 +125,9 @@ public class Scaffold extends Module {
 
     public Scaffold() {
         super("Scaffold", new String[]{"BlockFly"}, ModuleType.World);
-        addValues(modeValue, maxDelayValue, minDelayValue, placeableDelay, autoBlockValue, stayAutoBlock, HypixelSlow, MotionSpeed, GroundOnly, sprintValue, swingValue, searchValue, downValue, placeModeValue, eagleValue, eagleSilentValue, blocksToEagleValue, expandLengthValue, rotationsValue, keepLengthValue, keepRotationValue, zitterValue, zitterModeValue, zitterSpeed, zitterStrength, timerValue, speedModifierValue, sameYValue, safeWalkValue, airSafeValue, counterDisplayValue, markValue);
+        addValues(modeValue, maxDelayValue, minDelayValue, placeableDelay, autoBlockValue, stayAutoBlock, SetMotion, MotionSpeed, GroundOnly, sprintValue, swingValue, searchValue, downValue, placeModeValue, eagleValue, eagleSilentValue, blocksToEagleValue, expandLengthValue, rotationsValue, rotMode, staticPitchValue, rotationStrafeValue, keepLengthValue, keepRotationValue, zitterValue, zitterModeValue, zitterSpeed, zitterStrength, timerValue, speedModifierValue, sameYValue, safeWalkValue, airSafeValue, counterDisplayValue, markValue);
+        setValueDisplayable(new Value[]{MotionSpeed, GroundOnly}, SetMotion, !SetMotion.get());
+        setValueDisplayable(staticPitchValue, rotMode, RotMode.Static);
     }
 
     public static void renderBlock() {
@@ -160,6 +160,20 @@ public class Scaffold extends Module {
         }
 
         return amount;
+    }
+
+    public static float getScaffoldRotation(float yaw, float strafe) {
+        float rotationYaw = yaw;
+
+        rotationYaw += 180F;
+
+        float forward = -0.5F;
+
+        if (strafe < 0F) rotationYaw -= 90F * forward;
+
+        if (strafe > 0F) rotationYaw += 90F * forward;
+
+        return rotationYaw;
     }
 
     /**
@@ -202,11 +216,6 @@ public class Scaffold extends Module {
             if (mode.equals(ScaffoldMode.Rewinside)) {
                 MovementUtils.strafe(0.2F);
                 mc.thePlayer.motionY = 0D;
-            }
-            int DiffYaw = 0;
-            if (mc.thePlayer.movementInput.moveForward > 0) DiffYaw = 180;
-            if (modeValue.get().equals(ScaffoldMode.Huayuting)) {
-                RotationUtils.setTargetRotation(new Rotation(mc.thePlayer.rotationYaw + DiffYaw, 86));
             }
 
             // Smooth Zitter
@@ -368,6 +377,105 @@ public class Scaffold extends Module {
         this.targetPlace = null;
     }
 
+    @EventHandler
+    //took it from applyrotationstrafe XD. staticyaw comes from bestnub.
+    public void onStrafe(final EventStrafe event) {
+        if (lockRotation != null && rotationStrafeValue.get()) {
+            final int dif = (int) ((MathHelper.wrapAngleTo180_float(mc.thePlayer.rotationYaw - lockRotation.getYaw() - 23.5F - 135) + 180) / 45);
+
+            final float yaw = lockRotation.getYaw();
+            final float strafe = event.getStrafe();
+            final float forward = event.getForward();
+            final float friction = event.getFriction();
+            float calcForward = 0F;
+            float calcStrafe = 0F;
+            /*
+            Rotation Dif
+
+            7 \ 0 / 1     +  +  +      +  |  -
+            6   +   2     -- F --      +  S  -
+            5 / 4 \ 3     -  -  -      +  |  -
+            */
+            switch (dif) {
+                case 0: {
+                    calcForward = forward;
+                    calcStrafe = strafe;
+                    break;
+                }
+                case 1: {
+                    calcForward += forward;
+                    calcStrafe -= forward;
+                    calcForward += strafe;
+                    calcStrafe += strafe;
+                    break;
+                }
+                case 2: {
+                    calcForward = strafe;
+                    calcStrafe = -forward;
+                    break;
+                }
+                case 3: {
+                    calcForward -= forward;
+                    calcStrafe -= forward;
+                    calcForward += strafe;
+                    calcStrafe -= strafe;
+                    break;
+                }
+                case 4: {
+                    calcForward = -forward;
+                    calcStrafe = -strafe;
+                    break;
+                }
+                case 5: {
+                    calcForward -= forward;
+                    calcStrafe += forward;
+                    calcForward -= strafe;
+                    calcStrafe -= strafe;
+                    break;
+                }
+                case 6: {
+                    calcForward = -strafe;
+                    calcStrafe = forward;
+                    break;
+                }
+                case 7: {
+                    calcForward += forward;
+                    calcStrafe += forward;
+                    calcForward -= strafe;
+                    calcStrafe += strafe;
+                    break;
+                }
+            }
+
+            if (calcForward > 1f || calcForward < 0.9f && calcForward > 0.3f || calcForward < -1f || calcForward > -0.9f && calcForward < -0.3f) {
+                calcForward *= 0.5f;
+            }
+
+            if (calcStrafe > 1f || calcStrafe < 0.9f && calcStrafe > 0.3f || calcStrafe < -1f || calcStrafe > -0.9f && calcStrafe < -0.3f) {
+                calcStrafe *= 0.5f;
+            }
+
+            float f = calcStrafe * calcStrafe + calcForward * calcForward;
+
+            if (f >= 1.0E-4F) {
+                f = MathHelper.sqrt_float(f);
+
+                if (f < 1.0F) f = 1.0F;
+
+                f = friction / f;
+                calcStrafe *= f;
+                calcForward *= f;
+
+                final float yawSin = MathHelper.sin((float) (yaw * Math.PI / 180F));
+                final float yawCos = MathHelper.cos((float) (yaw * Math.PI / 180F));
+
+                mc.thePlayer.motionX += calcStrafe * yawCos - calcForward * yawSin;
+                mc.thePlayer.motionZ += calcForward * yawCos + calcStrafe * yawSin;
+            }
+            event.setCancelled(true);
+        }
+    }
+
     /**
      * Disable scaffold module
      */
@@ -402,10 +510,7 @@ public class Scaffold extends Module {
      */
     @EventHandler
     public void onMove(final EventMove event) {
-        if (modeValue.get().equals(ScaffoldMode.Huayuting) && mc.thePlayer.isPotionActive(Potion.moveSpeed)) {
-            MovementUtils.setMotion(event, 5.61f / 20f);
-        }
-        if (HypixelSlow.get()) {
+        if (SetMotion.get()) {
             if (MovementUtils.isMoving()) {
                 if ((GroundOnly.get() && mc.thePlayer.onGround) || !GroundOnly.get())
                     MovementUtils.setMotion(event, MotionSpeed.get());
@@ -484,6 +589,8 @@ public class Scaffold extends Module {
     private boolean search(final BlockPos blockPosition, final boolean checks) {
         if (!BlockUtils.isReplaceable(blockPosition)) return false;
 
+        final boolean staticYawMode = rotMode.get().equals(RotMode.AAC) || rotMode.get().equals(RotMode.Static);
+
         final Vec3 eyesPos = new Vec3(mc.thePlayer.posX, mc.thePlayer.getEntityBoundingBox().minY + mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
 
         PlaceRotation placeRotation = null;
@@ -506,23 +613,27 @@ public class Scaffold extends Module {
                             continue;
 
                         // face block
-                        final double diffX = hitVec.xCoord - eyesPos.xCoord;
-                        final double diffY = hitVec.yCoord - eyesPos.yCoord;
-                        final double diffZ = hitVec.zCoord - eyesPos.zCoord;
+                        for (int i = 0; i < (staticYawMode ? 2 : 1); i++) {
+                            final double diffX = staticYawMode && i == 0 ? 0 : hitVec.xCoord - eyesPos.xCoord;
+                            final double diffY = hitVec.yCoord - eyesPos.yCoord;
+                            final double diffZ = staticYawMode && i == 1 ? 0 : hitVec.zCoord - eyesPos.zCoord;
 
-                        final double diffXZ = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
+                            final double diffXZ = MathHelper.sqrt_double(diffX * diffX + diffZ * diffZ);
 
-                        final Rotation rotation = new Rotation(MathHelper.wrapAngleTo180_float((float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90F), MathHelper.wrapAngleTo180_float((float) -Math.toDegrees(Math.atan2(diffY, diffXZ))));
+                            Rotation rotation = new Rotation(MathHelper.wrapAngleTo180_float((float) Math.toDegrees(Math.atan2(diffZ, diffX)) - 90F), MathHelper.wrapAngleTo180_float((float) -Math.toDegrees(Math.atan2(diffY, diffXZ))));
+                            if (rotMode.get().equals(RotMode.Static)) {
+                                rotation = new Rotation(getScaffoldRotation(mc.thePlayer.rotationYaw, mc.thePlayer.moveStrafing), staticPitchValue.get().floatValue());
+                            }
+                            final Vec3 rotationVector = new Vec3(RotationUtils.getVectorForRotation(rotation).getX(), RotationUtils.getVectorForRotation(rotation).getY(), RotationUtils.getVectorForRotation(rotation).getZ());
+                            final Vec3 vector = eyesPos.addVector(rotationVector.xCoord * 4, rotationVector.yCoord * 4, rotationVector.zCoord * 4);
+                            final MovingObjectPosition obj = mc.theWorld.rayTraceBlocks(eyesPos, vector, false, false, true);
 
-                        final Vec3 rotationVector = new Vec3(RotationUtils.getVectorForRotation(rotation).getX(), RotationUtils.getVectorForRotation(rotation).getY(), RotationUtils.getVectorForRotation(rotation).getZ());
-                        final Vec3 vector = eyesPos.addVector(rotationVector.xCoord * 4, rotationVector.yCoord * 4, rotationVector.zCoord * 4);
-                        final MovingObjectPosition obj = mc.theWorld.rayTraceBlocks(eyesPos, vector, false, false, true);
+                            if (!(obj.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && obj.getBlockPos().equals(neighbor)))
+                                continue;
 
-                        if (!(obj.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && obj.getBlockPos().equals(neighbor)))
-                            continue;
-
-                        if (placeRotation == null || RotationUtils.getRotationDifference(rotation) < RotationUtils.getRotationDifference(placeRotation.getRotation()))
-                            placeRotation = new PlaceRotation(new PlaceInfo(neighbor, side.getOpposite(), hitVec), rotation);
+                            if (placeRotation == null || RotationUtils.getRotationDifference(rotation) < RotationUtils.getRotationDifference(placeRotation.getRotation()))
+                                placeRotation = new PlaceRotation(new PlaceInfo(neighbor, side.getOpposite(), hitVec), rotation);
+                        }
                     }
                 }
             }
@@ -539,7 +650,7 @@ public class Scaffold extends Module {
     }
 
     enum ScaffoldMode {
-        Normal, Rewinside, Expand, Huayuting
+        Normal, Rewinside, Expand
     }
 
     enum PlaceTiming {
@@ -548,5 +659,9 @@ public class Scaffold extends Module {
 
     enum ZitterMode {
         Teleport, Smooth
+    }
+
+    enum RotMode {
+        Normal, AAC, Static
     }
 }

@@ -30,7 +30,7 @@ public class Step extends Module {
     private double stepZ = 0.0;
 
     public Step() {
-        super("Step", null, ModuleType.Movement);
+        super("Step", new String[]{""}, ModuleType.Movement);
         addValues(mode, heightValue, timerValue, delay);
     }
 

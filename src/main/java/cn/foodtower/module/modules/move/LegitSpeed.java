@@ -9,7 +9,7 @@ import net.minecraft.potion.Potion;
 
 public class LegitSpeed extends Module {
     public LegitSpeed() {
-        super("LegitSpeed", null, ModuleType.Movement);
+        super("LegitSpeed", new String[]{""}, ModuleType.Movement);
     }
 
     @EventHandler

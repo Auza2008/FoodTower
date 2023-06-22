@@ -12,7 +12,7 @@ public class SmartDCJ extends Module {
     boolean once = false;
 
     public SmartDCJ() {
-        super("SmartDCJ", null, ModuleType.Combat);
+        super("SmartDCJ", new String[]{"betterdcj"}, ModuleType.Combat);
     }
 
     @Override

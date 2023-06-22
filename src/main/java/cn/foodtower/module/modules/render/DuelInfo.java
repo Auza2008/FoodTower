@@ -17,7 +17,7 @@ public class DuelInfo extends Module {
     private final Numbers<Double> y = new Numbers<>("Y", 20d, 0d, 300d, 1d);
 
     public DuelInfo() {
-        super("DuelInfo", null, ModuleType.Render);
+        super("DuelInfo", new String[]{""}, ModuleType.Render);
         addValues(x, y);
     }
 

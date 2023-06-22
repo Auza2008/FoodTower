@@ -87,6 +87,8 @@ public class HUD extends Module {
     private final Option info = new Option("Information", true);
     private final Option CompassValue = new Option("Compass", false);
     private final long startTime = System.currentTimeMillis();
+    private final int[] counter = new int[]{0};
+    private final Option FToutline = new Option("TextOutline", false);
     public Compass compass = new Compass(325, 325, 1, 2, true);
     public TimerUtil timer = new TimerUtil();
     public float animation = 0;
@@ -97,15 +99,15 @@ public class HUD extends Module {
     float animLogoY = 3;
     boolean firstTime = true;
     int addY;
-    private final int[] counter = new int[]{0};
     private int width;
 
     public HUD() {
         super("HUD", new String[]{"gui"}, ModuleType.Render);
-        this.addValues(logomode, Widget, RainbowSpeed, Arraylists, ArrayGap, hideRender, RectMode, info, ArrayShadow, ArrayFontMode, ArrayMode, skySaturation, skyBrightness, skyDistanceValue, customlogo, CompassValue, lhp, r, g, b, a, clientCape, Arraybackground, GuiChatBackGround);
+        this.addValues(logomode, FToutline, Widget, RainbowSpeed, Arraylists, ArrayGap, hideRender, RectMode, info, ArrayShadow, ArrayFontMode, ArrayMode, skySaturation, skyBrightness, skyDistanceValue, customlogo, CompassValue, lhp, r, g, b, a, clientCape, Arraybackground, GuiChatBackGround);
         this.setEnabled(true);
         setValueDisplayable(RainbowSpeed, ArrayMode, new Enum[]{ArrayModeE.Rainbow, ArrayModeE.BlueIceSakura, ArrayModeE.Rainbow2, ArrayModeE.Wave, ArrayModeE.NEON});
         setValueDisplayable(new Value[]{skyDistanceValue, skyBrightness, skySaturation}, ArrayMode, ArrayModeE.Sky);
+        setValueDisplayable(FToutline, logomode, logomodeE.FoodTower);
     }
 
     private static int HUDColor() {
@@ -286,7 +288,13 @@ public class HUD extends Module {
                     fps = "FPS:" + " " + EnumChatFormatting.GRAY + Minecraft.getDebugFPS();
                     speedc = "Speed:" + " " + EnumChatFormatting.GRAY + speed;
                     xyz = "XYZ:" + " " + EnumChatFormatting.GRAY + MathHelper.floor_double(mc.thePlayer.posX) + " " + MathHelper.floor_double(mc.thePlayer.posY) + " " + MathHelper.floor_double(mc.thePlayer.posZ);
-                    DrawUtil.drawRoundedRect((float) (ScaledResolution.getScaledWidth() / 250 - this.width - 1.5), 1.0F, (float) (FontLoaders.Baloo18.getStringWidth("  v" + version + " | " + Client.userName + " | " + Minecraft.getDebugFPS() + "FPS") + 63.5), 12, 8, new Color(0, 0, 0, 160).getRGB(), 2, colorXD);
+                    if (FToutline.get()) {
+                        DrawUtil.drawRoundedRect((float) (ScaledResolution.getScaledWidth() / 250 - this.width - 1.5), 1.0F, (float) (FontLoaders.Baloo18.getStringWidth("  v" + version + " | " + Client.userName + " | " + Minecraft.getDebugFPS() + "FPS") + 64), 12, 8, new Color(0, 0, 0, 120).getRGB(), 2, colorXD);
+                    } else {
+                        DrawUtil.drawRoundedRect((float) (ScaledResolution.getScaledWidth() / 250 - this.width - 1.5), 1.0F, (float) (FontLoaders.Baloo18.getStringWidth("  v" + version + " | " + Client.userName + " | " + Minecraft.getDebugFPS() + "FPS") + 64), 12, 8, new Color(0, 0, 0, 120).getRGB(), 2, new Color(0, 0, 0, 120).getRGB());
+                    }
+//                    DrawUtil.roundedRect(200d,100d,200,200,8,Color.BLACK);
+//                    DrawUtil.roundedRect(200d,100d,100,400,8,Color.BLACK);
 //                    FontLoaders.SF18.drawStringWithShadow(user, RenderUtil.width() - FontLoaders.SF18.getStringWidth(user) - 80, RenderUtil.height() - 9, colorXD);
                     new ScaledResolution(mc);
                     FontLoaders.Baloo18.drawStringWithShadow(xyz, ScaledResolution.getScaledWidth() / 250 - this.width, ScaledResolution.getScaledHeight() - 9, -1);

@@ -20,6 +20,5 @@ public class AutoReconnect
     private void onChat(EventChat e) {
         if (e.getMessage().contains("Flying or related.")) mc.thePlayer.sendChatMessage("/back");
     }
-
 }
 

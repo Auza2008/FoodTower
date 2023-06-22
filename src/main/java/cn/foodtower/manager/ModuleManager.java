@@ -75,6 +75,7 @@ public class ModuleManager implements Manager {
     public void init() {
         modules.add(new LegitSpeed());
         modules.add(new ComboOneHit());
+        modules.add(new AutoEat());
         modules.add(new PacketFixer());
         modules.add(new HypixelAntibot());
         modules.add(new TargetStrafe());

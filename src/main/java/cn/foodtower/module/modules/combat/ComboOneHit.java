@@ -14,7 +14,7 @@ public class ComboOneHit extends Module {
     private final Mode swing = new Mode("Swing", SwingE.values(), SwingE.Client);
 
     public ComboOneHit() {
-        super("ComboOneHit", null, ModuleType.Combat);
+        super("ComboOneHit", new String[]{""}, ModuleType.Combat);
         addValues(packets, swing);
     }
 
