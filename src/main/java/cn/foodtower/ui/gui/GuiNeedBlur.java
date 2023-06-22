@@ -82,7 +82,7 @@ public class GuiNeedBlur extends GuiScreen {
         FontLoader.msFont13.drawCenteredString("如果还是黑屏请删除\".minecraft/FoodTower/NeedBlur.txt\"来再次访问本界面", w / 2f, h / 2f - 7 + 4, -1);
         FontLoaders.GoogleSans16.drawCenteredString("客户端Base: Distance", w / 2f, h / 2f * 2 - 22, -1);
 
-        FontLoaders.GoogleSans16.drawCenteredString(Client.name + " made by \u00a7oAuza\u00a7r & \u00a7oLittleGod\u00a7r (FoodTower Team)", width / 2f, height - FontLoaders.GoogleSans16.getHeight() - 6f, -1);
+        FontLoaders.GoogleSans16.drawCenteredString(Client.name + " made by \u00a7oAuza\u00a7r (FoodTower Team)", width / 2f, height - FontLoaders.GoogleSans16.getHeight() - 6f, -1);
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 

@@ -38,7 +38,7 @@ public class Client {
     public static float Yaw;
     public static float Pitch;
     public static boolean Baned = false;
-    public static String author = "Auza, LittleGod";
+    public static String author = "Auza[Alone]";
     public static String releaseType = Main.isbeta ? "Beta" : "Release";
     public static String ClientVersion = version;
     public static Client instance = new Client();
