@@ -15,20 +15,19 @@ import java.util.List;
  * 相当于个性化，设置壁纸和颜色用的
  */
 public class ClientSetting extends Module {
-    public static final Mode backGround = new Mode("BackGround", backgrounds.values(), backgrounds.BG29);
+    public static final Mode backGround = new Mode("BackGround", backgrounds.values(), backgrounds.BG27);
     public static final Mode betterFPS = new Mode("BetterFPS", betterfps.values(), betterfps.Distance);
     public static final Option resetBF = new Option("Reset BetterFPS", false);
     public static final Option backPackAnimation = new Option("BackPack Animation", true);
     public static final Option soundFx = new Option("Module SoundFx", true);
     public static final Option clMode = new Option("AutoCL(Netease Login)", false);
-    public static final Option fakeForge = new Option("FakeForge", false);
     public static final Option keepWorld = new Option("Keep world on disconnect", true);
     public static final Option enableBlur = new Option("Enable Blur", true);
     public static int id = 1;
 
     public ClientSetting() {
         super("ClientSetting", new String[]{"ClientSetting"}, ModuleType.World);
-        addValues(backGround, backPackAnimation, soundFx, betterFPS, resetBF, clMode, fakeForge, keepWorld, enableBlur);
+        addValues(backGround, backPackAnimation, soundFx, betterFPS, resetBF, clMode, keepWorld, enableBlur);
         enableBlur.setValue(isBlurConfig());
         setRemoved(true);
     }

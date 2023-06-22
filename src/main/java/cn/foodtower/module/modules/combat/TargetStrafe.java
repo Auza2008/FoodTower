@@ -1,6 +1,5 @@
 package cn.foodtower.module.modules.combat;
 
-import cn.foodtower.Client;
 import cn.foodtower.api.EventHandler;
 import cn.foodtower.api.events.Render.EventRender3D;
 import cn.foodtower.api.events.World.EventMotion;
@@ -131,7 +130,7 @@ public class TargetStrafe extends Module {
         return this.aura.isEnabled() && KillAura.curTarget != null && this.isEnabled() && this.targetValidator.validate(KillAura.curTarget) && (!this.space.get() || mc.gameSettings.keyBindJump.isKeyDown()) && (ModuleManager.getModuleByClass(Speed.class).isEnabled() || ModuleManager.getModuleByClass(Fly.class).isEnabled() || ModuleManager.getModuleByClass(CustomSpeed.class).isEnabled());
     }
 
-    @EventHandler
+    @EventHandler(priority = 2)
     private void onMotion(EventMotion e) {
         if (thirdPerson.get()) { // smart change back lol
             if (canStrafe()) {
@@ -171,19 +170,19 @@ public class TargetStrafe extends Module {
         GLUtils.startSmooth();
         GL11.glDisable(2929);
         GL11.glDepthMask(false);
-        GL11.glLineWidth(1.0F);
+        GL11.glLineWidth(1F);
         GL11.glBegin(3);
         double x = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double) partialTicks - mc.getRenderManager().viewerPosX;
         double y = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double) partialTicks - mc.getRenderManager().viewerPosY;
         Color color = Color.WHITE;
         double z = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double) partialTicks - mc.getRenderManager().viewerPosZ;
-        if (entity == KillAura.curTarget && (ModuleManager.getModuleByName("Speed").isEnabled() || ModuleManager.getModuleByClass(CustomSpeed.class).isEnabled() || ModuleManager.getModuleByClass(Fly.class).isEnabled())) {
-            color = Client.getBlueColor(1);
-        }
+//        if (entity == KillAura.curTarget && (ModuleManager.getModuleByName("Speed").isEnabled() || ModuleManager.getModuleByClass(CustomSpeed.class).isEnabled() || ModuleManager.getModuleByClass(Fly.class).isEnabled())) {
+//            color = Client.getBlueColor(1);
+//        }
 
-        float r = 0.003921569F * (float) color.getRed();
-        float g = 0.003921569F * (float) color.getGreen();
-        float b = 0.003921569F * (float) color.getBlue();
+        float r = (float) color.getRed();
+        float g = (float) color.getGreen();
+        float b = (float) color.getBlue();
         double pix2 = 6.283185307179586D;
 
         for (int i = 0; i <= 90; ++i) {

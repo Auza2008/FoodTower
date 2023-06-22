@@ -4,10 +4,9 @@ import cn.foodtower.api.events.World.EventAttack;
 import cn.foodtower.api.events.World.EventMotionUpdate;
 import cn.foodtower.api.events.World.EventMove;
 import cn.foodtower.api.events.World.EventPacketSend;
-import cn.foodtower.module.modules.combat.Criticals;
 import cn.foodtower.module.modules.combat.criticalsmode.CriticalsModule;
 
-public class DCJSmartCrit extends CriticalsModule {
+public class DCJHop2Crit extends CriticalsModule {
     @Override
     public void onEnabled() {
 
@@ -20,15 +19,9 @@ public class DCJSmartCrit extends CriticalsModule {
 
     @Override
     public void onAttack(EventAttack e) {
-        if (mc.thePlayer.getHealth() < Criticals.smartChangeValue.get()) {
-            mc.thePlayer.motionY = 0.42;
-            mc.thePlayer.fallDistance = 0.42f;
-            mc.thePlayer.onGround = false;
-        } else {
-            mc.thePlayer.motionY = 0.3425;
-            mc.thePlayer.fallDistance = 0.3425f;
-            mc.thePlayer.onGround = false;
-        }
+        mc.thePlayer.motionY = 0.16;
+        mc.thePlayer.fallDistance = 0.16f;
+        mc.thePlayer.onGround = false;
     }
 
     @Override

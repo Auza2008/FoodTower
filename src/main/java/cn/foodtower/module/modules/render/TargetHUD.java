@@ -362,7 +362,7 @@ public class TargetHUD extends Module {
         DrawUtil.roundedRect(w, h, 160, 48, 8, new Color(0, 0, 0, 160));
 //        DrawUtil.rect(w + 45, h + 40, 110, 2, new Color(255,0,0,143));
         if (target.getHealth() > 0) {
-            DrawUtil.rect(w + 45, h + 40, (target.getHealth() / 20) * 110, 2, new Color(ColorUtils.getHealthColor(target.getHealth(), target.getMaxHealth()).getRGB()));
+            DrawUtil.rect(w + 45, h + 40, target.getHealth() / target.getMaxHealth() * 110, 2, new Color(ColorUtils.getHealthColor(target.getHealth(), target.getMaxHealth()).getRGB()));
         }
         FontLoaders.GoogleSans22.drawStringWithShadow(target.getName(), w + 50, h + 5, -1);
         if (target.getTotalArmorValue() != 0) {

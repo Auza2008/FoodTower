@@ -54,7 +54,7 @@ public class Scaffold extends Module {
 
     // Mode
     public final Mode modeValue = new Mode("Mode", ScaffoldMode.values(), ScaffoldMode.Normal);
-    public final Mode rotMode = new Mode("Rotations", RotMode.values(), RotMode.Normal);
+    public final Mode rotMode = new Mode("RotationMode", RotMode.values(), RotMode.Normal);
     // Basic stuff
     public final Option sprintValue = new Option("Sprint", true);
     // Delay

@@ -291,7 +291,7 @@ public class HUD extends Module {
                     if (FToutline.get()) {
                         DrawUtil.drawRoundedRect((float) (ScaledResolution.getScaledWidth() / 250 - this.width - 1.5), 1.0F, (float) (FontLoaders.Baloo18.getStringWidth("  v" + version + " | " + Client.userName + " | " + Minecraft.getDebugFPS() + "FPS") + 64), 12, 8, new Color(0, 0, 0, 120).getRGB(), 2, colorXD);
                     } else {
-                        DrawUtil.drawRoundedRect((float) (ScaledResolution.getScaledWidth() / 250 - this.width - 1.5), 1.0F, (float) (FontLoaders.Baloo18.getStringWidth("  v" + version + " | " + Client.userName + " | " + Minecraft.getDebugFPS() + "FPS") + 64), 12, 8, new Color(0, 0, 0, 120).getRGB(), 2, new Color(0, 0, 0, 120).getRGB());
+                        DrawUtil.roundedRect((float) (ScaledResolution.getScaledWidth() / 250 - this.width - 1.5), 1.0F, (float) (FontLoaders.Baloo18.getStringWidth("  v" + version + " | " + Client.userName + " | " + Minecraft.getDebugFPS() + "FPS") + 64), 12, 8, new Color(0, 0, 0, 120));
                     }
 //                    DrawUtil.roundedRect(200d,100d,200,200,8,Color.BLACK);
 //                    DrawUtil.roundedRect(200d,100d,100,400,8,Color.BLACK);

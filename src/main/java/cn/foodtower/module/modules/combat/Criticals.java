@@ -14,8 +14,8 @@ import cn.foodtower.module.modules.combat.criticalsmode.CriticalsModule;
 import cn.foodtower.module.modules.combat.criticalsmode.criticals.aac.AAC440NoGroundCriit;
 import cn.foodtower.module.modules.combat.criticalsmode.criticals.aac.AAC440PacketCrit;
 import cn.foodtower.module.modules.combat.criticalsmode.criticals.aac.AAC5Crit;
+import cn.foodtower.module.modules.combat.criticalsmode.criticals.bypass.DCJHop2Crit;
 import cn.foodtower.module.modules.combat.criticalsmode.criticals.bypass.DCJHopCrit;
-import cn.foodtower.module.modules.combat.criticalsmode.criticals.bypass.DCJSmartCrit;
 import cn.foodtower.module.modules.combat.criticalsmode.criticals.ncp.NCPCrit;
 import cn.foodtower.module.modules.combat.criticalsmode.criticals.ncp.OldNCPacketCrit;
 import cn.foodtower.module.modules.combat.criticalsmode.criticals.normal.*;
@@ -32,7 +32,6 @@ public class Criticals extends Module {
     public static Option Always = new Option("Always", "Always", false);
     public static Option C06 = new Option("C06", "C06", false);
     public static Numbers<Double> motionYvalue = new Numbers<>("MotionY", 0.42, 0.01, 1.0, 0.01);
-    public static Numbers<Double> smartChangeValue = new Numbers<>("SmartHealth", 17d, 0.5, 20.0, 0.5);
     private final Option speedCheck = new Option("SpeedCheck", true);
     private final Option fake = new Option("FakeCritical", true);
     private final Option onlyGround = new Option("OnlyCheckGround", false);
@@ -42,9 +41,8 @@ public class Criticals extends Module {
 
     public Criticals() {
         super("Criticals", new String[]{"Criticals", "crit"}, ModuleType.Combat);
-        this.addValues(mode, motionYvalue, smartChangeValue, HurtTime, Delay, fake, fakeSize, Always, onlyGround, C06, speedCheck);
+        this.addValues(mode, motionYvalue, HurtTime, Delay, fake, fakeSize, Always, onlyGround, C06, speedCheck);
         setValueDisplayable(new Value<?>[]{motionYvalue}, mode, new Enum[]{CritMode.Motion});
-        setValueDisplayable(smartChangeValue, mode, new Enum[]{CritMode.DCJSmart});
         setValueDisplayable(C06, mode, new Enum[]{CritMode.Packet, CritMode.AAC440Packet, CritMode.NCP, CritMode.OldNCPacket});
         setValueDisplayable(fakeSize, fake, fake.get());
     }
@@ -99,7 +97,7 @@ public class Criticals extends Module {
     }
 
     public enum CritMode {
-        Packet(new PacketCrit()), NoGround(new NoGroundCrit()), Edit(new EditCrit()), Motion(new MotionCrit()), TpHop(new TpHopCrit()), OldNCPacket(new OldNCPacketCrit()), NCP(new NCPCrit()), AAC440Packet(new AAC440PacketCrit()), AAC440NG(new AAC440NoGroundCriit()), AACV5(new AAC5Crit()), DCJHop(new DCJHopCrit()), DCJSmart(new DCJSmartCrit());
+        Packet(new PacketCrit()), NoGround(new NoGroundCrit()), Edit(new EditCrit()), Motion(new MotionCrit()), TpHop(new TpHopCrit()), OldNCPacket(new OldNCPacketCrit()), NCP(new NCPCrit()), AAC440Packet(new AAC440PacketCrit()), AAC440NG(new AAC440NoGroundCriit()), AACV5(new AAC5Crit()), DCJHop(new DCJHopCrit()), DCJHop2(new DCJHop2Crit());
         final CriticalsModule module;
 
         CritMode(CriticalsModule criticalsModule) {

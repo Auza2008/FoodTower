@@ -21,7 +21,6 @@ import cn.foodtower.util.entity.entitycheck.checks.DistanceCheck;
 import cn.foodtower.util.entity.entitycheck.checks.EntityCheck;
 import cn.foodtower.util.entity.entitycheck.checks.TeamsCheck;
 import cn.foodtower.util.math.MathUtil;
-import cn.foodtower.util.math.RayCastUtil;
 import cn.foodtower.util.math.RotationUtils;
 import cn.foodtower.util.math.SmoothRotationObject;
 import cn.foodtower.util.render.RenderUtil;
@@ -47,7 +46,6 @@ import java.util.List;
 public class KillAura extends Module {
     public static boolean isBlocking;
     public static EntityLivingBase curTarget;
-    private final Option raycast = new Option("Raycast", false);
     private final Option autoBlock = new Option("Auto Block", true);
     private final Option noHitCheck = new Option("NoHitCheck", false);
     private final Option coolDown = new Option("Auto CoolDown", false);
@@ -102,7 +100,7 @@ public class KillAura extends Module {
         this.blockValidator.add(new ConstantDistanceCheck(8.0f));
         this.blockValidator.add(entityCheck);
         this.blockValidator.add(teamsCheck);
-        addValues(mode, sortingMode, switchDelay, aps, minAps, range, wall, autoBlock, autoBlockMode, attackTiming, abTiming, rotMode, rotSpeed, noHitCheck, silent, this.teams, this.players, this.prioritizePlayers, this.animals, this.monsters, this.invisibles, esp, swing, predictBlock, raycast, coolDown, dbtap, fov, this.forceUpdate, this.disableOnDeath);
+        addValues(mode, sortingMode, switchDelay, aps, minAps, range, wall, autoBlock, autoBlockMode, attackTiming, abTiming, rotMode, rotSpeed, noHitCheck, silent, this.teams, this.players, this.prioritizePlayers, this.animals, this.monsters, this.invisibles, esp, swing, predictBlock, coolDown, dbtap, fov, this.forceUpdate, this.disableOnDeath);
         setValueDisplayable(sortingMode, mode, Mode.Single);
         setValueDisplayable(switchDelay, mode, Mode.Switch);
         setValueDisplayable(new Value[]{autoBlockMode, abTiming}, autoBlock, autoBlock.get());
@@ -138,7 +136,7 @@ public class KillAura extends Module {
     @EventHandler
     private void onPre(EventPreUpdate e) {
         if (curTarget != null && this.canAttack()) {
-            if (this.updateStopwatch.hasTimePassed(56L) && this.forceUpdate.get().booleanValue() && !mc.thePlayer.isMoving()) {
+            if (this.updateStopwatch.hasTimePassed(56L) && this.forceUpdate.get() && !mc.thePlayer.isMoving()) {
                 mc.getNetHandler().addToSendQueueSilent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, mc.thePlayer.onGround));
                 this.updateStopwatch.reset();
             }
@@ -152,6 +150,9 @@ public class KillAura extends Module {
                         break;
                     case HVH:
                         angles = RotationUtils.getCustomRotation(RotationUtils.getLocation(curTarget.getEntityBoundingBox()));
+                        break;
+                    case DCJ:
+                        angles = RotationUtils.getRotationsEntityEye(curTarget);
                         break;
                 }
                 if (!silent.get()) {
@@ -283,11 +284,6 @@ public class KillAura extends Module {
         if (curTarget != null && this.canAttack()) {
             if (((!coolDown.get() && this.attackStopwatch.hasTimePassed(getAps())) || (coolDown.get() && hitTicks > delayValue))) {
                 if (noHitCheck.get() || getHitable()) {
-                    if (!noHitCheck.get() && raycast.get()) {
-                        if (RayCastUtil.raycastEntity(range.get(), entity -> entity == curTarget) != null) {
-                            curTarget = (EntityLivingBase) RayCastUtil.raycastEntity(range.get(), entity -> entity == curTarget);
-                        }
-                    }
                     this.attack(curTarget);
                     this.attackStopwatch.reset();
                     hitTicks = 0;
@@ -325,14 +321,14 @@ public class KillAura extends Module {
     }
 
     private boolean getHitable() {
-        return RotationUtils.isFaced(curTarget, range.get()) && !raycast.get();
+        return RotationUtils.isFaced(curTarget, range.get());
     }
 
     private boolean isEntityNearby() {
         List<Entity> loadedEntityList = mc.theWorld.loadedEntityList;
-        for (Object o : loadedEntityList) {
-            Entity entity = (Entity) o;
-            if (((Entity) o).isDead || !this.blockValidator.validate(entity)) continue;
+        for (Entity o : loadedEntityList) {
+            Entity entity = o;
+            if (o.isDead || !this.blockValidator.validate(entity)) continue;
             return fov.get().equals(180d) || RotationUtils.isVisibleFOV(entity, fov.get().intValue());
         }
         return false;
@@ -382,6 +378,14 @@ public class KillAura extends Module {
         if (this.autoBlock.get() && isHoldingSword() && this.isEntityNearby() && !isBlocking) {
 //            mc.thePlayer.setItemInUse(mc.thePlayer.getHeldItem(), 7199);
             switch ((AutoBlockMode) this.autoBlockMode.get()) {
+                case Vanilla:
+                    if (mc.gameSettings.keyBindUseItem.isKeyDown()) {
+                        mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem());
+                        isBlocking = true;
+                    } else {
+                        isBlocking = false;
+                    }
+                    break;
                 case Packet:
                     sendPacket(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.inventory.getCurrentItem(), 0.0f, 0.0f, 0.0f));
                     isBlocking = true;
@@ -457,6 +461,6 @@ public class KillAura extends Module {
     }
 
     private enum Rotations {
-        Basic, Predict, HVH, None
+        Basic, Predict, HVH, DCJ, None
     }
 }

@@ -155,7 +155,7 @@ public class Speed extends Module {
     }
 
     public enum SpeedMode {
-        Hypixel(new HypixelSpeed()), AutoJump(new AutoJumpSpeed()), DCJBhop(new DCJBhopSpeed()), Hive(new HiveSpeed()), AAC440(new AAC440Speed()), Bhop(new BhopSpeed()), GudHop(new GudHopSpeed()), OnGround(new OnGroundSpeed()), AACTimer(new AACTimer()), VulcanHop(new VulcanHopSpeed()), VulcanFastHop(new VulcanFastHopSpeed()), VulcanLowHop(new VulcanLowHopSpeed()), DCJHop(new DCJHopSpeed());
+        Hypixel(new HypixelSpeed()), AutoJump(new AutoJumpSpeed()), DCJBhop(new DCJBhopSpeed()), Hive(new HiveSpeed()), AAC440(new AAC440Speed()), Bhop(new BhopSpeed()), GudHop(new GudHopSpeed()), OnGround(new OnGroundSpeed()), AACTimer(new AACTimer()), VulcanHop(new VulcanHopSpeed()), VulcanFastHop(new VulcanFastHopSpeed()), VulcanLowHop(new VulcanLowHopSpeed());
 
 
         final SpeedModule module;

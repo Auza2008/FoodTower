@@ -146,6 +146,12 @@ public class RotationUtils {
         return getRotationFromPosition(x, z, y);
     }
 
+    public static float[] getRotationsEntityEye(final EntityLivingBase ent) {
+        final double x = ent.posX;
+        final double z = ent.posZ;
+        return getRotationFromPosition(x, z, mc.thePlayer.posY + 1.2);
+    }
+
     public static float[] getPredictedRotations(EntityLivingBase ent) {
         double x = ent.posX + (ent.posX - ent.lastTickPosX);
         double z = ent.posZ + (ent.posZ - ent.lastTickPosZ);
