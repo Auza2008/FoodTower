@@ -210,15 +210,9 @@ public class ModuleManager implements Manager {
             if (f.getName().equalsIgnoreCase(name)) {
                 return f;
             }
-            String[] alias = f.getAlias();
-            int length = alias.length;
-            int i = 0;
-            while (i < length) {
-                String s = alias[i];
-                if (s.equalsIgnoreCase(name)) {
-                    return f;
-                }
-                ++i;
+            String alias = f.getName();
+            if (alias.equalsIgnoreCase(name)) {
+                return f;
             }
         }
         return null;
