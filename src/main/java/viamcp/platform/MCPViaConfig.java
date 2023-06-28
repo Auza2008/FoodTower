@@ -36,7 +36,6 @@ public class MCPViaConfig extends AbstractViaConfig
         return UNSUPPORTED;
     }
 
-    @Override
     public boolean isAntiXRay()
     {
         return false;

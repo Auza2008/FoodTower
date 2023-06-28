@@ -9,8 +9,6 @@ import com.viaversion.viaversion.api.platform.PlatformTask;
 import com.viaversion.viaversion.api.platform.UnsupportedSoftware;
 import com.viaversion.viaversion.api.platform.ViaPlatform;
 import com.viaversion.viaversion.libs.gson.JsonObject;
-import com.viaversion.viaversion.libs.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import com.viaversion.viaversion.libs.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import org.apache.logging.log4j.LogManager;
@@ -78,25 +76,27 @@ public class MCPViaPlatform implements ViaPlatform<UUID>
     {
         return new FutureTaskId(CompletableFuture.runAsync(runnable, ViaMCP.getInstance().getAsyncExecutor()).exceptionally(throwable ->
         {
-                if (!(throwable instanceof CancellationException))
-                {
-                    throwable.printStackTrace();
-                }
+            if (!(throwable instanceof CancellationException)) {
+                throwable.printStackTrace();
+            }
 
-                return null;
-            })
+            return null;
+        })
         );
     }
 
     @Override
-    public FutureTaskId runSync(Runnable runnable)
-    {
+    public PlatformTask runRepeatingAsync(Runnable runnable, long l) {
+        return null;
+    }
+
+    @Override
+    public FutureTaskId runSync(Runnable runnable) {
         return new FutureTaskId(ViaMCP.getInstance().getEventLoop().submit(runnable).addListener(errorLogger()));
     }
 
     @Override
-    public PlatformTask<?> runSync(Runnable runnable, long ticks)
-    {
+    public PlatformTask<?> runSync(Runnable runnable, long ticks) {
         return new FutureTaskId(ViaMCP.getInstance().getEventLoop().schedule(() -> runSync(runnable), ticks * 50, TimeUnit.MILLISECONDS).addListener(errorLogger()));
     }
 
