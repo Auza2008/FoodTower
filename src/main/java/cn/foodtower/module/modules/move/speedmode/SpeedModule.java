@@ -59,8 +59,4 @@ public abstract class SpeedModule {
     protected boolean canZoom() {
         return mc.thePlayer.moving() && mc.thePlayer.onGround;
     }
-
-    public boolean isMoving2() {
-        return !(mc.thePlayer.moveForward == 0.0F && mc.thePlayer.moveStrafing == 0.0F);
-    }
 }

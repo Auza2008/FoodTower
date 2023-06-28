@@ -11,7 +11,9 @@ import cn.foodtower.api.value.Value;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.module.modules.world.dis.DisablerModule;
-import cn.foodtower.module.modules.world.dis.disablers.*;
+import cn.foodtower.module.modules.world.dis.disablers.bypass.*;
+import cn.foodtower.module.modules.world.dis.disablers.server.CubeCraftDisabler;
+import cn.foodtower.module.modules.world.dis.disablers.server.DisablerHypixelDisabler;
 import cn.foodtower.util.time.MSTimer;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 
@@ -25,13 +27,14 @@ public class Disabler extends Module {
     public static Option pingspoofvalue = new Option("PingSpoof", true);
     public static Numbers<Number> pingspoofdelay = new Numbers<Number>("PingSpoodDelay", 400, 10, 600, 1);
     public static Option invclickbypass = new Option("InvClickBypass", true);
-    private final Mode mode = new Mode("Mode", Modes.values(), Modes.OldNCP);
+    public static Option debug = new Option("Debug", false);
+    private final Mode mode = new Mode("Mode", Modes.values(), Modes.Basic);
     private final MSTimer lagTimer = new MSTimer();
     //    public static final Numbers<Double> delay = new Numbers<>("Delay",500d, 300d, 2000d, 100d);
 
     public Disabler() {
         super("Disabler", new String[]{"Bypass", "Patcher"}, ModuleType.World);
-        addValues(mode, lowerTimer, lobbycheckvalue, TimerA, TimerB, noC03s, blinkvalue, pingspoofvalue, pingspoofdelay, invclickbypass);
+        addValues(mode, lowerTimer, lobbycheckvalue, TimerA, TimerB, noC03s, blinkvalue, pingspoofvalue, pingspoofdelay, invclickbypass, debug);
         setValueDisplayable(new Value<?>[]{lobbycheckvalue, TimerA, TimerB, noC03s, blinkvalue, pingspoofvalue, invclickbypass, pingspoofdelay}, mode, Modes.Hypxiel);
     }
 
@@ -70,12 +73,6 @@ public class Disabler extends Module {
                 mc.timer.timerSpeed = 1f;
             }
         }
-
-        if (mode.get().equals(Modes.DCJNetWork)) {
-            if (!DCJNetWorkDisabler.enable) {
-                setEnabled(false);
-            }
-        }
     }
 
     @EventHandler
@@ -112,7 +109,7 @@ public class Disabler extends Module {
     }
 
     enum Modes {
-        Hypxiel(new DisablerHypixelDisabler()), OldNCP(new OldNCPDisabler()), NewSpoof(new NewSpoofDisabler()), AAC4LessFlag(new AAC4LessFlagDisabler()), AAC5Test(new AAC5TestDisabler()), VulcanCombat(new VulcanCombatDisabler()), DCJNetWork(new DCJNetWorkDisabler()), DCJPacket(new DCJPacketDisabler()), DCJFastStop(new DCJFastStop());
+        Basic(new BasicDisabler()), Hypxiel(new DisablerHypixelDisabler()), CubeCraft(new CubeCraftDisabler()), OldNCP(new OldNCPDisabler()), AAC4LessFlag(new AAC4LessFlagDisabler()), AAC5Test(new AAC5TestDisabler()), VulcanCombat(new VulcanCombatDisabler());
 
         final DisablerModule disablerModule;
 

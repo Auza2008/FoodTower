@@ -109,9 +109,7 @@ public class KillAura extends Module {
 
     @Override
     public void onDisable() {
-        if (autoBlock.get()) {
-            this.unblock();
-        }
+        this.unblock();
         curTarget = null;
     }
 
@@ -135,6 +133,15 @@ public class KillAura extends Module {
 
     @EventHandler
     private void onPre(EventPreUpdate e) {
+        this.updateTargets();
+        this.sortTargets();
+        ++hitTicks;
+        if (!isHoldingSword()) {
+            isBlocking = false;
+        }
+        if (curTarget == null) {
+            unblock();
+        }
         if (curTarget != null && this.canAttack()) {
             if (this.updateStopwatch.hasTimePassed(56L) && this.forceUpdate.get() && !mc.thePlayer.isMoving()) {
                 mc.getNetHandler().addToSendQueueSilent(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, mc.thePlayer.onGround));
@@ -186,15 +193,6 @@ public class KillAura extends Module {
 
     @EventHandler
     private void onUpdate(EventUpdate e) {
-        this.updateTargets();
-        this.sortTargets();
-        ++hitTicks;
-        if (!isHoldingSword()) {
-            isBlocking = false;
-        }
-        if (curTarget == null && autoBlock.get() && isBlocking) {
-            unblock();
-        }
         if ((abTiming.get().equals(ABTiming.Update) || abTiming.get().equals(ABTiming.All)) && predictBlock.get())
             block();
         if (attackTiming.get().equals(AttackTiming.Update) || attackTiming.get().equals(AttackTiming.All)) attack();
@@ -207,42 +205,6 @@ public class KillAura extends Module {
             RenderUtil.drawShadow(curTarget, e.getPartialTicks(), (float) yPos, direction);
             RenderUtil.drawCircle(curTarget, e.getPartialTicks(), (float) yPos);
         }
-//        水影esp(不好看所以删了)
-//        if (curTarget != null) {
-//            Color color = curTarget.hurtTime > 0 ? new Color(-1618884) : new Color(-13330213);
-//            double x;
-//            double y;
-//            double z;
-//            x = curTarget.lastTickPosX + (curTarget.posX - curTarget.lastTickPosX) * mc.timer.renderPartialTicks - RenderManager.renderPosX;
-//            mc.getRenderManager();
-//            y = curTarget.lastTickPosY + (curTarget.posY - curTarget.lastTickPosY) * mc.timer.renderPartialTicks - RenderManager.renderPosY;
-//            mc.getRenderManager();
-//            z = curTarget.lastTickPosZ + (curTarget.posZ - curTarget.lastTickPosZ) * mc.timer.renderPartialTicks - RenderManager.renderPosZ;
-//            x -= 0.5;
-//            z -= 0.5;
-//            y += curTarget.getEyeHeight() + 0.35 - (curTarget.isSneaking() ? 0.25 : 0.0);
-//            final double mid = 0.5;
-//            GL11.glPushMatrix();
-//            GL11.glEnable(3042);
-//            GL11.glBlendFunc(770, 771);
-//            GL11.glTranslated(x + mid, y + mid, z + mid);
-//            GL11.glRotated(-curTarget.rotationYaw % 360.0f, 0.0, 1.0, 0.0);
-//            GL11.glTranslated(-(x + mid), -(y + mid), -(z + mid));
-//            GL11.glDisable(3553);
-//            GL11.glEnable(2848);
-//            GL11.glDisable(2929);
-//            GL11.glDepthMask(false);
-//            GL11.glColor4f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, 1.0f);
-//            GL11.glLineWidth(2.0f);
-//            GL11.glColor4f(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, 0.5f);
-//            RenderUtil.drawBoundingBox(new AxisAlignedBB(x + 0.2, y - 0.04, z + 0.2, x + 0.8, y + 0.01, z + 0.8));
-//            GL11.glDisable(2848);
-//            GL11.glEnable(3553);
-//            GL11.glEnable(2929);
-//            GL11.glDepthMask(true);
-//            GL11.glDisable(3042);
-//            GL11.glPopMatrix();
-//        }
     }
 
     @EventHandler
@@ -367,7 +329,9 @@ public class KillAura extends Module {
                     isBlocking = false;
                     break;
                 case DCJ:
-                    sendPacket(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, new BlockPos(0, 0, 0), EnumFacing.DOWN));
+                    sendPacket(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+                    mc.playerController.onStoppedUsingItem(mc.thePlayer);
+                    mc.gameSettings.keyBindUseItem.Doing = false;
                     isBlocking = false;
                     break;
             }
@@ -382,8 +346,6 @@ public class KillAura extends Module {
                     if (mc.gameSettings.keyBindUseItem.isKeyDown()) {
                         mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem());
                         isBlocking = true;
-                    } else {
-                        isBlocking = false;
                     }
                     break;
                 case Packet:
@@ -398,7 +360,9 @@ public class KillAura extends Module {
                     isBlocking = true;
                     break;
                 case DCJ:
-                    sendPacket(new C08PacketPlayerBlockPlacement(BlockPos.ORIGIN, 255, mc.thePlayer.getHeldItem(), 0.0f, 0.0f, 0.0f));
+                    mc.thePlayer.setItemInUse(mc.thePlayer.getHeldItem(), mc.thePlayer.getHeldItem().getMaxItemUseDuration());
+                    sendPacket(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0.0f, 0.0f, 0.0f));
+                    mc.gameSettings.keyBindUseItem.Doing = true;
                     isBlocking = true;
                     break;
             }

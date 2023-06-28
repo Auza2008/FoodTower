@@ -67,7 +67,7 @@ public class HUD extends Module {
     public static Numbers<Double> g = new Numbers<>("Green", 255d, 0.0, 255.0, 1.0);
     public static Numbers<Double> b = new Numbers<>("Blue", 255.0, 0.0, 255.0, 1.0);
     public static Numbers<Double> a = new Numbers<>("Alpha", 255.0, 0.0, 255.0, 1.0);
-    public static Numbers<Double> Arraybackground = new Numbers<>("ArrayAlpha", 160.0, 0.0, 255.0, 1.0);
+    public static Numbers<Double> Arraybackground = new Numbers<>("ArrayAlpha", 120.0, 0.0, 255.0, 1.0);
     public static Mode logomode = new Mode("LogoMode", HUD.logomodeE.values(), logomodeE.FoodTower);
     public static Mode RectMode = new Mode("RectMode", RectModes.values(), RectModes.None);
     public static Option GuiChatBackGround = new Option("GuiChatBackGround", false);

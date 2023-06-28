@@ -1,6 +1,7 @@
 package cn.foodtower.module.modules.move.speedmode.speed;
 
 import cn.foodtower.api.events.World.*;
+import cn.foodtower.module.modules.combat.KillAura;
 import cn.foodtower.module.modules.move.speedmode.SpeedModule;
 import cn.foodtower.util.entity.MoveUtils;
 
@@ -17,10 +18,14 @@ public class DCJBhopSpeed extends SpeedModule {
     @Override
     public void onMove(EventMove e) {
         if (mc.thePlayer.onGround && MoveUtils.isMoving()) {
-            e.setY(mc.thePlayer.motionY = 0.45);
+            e.setY(mc.thePlayer.motionY = 0.42);
         }
         if (MoveUtils.isMoving()) {
-            setMotion(e, 0.82);
+            if (KillAura.curTarget != null) {
+                setMotion(e, 0.33);
+            } else {
+                setMotion(e, 0.82);
+            }
         } else {
             setMotion(e, 0);
         }

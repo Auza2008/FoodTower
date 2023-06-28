@@ -1,14 +1,13 @@
-package cn.foodtower.module.modules.world.dis.disablers;
+package cn.foodtower.module.modules.world.dis.disablers.bypass;
 
 import cn.foodtower.api.events.Render.EventRender2D;
 import cn.foodtower.api.events.Render.EventRender3D;
 import cn.foodtower.api.events.World.*;
 import cn.foodtower.module.modules.world.dis.DisablerModule;
-import net.minecraft.client.settings.GameSettings;
+import net.minecraft.network.play.client.C00PacketKeepAlive;
+import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
 
-public class DCJFastStop implements DisablerModule {
-    GameSettings key = mc.gameSettings;
-
+public class BasicDisabler implements DisablerModule {
     @Override
     public void onDisable() {
 
@@ -21,7 +20,9 @@ public class DCJFastStop implements DisablerModule {
 
     @Override
     public void onPacket(EventPacketSend event) {
-
+        if (event.getPacket() instanceof C00PacketKeepAlive || event.getPacket() instanceof C0FPacketConfirmTransaction) {
+            event.setCancelled(true);
+        }
     }
 
     @Override
@@ -56,10 +57,7 @@ public class DCJFastStop implements DisablerModule {
 
     @Override
     public void onMotionUpdate(EventMotionUpdate event) {
-        if (key.keyBindForward.isKeyDown() || key.keyBindLeft.isKeyDown() || key.keyBindRight.isKeyDown() || key.keyBindBack.isKeyDown())
-            return;
-        mc.thePlayer.motionX *= 0;
-        mc.thePlayer.motionZ *= 0;
+
     }
 
     @Override

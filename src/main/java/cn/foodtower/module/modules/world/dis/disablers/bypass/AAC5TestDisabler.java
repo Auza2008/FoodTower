@@ -1,4 +1,4 @@
-package cn.foodtower.module.modules.world.dis.disablers;
+package cn.foodtower.module.modules.world.dis.disablers.bypass;
 
 
 import cn.foodtower.api.events.Render.EventRender2D;

@@ -2428,7 +2428,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     public void addServerTypeToSnooper(PlayerUsageSnooper playerSnooper) {
         playerSnooper.addStatToSnooper("opengl_version", GL11.glGetString(GL11.GL_VERSION));
         playerSnooper.addStatToSnooper("opengl_vendor", GL11.glGetString(GL11.GL_VENDOR));
-        playerSnooper.addStatToSnooper("client_brand", "fml,forge");
+        playerSnooper.addStatToSnooper("client_brand", ClientBrandRetriever.getClientModName());
         playerSnooper.addStatToSnooper("launched_version", this.launchedVersion);
         ContextCapabilities contextcapabilities = GLContext.getCapabilities();
         playerSnooper.addStatToSnooper("gl_caps[ARB_arrays_of_arrays]", contextcapabilities.GL_ARB_arrays_of_arrays);
