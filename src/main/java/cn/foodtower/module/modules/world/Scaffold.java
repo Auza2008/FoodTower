@@ -98,7 +98,7 @@ public class Scaffold extends Module {
     private final Option airSafeValue = new Option("AirSafe", false);
     // Visuals
     private final Option counterDisplayValue = new Option("Counter", true);
-    private final Option markValue = new Option("Mark", false);
+    private final Option markValue = new Option("Mark", true);
     // Delay
     private final MSTimer delayTimer = new MSTimer();
     private final MSTimer zitterTimer = new MSTimer();

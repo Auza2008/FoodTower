@@ -13,18 +13,18 @@ public class DCJBhopSpeed extends SpeedModule {
 
     @Override
     public void onPre(EventPreUpdate e) {
+        if (mc.thePlayer.onGround && MoveUtils.isMoving()) {
+            mc.thePlayer.motionY = 0.34;
+        }
     }
 
     @Override
     public void onMove(EventMove e) {
-        if (mc.thePlayer.onGround && MoveUtils.isMoving()) {
-            e.setY(mc.thePlayer.motionY = 0.42);
-        }
         if (MoveUtils.isMoving()) {
             if (KillAura.curTarget != null) {
-                setMotion(e, 0.33);
+                setMotion(e, 0.55);
             } else {
-                setMotion(e, 0.82);
+                setMotion(e, 0.80);
             }
         } else {
             setMotion(e, 0);
@@ -38,7 +38,7 @@ public class DCJBhopSpeed extends SpeedModule {
 
     @Override
     public void onEnabled() {
-        mc.timer.timerSpeed = 1.07f;
+
     }
 
     @Override

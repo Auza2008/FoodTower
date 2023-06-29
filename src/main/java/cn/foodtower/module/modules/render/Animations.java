@@ -7,7 +7,7 @@ import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 
 public class Animations extends Module {
-    public static Mode mode = new Mode("Mode", renderMode.values(), renderMode.Swong);
+    public static Mode mode = new Mode("Mode", renderMode.values(), renderMode.Old);
     public static Option NoFire = new Option("NoFire", false);
     public static Option EveryThingBlock = new Option("EveryThingBlock", false);
     public static Numbers<Double> x = new Numbers<>("x", 0.0, -1.0, 1.0, 0.1);

@@ -314,6 +314,12 @@ public class HUD extends Module {
             // ArrayList
             arryfont = true;
             switch ((ArrayFont) ArrayFontMode.get()) {
+                case Roboto16:
+                    fontarry = FontLoaders.roboto16;
+                    break;
+                case Roboto18:
+                    fontarry = FontLoaders.roboto18;
+                    break;
                 case SF18:
                     fontarry = FontLoaders.SF18;
                     break;
@@ -637,7 +643,7 @@ public class HUD extends Module {
     }
 
     public enum ArrayFont {
-        SF18, SF20, GoogleSans16, GoogleSans18, Jello18, Jello16, Baloo16, Baloo18, Minecraft
+        Roboto16, Roboto18, SF18, SF20, GoogleSans16, GoogleSans18, Jello18, Jello16, Baloo16, Baloo18, Minecraft
     }
 
     public enum ArrayModeE {

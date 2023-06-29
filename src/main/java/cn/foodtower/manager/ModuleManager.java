@@ -167,6 +167,7 @@ public class ModuleManager implements Manager {
         modules.add(new LightningCheck());
         modules.add(new NoRotate());
         modules.add(new InvCleaner());
+        modules.add(new AutoOnlySword());
 //		modules.add(new IRC());
         modules.add(new MusicPlayer());
         modules.add(new ArrowDodge());

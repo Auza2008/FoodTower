@@ -23,20 +23,20 @@ public class DuelInfo extends Module {
 
     @EventHandler
     private void on2D(EventRender2D e) {
-        DrawUtil.roundedRect(x.get().floatValue(), y.get().floatValue(), 165, 160, 8, new Color(0, 0, 0, 160));
-        RenderUtil.drawLine(x.get().floatValue() + 5, y.get().floatValue() + 20, x.get().floatValue() + 160, y.get().floatValue() + 20, 4);
-        FontLoaders.SF20.drawStringWithShadow("DuelInfo", x.get().floatValue() + 61.5, y.get().floatValue() + 6, -1);
-        FontLoaders.SF18.drawStringWithShadow("Yourself", x.get().floatValue() + 25.5, y.get().floatValue() + 145, -1);
-        FontLoaders.SF18.drawStringWithShadow("Target", x.get().floatValue() + 103, y.get().floatValue() + 145, -1);
+        DrawUtil.roundedRect(x.get().floatValue(), y.get().floatValue(), 120, 120, 8, new Color(0, 0, 0, 160));
+        RenderUtil.drawLine(x.get().floatValue() + 5, y.get().floatValue() + 20, x.get().floatValue() + 115, y.get().floatValue() + 20, 4);
+        FontLoaders.SF20.drawStringWithShadow("DuelInfo", x.get().floatValue() + 42.5, y.get().floatValue() + 6.5, -1);
+        FontLoaders.SF18.drawStringWithShadow("Yourself", x.get().floatValue() + 9.5, y.get().floatValue() + 100.5, -1);
+        FontLoaders.SF18.drawStringWithShadow("Target", x.get().floatValue() + 80.5, y.get().floatValue() + 100.5, -1);
         double x = this.x.get();
         double y = this.y.get();
         if (mc.thePlayer != null) {
             if (mc.thePlayer.getHealth() > 0)
-                DrawUtil.rect(x + 40, y + 140, 5d, -5 * mc.thePlayer.getHealth(), new Color(-1));
+                DrawUtil.rect(x + 24.5, y + 95, 5d, -5 * mc.thePlayer.getHealth() / 1.5, new Color(-1));
         }
         if (KillAura.curTarget != null) {
             if (KillAura.curTarget.getHealth() > 0)
-                DrawUtil.rect(x + 115, y + 140, 5d, -5 * KillAura.curTarget.getHealth(), new Color(-1));
+                DrawUtil.rect(x + 92.5, y + 95, 5d, -5 * KillAura.curTarget.getHealth() / 1.5, new Color(-1));
         }
     }
 }

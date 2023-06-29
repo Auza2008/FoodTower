@@ -44,6 +44,7 @@ public class CommandManager implements Manager {
         commands.add(new NotificationTest());
         commands.add(new Tp());
         commands.add(new Spammer());
+        commands.add(new AutoOnlySword());
 
         EventBus.getInstance().register(this);
     }

@@ -59,11 +59,13 @@ public abstract class FontLoaders {
 
     public static CFontRenderer Arial18 = new CFontRenderer(FontLoaders.getfonts(18, "Arial", true), true, true);
 
+    public static CFontRenderer roboto18 = new CFontRenderer(FontLoaders.getfonts(18, "Roboto-Medium", true), true, true);
+    public static CFontRenderer roboto16 = new CFontRenderer(FontLoaders.getfonts(16, "Roboto-Medium", true), true, true);
+
     private static Font getComfortaa(int size) {
         Font font;
         try {
-            InputStream is = Minecraft.getMinecraft().getResourceManager()
-                    .getResource(new ResourceLocation("FoodTower/fonts/Comfortaa.ttf")).getInputStream();
+            InputStream is = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation("FoodTower/fonts/Comfortaa.ttf")).getInputStream();
             font = Font.createFont(0, is);
             font = font.deriveFont(0, size);
         } catch (Exception ex) {
@@ -77,8 +79,7 @@ public abstract class FontLoaders {
     private static Font getNovICON(int size) {
         Font font;
         try {
-            InputStream is = Minecraft.getMinecraft().getResourceManager()
-                    .getResource(new ResourceLocation("FoodTower/fonts/NovICON.ttf")).getInputStream();
+            InputStream is = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation("FoodTower/fonts/NovICON.ttf")).getInputStream();
             font = Font.createFont(0, is);
             font = font.deriveFont(0, size);
         } catch (Exception ex) {
@@ -92,8 +93,21 @@ public abstract class FontLoaders {
     private static Font getSF(int size) {
         Font font;
         try {
-            InputStream is = Minecraft.getMinecraft().getResourceManager()
-                    .getResource(new ResourceLocation("FoodTower/fonts/SFREGULAR.ttf")).getInputStream();
+            InputStream is = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation("FoodTower/fonts/SFREGULAR.ttf")).getInputStream();
+            font = Font.createFont(0, is);
+            font = font.deriveFont(0, size);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println("Error loading font");
+            font = new Font("default", Font.PLAIN, size);
+        }
+        return font;
+    }
+
+    private static Font getRoboto(int size) {
+        Font font;
+        try {
+            InputStream is = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation("FoodTower/fonts/Roboto-Medium.ttf")).getInputStream();
             font = Font.createFont(0, is);
             font = font.deriveFont(0, size);
         } catch (Exception ex) {
@@ -107,8 +121,7 @@ public abstract class FontLoaders {
     private static Font getGoogleSans(int size) {
         Font font;
         try {
-            InputStream is = Minecraft.getMinecraft().getResourceManager()
-                    .getResource(new ResourceLocation("FoodTower/fonts/GoogleSans.ttf")).getInputStream();
+            InputStream is = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation("FoodTower/fonts/GoogleSans.ttf")).getInputStream();
             font = Font.createFont(0, is);
             font = font.deriveFont(0, size);
         } catch (Exception ex) {
@@ -124,11 +137,9 @@ public abstract class FontLoaders {
         try {
             InputStream is;
             if (ttf) {
-                is = Minecraft.getMinecraft().getResourceManager()
-                        .getResource(new ResourceLocation("FoodTower/fonts/" + fontname + ".ttf")).getInputStream();
+                is = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation("FoodTower/fonts/" + fontname + ".ttf")).getInputStream();
             } else {
-                is = Minecraft.getMinecraft().getResourceManager()
-                        .getResource(new ResourceLocation("FoodTower/fonts/" + fontname + ".otf")).getInputStream();
+                is = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation("FoodTower/fonts/" + fontname + ".otf")).getInputStream();
             }
             font = Font.createFont(0, is);
             font = font.deriveFont(Font.PLAIN, size);

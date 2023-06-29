@@ -41,7 +41,7 @@ public class Criticals extends Module {
 
     public Criticals() {
         super("Criticals", new String[]{"Criticals", "crit"}, ModuleType.Combat);
-        this.addValues(mode, motionYvalue, HurtTime, Delay, fake, fakeSize, Always, onlyGround, C06, speedCheck);
+        this.addValues(mode, motionYvalue, HurtTime, Delay, fake, fakeSize, C06, Always, onlyGround, speedCheck);
         setValueDisplayable(new Value<?>[]{motionYvalue}, mode, new Enum[]{CritMode.Motion});
         setValueDisplayable(C06, mode, new Enum[]{CritMode.Packet, CritMode.AAC440Packet, CritMode.NCP, CritMode.OldNCPacket});
         setValueDisplayable(fakeSize, fake, fake.get());
@@ -97,7 +97,7 @@ public class Criticals extends Module {
     }
 
     public enum CritMode {
-        Packet(new PacketCrit()), NoGround(new NoGroundCrit()), Edit(new EditCrit()), Motion(new MotionCrit()), TpHop(new TpHopCrit()), OldNCPacket(new OldNCPacketCrit()), NCP(new NCPCrit()), AAC440Packet(new AAC440PacketCrit()), AAC440NG(new AAC440NoGroundCriit()), AACV5(new AAC5Crit()), DCJHop(new DCJHopCrit()), DCJHop2(new DCJHop2Crit());
+        Packet(new PacketCrit()), NoGround(new NoGroundCrit()), Edit(new EditCrit()), Motion(new MotionCrit()), Jump(new JumpCrit()), TpHop(new TpHopCrit()), OldNCPacket(new OldNCPacketCrit()), NCP(new NCPCrit()), AAC440Packet(new AAC440PacketCrit()), AAC440NG(new AAC440NoGroundCriit()), AACV5(new AAC5Crit()), DCJHop(new DCJHopCrit()), DCJHop2(new DCJHop2Crit());
         final CriticalsModule module;
 
         CritMode(CriticalsModule criticalsModule) {
