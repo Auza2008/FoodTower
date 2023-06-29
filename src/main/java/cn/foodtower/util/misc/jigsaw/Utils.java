@@ -25,6 +25,8 @@ import java.util.Random;
 
 public class Utils {
 
+    private static final Minecraft mc = Minecraft.getMinecraft();
+    private static final Random rand = new Random();
     public static boolean spectator;
     public static ArrayList<Entity> blackList = new ArrayList<>();
     static double x;
@@ -36,8 +38,6 @@ public class Utils {
     static double xPre;
     static double yPre;
     static double zPre;
-    private static final Minecraft mc = Minecraft.getMinecraft();
-    private static final Random rand = new Random();
     private static Vec3 lastLoc = null;
 
     private static void sendPacket(Packet packet) {

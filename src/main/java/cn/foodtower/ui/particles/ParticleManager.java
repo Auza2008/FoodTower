@@ -10,10 +10,10 @@ import java.util.Iterator;
 import java.util.Random;
 
 public class ParticleManager {
-    public ArrayList particles = new ArrayList();
     private final Particle particle;
     private final int amount;
     private final Random random = new Random();
+    public ArrayList particles = new ArrayList();
 
     public ParticleManager(Particle particle, int amount) {
         this.particle = particle;

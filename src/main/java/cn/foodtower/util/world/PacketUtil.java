@@ -13,12 +13,12 @@ import java.util.ArrayList;
 
 public class PacketUtil {
 
-    public static int inBound, outBound = 0;
-    public static int avgInBound, avgOutBound = 0;
-    static Minecraft mc = Minecraft.getMinecraft();
     private static final ArrayList<Packet<?>> packets = new ArrayList<Packet<?>>();
     private static final MSTimer packetTimer = new MSTimer();
     private static final MSTimer wdTimer = new MSTimer();
+    public static int inBound, outBound = 0;
+    public static int avgInBound, avgOutBound = 0;
+    static Minecraft mc = Minecraft.getMinecraft();
     private static int transCount = 0;
     private static int wdVL = 0;
 

@@ -19,9 +19,9 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class AutoSword extends Module {
+    private final Mode mode = new Mode("Mpde", ModeE.values(), ModeE.New);
     public TimeHelper timer = new TimeHelper();
 
-    private final Mode mode = new Mode("Mpde", ModeE.values(), ModeE.New);
     public AutoSword() {
         super("AutoSword", new String[]{"AutoSword"}, ModuleType.Combat);
         addValues(mode);

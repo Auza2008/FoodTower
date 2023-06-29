@@ -20,6 +20,10 @@ import org.lwjgl.opengl.GL11;
 public class Chams extends Module {
 
 
+    private final Option players = new Option("Players", "Players", true);
+    private final Option animals = new Option("Animals", "Animals", true);
+    private final Option mobs = new Option("Mobs", "Mobs", false);
+    private final Option passives = new Option("Passives", "Passives", true);
     public Numbers<Double> visiblered = new Numbers<>("VisibleRed", "VisibleRed", 1.0, 0.001, 1.0, 0.001);
     public Numbers<Double> visiblegreen = new Numbers<>("VisibleGreen", "VisibleGreen", 0.0, 0.001, 1.0, 0.001);
     public Numbers<Double> visibleblue = new Numbers<>("VisibleBlue", "VisibleBlue", 0.0, 0.001, 1.0, 0.001);
@@ -31,10 +35,6 @@ public class Chams extends Module {
     public Option colored = new Option("Colored", "Colored", false);
     //public Option hands = new Option("Hands","Hands", false);
     public Option rainbow = new Option("Raindow", "Raindow", false);
-    private final Option players = new Option("Players", "Players", true);
-    private final Option animals = new Option("Animals", "Animals", true);
-    private final Option mobs = new Option("Mobs", "Mobs", false);
-    private final Option passives = new Option("Passives", "Passives", true);
 
     public Chams() {
         super("Chams", new String[]{"Chams"}, ModuleType.Render);

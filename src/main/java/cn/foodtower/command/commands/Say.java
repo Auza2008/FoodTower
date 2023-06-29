@@ -25,7 +25,7 @@ public class Say
             sending = true;
             int i = 0;
             while (i < args.length) {
-                msg = String.valueOf(msg) + args[i] + " ";
+                msg = msg + args[i] + " ";
                 i++;
             }
             msg = msg.substring(0, msg.length() - 1);

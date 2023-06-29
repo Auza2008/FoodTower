@@ -7,9 +7,9 @@ import net.minecraft.client.shader.Framebuffer;
 import org.lwjgl.opengl.GL11;
 
 public class Shader {
+    private final String fragmentShader;
     private Framebuffer frameBuffer;
     private ShaderLoader clientShader;
-    private final String fragmentShader;
 
     public Shader(String fragmentShader) {
         this.fragmentShader = fragmentShader;

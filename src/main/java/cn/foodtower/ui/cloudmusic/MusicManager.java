@@ -53,6 +53,14 @@ public class MusicManager {
         INSTANCE = new MusicManager();
     }
 
+    // 音乐封面缓存
+    private final HashMap<Long, ResourceLocation> artsLocations = new HashMap<>();
+    // 缓存文件夹
+    private final File musicFolder;
+    private final File artPicFolder;
+    private final File cookie;
+    // Minecraft 实例
+    private final Minecraft mc = Minecraft.getMinecraft();
     public float x = 10;
     public float y = 10;
     public float x2 = 0;
@@ -82,16 +90,8 @@ public class MusicManager {
     public int lrcIndex = 0;
     public int tlrcIndex = 0;
     public File circleImage;
-    // 音乐封面缓存
-    private final HashMap<Long, ResourceLocation> artsLocations = new HashMap<>();
     // I'm stuck with JavaFX MediaPlayer :(
     private MediaPlayer mediaPlayer;
-    // 缓存文件夹
-    private final File musicFolder;
-    private final File artPicFolder;
-    private final File cookie;
-    // Minecraft 实例
-    private final Minecraft mc = Minecraft.getMinecraft();
 
 
     public MusicManager() {

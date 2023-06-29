@@ -61,67 +61,36 @@ public class GlyphCache {
      * Transparent (alpha zero) white background color for use with BufferedImage.clearRect().
      */
     private static final Color BACK_COLOR = new Color(255, 255, 255, 0);
-
-    /**
-     * The point size at which every OpenType font is rendered.
-     */
-    private int fontSize = 18;
-
-    /**
-     * If true, then enble anti-aliasing when rendering the font glyph
-     */
-    private boolean antiAliasEnabled = false;
-
-
-    /**
-     * Temporary image for rendering a string to and then extracting the glyph images from.
-     */
-    private BufferedImage stringImage;
-
-    /**
-     * The Graphics2D associated with stringImage and used for string drawing to extract the individual glyph shapes.
-     */
-    private Graphics2D stringGraphics;
-
-
     /**
      * All font glyphs are packed inside this image and are then loaded from here into an OpenGL texture.
      */
     private final BufferedImage glyphCacheImage = new BufferedImage(TEXTURE_WIDTH, TEXTURE_HEIGHT, BufferedImage.TYPE_INT_ARGB);
-
     /**
      * The Graphics2D associated with glyphCacheImage and used for bit blitting between stringImage.
      */
     private final Graphics2D glyphCacheGraphics = glyphCacheImage.createGraphics();
-
     /**
      * Needed for all text layout operations that create GlyphVectors (maps point size to pixel size).
      */
     private final FontRenderContext fontRenderContext = glyphCacheGraphics.getFontRenderContext();
-
-
     /**
      * Intermediate data array for use with textureImage.getRgb().
      */
     private final int[] imageData = new int[TEXTURE_WIDTH * TEXTURE_HEIGHT];
-
     /**
      * A big-endian direct int buffer used with glTexSubImage2D() and glTexImage2D(). Used for loading the pre-rendered glyph
      * images from the glyphCacheImage BufferedImage into OpenGL textures. This buffer uses big-endian byte ordering to ensure
      * that the integers holding packed RGBA colors are stored into memory in a predictable order.
      */
     private final IntBuffer imageBuffer = ByteBuffer.allocateDirect(4 * TEXTURE_WIDTH * TEXTURE_HEIGHT).order(ByteOrder.BIG_ENDIAN).asIntBuffer();
-
     /**
      * A single integer direct buffer with native byte ordering used for returning values from glGenTextures().
      */
     private final IntBuffer singleIntBuffer = GLAllocation.createDirectIntBuffer(1);
-
     /**
      * List of all available physical fonts on the system. Used by lookupFont() to find alternate fonts.
      */
     private final List<Font> allFonts = Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts());
-
     /**
      * A list of all fonts that have been returned so far by lookupFont(), and that will always be searched first for a usable font before
      * searching through allFonts[]. This list will only have plain variation of a font at a dummy point size, unlike fontCache which could
@@ -129,28 +98,38 @@ public class GlyphCache {
      * font.
      */
     private final List<Font> usedFonts = new ArrayList();
-
-
-    /**
-     * ID of current OpenGL cache texture being used by cacheGlyphs() to store pre-rendered glyph images.
-     */
-    private int textureName;
-
     /**
      * A cache of all fonts that have at least one glyph pre-rendered in a texture. Each font maps to an integer (monotonically
      * increasing) which forms the upper 32 bits of the key into the glyphCache map. This font cache can include different styles
      * of the same font family like bold or italic.
      */
     private final LinkedHashMap<Font, Integer> fontCache = new LinkedHashMap();
-
     /**
      * A cache of pre-rendered glyphs mapping each glyph by its glyphcode to the position of its pre-rendered image within
      * the cache texture. The key is a 64 bit number such that the lower 32 bits are the glyphcode and the upper 32 are the
      * index of the font in the fontCache. This makes for a single globally unique number to identify any glyph from any font.
      */
     private final LinkedHashMap<Long, Entry> glyphCache = new LinkedHashMap();
-
-
+    /**
+     * The point size at which every OpenType font is rendered.
+     */
+    private int fontSize = 18;
+    /**
+     * If true, then enble anti-aliasing when rendering the font glyph
+     */
+    private boolean antiAliasEnabled = false;
+    /**
+     * Temporary image for rendering a string to and then extracting the glyph images from.
+     */
+    private BufferedImage stringImage;
+    /**
+     * The Graphics2D associated with stringImage and used for string drawing to extract the individual glyph shapes.
+     */
+    private Graphics2D stringGraphics;
+    /**
+     * ID of current OpenGL cache texture being used by cacheGlyphs() to store pre-rendered glyph images.
+     */
+    private int textureName;
     /**
      * The X coordinate of the upper=left corner in glyphCacheImage where the next glyph image should be stored. Glyphs are
      * always added left-to-right on the curren tline until it fills up, at which point they continue filling the texture on

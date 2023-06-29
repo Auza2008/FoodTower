@@ -12,8 +12,8 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import java.awt.*;
 
 public class PacketMotior extends Module {
-    private int packetcount;
     private final TimerUtil time = new TimerUtil();
+    private int packetcount;
 
     public PacketMotior() {
         super("PacketMotior", new String[]{"rotate"}, ModuleType.Render);

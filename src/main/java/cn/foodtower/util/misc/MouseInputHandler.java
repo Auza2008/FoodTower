@@ -3,8 +3,8 @@ package cn.foodtower.util.misc;
 import org.lwjgl.input.Mouse;
 
 public class MouseInputHandler {
-    public boolean clicked;
     private final int button;
+    public boolean clicked;
 
     public MouseInputHandler(int key) {
         this.button = key;

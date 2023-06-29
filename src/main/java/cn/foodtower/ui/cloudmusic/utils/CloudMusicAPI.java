@@ -54,16 +54,14 @@ public enum CloudMusicAPI {
             {"Referer", "https://music.163.com/"},
             {"X-Real-IP", "117.181.172.1"}
     };
-
+    // Json Parser
+    private final JsonParser parser = new JsonParser();
     // Cookie
     public String[][] cookies = {
             {"os", "pc"},
             {"Referer", "https://music.163.com/"},
             {"__remember_me", "true"}
     };
-
-    // Json Parser
-    private final JsonParser parser = new JsonParser();
 
     /**
      * --使用手机号登录

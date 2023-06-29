@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 public class RayTraceUtil2 {
     private static final float MAX_STEP = 0.1f;
+    private final ArrayList<Vector3f> positions = new ArrayList();
     protected Minecraft mc = Minecraft.getMinecraft();
     private float startX;
     private float startY;
@@ -16,7 +17,6 @@ public class RayTraceUtil2 {
     private float endX;
     private float endY;
     private float endZ;
-    private final ArrayList<Vector3f> positions = new ArrayList();
     private EntityLivingBase entity;
 
     public RayTraceUtil2(EntityLivingBase entity) {

@@ -26,16 +26,25 @@ public class AntiFall extends Module {
     public static Numbers<Double> distance = new Numbers<>("Distance", 5.0, 0.0, 10.0, 1.0);
     public static Option Void = new Option("Void", "Void", true);
     public static Option scaffoldvalue = new Option("ToggleScaffold", true);
+    private static final ArrayList<C03PacketPlayer> packets = new ArrayList<>();
     private final Timer timer = new Timer();
     private final Mode mode = new Mode("Mode", "Mode", AntiMode.values(), AntiMode.Hypixel);
     boolean needBlink;
     private boolean saveMe;
-    private double[] lastGroundPos = new double[3];
-    private static ArrayList<C03PacketPlayer> packets = new ArrayList<>();
+    private final double[] lastGroundPos = new double[3];
 
     public AntiFall() {
         super("AntiFall", new String[]{"AntiVoid"}, ModuleType.Movement);
         this.addValues(this.mode, distance, Void, scaffoldvalue);
+    }
+
+    public static boolean isInVoid() {
+        for (int i = 0; i <= 128; i++) {
+            if (MoveUtils.isOnGround(i)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @EventHandler
@@ -98,15 +107,6 @@ public class AntiFall extends Module {
                 }
             }
         }
-    }
-
-    public static boolean isInVoid() {
-        for (int i = 0; i <= 128; i++) {
-            if (MoveUtils.isOnGround(i)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     @EventHandler

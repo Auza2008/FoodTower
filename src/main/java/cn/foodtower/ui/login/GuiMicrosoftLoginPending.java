@@ -8,9 +8,9 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 
 public class GuiMicrosoftLoginPending extends GuiScreen {
+    private final GuiScreen prevGui;
     private String stage = "Initializing...";
     private OAuthServer server;
-    private final GuiScreen prevGui;
 
     public GuiMicrosoftLoginPending(GuiScreen prevGui) {
         this.prevGui = prevGui;

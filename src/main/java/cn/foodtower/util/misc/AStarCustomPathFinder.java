@@ -18,11 +18,11 @@ public class AStarCustomPathFinder {
     };
     private final Vec3 startVec3;
     private final Vec3 endVec3;
-    private ArrayList<Vec3> path = new ArrayList<>();
     private final ArrayList<Hub> hubs = new ArrayList<>();
     private final ArrayList<Hub> hubsToWork = new ArrayList<>();
     private final double minDistanceSquared = 9;
     private final boolean nearest = true;
+    private ArrayList<Vec3> path = new ArrayList<>();
 
     public AStarCustomPathFinder(Vec3 startVec3, Vec3 endVec3) {
         this.startVec3 = startVec3.addVector(0, 0, 0).floor();

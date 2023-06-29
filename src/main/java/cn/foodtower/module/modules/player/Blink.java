@@ -25,9 +25,9 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Blink extends Module {
 
+    public final Option pulseValue = new Option("Pulse", false);
     private final LinkedBlockingQueue<Packet> packets = new LinkedBlockingQueue<>();
     private final LinkedList<double[]> positions = new LinkedList<>();
-    public final Option pulseValue = new Option("Pulse", false);
     private final Numbers<Double> pulseDelayValue = new Numbers<>("PulseDelay", 1000d, 100d, 5000d, 100d);
     private final MSTimer pulseTimer = new MSTimer();
     private EntityOtherPlayerMP fakePlayer = null;

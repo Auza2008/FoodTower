@@ -7,14 +7,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 
 public class Notification implements INotification {
-    public long id;
-    public Translate translate;
-    boolean isplayed;
     private final String header;
     private final String subtext;
     private final long start;
     private final long displayTime;
     private final Notifications.Type type;
+    public long id;
+    public Translate translate;
+    boolean isplayed;
     private float x;
     private float tarX;
     private float y;

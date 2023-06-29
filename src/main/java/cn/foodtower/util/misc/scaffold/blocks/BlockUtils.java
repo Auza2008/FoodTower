@@ -9,7 +9,6 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
-import net.minecraft.world.World;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

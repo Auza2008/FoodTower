@@ -1,10 +1,10 @@
 package cn.foodtower.util.anim;
 
 public class Expand {
-    private float x;
-    private float y;
     private final float expandX;
     private final float expandY;
+    private float x;
+    private float y;
     private long lastMS;
 
     public Expand(float x, float y, float expandX, float expandY) {

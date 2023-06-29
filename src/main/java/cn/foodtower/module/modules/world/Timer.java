@@ -11,10 +11,10 @@ import java.awt.*;
 
 public class Timer
         extends Module {
-    private float old;
     private final Numbers<Double> Speed = new Numbers<>("Speed", "Speed", 1.0,
             0.0,
             20.0, 0.01);
+    private float old;
 
     public Timer() {
         super("Timer", new String[]{"Timer", "Timer", "Timer"}, ModuleType.World);

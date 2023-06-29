@@ -18,8 +18,8 @@ public class AltLoginThread extends Thread {
     private final Minecraft mc = Minecraft.getMinecraft();
     private final String password;
     private final String username;
-    private String status;
     private final Alt alt;
+    private String status;
 
     public AltLoginThread(Alt alt) {
         super("Alt Login Thread");

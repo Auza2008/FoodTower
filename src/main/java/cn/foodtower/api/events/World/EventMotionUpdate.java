@@ -4,6 +4,7 @@ package cn.foodtower.api.events.World;
 import cn.foodtower.api.Event;
 
 public final class EventMotionUpdate extends Event {
+    private final EventPreUpdate event;
     private double posX;
     private double lastPosX;
     private double posY;
@@ -16,7 +17,6 @@ public final class EventMotionUpdate extends Event {
     private float lastPitch;
     private boolean onGround;
     private Type type;
-    private final EventPreUpdate event;
 
     public EventMotionUpdate(EventPreUpdate eventPreUpdate, double posX, double posY, double posZ, float yaw, float pitch, boolean onGround, Type type) {
         this.posX = posX;

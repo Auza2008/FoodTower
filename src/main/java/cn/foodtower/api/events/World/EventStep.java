@@ -6,10 +6,10 @@ import cn.foodtower.api.Event;
  * Created by cool1 on 1/16/2017.
  */
 public class EventStep extends Event {
+    private final boolean pre;
     private double stepHeight;
     private double realHeight;
     private boolean active;
-    private final boolean pre;
 
     public EventStep(boolean state, double stepHeight, double realHeight) {
         this.pre = state;

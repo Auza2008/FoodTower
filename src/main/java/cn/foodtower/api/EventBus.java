@@ -88,9 +88,9 @@ public class EventBus {
     }
 
     private class Handler {
-        private MethodHandle handler;
         private final Object parent;
         private final byte priority;
+        private MethodHandle handler;
 
         public Handler(Method method, Object parent, byte priority) {
             if (!method.isAccessible()) {

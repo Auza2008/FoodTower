@@ -12,12 +12,12 @@ import java.util.Random;
 
 public class RotationUtil {
 
+    private static final Minecraft mc = Minecraft.getMinecraft();
     public static Random random = new Random();
     public static double x = random.nextDouble();
     public static double y = random.nextDouble();
     public static double z = random.nextDouble();
     public static float[] prevRotations = new float[2];
-    private static final Minecraft mc = Minecraft.getMinecraft();
 
     public static boolean isFaced(final Entity targetEntity, double blockReachDistance) {
         return rayCastUtil.raycastEntity(blockReachDistance, entity -> entity == targetEntity) != null;

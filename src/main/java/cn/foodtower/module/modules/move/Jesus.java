@@ -28,11 +28,11 @@ public class Jesus extends Module {
     private static final int timer1 = 0;
     private static final int rheight = 0;
     private static final int Expression = 0;
-    int stage, water;
     private final TimerUtil timer = new TimerUtil();
+    private final Mode mode = new Mode("Mode", "Mode", JMode.values(), JMode.Dolphin);
+    int stage, water;
     private boolean wasWater = false;
     private int ticks = 0;
-    private final Mode mode = new Mode("Mode", "Mode", JMode.values(), JMode.Dolphin);
 
     public Jesus() {
         super("Jesus", new String[]{"waterwalk", "float"}, ModuleType.Movement);

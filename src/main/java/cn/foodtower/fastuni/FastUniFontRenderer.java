@@ -37,6 +37,12 @@ public class FastUniFontRenderer implements IResourceManagerReloadListener, IBFF
      */
     private final TextureManager renderEngine;
     /**
+     * Array of the start/end column (in upper/lower nibble) for every glyph in the /font directory.
+     */
+    private final byte[] glyphWidth = new byte[65536];
+    private final float[] charWidthFloat = new float[256];
+    private final GlBlendState oldBlendState = new GlBlendState();
+    /**
      * the height in pixels of default text
      */
     public int FONT_HEIGHT = 8;
@@ -49,10 +55,6 @@ public class FastUniFontRenderer implements IResourceManagerReloadListener, IBFF
     public GameSettings gameSettings;
     public ResourceLocation locationFontTextureBase;
     public float offsetBold = 1.0F;
-    /**
-     * Array of the start/end column (in upper/lower nibble) for every glyph in the /font directory.
-     */
-    private final byte[] glyphWidth = new byte[65536];
     private ResourceLocation locationFontTexture;
     /**
      * Current X coordinate at which to draw the next character.
@@ -110,10 +112,7 @@ public class FastUniFontRenderer implements IResourceManagerReloadListener, IBFF
      * Set if the "m" style (strikethrough) is active in currently rendering string
      */
     private boolean strikethroughStyle;
-    private final float[] charWidthFloat = new float[256];
     private boolean blend = false;
-    private final GlBlendState oldBlendState = new GlBlendState();
-
     private StringCache stringCache;
 
     public FastUniFontRenderer(Font font, int size, boolean antiAlias) {
