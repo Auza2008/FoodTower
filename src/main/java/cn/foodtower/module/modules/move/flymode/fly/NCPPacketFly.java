@@ -28,7 +28,7 @@ public class NCPPacketFly implements FlyModule {
     public void onUpdate(EventPreUpdate e) {
         double yaw = Math.toRadians(mc.thePlayer.rotationYaw);
         double x = -sin(yaw) * Fly.ncpSpeed.get();
-        double z = MathHelper.cos((float) yaw) * Fly.speed.get();
+        double z = MathHelper.cos((float) yaw) * Fly.ncpSpeed.get();
         resetMotion(true);
         mc.timer.timerSpeed = Fly.ncpTimer.get().floatValue();
         mc.getNetHandler().addToSendQueue(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX + x, mc.thePlayer.motionY, mc.thePlayer.motionZ + z, false));

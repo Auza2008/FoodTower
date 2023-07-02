@@ -27,6 +27,7 @@ import cn.foodtower.util.render.RenderUtil;
 import cn.foodtower.util.time.MSTimer;
 import cn.foodtower.util.time.TimerUtil;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -42,6 +43,8 @@ import net.minecraft.util.EnumFacing;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import static cn.foodtower.util.math.RotationUtils.getRotationFromPosition;
 
 public class KillAura extends Module {
     public static boolean isBlocking;
@@ -107,6 +110,13 @@ public class KillAura extends Module {
         setValueDisplayable(prioritizePlayers, players, players.get());
     }
 
+    public static float[] getRotationsDCJPitch(final EntityLivingBase ent) {
+        final double x = ent.posX;
+        final double z = ent.posZ;
+        final double y = mc.thePlayer.posY + mc.thePlayer.getEyeHeight() - 0.5;
+        return getRotationFromPosition(x, z, y);
+    }
+
     @Override
     public void onDisable() {
         this.unblock();
@@ -150,10 +160,11 @@ public class KillAura extends Module {
                         angles = RotationUtils.getCustomRotation(RotationUtils.getLocation(curTarget.getEntityBoundingBox()));
                         break;
                     case DCJ:
-                        if (curTarget.getEntityBoundingBox().minY > mc.thePlayer.posY + mc.thePlayer.getEyeHeight() || mc.thePlayer.posY + mc.thePlayer.getEyeHeight() > curTarget.getEntityBoundingBox().maxY) {
-                            angles = RotationUtils.getRotationsEntity(curTarget);
+                        if (mc.thePlayer != null && (curTarget.getEntityBoundingBox().minY > mc.thePlayer.posY + mc.thePlayer.getEyeHeight() - 0.5 || mc.thePlayer.posY + mc.thePlayer.getEyeHeight() - 0.5 > curTarget.getEntityBoundingBox().maxY)) {
+                            angles[0] = RotationUtils.getRotationsEntity(curTarget)[0];
+                            angles[1] = RotationUtils.getRotationsEntity(curTarget)[1] + curTarget.getEyeHeight() / 2f - 0.5f;
                         } else {
-                            angles = RotationUtils.getRotationsEntityEye(curTarget);
+                            angles = getRotationsDCJPitch(curTarget);
                         }
                         break;
                 }
@@ -178,11 +189,11 @@ public class KillAura extends Module {
     @EventHandler
     private void runAttack(EventMotionUpdate e) {
         setSuffix(mode.get());
-        if (((abTiming.get().equals(ABTiming.Pre) && e.isPre()) || (abTiming.get().equals(ABTiming.Post) && !e.isPre()) || abTiming.get().equals(ABTiming.All)) && predictBlock.get())
+        if (((abTiming.get().equals(ABTiming.Pre) && e.isPre()) || (abTiming.get().equals(ABTiming.Post) && !e.isPre())) && predictBlock.get())
             block();
-        if ((attackTiming.get().equals(AttackTiming.Pre) && e.isPre()) || (attackTiming.get().equals(AttackTiming.Post) && !e.isPre()) || attackTiming.get().equals(AttackTiming.All))
+        if ((attackTiming.get().equals(AttackTiming.Pre) && e.isPre()) || (attackTiming.get().equals(AttackTiming.Post) && !e.isPre()))
             attack();
-        if ((abTiming.get().equals(ABTiming.Pre) && e.isPre()) || (abTiming.get().equals(ABTiming.Post) && !e.isPre()) || abTiming.get().equals(ABTiming.All))
+        if ((abTiming.get().equals(ABTiming.Pre) && e.isPre()) || (abTiming.get().equals(ABTiming.Post) && !e.isPre()))
             block();
     }
 
@@ -197,14 +208,16 @@ public class KillAura extends Module {
         if (curTarget == null) {
             unblock();
         }
-        if ((abTiming.get().equals(ABTiming.Update) || abTiming.get().equals(ABTiming.All)) && predictBlock.get())
-            block();
-        if (attackTiming.get().equals(AttackTiming.Update) || attackTiming.get().equals(AttackTiming.All)) attack();
-        if (abTiming.get().equals(ABTiming.Update) || abTiming.get().equals(ABTiming.All)) block();
+        if (abTiming.get().equals(ABTiming.Update) && predictBlock.get()) block();
+        if (attackTiming.get().equals(AttackTiming.Update)) attack();
+        if (abTiming.get().equals(ABTiming.Update)) block();
     }
 
     @EventHandler
     private void onRender(EventRender3D e) {
+        if (abTiming.get().equals(ABTiming.All) && predictBlock.get()) block();
+        if (attackTiming.get().equals(AttackTiming.All)) attack();
+        if (abTiming.get().equals(ABTiming.All)) block();
         if (curTarget != null && esp.get()) {
             RenderUtil.drawShadow(curTarget, e.getPartialTicks(), (float) yPos, direction);
             RenderUtil.drawCircle(curTarget, e.getPartialTicks(), (float) yPos);
@@ -303,14 +316,17 @@ public class KillAura extends Module {
     private void attack(EntityLivingBase entity) {
         EntityPlayerSP player = mc.thePlayer;
         unblock();
+        if (autoBlockMode.get().equals(AutoBlockMode.Vanilla) && (mc.thePlayer.isBlocking() || isBlocking)) {
+            sendPacket(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+        }
+        EventAttack attack = new EventAttack(curTarget);
+        EventBus.getInstance().register(attack);
+        if (attack.isCancelled()) return;
         if (swing.get()) {
             player.swingItem();
         } else {
             mc.getNetHandler().addToSendQueue(new C0APacketAnimation());
         }
-        EventAttack attack = new EventAttack(curTarget);
-        EventBus.getInstance().register(attack);
-        if (attack.isCancelled()) return;
         if (dbtap.get()) {
             sendPacket(new C02PacketUseEntity(entity, C02PacketUseEntity.Action.ATTACK));
         }
@@ -324,10 +340,14 @@ public class KillAura extends Module {
     //    取消格挡
     private void unblock() {
         if ((this.autoBlock.get() || mc.thePlayer.isBlocking()) && isHoldingSword() && isBlocking) {
-//            mc.thePlayer.setItemInUse(mc.thePlayer.getHeldItem(), 7199);
             switch ((AutoBlockMode) this.autoBlockMode.get()) {
-                case Vanilla:
+                case Right:
+                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
+                    isBlocking = false;
+                    break;
+                case NCP:
                 case AAC:
+                case Vanilla:
                 case Packet:
                     sendPacket(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
                     isBlocking = false;
@@ -343,16 +363,14 @@ public class KillAura extends Module {
 
     private void block() {
         if (this.autoBlock.get() && isHoldingSword() && this.isEntityNearby() && !isBlocking) {
-//            mc.thePlayer.setItemInUse(mc.thePlayer.getHeldItem(), 7199);
             switch ((AutoBlockMode) this.autoBlockMode.get()) {
-                case Vanilla:
-                    if (mc.gameSettings.keyBindUseItem.isKeyDown()) {
-                        mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem());
-                        isBlocking = true;
-                    }
+                case Right:
+                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
+                    isBlocking = true;
                     break;
+                case Vanilla:
                 case Packet:
-                    sendPacket(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.inventory.getCurrentItem(), 0.0f, 0.0f, 0.0f));
+                    sendPacket(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
                     isBlocking = true;
                     break;
                 case AAC:
@@ -366,6 +384,9 @@ public class KillAura extends Module {
                     mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem());
                     mc.gameSettings.keyBindUseItem.Doing = true;
                     isBlocking = true;
+                    break;
+                case NCP:
+                    sendPacket(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, null, 0f, 0f, 0f));
                     break;
             }
         }
@@ -411,7 +432,7 @@ public class KillAura extends Module {
     }
 
     private enum AutoBlockMode {
-        Packet, Vanilla, AAC, DCJ
+        Packet, Right, Vanilla, NCP, AAC, DCJ
     }
 
     private enum Mode {

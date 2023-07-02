@@ -11,10 +11,7 @@ import cn.foodtower.api.value.Value;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.module.modules.move.flymode.FlyModule;
-import cn.foodtower.module.modules.move.flymode.fly.DCJFly;
-import cn.foodtower.module.modules.move.flymode.fly.NCPPacketFly;
-import cn.foodtower.module.modules.move.flymode.fly.VanillaFly;
-import cn.foodtower.module.modules.move.flymode.fly.VulcanFly;
+import cn.foodtower.module.modules.move.flymode.fly.*;
 import cn.foodtower.ui.notifications.user.Notifications;
 import net.minecraft.block.BlockAir;
 import net.minecraft.network.Packet;
@@ -26,17 +23,20 @@ public class Fly extends Module {
     public static final Option vulcan_canClipValue = new Option("CanClip", true);
     public static Numbers<Double> speed = new Numbers<>("Speed", 2d, 0.1d, 5d, 0.1d);
     public static Numbers<Double> ncpSpeed = new Numbers<>("Speed", 0.28d, 0.27d, 0.29d, 0.01d);
-    public static Numbers<Double> ncpTimer = new Numbers<>("Timer", 1.1d, 1.0d, 1.3d, 0.1d);
-    public static Numbers<Double> dcjTimer = new Numbers<>("Timer", 1d, 1.0d, 10d, 0.1d);
+    public static Numbers<Double> ncpTimer = new Numbers<>("NCPFly-Timer", 1.1d, 1.0d, 1.3d, 0.1d);
+    public static Numbers<Double> dcjTimer = new Numbers<>("DCJFly-Timer", 1d, 1.0d, 10d, 0.1d);
+    public static Numbers<Double> timer = new Numbers<>("Timer", 1d, 0.1, 10d, 0.1);
     public static Option vanillaFlyAntiKick = new Option("AntiKick", false);
     private final Option bob = new Option("Bobbing", false);
     public Mode mode = new Mode("Mode", FlyMode.values(), FlyMode.Vanilla);
 
     public Fly() {
         super("Fly", new String[]{"flight"}, ModuleType.Movement);
-        addValues(mode, speed, ncpSpeed, ncpTimer, dcjTimer, bob, lagBackCheck, vanillaFlyAntiKick, vulcan_canClipValue);
+        addValues(mode, speed, timer, ncpSpeed, ncpTimer, dcjTimer, bob, lagBackCheck, vanillaFlyAntiKick, vulcan_canClipValue);
         setValueDisplayable(vulcan_canClipValue, mode, FlyMode.Vulcan);
         setValueDisplayable(vanillaFlyAntiKick, mode, FlyMode.Vanilla);
+        setValueDisplayable(timer, mode, new Enum[]{FlyMode.Vanilla});
+        setValueDisplayable(speed, mode, new Enum[]{FlyMode.Vanilla, FlyMode.AAC5});
         setValueDisplayable(new Value<?>[]{ncpSpeed, ncpTimer}, mode, FlyMode.NCPPacket);
         setValueDisplayable(dcjTimer, mode, FlyMode.DCJTest);
     }
@@ -59,6 +59,7 @@ public class Fly extends Module {
     @Override
     public void onDisable() {
         ((FlyMode) mode.get()).get().onDisable();
+        mc.timer.timerSpeed = 1f;
     }
 
     @EventHandler
@@ -119,7 +120,7 @@ public class Fly extends Module {
 
 
     enum FlyMode {
-        Vanilla(new VanillaFly()), NCPPacket(new NCPPacketFly()), Vulcan(new VulcanFly()), DCJTest(new DCJFly());
+        Vanilla(new VanillaFly()), NCPPacket(new NCPPacketFly()), AAC5(new AAC5Fly()), Vulcan(new VulcanFly()), DCJTest(new DCJFly());
 
         final FlyModule flyModule;
 

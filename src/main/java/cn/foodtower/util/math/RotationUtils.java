@@ -149,7 +149,8 @@ public class RotationUtils {
     public static float[] getRotationsEntityEye(final EntityLivingBase ent) {
         final double x = ent.posX;
         final double z = ent.posZ;
-        return getRotationFromPosition(x, z, mc.thePlayer.posY + 1.2);
+        final double y = ent.posY + ent.getEyeHeight() - 0.5;
+        return getRotationFromPosition(x, z, y);
     }
 
     public static float[] getPredictedRotations(EntityLivingBase ent) {

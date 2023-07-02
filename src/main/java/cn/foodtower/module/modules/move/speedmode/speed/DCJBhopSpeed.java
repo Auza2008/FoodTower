@@ -4,8 +4,14 @@ import cn.foodtower.api.events.World.*;
 import cn.foodtower.module.modules.combat.KillAura;
 import cn.foodtower.module.modules.move.speedmode.SpeedModule;
 import cn.foodtower.util.entity.MoveUtils;
+import cn.foodtower.util.time.TimerUtil;
+import net.minecraft.network.play.server.S12PacketEntityVelocity;
+import net.minecraft.network.play.server.S27PacketExplosion;
 
 public class DCJBhopSpeed extends SpeedModule {
+    boolean dmgBoost = false;
+    TimerUtil t = new TimerUtil();
+
     @Override
     public void onStep(EventStep e) {
 
@@ -22,7 +28,15 @@ public class DCJBhopSpeed extends SpeedModule {
     public void onMove(EventMove e) {
         if (MoveUtils.isMoving()) {
             if (KillAura.curTarget != null) {
-                setMotion(e, 0.55);
+                if (!dmgBoost) {
+                    setMotion(e, 0.55);
+                } else {
+                    setMotion(e, 1);
+                    if (t.hasReached(1000)) {
+                        dmgBoost = false;
+                        t.reset();
+                    }
+                }
             } else {
                 setMotion(e, 0.80);
             }
@@ -47,7 +61,11 @@ public class DCJBhopSpeed extends SpeedModule {
 
     @Override
     public void onPacket(EventPacket e) {
-
+        if (e.getTypes() == EventPacket.Type.RECEIVE) {
+            if (e.getPacket() instanceof S12PacketEntityVelocity || e.getPacket() instanceof S27PacketExplosion) {
+                dmgBoost = true;
+            }
+        }
     }
 
     @Override

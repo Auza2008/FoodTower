@@ -19,9 +19,7 @@ public class DCJHop2Crit extends CriticalsModule {
 
     @Override
     public void onAttack(EventAttack e) {
-        mc.thePlayer.motionY = 0.1;
-        mc.thePlayer.fallDistance = 0.1f;
-        mc.thePlayer.onGround = false;
+        mc.thePlayer.motionY = 0.3425;
     }
 
     @Override

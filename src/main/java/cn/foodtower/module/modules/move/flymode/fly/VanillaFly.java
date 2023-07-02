@@ -13,7 +13,7 @@ public class VanillaFly implements FlyModule {
 
     @Override
     public void onEnabled() {
-
+mc.timer.timerSpeed = Fly.timer.get().floatValue();
     }
 
     @Override
