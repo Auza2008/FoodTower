@@ -1,4 +1,4 @@
-package cn.foodtower.module.modules.move.flymode.fly;
+package cn.foodtower.module.modules.move.flymode.fly.server;
 
 import cn.foodtower.api.events.World.*;
 import cn.foodtower.module.modules.move.Fly;
