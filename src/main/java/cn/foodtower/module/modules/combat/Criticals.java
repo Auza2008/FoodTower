@@ -30,6 +30,7 @@ public class Criticals extends Module {
     private static final Numbers<Double> Delay = new Numbers<>("Delay", "Delay", 0.0, 0.0, 1000.0, 1.0);
     public static Mode mode = new Mode("Mode", "mode", CritMode.values(), CritMode.Packet);
     public static Option Always = new Option("Always", "Always", false);
+    public static Option DCJAlways = new Option("DCJ-Always", false);
     public static Option C06 = new Option("C06", "C06", false);
     public static Numbers<Double> motionYvalue = new Numbers<>("MotionY", 0.42, 0.01, 1.0, 0.01);
     private final Option speedCheck = new Option("SpeedCheck", true);
@@ -41,14 +42,15 @@ public class Criticals extends Module {
 
     public Criticals() {
         super("Criticals", new String[]{"Criticals", "crit"}, ModuleType.Combat);
-        this.addValues(mode, motionYvalue, HurtTime, Delay, fake, fakeSize, C06, Always, onlyGround, speedCheck);
+        this.addValues(mode, motionYvalue, HurtTime, Delay, fake, fakeSize, C06, Always, DCJAlways, onlyGround, speedCheck);
         setValueDisplayable(new Value<?>[]{motionYvalue}, mode, new Enum[]{CritMode.Motion});
+        setValueDisplayable(DCJAlways, mode, CritMode.DCJHop);
         setValueDisplayable(C06, mode, new Enum[]{CritMode.Packet, CritMode.AAC440Packet, CritMode.NCP, CritMode.OldNCPacket});
         setValueDisplayable(fakeSize, fake, fake.get());
     }
 
     public boolean canCrit(EntityLivingBase e) {
-        return onlyGround.get() && mc.thePlayer.onGround || (!ModuleManager.getModuleByClass(Scaffold.class).isEnabled() && (HurtTime.get().equals(20.0) || e.hurtTime <= HurtTime.get()) && mc.thePlayer.onGround && (!speedCheck.get() || !ModuleManager.getModuleByClass(Speed.class).isEnabled()) && !ModuleManager.getModuleByClass(Fly.class).isEnabled()) || Always.get();
+        return DCJAlways.get() || onlyGround.get() && mc.thePlayer.onGround || (!ModuleManager.getModuleByClass(Scaffold.class).isEnabled() && (HurtTime.get().equals(20.0) || e.hurtTime <= HurtTime.get()) && mc.thePlayer.onGround && (!speedCheck.get() || !ModuleManager.getModuleByClass(Speed.class).isEnabled()) && !ModuleManager.getModuleByClass(Fly.class).isEnabled()) || Always.get();
     }
 
     @EventHandler

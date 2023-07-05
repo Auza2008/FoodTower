@@ -9,7 +9,19 @@ import cn.foodtower.api.value.Value;
 import cn.foodtower.module.Module;
 import cn.foodtower.module.ModuleType;
 import cn.foodtower.module.modules.move.speedmode.SpeedModule;
-import cn.foodtower.module.modules.move.speedmode.speed.*;
+import cn.foodtower.module.modules.move.speedmode.speed.aac.AAC440Speed;
+import cn.foodtower.module.modules.move.speedmode.speed.aac.AACTimer;
+import cn.foodtower.module.modules.move.speedmode.speed.ncp.NCPLatestSpeed;
+import cn.foodtower.module.modules.move.speedmode.speed.normal.AutoJumpSpeed;
+import cn.foodtower.module.modules.move.speedmode.speed.ncp.BhopSpeed;
+import cn.foodtower.module.modules.move.speedmode.speed.normal.GudHopSpeed;
+import cn.foodtower.module.modules.move.speedmode.speed.normal.OnGroundSpeed;
+import cn.foodtower.module.modules.move.speedmode.speed.bypass.DCJBhopSpeed;
+import cn.foodtower.module.modules.move.speedmode.speed.bypass.HiveSpeed;
+import cn.foodtower.module.modules.move.speedmode.speed.bypass.HypixelSpeed;
+import cn.foodtower.module.modules.move.speedmode.speed.vulcan.VulcanFastHopSpeed;
+import cn.foodtower.module.modules.move.speedmode.speed.vulcan.VulcanHopSpeed;
+import cn.foodtower.module.modules.move.speedmode.speed.vulcan.VulcanLowHopSpeed;
 import cn.foodtower.ui.notifications.user.Notifications;
 import cn.foodtower.util.entity.MovementUtils;
 import cn.foodtower.util.entity.PlayerUtil;
@@ -155,7 +167,7 @@ public class Speed extends Module {
     }
 
     public enum SpeedMode {
-        Hypixel(new HypixelSpeed()), AutoJump(new AutoJumpSpeed()), DCJBhop(new DCJBhopSpeed()), Hive(new HiveSpeed()), AAC440(new AAC440Speed()), Bhop(new BhopSpeed()), GudHop(new GudHopSpeed()), OnGround(new OnGroundSpeed()), AACTimer(new AACTimer()), VulcanHop(new VulcanHopSpeed()), VulcanFastHop(new VulcanFastHopSpeed()), VulcanLowHop(new VulcanLowHopSpeed());
+        Hypixel(new HypixelSpeed()), AutoJump(new AutoJumpSpeed()), DCJBhop(new DCJBhopSpeed()), Hive(new HiveSpeed()), AAC440(new AAC440Speed()), Bhop(new BhopSpeed()), NCPLatest(new NCPLatestSpeed()), GudHop(new GudHopSpeed()), OnGround(new OnGroundSpeed()), AACTimer(new AACTimer()), VulcanHop(new VulcanHopSpeed()), VulcanFastHop(new VulcanFastHopSpeed()), VulcanLowHop(new VulcanLowHopSpeed());
 
 
         final SpeedModule module;

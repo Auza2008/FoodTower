@@ -7,6 +7,9 @@ import cn.foodtower.api.events.World.EventPacketSend;
 import cn.foodtower.module.modules.combat.criticalsmode.CriticalsModule;
 
 public class DCJHop2Crit extends CriticalsModule {
+    int attack = 0;
+    int attacked;
+
     @Override
     public void onEnabled() {
 
@@ -19,7 +22,13 @@ public class DCJHop2Crit extends CriticalsModule {
 
     @Override
     public void onAttack(EventAttack e) {
-        mc.thePlayer.motionY = 0.3425;
+        if (attack >= 5) {
+            mc.thePlayer.jump();
+            attack = 0;
+        } else {
+            mc.thePlayer.motionY = 0.20;
+        }
+        ++attack;
     }
 
     @Override

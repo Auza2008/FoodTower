@@ -13,6 +13,7 @@ import cn.foodtower.module.ModuleType;
 import cn.foodtower.module.modules.world.dis.DisablerModule;
 import cn.foodtower.module.modules.world.dis.disablers.bypass.*;
 import cn.foodtower.module.modules.world.dis.disablers.server.CubeCraftDisabler;
+import cn.foodtower.module.modules.world.dis.disablers.server.DCJDisabler;
 import cn.foodtower.module.modules.world.dis.disablers.server.DisablerHypixelDisabler;
 import cn.foodtower.util.time.MSTimer;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
@@ -28,7 +29,7 @@ public class Disabler extends Module {
     public static Numbers<Number> pingspoofdelay = new Numbers<Number>("PingSpoodDelay", 400, 10, 600, 1);
     public static Option invclickbypass = new Option("InvClickBypass", true);
     public static Option debug = new Option("Debug", false);
-    private final Mode mode = new Mode("Mode", Modes.values(), Modes.Basic);
+    public static final Mode mode = new Mode("Mode", Modes.values(), Modes.Basic);
     private final MSTimer lagTimer = new MSTimer();
     //    public static final Numbers<Double> delay = new Numbers<>("Delay",500d, 300d, 2000d, 100d);
 
@@ -108,8 +109,8 @@ public class Disabler extends Module {
         ((Modes) (mode.get())).get().onTick(e);
     }
 
-    enum Modes {
-        Basic(new BasicDisabler()), Hypxiel(new DisablerHypixelDisabler()), CubeCraft(new CubeCraftDisabler()), OldNCP(new OldNCPDisabler()), AAC4LessFlag(new AAC4LessFlagDisabler()), AAC5Test(new AAC5TestDisabler()), VulcanCombat(new VulcanCombatDisabler());
+    public enum Modes {
+        Basic(new BasicDisabler()), Hypxiel(new DisablerHypixelDisabler()), CubeCraft(new CubeCraftDisabler()), DCJ(new DCJDisabler()), OldNCP(new OldNCPDisabler()), AAC4LessFlag(new AAC4LessFlagDisabler()), AAC5Test(new AAC5TestDisabler()), VulcanCombat(new VulcanCombatDisabler());
 
         final DisablerModule disablerModule;
 

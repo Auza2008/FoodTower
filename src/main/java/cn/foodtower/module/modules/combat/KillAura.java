@@ -54,6 +54,7 @@ public class KillAura extends Module {
     private final Option coolDown = new Option("Auto CoolDown", false);
     private final Option esp = new Option("ESP", true);
     private final Option predictBlock = new Option("PredictBlock", false);
+    private final Option dbBlock = new Option("DoubleBlock", false);
     private final Numbers<Double> aps = new Numbers("MaxCps", 13.0, 1.0, 20.0, 1.0);
     private final Numbers<Double> minAps = new Numbers<>("MinCps", 10.0, 1.0, 20.0, 1.0);
     private final cn.foodtower.api.value.Mode mode = new cn.foodtower.api.value.Mode("Mode", Mode.values(), Mode.Switch);
@@ -81,7 +82,6 @@ public class KillAura extends Module {
     private final cn.foodtower.api.value.Mode rotMode = new cn.foodtower.api.value.Mode("RotationMode", Rotations.values(), Rotations.Basic);
     private final MSTimer attackStopwatch = new MSTimer();
     private final MSTimer updateStopwatch = new MSTimer();
-    private final MSTimer critStopwatch = new MSTimer();
     private final EntityValidator entityValidator = new EntityValidator();
     private final EntityValidator blockValidator = new EntityValidator();
     private final SmoothRotationObject smoothRotationObject = new SmoothRotationObject();
@@ -103,7 +103,7 @@ public class KillAura extends Module {
         this.blockValidator.add(new ConstantDistanceCheck(8.0f));
         this.blockValidator.add(entityCheck);
         this.blockValidator.add(teamsCheck);
-        addValues(mode, sortingMode, switchDelay, aps, minAps, range, wall, autoBlock, autoBlockMode, attackTiming, abTiming, rotMode, rotSpeed, noHitCheck, silent, this.teams, this.players, this.prioritizePlayers, this.animals, this.monsters, this.invisibles, esp, swing, predictBlock, coolDown, dbtap, fov, this.forceUpdate, this.disableOnDeath);
+        addValues(mode, sortingMode, switchDelay, aps, minAps, range, wall, autoBlock, autoBlockMode, predictBlock, attackTiming, abTiming, rotMode, rotSpeed, silent, noHitCheck, teams, players, prioritizePlayers, animals, monsters, invisibles, esp, swing, coolDown, dbtap, dbBlock, fov, forceUpdate, disableOnDeath);
         setValueDisplayable(sortingMode, mode, Mode.Single);
         setValueDisplayable(switchDelay, mode, Mode.Switch);
         setValueDisplayable(new Value[]{autoBlockMode, abTiming}, autoBlock, autoBlock.get());
@@ -126,7 +126,6 @@ public class KillAura extends Module {
     @Override
     public void onEnable() {
         this.updateStopwatch.reset();
-        this.critStopwatch.reset();
         this.targetIndex = 0;
         this.targets.clear();
         this.changeTarget = false;
@@ -193,31 +192,33 @@ public class KillAura extends Module {
             block();
         if ((attackTiming.get().equals(AttackTiming.Pre) && e.isPre()) || (attackTiming.get().equals(AttackTiming.Post) && !e.isPre()))
             attack();
-        if ((abTiming.get().equals(ABTiming.Pre) && e.isPre()) || (abTiming.get().equals(ABTiming.Post) && !e.isPre()))
+        if ((abTiming.get().equals(ABTiming.Pre) && e.isPre()) || (abTiming.get().equals(ABTiming.Post) && !e.isPre()) && !predictBlock.get())
             block();
     }
 
     @EventHandler
     private void onUpdate(EventUpdate e) {
-        this.updateTargets();
-        this.sortTargets();
+        if (curTarget == null || mc.thePlayer.getDistanceToEntity(curTarget) > range.get() || (curTarget.getHealth() <= 0 || curTarget.isDead) || targets.isEmpty()) {
+            this.updateTargets();
+            this.sortTargets();
+        }
         ++hitTicks;
         if (!isHoldingSword()) {
-            isBlocking = false;
+            if (isBlocking || mc.thePlayer.isBlocking()) unblock();
         }
         if (curTarget == null) {
             unblock();
         }
         if (abTiming.get().equals(ABTiming.Update) && predictBlock.get()) block();
         if (attackTiming.get().equals(AttackTiming.Update)) attack();
-        if (abTiming.get().equals(ABTiming.Update)) block();
+        if (abTiming.get().equals(ABTiming.Update) && !predictBlock.get()) block();
     }
 
     @EventHandler
     private void onRender(EventRender3D e) {
         if (abTiming.get().equals(ABTiming.All) && predictBlock.get()) block();
         if (attackTiming.get().equals(AttackTiming.All)) attack();
-        if (abTiming.get().equals(ABTiming.All)) block();
+        if (abTiming.get().equals(ABTiming.All) && !predictBlock.get()) block();
         if (curTarget != null && esp.get()) {
             RenderUtil.drawShadow(curTarget, e.getPartialTicks(), (float) yPos, direction);
             RenderUtil.drawCircle(curTarget, e.getPartialTicks(), (float) yPos);
@@ -353,8 +354,8 @@ public class KillAura extends Module {
                     isBlocking = false;
                     break;
                 case DCJ:
-                    mc.playerController.onStoppedUsingItem(mc.thePlayer);
-                    mc.gameSettings.keyBindUseItem.Doing = false;
+                    sendPacket(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
                     isBlocking = false;
                     break;
             }
@@ -363,31 +364,34 @@ public class KillAura extends Module {
 
     private void block() {
         if (this.autoBlock.get() && isHoldingSword() && this.isEntityNearby() && !isBlocking) {
-            switch ((AutoBlockMode) this.autoBlockMode.get()) {
-                case Right:
-                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
-                    isBlocking = true;
-                    break;
-                case Vanilla:
-                case Packet:
-                    sendPacket(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
-                    isBlocking = true;
-                    break;
-                case AAC:
-                    if (mc.thePlayer.ticksExisted % 2 == 0) {
-                        mc.playerController.interactWithEntitySendPacket(mc.thePlayer, curTarget);
+            for (int i = 0; dbBlock.get() ? i < 2 : i < 1; ++i) {
+                switch ((AutoBlockMode) this.autoBlockMode.get()) {
+                    case Right:
+                        KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
+                        isBlocking = true;
+                        break;
+                    case Vanilla:
+                    case Packet:
                         sendPacket(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
-                    }
-                    isBlocking = true;
-                    break;
-                case DCJ:
-                    mc.playerController.sendUseItem(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem());
-                    mc.gameSettings.keyBindUseItem.Doing = true;
-                    isBlocking = true;
-                    break;
-                case NCP:
-                    sendPacket(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, null, 0f, 0f, 0f));
-                    break;
+                        isBlocking = true;
+                        break;
+                    case AAC:
+                        if (mc.thePlayer.ticksExisted % 2 == 0) {
+                            mc.playerController.interactWithEntitySendPacket(mc.thePlayer, curTarget);
+                            sendPacket(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
+                        }
+                        isBlocking = true;
+                        break;
+                    case DCJ:
+                        sendPacket(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, mc.thePlayer.getHeldItem(), 0f, 0f, 0f));
+                        KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), true);
+                        isBlocking = true;
+                        break;
+                    case NCP:
+                        sendPacket(new C08PacketPlayerBlockPlacement(new BlockPos(-1, -1, -1), 255, null, 0f, 0f, 0f));
+                        isBlocking = true;
+                        break;
+                }
             }
         }
     }

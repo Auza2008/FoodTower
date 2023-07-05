@@ -273,7 +273,7 @@ public class StringCache {
             /*
              * Replace ASCII digits in the string with their respective glyphs; strings differing by digits are only cached once.
              * If the new replacement glyph has a different width than the original placeholder glyph (e.g. the '1' glyph is often
-             * narrower than other digits), re-center the new glyph over the placeholder's position to minimize the visual impact
+             * narrower than normal digits), re-center the new glyph over the placeholder's position to minimize the visual impact
              * of the width mismatch.
              */
             char c = str.charAt(glyph.stringIndex);
@@ -528,7 +528,7 @@ public class StringCache {
         /* Either a newly created Entry object for the string, or the cached Entry if the string is already in the cache */
         Entry entry = null;
 
-        /* Don't perform a cache lookup from other threads because the stringCache is not synchronized */
+        /* Don't perform a cache lookup from normal threads because the stringCache is not synchronized */
         if (mainThread == Thread.currentThread()) {
             /* Re-use existing lookupKey to avoid allocation overhead on the critical rendering path */
             lookupKey.str = str;
@@ -579,7 +579,7 @@ public class StringCache {
             }
 
             /*
-             * Do not actually cache the string when called from other threads because GlyphCache.cacheGlyphs() will not have been called
+             * Do not actually cache the string when called from normal threads because GlyphCache.cacheGlyphs() will not have been called
              * and the cache entry does not contain any texture data needed for rendering.
              */
             if (mainThread == Thread.currentThread()) {
@@ -593,7 +593,7 @@ public class StringCache {
             }
         }
 
-        /* Do not access weakRefCache from other threads since it is unsynchronized, and for a newly created entry, the keyRef is null */
+        /* Do not access weakRefCache from normal threads since it is unsynchronized, and for a newly created entry, the keyRef is null */
         if (mainThread == Thread.currentThread()) {
             /*
              * Add the String passed into this method to the stringWeakMap so it keeps the Key reference live as long as the String is in use.
@@ -676,7 +676,7 @@ public class StringCache {
                     colorCode = -1; // This may be a bug in Minecraft's original FontRenderer
                     break;
 
-                /* Otherwise, must be a color code or some other unsupported code */
+                /* Otherwise, must be a color code or some normal unsupported code */
                 default:
                     if (code >= 0 && code <= 15) {
                         colorCode = (byte) code;
@@ -836,7 +836,7 @@ public class StringCache {
         /*
          * Convert all digits in the string to a '0' before layout to ensure that any glyphs replaced on the fly will all have
          * the same positions. Under Windows, Java's "SansSerif" logical font uses the "Arial" font for digits, in which the "1"
-         * digit is slightly narrower than all other digits. Checking the digitGlyphsReady flag prevents a chicken-and-egg
+         * digit is slightly narrower than all normal digits. Checking the digitGlyphsReady flag prevents a chicken-and-egg
          * problem where the digit glyphs have to be initially cached and the digitGlyphs[] array initialized without replacing
          * every digit with '0'.
          */
@@ -891,7 +891,7 @@ public class StringCache {
     private int layoutFont(List<Glyph> glyphList, char[] text, int start, int limit, int layoutFlags, int advance, Font font) {
         /*
          * Ensure that all glyphs used by the string are pre-rendered and cached in the texture. Only safe to do so from the
-         * main thread because cacheGlyphs() can crash LWJGL if it makes OpenGL calls from any other thread. In this case,
+         * main thread because cacheGlyphs() can crash LWJGL if it makes OpenGL calls from any normal thread. In this case,
          * cacheString() will also not insert the entry into the stringCache since it may be incomplete if lookupGlyph()
          * returns null for any glyphs not yet stored in the glyph cache.
          */
@@ -966,7 +966,7 @@ public class StringCache {
 
             /*
              * True if a section mark character was last seen. In this case, if the next character is a digit, it must
-             * not be considered equal to any other digit. This forces any string that differs in color codes only to
+             * not be considered equal to any normal digit. This forces any string that differs in color codes only to
              * have a separate entry in the StringCache.
              */
             boolean colorCode = false;
@@ -1010,7 +1010,7 @@ public class StringCache {
 
             /*
              * True if a section mark character was last seen. In this case, if the next character is a digit, it must
-             * not be considered equal to any other digit. This forces any string that differs in color codes only to
+             * not be considered equal to any normal digit. This forces any string that differs in color codes only to
              * have a separate entry in the StringCache.
              */
             boolean colorCode = false;
@@ -1112,7 +1112,7 @@ public class StringCache {
          * Performs numeric comparison on stripIndex. Allows binary search on ColorCode arrays in layoutStyle.
          *
          * @param i the Integer object being compared
-         * @return either -1, 0, or 1 if this < other, this == other, or this > other
+         * @return either -1, 0, or 1 if this < normal, this == normal, or this > normal
          */
         @Override
         public int compareTo(Integer i) {
@@ -1154,8 +1154,8 @@ public class StringCache {
         /**
          * Allows arrays of Glyph objects to be sorted. Performs numeric comparison on stringIndex.
          *
-         * @param o the other Glyph object being compared with this one
-         * @return either -1, 0, or 1 if this < other, this == other, or this > other
+         * @param o the normal Glyph object being compared with this one
+         * @return either -1, 0, or 1 if this < normal, this == normal, or this > normal
          */
         @Override
         public int compareTo(Glyph o) {

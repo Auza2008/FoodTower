@@ -1,12 +1,14 @@
-package cn.foodtower.module.modules.world.dis.disablers.bypass;
+package cn.foodtower.module.modules.world.dis.disablers.server;
 
 import cn.foodtower.api.events.Render.EventRender2D;
 import cn.foodtower.api.events.Render.EventRender3D;
 import cn.foodtower.api.events.World.*;
+import cn.foodtower.manager.ModuleManager;
+import cn.foodtower.module.modules.combat.KillAura;
 import cn.foodtower.module.modules.world.dis.DisablerModule;
-import net.minecraft.network.play.client.C0FPacketConfirmTransaction;
+import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 
-public class BasicDisabler implements DisablerModule {
+public class DCJDisabler implements DisablerModule {
     @Override
     public void onDisable() {
 
@@ -19,14 +21,15 @@ public class BasicDisabler implements DisablerModule {
 
     @Override
     public void onPacket(EventPacketSend event) {
-        if (event.getPacket() instanceof C0FPacketConfirmTransaction) {
-            event.setCancelled(true);
-        }
+
     }
 
     @Override
     public void onPacket(EventPacketReceive event) {
-
+        if (KillAura.curTarget == null || !ModuleManager.getModuleByClass(KillAura.class).isEnabled()) return;
+        if (event.getPacket() instanceof S08PacketPlayerPosLook) {
+            event.setCancelled(true);
+        }
     }
 
     @Override

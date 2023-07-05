@@ -53,7 +53,7 @@ public class ChestStealer extends Module {
             String[] list;
             GuiChest guiChest = (GuiChest) mc.currentScreen;
             String name = guiChest.lowerChestInventory.getDisplayName().getUnformattedText().toLowerCase();
-            for (String str : list = new String[]{"menu", "selector", "game", "gui", "server", "inventory", "play", "teleporter", "shop", "melee", "armor", "block", "castle", "mini", "warp", "teleport", "user", "team", "tool", "sure", "trade", "cancel", "accept", "soul", "book", "recipe", "profile", "tele", "port", "map", "kit", "select", "lobby", "vault", "lock"}) {
+            for (String str : list = new String[]{"menu", "selector", "game", "gui", "bypass", "inventory", "play", "teleporter", "shop", "melee", "armor", "block", "castle", "mini", "warp", "teleport", "user", "team", "tool", "sure", "trade", "cancel", "accept", "soul", "book", "recipe", "profile", "tele", "port", "map", "kit", "select", "lobby", "vault", "lock"}) {
                 if (!name.contains(str)) continue;
                 return;
             }

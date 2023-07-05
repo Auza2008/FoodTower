@@ -1,4 +1,4 @@
-package cn.foodtower.module.modules.move.speedmode.speed;
+package cn.foodtower.module.modules.move.speedmode.speed.normal;
 
 import cn.foodtower.api.events.World.*;
 import cn.foodtower.module.modules.move.speedmode.SpeedModule;

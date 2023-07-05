@@ -521,7 +521,7 @@ public class TargetHUD extends Module {
 
         //Renders face
         if (target instanceof AbstractClientPlayer) {
-            //offset other colors aside from red, so the face turns red
+            //offset normal colors aside from red, so the face turns red
             final double offset = -(target.hurtTime * 23);
             //sets color to red
             DrawUtil.color(new Color(255, (int) (255 + offset), (int) (255 + offset)));
@@ -640,7 +640,7 @@ public class TargetHUD extends Module {
         DrawUtil.renderGradientRectLeftRight(((tx - 70)) / 2, (int) (ty / 2F + 194) - 60, (int) ((tx - 70 + (216 * normalizedenHealthValue))) / 2, (int) (ty / 2F + 197) - 60, new Color(0xFF078301).darker().getRGB(), 0xFF00FF50);
         DrawUtil.renderGradientRectLeftRight(((tx - 70)) / 2, (int) (ty / 2F + 199) - 60, (int) ((tx - 70 + (216 * (ent.getTotalArmorValue() / 20f)))) / 2, (int) (ty / 2F + 202) - 60, 0xFF0050FF, 0xFF00FFFF);
 
-        //offset other colors aside from red, so the face turns red
+        //offset normal colors aside from red, so the face turns red
         final double offset = -(ent.hurtTime * 23);
         //sets color to red
         DrawUtil.color(new Color(255, (int) (255 + offset), (int) (255 + offset)));
@@ -1321,7 +1321,7 @@ public class TargetHUD extends Module {
         font3.drawString("r", x, y - 30 + FontLoaders.GoogleSans18.getStringHeight("A") + 6.5f, -1);
     }
 
-    // It's a retarded way to do, but I couldn't figure how to space them proper. (I'll improve this some other time can't be asked rn)
+    // It's a retarded way to do, but I couldn't figure how to space them proper. (I'll improve this some normal time can't be asked rn)
     private void drawHelmet(final int x, final int y) {
         if (target == null || !(target instanceof EntityPlayer)) return;
         GL11.glPushMatrix();

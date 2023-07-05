@@ -445,7 +445,7 @@ public final class RotationUtils {
     }
 
     /**
-     * Calculate difference between the server rotation and your rotation
+     * Calculate difference between the bypass rotation and your rotation
      *
      * @param rotation your rotation
      * @return difference between rotation
