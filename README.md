@@ -1,4 +1,4 @@
-# FoodTower
+# FoodTower[已经Reborn 看新仓库]
 
 ![Github stars](http://img.shields.io/github/stars/Auza2008/FoodTower.svg)
 ![Github stars](http://img.shields.io/github/license/Auza2008/FoodTower)
